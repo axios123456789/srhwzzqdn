@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.system.mapper.SysDictMapper">
+    <sql id="columns">
+        id
+        ,
+        code,
+        value,
+        type,
+        description,
+        status,
+        create_time as createTime,
+        create_by as createBy,
+        update_time as updateTime,
+        update_by as updateBy,
+        is_deleted as isDeleted
+    </sql>
+
+    <!--  添加数据字典  -->
+    <insert id="addDict">
+        insert into t_sys_dict(id,
+                               code,
+                               value,
+                               type,
+                               create_time,
+                               create_by,
+                               description)
+        values (#{id},
+                #{code},
+                #{value},
+                #{type},
+                now(),
+                #{createBy},
+                #{description})
+    </insert>
+
+    <!--  修改数据字典  -->
+    <update id="updateDict">
+        update t_sys_dict set
+        <if test="code != null">
+            code = #{code},
+        </if>
+        <if test="value != null and value != ''">
+            value = #{value},
+        </if>
+        <if test="type != null and type != ''">
+            type = #{type},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+        <if test="description != null and description != ''">
+            description = #{description},
+        </if>
+        update_time = now(),
+        update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  根据type查询所有  -->
+    <select id="getCodesByType" resultType="com.xk.srhwzzqdn.model.entity.system.SysDict">
+        select
+        <include refid="columns"/>
+        from t_sys_dict c
+        where c.is_deleted = 0
+        and c.type = #{param1}
+        and c.status = 1
+        order by c.code asc
+    </select>
+
+    <!--  根据当前账号的权限查询对应的账号等级  -->
+    <select id="getUserLevelByPower" resultType="com.xk.srhwzzqdn.model.entity.system.SysDict">
+        select
+        <include refid="columns"/>
+        from t_sys_dict c
+        where c.is_deleted = 0
+        and c.status = 1
+        and c.type = #{param1}
+        and c.code > #{param2}
+        order by c.code asc
+    </select>
+
+    <!--  条件查询数据字典  -->
+    <select id="getSysDictList" resultType="com.xk.srhwzzqdn.model.entity.system.SysDict">
+        select
+        <include refid="columns"/>
+        from t_sys_dict c
+        <where>
+            <if test="value != null and value != ''">
+                and c.value like concat('%', #{value}, '%')
+            </if>
+            <if test="type != null and type != ''">
+                and c.type like concat('%', #{type}, '%')
+            </if>
+            <if test="status != null">
+                and c.status = #{status}
+            </if>
+            and c.is_deleted = 0
+        </where>
+        order by c.create_time desc
+    </select>
+</mapper>

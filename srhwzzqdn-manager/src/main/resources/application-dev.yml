@@ -1,0 +1,37 @@
+server:
+  port: 8400
+
+spring:
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/srhwzzqdn?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: 12345
+
+
+mybatis:
+  mapper-locations: classpath:/mapper/*/*.xml
+  config-location: classpath:/mybatis-config.xml
+
+
+srhwzzqdn:
+  auth:
+    noAuthUrls:
+      - /superBrain/system/index/login
+      - /superBrain/system/index/generateValidateCode
+      - /superBrain/system/index/companyIsExists
+      - /superBrain/system/fileUpload
+      - /superBrain/system/index/isRegisterMainBrain
+      - /superBrain/system/index/registerBrainAccount
+
+  minio:
+    endpointUrl: http://127.0.0.1:9000
+    accessKey: minioadmin
+    secreKey: minioadmin
+    bucketName: srhwzzqdn-bucket

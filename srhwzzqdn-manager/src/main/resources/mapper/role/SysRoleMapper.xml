@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.system.mapper.SysRoleMapper">
+    <sql id="columns">
+        id,
+        role_name as roleName,
+        role_code as roleCode,
+        description,
+        create_time as createTime,
+        create_by as createBy,
+        update_time as updateTime,
+        update_by as updateBy,
+        is_deleted as isDeleted
+    </sql>
+
+    <!--  添加角色  -->
+    <insert id="addRole">
+        insert into t_sys_role (id, role_name, role_code, description, create_time, create_by)
+        values (#{id}, #{roleName}, #{roleCode}, #{description}, now(), #{createBy})
+    </insert>
+
+    <!--  修改角色  -->
+    <update id="updateRole">
+        update t_sys_role set
+        <if test="roleName != null and roleName != ''">
+            role_name = #{roleName},
+        </if>
+        <if test="roleCode != null and roleCode != ''">
+            role_code = #{roleCode},
+        </if>
+        <if test="description != null and description != ''">
+            description = #{description},
+        </if>
+        update_time = now(),
+        update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  条件查询所有角色  -->
+    <select id="findByPage" resultType="com.xk.srhwzzqdn.model.entity.system.SysRole">
+        select <include refid="columns"/>
+        from t_sys_role t
+        <where>
+            <if test="roleName != null and roleName != ''">
+                and t.role_name like concat('%', #{roleName}, '%')
+            </if>
+            and t.is_deleted = 0
+        </where>
+        order by t.create_time desc
+    </select>
+</mapper>
