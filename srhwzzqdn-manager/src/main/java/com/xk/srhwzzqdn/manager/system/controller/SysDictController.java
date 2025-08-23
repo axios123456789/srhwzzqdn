@@ -101,7 +101,7 @@ public class SysDictController {
     }
 
     /**
-     * 根据type获取t_sys_code键值对（仅只有一级数据的时候）
+     * 根据type获取t_sys_code键值对（仅取一级数据）
      * @param type
      * @return
      */
@@ -109,5 +109,57 @@ public class SysDictController {
     public Result getSysCodeByType(@PathVariable("type") String type){
         List<SysCode> sysCodes = sysDictService.getSysCodeByType(type);
         return Result.build(sysCodes, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 条件查询code码表
+     * @param sysDictDto
+     * @return
+     */
+    @GetMapping("/getSysCodeList")
+    public Result getSysCodeList(SysDictDto sysDictDto){
+        List<SysCode> sysCodes = sysDictService.getSysCodeList(sysDictDto);
+        return Result.build(sysCodes, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 添加sysCode数据字典
+     * @param sysCode
+     * @return
+     */
+    @PostMapping("/addSysCode")
+    public Result addSysCode(@RequestBody SysCode sysCode){
+        try {
+            sysDictService.addSysCode(sysCode);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "添加B区大脑字典失败~~");
+        }
+    }
+
+    /**
+     * 修改sysCode数据字典
+     * @param sysCode
+     * @return
+     */
+    @PutMapping("/updateSysCode")
+    public Result updateSysCode(@RequestBody SysCode sysCode){
+        try {
+            sysDictService.updateSysCode(sysCode);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "修改B区大脑字典失败~~");
+        }
+    }
+
+    /**
+     * 根据id删除码值
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/deleteSysCodeById/{id}")
+    public Result deleteSysCodeById(@PathVariable("id") String id){
+        sysDictService.deleteSysCodeById(id);
+        return Result.build(null, ResultCodeEnum.SUCCESS);
     }
 }

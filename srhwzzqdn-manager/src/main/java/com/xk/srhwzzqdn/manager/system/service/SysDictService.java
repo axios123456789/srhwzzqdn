@@ -30,4 +30,16 @@ public interface SysDictService {
 
     //根据type获取t_sys_code键值对（仅只有一级数据的时候）
     List<SysCode> getSysCodeByType(String type);
+
+    //条件查询code码表
+    List<SysCode> getSysCodeList(SysDictDto sysDictDto);
+
+    //添加sysCode数据字典
+    void addSysCode(SysCode sysCode);
+
+    //修改sysCode数据字典
+    void updateSysCode(SysCode sysCode);
+
+    //根据id删除码值
+    void deleteSysCodeById(String id);
 }

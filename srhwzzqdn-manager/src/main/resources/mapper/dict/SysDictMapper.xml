@@ -34,6 +34,27 @@
                 #{description})
     </insert>
 
+    <!--  添加sysCode数据字典  -->
+    <insert id="addSysCode">
+        insert into t_sys_code (
+            id,
+            value,
+            text,
+            sort_value,
+            parent_id,
+            status,
+            type
+        ) values (
+            #{id},
+            #{value},
+            #{text},
+            #{sortValue},
+            #{parentId},
+            #{status},
+            #{type}
+        )
+    </insert>
+
     <!--  修改数据字典  -->
     <update id="updateDict">
         update t_sys_dict set
@@ -54,6 +75,17 @@
         </if>
         update_time = now(),
         update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  修改sysCode数据字典  -->
+    <update id="updateSysCode">
+        update t_sys_code set
+            value = #{value},
+            text = #{text},
+            sort_value = #{sortValue},
+            status = #{status},
+            type = #{type}
         where id = #{id}
     </update>
 
@@ -98,5 +130,29 @@
             and c.is_deleted = 0
         </where>
         order by c.create_time desc
+    </select>
+
+    <!--  条件查询sysCode的所有数据  -->
+    <select id="getSysCodeList" resultType="com.xk.srhwzzqdn.model.entity.system.SysCode">
+        select c.id,
+               c.value,
+               c.text,
+               c.sort_value as sortValue,
+               c.parent_id as parentId,
+               c.status,
+               c.type
+          from t_sys_code c
+        <where>
+            <if test="value != null and value != ''">
+                and c.text like concat('%', #{value}, '%')
+            </if>
+            <if test="type != null and type != ''">
+                and c.type like concat('%', #{type}, '%')
+            </if>
+            <if test="status != null">
+                and c.status = #{status}
+            </if>
+        </where>
+        order by c.sort_value
     </select>
 </mapper>

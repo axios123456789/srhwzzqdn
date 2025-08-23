@@ -4,6 +4,7 @@ import com.xk.srhwzzqdn.model.dto.system.SysDictDto;
 import com.xk.srhwzzqdn.model.entity.system.SysAdministrative;
 import com.xk.srhwzzqdn.model.entity.system.SysCode;
 import com.xk.srhwzzqdn.model.entity.system.SysDict;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -41,6 +42,23 @@ public interface SysDictMapper {
     List<SysAdministrative> getAdministrativeList();
 
     //根据type获取对应的码值数据
-    @Select("select id, value, text, sort_value as sortValue, parent_id as parentId, `status`, type from t_sys_code where type = #{param1}")
+    @Select("select id, value, text, sort_value as sortValue, parent_id as parentId, `status`, type from t_sys_code where type = #{param1} and parent_id = '0'")
     List<SysCode> getSysCodeByType(String type);
+
+    //条件查询sysCode的所有数据
+    List<SysCode> getSysCodeList(SysDictDto sysDictDto);
+
+    //添加sysCode数据字典
+    void addSysCode(SysCode sysCode);
+
+    //修改sysCode数据字典
+    void updateSysCode(SysCode sysCode);
+
+    //查询SysCode的子节点数
+    @Select("select count(1) from t_sys_code where parent_id = #{param1}")
+    int getChildCodeCount(String id);
+
+    //根据id删除数据字典（sysCode）
+    @Delete("delete from t_sys_code where id = #{param1}")
+    void deleteSysCodeById(String id);
 }

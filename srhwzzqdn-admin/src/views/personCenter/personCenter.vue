@@ -1479,8 +1479,36 @@ const handleAvatarSuccess = (response, uploadFile) => {
 }
 
 //--------------------------------------导出Word文档功能-----------------------------------------
+// 将图片URL转换为Uint8Array
+const getImageBuffer = async (url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.statusText}`);
+    }
+    const arrayBuffer = await response.arrayBuffer();
+    return new Uint8Array(arrayBuffer);
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    return null;
+  }
+};
+
 // 导出为Word文档
-const exportToWord = () => {
+const exportToWord = async () => {
+  // 获取头像图片数据
+  let avatarImage = null;
+  if (profile.value.personPicture) {
+    const imageBuffer = await getImageBuffer(profile.value.personPicture);
+    if (imageBuffer) {
+      avatarImage = {
+        data: imageBuffer,
+        width: 100, // 设置图片宽度
+        height: 100, // 设置图片高度
+      };
+    }
+  }
+
   // 创建文档
   const doc = new docx.Document({
     sections: [{
@@ -1494,6 +1522,27 @@ const exportToWord = () => {
           spacing: {
             after: 200,
           },
+        }),
+
+        // 头像部分
+        avatarImage ? new docx.Paragraph({
+          children: [
+            new docx.ImageRun({
+              data: avatarImage.data,
+              transformation: {
+                width: avatarImage.width,
+                height: avatarImage.height,
+              },
+            }),
+          ],
+          alignment: docx.AlignmentType.CENTER,
+          spacing: {
+            after: 200,
+          },
+        }) : new docx.Paragraph({
+          text: "无头像",
+          italics: true,
+          alignment: docx.AlignmentType.CENTER,
         }),
 
         // 基础信息部分

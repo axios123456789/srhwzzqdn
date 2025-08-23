@@ -5,10 +5,13 @@ import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.manager.system.mapper.SysDictMapper;
 import com.xk.srhwzzqdn.manager.system.service.SysDictService;
 import com.xk.srhwzzqdn.manager.util.AdministrativeHelper;
+import com.xk.srhwzzqdn.manager.util.SysCodeHelper;
 import com.xk.srhwzzqdn.model.dto.system.SysDictDto;
 import com.xk.srhwzzqdn.model.entity.system.SysAdministrative;
 import com.xk.srhwzzqdn.model.entity.system.SysCode;
 import com.xk.srhwzzqdn.model.entity.system.SysDict;
+import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
+import com.xk.srhwzzqdn.service.exception.MyException;
 import com.xk.srhwzzqdn.util.AuthContextUtil;
 import com.xk.srhwzzqdn.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,5 +152,56 @@ public class SysDictServiceImpl implements SysDictService {
 
         //2.直接返回
         return sysCodes;
+    }
+
+    /**
+     * 条件查询code码表
+     * @param sysDictDto
+     * @return
+     */
+    @Override
+    public List<SysCode> getSysCodeList(SysDictDto sysDictDto) {
+        //1.条件查询所有
+        List<SysCode> sysCodeList = sysDictMapper.getSysCodeList(sysDictDto);
+
+        //2.数据处理
+        List<SysCode> sysCodes = SysCodeHelper.buildTree(sysCodeList);
+
+        return sysCodes;
+    }
+
+    /**
+     * 添加sysCode数据字典
+     * @param sysCode
+     */
+    @Override
+    public void addSysCode(SysCode sysCode) {
+        sysCode.setId(UUIDUtil.getUUID());
+        sysDictMapper.addSysCode(sysCode);
+    }
+
+    /**
+     * 修改sysCode数据字典
+     * @param sysCode
+     */
+    @Override
+    public void updateSysCode(SysCode sysCode) {
+        sysDictMapper.updateSysCode(sysCode);
+    }
+
+    /**
+     * 根据id删除码值
+     * @param id
+     */
+    @Override
+    public void deleteSysCodeById(String id) {
+        //判断是否存在子节点
+        int childCount = sysDictMapper.getChildCodeCount(id);
+        if (childCount > 0){
+            throw new MyException(ResultCodeEnum.NODE_ERROR);
+        }
+
+        //删除
+        sysDictMapper.deleteSysCodeById(id);
     }
 }

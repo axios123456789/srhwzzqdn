@@ -59,3 +59,38 @@ export const GetSysCodeByType = (type) => {
     method: 'get'
   })
 }
+
+//获取sysCode码表的数据列表
+export const GetSysCodeLis = (queryDto2) => {
+  return request({
+    url: `${base_api}/getSysCodeList`,
+    method: 'get',
+    params: queryDto2
+  })
+}
+
+//添加sysCode码表数据
+export const AddSysCode = (sysCode) => {
+  return request({
+    url: `${base_api}/addSysCode`,
+    method: 'post',
+    data: sysCode
+  })
+}
+
+//修改sysCode码表数据
+export const UpdateSysCode = (sysCode) => {
+  return request({
+    url: `${base_api}/updateSysCode`,
+    method: 'put',
+    data: sysCode
+  })
+}
+
+//根据id删除sysCode码表数据
+export const DeleteSysCodeById = (id) => {
+  return request({
+    url: `${base_api}/deleteSysCodeById/${id}`,
+    method: 'delete'
+  })
+}
