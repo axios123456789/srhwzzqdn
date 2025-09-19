@@ -42,7 +42,7 @@ public interface SysDictMapper {
     List<SysAdministrative> getAdministrativeList();
 
     //根据type获取对应的码值数据
-    @Select("select id, value, text, sort_value as sortValue, parent_id as parentId, `status`, type from t_sys_code where type = #{param1} and parent_id = '0'")
+    @Select("select id, value, text, sort_value as sortValue, parent_id as parentId, `status`, type from t_sys_code where status = 1 and type = #{param1} and parent_id = '0'")
     List<SysCode> getSysCodeByType(String type);
 
     //条件查询sysCode的所有数据
@@ -55,7 +55,7 @@ public interface SysDictMapper {
     void updateSysCode(SysCode sysCode);
 
     //查询SysCode的子节点数
-    @Select("select count(1) from t_sys_code where parent_id = #{param1}")
+    @Select("select count(1) from t_sys_code where status = 1 and parent_id = #{param1}")
     int getChildCodeCount(String id);
 
     //根据id删除数据字典（sysCode）
