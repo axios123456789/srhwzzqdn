@@ -1,5 +1,152 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.RowMemoryAccessMapper">
+    <sql id="columns">
+        id,
+        record_time,
+        contact_type,
+        contact,
+        memory_place,
+        memory_place_detail,
+        memory_place_short,
+        row_memory_type,
+        row_memory_content,
+        row_memory_reason,
+        row_memory_action,
+        memory_owner,
+        memory_source,
+        memory_associative_status,
+        memory_images,
+        record_end_time,
+        record_by,
+        update_time,
+        update_by
+    </sql>
 
+    <!--  添加原始记忆  -->
+    <insert id="addRowMemory">
+        insert into t_row_memory (
+            id,
+            record_time,
+            contact_type,
+            contact,
+            memory_place,
+            memory_place_detail,
+            memory_place_short,
+            row_memory_type,
+            row_memory_content,
+            row_memory_reason,
+            row_memory_action,
+            memory_owner,
+            memory_source,
+            memory_associative_status,
+            memory_images,
+            record_end_time,
+            record_by
+        ) values (
+            #{id},
+            #{recordTime},
+            #{contactType},
+            #{contact},
+            #{memoryPlace},
+            #{memoryPlaceDetail},
+            #{memoryPlaceShort},
+            #{rowMemoryType},
+            #{rowMemoryContent},
+            #{rowMemoryReason},
+            #{rowMemoryAction},
+            #{memoryOwner},
+            #{memorySource},
+            #{memoryAssociativeStatus},
+            #{memoryImages},
+            #{recordEndTime},
+            #{recordBy}
+        )
+    </insert>
+
+    <!--  修改原始记忆  -->
+    <update id="updateRowMemory">
+        update t_row_memory set
+            record_time = #{recordTime},
+            contact_type = #{contactType},
+            contact = #{contact},
+            memory_place = #{memoryPlace},
+            memory_place_detail = #{memoryPlaceDetail},
+            memory_place_short = #{memoryPlaceShort},
+            row_memory_type = #{rowMemoryType},
+            row_memory_content = #{rowMemoryContent},
+            row_memory_reason = #{rowMemoryReason},
+            row_memory_action = #{rowMemoryAction},
+            memory_source = #{memorySource},
+            memory_associative_status = #{memoryAssociativeStatus},
+            memory_images = #{memoryImages},
+            record_end_time = #{recordEndTime},
+            update_time = now(),
+            update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  条件查询原始记忆列表  -->
+    <select id="getRowMemoryByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemory">
+        select  t.id,
+                t.record_time,
+                t.contact_type,
+                t.contact,
+                t.memory_place,
+                t.memory_place_detail,
+                t.memory_place_short,
+                t.row_memory_type,
+                t.row_memory_content,
+                t.row_memory_reason,
+                t.row_memory_action,
+                t.memory_owner,
+                t.memory_source,
+                t.memory_associative_status,
+                t.memory_images,
+                t.record_end_time,
+                t.record_by,
+                t.update_time,
+                t.update_by,
+                i.name as memoryOwnerName
+          from t_row_memory t
+          left join t_sys_person_info i
+            on i.account_id = t.memory_owner
+        <where>
+            <if test="contact != null and contact != ''">
+                and t.contact like concat('%', #{contact}, '%')
+            </if>
+            <if test="contactType != null and contactType.size() > 0">
+                and t.contact_type in
+                <foreach collection="contactType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="recordBeginTime != null and recordBeginTime != ''">
+                and t.record_time &gt;= #{recordBeginTime}
+            </if>
+            <if test="recordEndTime != null and recordEndTime != ''">
+                and t.record_time &lt;= #{recordEndTime}
+            </if>
+            <if test="rowMemoryType != null and rowMemoryType.size() > 0">
+                and t.row_memory_type in
+                <foreach collection="rowMemoryType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="memorySource != null and memorySource.size() > 0">
+                and t.memory_source in
+                <foreach collection="memorySource" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="memoryAssociativeStatus != null and memoryAssociativeStatus.size() > 0">
+                and t.memory_associative_status in
+                <foreach collection="memoryAssociativeStatus" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by t.record_time desc
+    </select>
 </mapper>

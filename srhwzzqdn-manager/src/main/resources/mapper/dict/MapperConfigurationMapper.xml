@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.system.mapper.MapperConfigurationMapper">
+    <sql id="columns">
+        id,
+        `type`,
+        type_description,
+        mapper_fieldA1,
+        mapper_fieldA2,
+        mapper_fieldB1,
+        mapper_fieldB2,
+        mapper_rule_description,
+        mapper_fieldB3
+    </sql>
+
+    <!--  添加映射配置  -->
+    <insert id="addMapperConfiguration">
+        insert into t_mapper_configuration (
+            id,
+            `type`,
+            type_description,
+            mapper_fieldA1,
+            mapper_fieldA2,
+            mapper_fieldB1,
+            mapper_fieldB2,
+            mapper_rule_description,
+            mapper_fieldB3
+        ) values (
+            #{id},
+            #{type},
+            #{typeDescription},
+            #{mapperFieldA1},
+            #{mapperFieldA2},
+            #{mapperFieldB1},
+            #{mapperFieldB2},
+            #{mapperRuleDescription},
+            #{mapperFieldB3}
+        )
+    </insert>
+
+    <!--  修改映射配置  -->
+    <update id="updateMapperConfiguration">
+        update t_mapper_configuration set
+            `type` = #{type},
+            type_description = #{typeDescription},
+            mapper_fieldA1 = #{mapperFieldA1},
+            mapper_fieldA2 = #{mapperFieldA2},
+            mapper_fieldB1 = #{mapperFieldB1},
+            mapper_fieldB2 = #{mapperFieldB2},
+            mapper_rule_description = #{mapperRuleDescription},
+            mapper_fieldB3 = #{mapperFieldB3}
+        where id = #{id}
+    </update>
+
+    <!--  条件查询映射配置列表  -->
+    <select id="getMapperConfigurationByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.system.MapperConfiguration">
+        select <include refid="columns" />
+          from t_mapper_configuration t
+        <where>
+            <if test="param1 != null and param1 != ''">
+                and t.type like concat('%', #{param1}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!--  根据映射业务类型查询其中1条记录  -->
+    <select id="getMapperConfigByType" resultType="com.xk.srhwzzqdn.model.entity.system.MapperConfiguration">
+        select <include refid="columns" />
+          from t_mapper_configuration t
+        where 
+        <choose>
+            <when test="param1 != null">
+                t.type = #{param1}
+            </when>
+            <otherwise>
+                t.type = ''
+            </otherwise>
+        </choose>
+        limit 1
+    </select>
+
+    <!--  根据映射业务类型查询所有记录  -->
+    <select id="getAllMapperConfigByType"
+            resultType="com.xk.srhwzzqdn.model.entity.system.MapperConfiguration">
+        select <include refid="columns" />
+          from t_mapper_configuration t
+        where
+        <choose>
+            <when test="param1 != null">
+                t.type = #{param1}
+            </when>
+            <otherwise>
+                t.type = ''
+            </otherwise>
+        </choose>
+    </select>
+</mapper>

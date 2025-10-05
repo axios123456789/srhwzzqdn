@@ -20,6 +20,15 @@
       >
         <span>大脑字典B区</span>
       </div>
+      <div v-if="viewDictType != 3" @click="mapperConfiguration">
+        <span>映射配置区</span>
+      </div>
+      <div
+          style="border-bottom: 3px solid green; color: green"
+          v-if="viewDictType == 3"
+      >
+        <span>映射配置区</span>
+      </div>
     </div>
     <!--  大脑字典A区展示  -->
     <div v-if="viewDictType == 1">
@@ -244,6 +253,121 @@
         <el-table-column prop="type" label="类型" />
       </el-table>
     </div>
+
+    <!--  映射配置区展示  -->
+    <div v-if="viewDictType == 3">
+      <div class="search-div">
+        <el-form label-width="100px" size="small">
+          <el-row>
+            <el-col :span="24">
+              <el-form-item label="映射业务类型">
+                <el-input
+                    v-model="mapperConfigurationDto.type"
+                    style="width: 100%"
+                    clearable
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row style="display:flex">
+            <el-button type="primary" size="small" @click="searchMapperConfiguration">
+              搜索
+            </el-button>
+            <el-button size="small" @click="resetMapperConfigurationData">重置</el-button>
+          </el-row>
+        </el-form>
+      </div>
+
+      <!--添加按钮-->
+      <div class="tools-div">
+        <el-button type="success" size="small" @click="addMapperConfiguration">添 加</el-button>
+      </div>
+
+      <!-- 添加或修改映射配置表单对话框 -->
+      <el-dialog v-model="dialogVisible3" :title="mapperConfigurationVo.id ? '添加映射配置' : '修改映射配置'" width="40%">
+        <el-form label-width="120px">
+          <el-form-item label="映射业务类型">
+            <el-input
+                v-model="mapperConfigurationVo.type"
+                placeholder=""
+                clearable
+            >
+              <template #suffix v-if="mapperConfigurationVo.id == null">
+                <el-icon @click="handleSearchClick" style="cursor: pointer;">
+                  <Search />
+                </el-icon>
+              </template>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="业务类型描述">
+            <el-input v-model="mapperConfigurationVo.typeDescription" placeholder="" />
+          </el-form-item>
+          <el-form-item label="映射A类型字段1">
+            <el-input v-model="mapperConfigurationVo.mapperFieldA1" placeholder="" />
+          </el-form-item>
+          <el-form-item label="映射A类型字段2">
+            <el-input v-model="mapperConfigurationVo.mapperFieldA2" />
+          </el-form-item>
+          <el-form-item label="映射B类型字段1">
+            <el-input v-model="mapperConfigurationVo.mapperFieldB1" placeholder="" />
+          </el-form-item>
+          <el-form-item label="映射B类型字段2">
+            <el-input v-model="mapperConfigurationVo.mapperFieldB2" />
+          </el-form-item>
+          <el-form-item label="映射B类型字段3">
+            <el-input v-model="mapperConfigurationVo.mapperFieldB3" />
+          </el-form-item>
+          <el-form-item label="映射规则描述">
+            <el-input
+                type="textarea"
+                :rows="3"
+                placeholder="请输入内容"
+                v-model="mapperConfigurationVo.mapperRuleDescription"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitMapperConfiguration">提交</el-button>
+            <el-button @click="dialogVisible3 = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
+      <!---数据表格-->
+      <el-table :data="mapperList" style="width: 100%" height="400">
+        <el-table-column label="操作" align="center" width="200" #default="scope">
+          <el-button type="primary" size="small" @click="editMapperConfiguration(scope.row)">
+            修改
+          </el-button>
+          <el-button
+              type="danger"
+              size="small"
+              @click="deleteMapperConfigurationById(scope.row.id)"
+          >
+            删除
+          </el-button>
+        </el-table-column>
+        <el-table-column prop="type" label="映射业务类型" width="120" />
+        <el-table-column prop="typeDescription" label="业务类型描述" width="180" />
+        <el-table-column prop="mapperFieldA1" label="映射A类型字段1" width="150" />
+        <el-table-column prop="mapperFieldA2" label="映射A类型字段2" width="150" />
+        <el-table-column prop="mapperFieldB1" label="映射B类型字段1" width="150" />
+        <el-table-column prop="mapperFieldB2" label="映射B类型字段2" width="150" />
+        <el-table-column prop="mapperFieldB3" label="映射B类型字段3" width="150" />
+        <el-table-column prop="mapperRuleDescription" label="映射规则描述" width="300" />
+      </el-table>
+
+      <!--分页条-->
+      <el-pagination
+          style="margin-top: 30px"
+          v-model:current-page="mapperPageParams.page"
+          v-model:page-size="mapperPageParams.limit"
+          :page-sizes="[10, 20, 50, 100]"
+          @size-change="mapperFetchData"
+          @current-change="mapperFetchData"
+          layout="total, sizes, prev, pager, next"
+          :total="mapperTotal"
+      />
+    </div>
   </div>
 </template>
 
@@ -259,6 +383,11 @@ import {
   UpdateSysCode
 } from '@/api/sysDict'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {
+  DeleteMapperConfigurationById,
+  GetMapperConfigByConditionAndPage, GetMapperConfigByType,
+  SaveConfiguration
+} from "@/api/mapperConfiguration";
 //-----------------------------------------------tab标签页切换------------------------------------
 const viewDictType = ref(1);
 const brainA = () => {
@@ -268,6 +397,10 @@ const brainA = () => {
 const brainB = () => {
   viewDictType.value = 2;
   fetchDateCode();
+}
+const mapperConfiguration = () => {
+  viewDictType.value = 3;
+  mapperFetchData();
 }
 
 //-----------------------------------------------查询数据字典列表----------------------------------
@@ -410,7 +543,7 @@ const resetCodeData = () => {
 }
 //---------------------------添加修改-----------------------------------
 const sysCode = ref({}); //页面表单数据
-const dialogVisible2 = ref(false); //控制模态窗口开闭
+let dialogVisible2 = ref(false); //控制模态窗口开闭
 const titleName = ref();
 //添加按钮点击事件
 const addCode = row => {
@@ -488,6 +621,96 @@ const removeCode = id => {
     if (code === 200) {
       ElMessage.success(message)
       fetchDateCode()
+    } else {
+      ElMessage.error(message)
+    }
+  })
+}
+
+//----------------------------------------------------------映射配置区------------------------------------------------------
+//------------------------------------列表---------------------------
+const mapperList = ref([]);
+const mapperPageParams = ref({
+  page: 1,
+  limit: 10
+}); //封装分页参数
+const mapperTotal = ref(0); //封装查询条数
+//封装条件查询参数
+const mapperConfigurationDto = ref({
+  type: ""
+});
+
+//调用后端接口查询映射配置列表
+const mapperFetchData = async () => {
+  const {data} = await GetMapperConfigByConditionAndPage(mapperPageParams.value.page, mapperPageParams.value.limit, mapperConfigurationDto.value);
+  mapperList.value = data.list;
+  mapperTotal.value = data.total;
+}
+
+//搜索按钮点击事件
+const searchMapperConfiguration = () => {
+  mapperFetchData();
+}
+//重置按钮点击事件
+const resetMapperConfigurationData = () => {
+  mapperConfigurationDto.value = {};
+  mapperFetchData();
+}
+
+//------------------------添加修改--------------------------
+const dialogVisible3 = ref(false); //控制映射配置添加修改模态窗口
+const mapperConfigurationVo = ref({}); //添加或修改表单参数
+
+//点击添加按钮触发
+const addMapperConfiguration = () => {
+  mapperConfigurationVo.value = {};
+  dialogVisible3.value = true;
+}
+
+//点击修改按钮触发
+const editMapperConfiguration = (row) => {
+  mapperConfigurationVo.value = {...row};
+  dialogVisible3.value = true;
+}
+
+//点击模态窗口中的提交按钮触发
+const submitMapperConfiguration = async () => {
+  //非空校验
+  if (mapperConfigurationVo.value.type == undefined || mapperConfigurationVo.value.type == ""){
+    ElMessage.warning("【映射业务类型】不能为空")
+    return
+  }
+  const {code, message} = await SaveConfiguration(mapperConfigurationVo.value);
+  if (code === 200) {
+    dialogVisible3.value = false;
+    ElMessage.success(message);
+    mapperFetchData();
+  }else {
+    ElMessage.error(message);
+  }
+}
+
+//点击添加模态窗口中的搜索图标触发
+const handleSearchClick = async () => {
+  const {data} = await GetMapperConfigByType(mapperConfigurationVo.value.type);
+  if (data == null){
+    return
+  }
+  mapperConfigurationVo.value.typeDescription = data.typeDescription;
+  mapperConfigurationVo.value.mapperRuleDescription = data.mapperRuleDescription;
+}
+
+//点击删除角色按钮后触发
+const deleteMapperConfigurationById = id => {
+  ElMessageBox.confirm('此操作将永久删除该记录, 是否继续?', 'Warning', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(async () => {
+    const { code, message } = await DeleteMapperConfigurationById(id)
+    if (code === 200) {
+      ElMessage.success(message)
+      mapperFetchData();
     } else {
       ElMessage.error(message)
     }

@@ -9,7 +9,6 @@ import java.util.Date;
 @Data
 @Schema(description = "原始记忆表")
 public class RowMemory {
-    @Schema(description = "主键")
     private String id;
 
     @Schema(description = "记录时间")
@@ -46,21 +45,26 @@ public class RowMemory {
     @Schema(description = "记忆所属人（记录账号id）")
     private String memoryOwner;
 
+    private String memoryOwnerName;
+
     @Schema(description = "记忆来源(1:手动录入 2:响应式录入 3:智能录入)")
     private Integer memorySource;
 
-    @Schema(description = "工作记忆联想状态（0：未联想 1：已联想 2：无需联想）")
-    private Integer workMemoryAssociativeStatus;
+    @Schema(description = "记忆联想状态（1：未联想 2：已联想工作记忆 3：已联想生活记忆：4：已联想娱乐记忆 5：已联系交际记忆 6:已联系学习记忆 7：无需联想）")
+    private Integer memoryAssociativeStatus;
 
-    @Schema(description = "生活记忆联想状态（0：未联想 1：已联想 2：无需联想）")
-    private Integer lifeMemoryAssociativeStatus;
+    @Schema(description = "记忆册")
+    private String memoryImages;
 
-    @Schema(description = "娱乐记忆联想状态（0：未联想 1：已联想 2：无需联想）")
-    private Integer funMemoryAssociativeStatus;
+    @Schema(description = "记录结束时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date recordEndTime;
 
-    @Schema(description = "交际记忆联想状态（0：未联想 1：已联想 2：无需联想）")
-    private Integer communicateMemoryAssociativeStatus;
+    @Schema(description = "记录人")
+    private String recordBy;
 
-    @Schema(description = "学习记忆联想状态（0：未联想 1：已联想 2：无需联想）")
-    private Integer learnMemoryAssociativeStatus;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date updateTime;
+
+    private String updateBy;
 }
