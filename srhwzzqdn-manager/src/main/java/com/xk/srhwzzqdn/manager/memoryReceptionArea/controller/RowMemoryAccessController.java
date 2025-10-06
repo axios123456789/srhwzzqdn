@@ -9,6 +9,8 @@ import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/superBrain/memoryReception/rowMemoryAccess")
 public class RowMemoryAccessController {
@@ -57,6 +59,21 @@ public class RowMemoryAccessController {
             return Result.build(null, ResultCodeEnum.SUCCESS);
         } catch (Exception e) {
             return Result.build(null, 500, "删除原始记忆失败！");
+        }
+    }
+
+    /**
+     * 根据ids批量删除原始记忆
+     * @param ids
+     * @return
+     */
+    @PostMapping("/deleteAllRowMemoryByIds")
+    public Result deleteAllRowMemoryByIds(@RequestBody List<String> ids){
+        try {
+            rowMemoryAccessService.deleteAllRowMemoryByIds(ids);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "批量删除原始记忆失败！");
         }
     }
 }

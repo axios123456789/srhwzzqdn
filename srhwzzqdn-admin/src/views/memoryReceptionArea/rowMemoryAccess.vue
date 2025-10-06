@@ -132,6 +132,24 @@
     <!--总体操作按钮一览-->
     <div class="tools-div beautified-tools">
       <el-button
+          type="danger"
+          size="small"
+          @click="deleteSelectAll"
+          class="action-btn batch-delete-btn"
+      >
+        <el-icon><Delete /></el-icon>
+        批量删除
+      </el-button>
+      <el-button
+          type="info"
+          size="small"
+          @click="showExportDialog"
+          class="action-btn export-btn"
+      >
+        <el-icon><Download /></el-icon>
+        一键导出
+      </el-button>
+      <el-button
           type="success"
           size="small"
           @click="addRowMemory"
@@ -159,6 +177,55 @@
         智能录入
       </el-button>
     </div>
+
+    <!-- 导出对话框 -->
+    <el-dialog
+        v-model="exportDialogVisible"
+        title="导出数据"
+        width="500px"
+        class="export-dialog"
+        :close-on-click-modal="false"
+    >
+      <div class="export-dialog-content">
+        <el-form label-width="100px">
+          <el-form-item label="导出范围">
+            <el-radio-group v-model="exportScope">
+              <el-radio label="current">导出当前页 ({{ rowList.length }} 条)</el-radio>
+              <el-radio label="all">导出全部数据 ({{ rowTotal }} 条)</el-radio>
+            </el-radio-group>
+          </el-form-item>
+
+          <el-form-item label="文件名称">
+            <el-input
+                v-model="exportFileName"
+                placeholder="请输入导出文件名称"
+                clearable
+            />
+          </el-form-item>
+
+          <el-form-item label="包含列">
+            <el-checkbox-group v-model="selectedColumns">
+              <el-checkbox
+                  v-for="column in availableColumns"
+                  :key="column.key"
+                  :label="column.key"
+              >
+                {{ column.label }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-form>
+      </div>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="exportDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleExport" :loading="exportLoading">
+            {{ exportLoading ? '导出中...' : '开始导出' }}
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
 
     <!--  手动录入和修改模态窗口  -->
     <el-dialog
@@ -504,12 +571,19 @@
 </template>
 
 <script setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref, computed} from "vue";
 import {GetAdministrative, GetKeyAndValueByType} from "@/api/sysDict";
-import {DeleteRowMemoryById, GetRowMemoryByConditionAndPage, SaveRowMemory} from "@/api/memoryReception";
+import {
+  DeleteAllRowMemoryByIds,
+  DeleteRowMemoryById,
+  GetRowMemoryByConditionAndPage,
+  SaveRowMemory
+} from "@/api/memoryReception";
 import {useApp} from "@/pinia/modules/app";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {GetAllMapperConfigByType} from "@/api/mapperConfiguration";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 //-----------------------------------------------原始记忆列表--------------------------------------------------
 //列表展示数据模型
@@ -828,6 +902,332 @@ const deleteRowMemoryById = row => {
   })
 }
 
+//--------------------------------------------------批量删除记忆功能-------------------------------------------------
+// 选中的行数据
+const selectedRows = ref([])
+// 处理选中行变化
+const handleSelectionChange = (selection) => {
+  selectedRows.value = selection
+}
+
+// 批量删除函数
+const deleteSelectAll = async () => {
+  if (!selectedRows.value || selectedRows.value.length === 0) {
+    ElMessage.warning('请先选择要删除的记忆记录')
+    return
+  }
+
+  await ElMessageBox.confirm(
+      `确定要批量删除选中的 ${selectedRows.value.length} 条记忆记录吗？此操作不可恢复！`,
+      '警告',
+      {
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        type: 'warning',
+        confirmButtonClass: 'batch-delete-confirm-btn',
+        cancelButtonClass: 'batch-delete-cancel-btn'
+      }
+  )
+
+  // 获取所有选中记录的ID
+  const selectedIds = selectedRows.value.map(row => row.id)
+  //console.log("id数据"+selectedIds)
+
+  // 这里调用批量删除的API
+  const {code, message} = await DeleteAllRowMemoryByIds(selectedIds)
+  if (code === 200){
+    // 刷新数据
+    rowFetchData()
+
+    // 清空选中状态
+    if (multipleTable.value) {
+      multipleTable.value.clearSelection()
+    }
+    selectedRows.value = []
+
+    ElMessage.success(message)
+  } else {
+    ElMessage.error(message)
+  }
+}
+// 获取表格引用
+const multipleTable = ref(null)
+
+//--------------------------------------------------通用Excel导出功能-------------------------------------------------
+// 导出相关状态
+const exportDialogVisible = ref(false)
+const exportScope = ref('current') // 'current' 或 'all'
+const exportFileName = ref('原始记忆数据')
+const exportLoading = ref(false)
+const selectedColumns = ref([])
+
+// 可导出的列配置（通用配置，可以在其他页面复用）
+const availableColumns = ref([
+  { key: 'rowMemoryType', label: '记忆类型', width: 15 },
+  { key: 'recordTime', label: '记录开始时间', width: 20 },
+  { key: 'recordEndTime', label: '记录结束时间', width: 20 },
+  { key: 'contactType', label: '关系人类型', width: 15 },
+  { key: 'contact', label: '关系人名称', width: 15 },
+  { key: 'memoryPlace', label: '记忆地点', width: 25 },
+  { key: 'rowMemoryContent', label: '记忆内容', width: 40 },
+  { key: 'rowMemoryReason', label: '记忆发生原由', width: 30 },
+  { key: 'rowMemoryAction', label: '记忆行为', width: 30 },
+  { key: 'memoryOwnerName', label: '记忆所属人', width: 15 },
+  { key: 'memorySource', label: '记忆来源', width: 15 },
+  { key: 'memoryAssociativeStatus', label: '记忆联想状态', width: 18 },
+  { key: 'recordBy', label: '记录人', width: 12 },
+  { key: 'updateTime', label: '修改时间', width: 20 },
+  { key: 'updateBy', label: '修改者', width: 12 }
+])
+
+// 计算选中的列配置
+const selectedColumnConfig = computed(() => {
+  return availableColumns.value.filter(col => selectedColumns.value.includes(col.key))
+})
+
+// 初始化选中的列（默认全选）
+onMounted(() => {
+  selectedColumns.value = availableColumns.value.map(col => col.key)
+})
+
+// 显示导出对话框
+const showExportDialog = () => {
+  if (rowList.value.length === 0 && exportScope.value === 'current') {
+    ElMessage.warning('当前页没有数据可导出')
+    return
+  }
+  if (rowTotal.value === 0 && exportScope.value === 'all') {
+    ElMessage.warning('没有数据可导出')
+    return
+  }
+  exportDialogVisible.value = true
+}
+
+// 通用Excel导出函数
+/**
+ * 通用Excel导出函数
+ * @param {Array} data - 要导出的数据
+ * @param {Array} columns - 列配置
+ * @param {Object} options - 选项
+ * @param {Function} dataFormatter - 数据格式化函数
+ */
+const exportExcel = (data, columns, options = {}, dataFormatter = null) => {
+  if (!data || data.length === 0) {
+    throw new Error('没有数据可导出')
+  }
+
+  try {
+    // 创建工作簿
+    const workbook = XLSX.utils.book_new()
+
+    // 创建工作表数据
+    const worksheetData = []
+
+    // 添加表头（第一行）
+    const headerRow = columns.map(col => col.label)
+    worksheetData.push(headerRow)
+
+    // 处理数据行
+    data.forEach(item => {
+      const row = columns.map(col => {
+        let value = item[col.key]
+
+        // 如果有自定义格式化函数，使用它
+        if (dataFormatter && typeof dataFormatter === 'function') {
+          value = dataFormatter(item, col.key, value)
+        }
+
+        // 处理空值
+        if (value === null || value === undefined) {
+          return ''
+        }
+
+        // 处理数组
+        if (Array.isArray(value)) {
+          return value.join('; ')
+        }
+
+        return value
+      })
+      worksheetData.push(row)
+    })
+
+    // 创建工作表
+    const worksheet = XLSX.utils.aoa_to_sheet(worksheetData)
+
+    // 设置列宽
+    worksheet['!cols'] = columns.map(col => ({ wch: col.width }))
+
+    // 设置样式
+    if (worksheet['!ref']) {
+      const range = XLSX.utils.decode_range(worksheet['!ref'])
+
+      // 表头样式
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cellAddress = XLSX.utils.encode_cell({ r: 0, c: C })
+        if (!worksheet[cellAddress].s) {
+          worksheet[cellAddress].s = {}
+        }
+        worksheet[cellAddress].s = {
+          font: { bold: true, color: { rgb: "FFFFFF" } },
+          fill: { fgColor: { rgb: "409EFF" } },
+          alignment: { horizontal: "center", vertical: "center" },
+          border: {
+            top: { style: "thin", color: { rgb: "000000" } },
+            left: { style: "thin", color: { rgb: "000000" } },
+            bottom: { style: "thin", color: { rgb: "000000" } },
+            right: { style: "thin", color: { rgb: "000000" } }
+          }
+        }
+      }
+
+      // 数据行样式
+      for (let R = 1; R <= range.e.r; ++R) {
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+          const cellAddress = XLSX.utils.encode_cell({ r: R, c: C })
+          if (!worksheet[cellAddress].s) {
+            worksheet[cellAddress].s = {}
+          }
+          worksheet[cellAddress].s = {
+            border: {
+              top: { style: "thin", color: { rgb: "DDDDDD" } },
+              left: { style: "thin", color: { rgb: "DDDDDD" } },
+              bottom: { style: "thin", color: { rgb: "DDDDDD" } },
+              right: { style: "thin", color: { rgb: "DDDDDD" } }
+            },
+            alignment: {
+              horizontal: "left",
+              vertical: "center",
+              wrapText: true
+            }
+          }
+
+          // 隔行变色
+          if (R % 2 === 0) {
+            worksheet[cellAddress].s.fill = { fgColor: { rgb: "F8F9FA" } }
+          }
+        }
+      }
+    }
+
+    // 将工作表添加到工作簿
+    const sheetName = options.sheetName || '数据'
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
+
+    return workbook
+  } catch (error) {
+    console.error('创建Excel失败:', error)
+    throw error
+  }
+}
+
+// 数据格式化函数（针对记忆数据的特殊处理）
+const memoryDataFormatter = (item, key, value) => {
+  switch(key) {
+    case 'rowMemoryType':
+      return getDisplayText(value, rowMemoryTypeItem.value)
+    case 'contactType':
+      return getDisplayText(value, contactTypeItem.value)
+    case 'memorySource':
+      return getDisplayText(value, memorySourceItem.value)
+    case 'memoryAssociativeStatus':
+      return getDisplayText(value, associativeStatusItem.value)
+    case 'memoryPlace':
+      return getMemoryPlaceDisplay(item)
+    case 'memoryImages':
+      return '' // 图片字段不导出
+    default:
+      return value
+  }
+}
+
+// 获取全部数据
+const fetchAllData = async () => {
+  // 这里调用API获取所有数据，不分页
+  const { data } = await GetRowMemoryByConditionAndPage(1, 10000, rowQueryDto.value)
+
+  // 处理数据格式
+  data.list.forEach(item => {
+    if (item.memoryImages != null && item.memoryImages != ""){
+      item.memoryImages = item.memoryImages.split(',')
+    } else {
+      item.memoryImages = []
+    }
+    if (item.memoryPlace != null && item.memoryPlace != ""){
+      item.memoryPlace = item.memoryPlace.split(",")
+    } else {
+      item.memoryPlace = []
+    }
+  })
+
+  return data.list
+}
+
+// 处理导出
+const handleExport = async () => {
+  if (selectedColumns.value.length === 0) {
+    ElMessage.warning('请至少选择一列进行导出')
+    return
+  }
+
+  exportLoading.value = true
+
+  try {
+    let exportData = []
+    let dataCount = 0
+
+    // 根据选择的范围获取数据
+    if (exportScope.value === 'current') {
+      exportData = rowList.value
+      dataCount = rowList.value.length
+    } else {
+      // 导出全部数据
+      exportData = await fetchAllData()
+      dataCount = exportData.length
+    }
+
+    if (exportData.length === 0) {
+      ElMessage.warning('没有数据可导出')
+      return
+    }
+
+    // 生成文件名
+    const fileName = exportFileName.value || '导出数据'
+    const timestamp = new Date().getTime()
+    const fullFileName = `${fileName}_${timestamp}.xlsx`
+
+    // 使用通用导出函数
+    const workbook = exportExcel(
+        exportData,
+        selectedColumnConfig.value,
+        { sheetName: '原始记忆数据' },
+        memoryDataFormatter
+    )
+
+    // 生成Excel文件并下载
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+      cellStyles: true
+    })
+
+    const blob = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    })
+
+    saveAs(blob, fullFileName)
+
+    ElMessage.success(`成功导出 ${dataCount} 条数据`)
+    exportDialogVisible.value = false
+
+  } catch (error) {
+    console.error('导出失败:', error)
+    ElMessage.error('导出失败，请重试')
+  } finally {
+    exportLoading.value = false
+  }
+}
+
 </script>
 
 <style scoped>
@@ -858,7 +1258,7 @@ const deleteRowMemoryById = row => {
   z-index: 1;
 }
 
-/* 美化搜索按钮 - 保持原有大小和位置 */
+/* *****************美化搜索按钮 - 保持原有大小和位置 **************************/
 .beautified-search-btn {
   border-radius: 4px;
   padding: 8px 15px;
@@ -885,7 +1285,6 @@ const deleteRowMemoryById = row => {
   transform: translateY(0);
   box-shadow: 0 1px 3px rgba(64, 158, 255, 0.3);
 }
-
 /* 美化重置按钮 - 保持原有大小和位置 */
 .beautified-reset-btn {
   border-radius: 4px;
@@ -915,8 +1314,10 @@ const deleteRowMemoryById = row => {
   transform: translateY(0);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
+/****************************************************************/
 
-/* 按钮图标样式 */
+
+/* *******************录入等按钮图标样式美化 ********************/
 .beautified-search-btn .el-icon,
 .beautified-reset-btn .el-icon {
   font-size: 12px;
@@ -991,9 +1392,103 @@ const deleteRowMemoryById = row => {
   box-shadow: 0 6px 20px rgba(245, 34, 45, 0.4);
 }
 
+/* 导出按钮样式 */
+.export-btn {
+  background: linear-gradient(135deg, #909399 0%, #a6a9ad 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(144, 147, 153, 0.3);
+}
+
+.export-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(144, 147, 153, 0.4);
+  background: linear-gradient(135deg, #7a7d81 0%, #8f9296 100%);
+}
+
+.export-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(144, 147, 153, 0.3);
+}
+
+.export-btn:disabled {
+  background: linear-gradient(135deg, #d9d9d9 0%, #bfbfbf 100%);
+  color: #8c8c8c;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 批量删除按钮样式 */
+.batch-delete-btn {
+  background: linear-gradient(135deg, #f5222d 0%, #ff4d4f 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(245, 34, 45, 0.3);
+}
+
+.batch-delete-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(245, 34, 45, 0.4);
+  background: linear-gradient(135deg, #cf1322 0%, #f5222d 100%);
+}
+
+.batch-delete-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(245, 34, 45, 0.3);
+}
+
+.batch-delete-btn:disabled {
+  background: linear-gradient(135deg, #d9d9d9 0%, #bfbfbf 100%);
+  color: #8c8c8c;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 .action-btn .el-icon {
   font-size: 16px;
   margin-right: 4px;
+}
+
+/* 导出对话框样式 */
+.export-dialog-content {
+  padding: 20px 0;
+}
+
+.export-dialog-content .el-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.export-dialog-content .el-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
 }
 
 /* 响应式设计 */
@@ -1010,8 +1505,10 @@ const deleteRowMemoryById = row => {
     justify-content: center;
   }
 }
+/*******************************************************************/
 
-/* 原有的其他样式保持不变 */
+
+/* *****************原有添加修改的其他样式保持不变 ********************/
 .tools-div {
   margin: 10px 0;
   padding: 10px;
@@ -1041,7 +1538,6 @@ const deleteRowMemoryById = row => {
   border-radius: 3px;
   background-color: transparent;
 }
-
 /*头像部分样式*/
 .avatar-uploader .avatar {
   width: 178px;
@@ -1066,8 +1562,9 @@ const deleteRowMemoryById = row => {
   height: 178px;
   text-align: center;
 }
+/***************************************************************/
 
-/* 添加或修改模态窗口样式优化 */
+/* ***************************添加或修改模态窗口样式优化 ***********************/
 :deep(.enhanced-dialog) {
   border-radius: 12px;
   overflow: hidden;
@@ -1281,8 +1778,10 @@ const deleteRowMemoryById = row => {
 .scrollable-form::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+/*****************************************************************/
 
-/* ******************列表操作按钮容器 ************************/
+
+/* ****************** 列表操作按钮容器美化 ************************/
 .action-buttons {
   display: flex;
   gap: 8px;
@@ -1385,4 +1884,5 @@ const deleteRowMemoryById = row => {
     font-size: 11px;
   }
 }
+/****************************************************************/
 </style>

@@ -27,3 +27,12 @@ export const DeleteRowMemoryById = (id) => {
         method: 'delete'
     })
 }
+
+//根据ids批量删除原始记忆
+export const DeleteAllRowMemoryByIds = (ids) => {
+    return request({
+        url: `${base_api}/deleteAllRowMemoryByIds`,
+        method: 'post',
+        data: ids
+    })
+}

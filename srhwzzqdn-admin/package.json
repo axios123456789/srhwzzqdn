@@ -25,7 +25,9 @@
     "pinia": "^2.0.14",
     "vue": "3.2.33",
     "vue-router": "^4.0.5",
-    "vuex": "^4.0.0"
+    "vuex": "^4.0.0",
+    "xlsx": "^0.18.5",
+    "xlsx-style": "^0.8.13"
   },
   "devDependencies": {
     "@ehutch79/vite-eslint": "0.0.1",

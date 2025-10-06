@@ -68,4 +68,13 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
     public void deleteRowMemoryById(String id) {
         rowMemoryAccessMapper.deleteRowMemoryById(id);
     }
+
+    /**
+     * 根据ids批量删除原始记忆
+     * @param ids
+     */
+    @Override
+    public void deleteAllRowMemoryByIds(List<String> ids) {
+        rowMemoryAccessMapper.deleteAllRowMemoryByIds(ids);
+    }
 }

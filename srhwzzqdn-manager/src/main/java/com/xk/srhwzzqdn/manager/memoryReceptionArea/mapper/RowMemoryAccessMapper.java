@@ -21,4 +21,7 @@ public interface RowMemoryAccessMapper {
     //根据id删除原始记忆
     @Delete("delete from t_row_memory where id = #{param1}")
     void deleteRowMemoryById(String id);
+
+    //根据ids批量删除原始记忆
+    void deleteAllRowMemoryByIds(List<String> ids);
 }
