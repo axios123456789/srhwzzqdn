@@ -2,6 +2,7 @@ package com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper;
 
 import com.xk.srhwzzqdn.model.dto.memoryReceptionArea.RowMemoryDto;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemory;
+import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemoryConfiguration;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -24,4 +25,10 @@ public interface RowMemoryAccessMapper {
 
     //根据ids批量删除原始记忆
     void deleteAllRowMemoryByIds(List<String> ids);
+
+    //获取缺失原始记忆的日期列表
+    List<String> getLossRowMemoryDate();
+
+    //根据时间阶段类型获取原始记忆配置数据
+    List<RowMemoryConfiguration> getMemoryConfigurationByTimeType(Integer timePeriodType);
 }

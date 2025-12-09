@@ -36,3 +36,19 @@ export const DeleteAllRowMemoryByIds = (ids) => {
         data: ids
     })
 }
+
+//获取没录原始记忆的日期
+export const GetLossRowMemoryDate = () => {
+    return request({
+        url: `${base_api}/getLossRowMemoryDate`,
+        method: 'get'
+    })
+}
+
+//根据时间阶段类型获取记忆配置
+export const GetMemoryConfigurationByTimeType = (timePeriodType) => {
+    return request({
+        url: `${base_api}/getMemoryConfigurationByTimeType/${timePeriodType}`,
+        method: 'get'
+    })
+}

@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.service.RowMemoryAccessService;
 import com.xk.srhwzzqdn.model.dto.memoryReceptionArea.RowMemoryDto;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemory;
+import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemoryConfiguration;
 import com.xk.srhwzzqdn.model.vo.common.Result;
 import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +76,26 @@ public class RowMemoryAccessController {
         } catch (Exception e) {
             return Result.build(null, 500, "批量删除原始记忆失败！");
         }
+    }
+
+    /**
+     * 获取缺失原始记忆的日期列表
+     * @return
+     */
+    @GetMapping("/getLossRowMemoryDate")
+    public Result getLossRowMemoryDate(){
+        List<String> list = rowMemoryAccessService.getLossRowMemoryDate();
+        return Result.build(list, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 根据时间阶段类型获取原始记忆配置数据
+     * @param timePeriodType
+     * @return
+     */
+    @GetMapping("/getMemoryConfigurationByTimeType/{timePeriodType}")
+    public Result getMemoryConfigurationByTimeType(@PathVariable("timePeriodType") Integer timePeriodType){
+        List<RowMemoryConfiguration> rowMemoryConfigurations = rowMemoryAccessService.getMemoryConfigurationByTimeType(timePeriodType);
+        return Result.build(rowMemoryConfigurations, ResultCodeEnum.SUCCESS);
     }
 }

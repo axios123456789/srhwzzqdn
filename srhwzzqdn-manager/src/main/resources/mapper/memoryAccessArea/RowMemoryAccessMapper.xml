@@ -158,4 +158,32 @@
         </where>
         order by t.record_time desc
     </select>
+
+    <!--  获取缺失原始记忆的日期列表  -->
+    <select id="getLossRowMemoryDate" resultType="java.lang.String">
+        select DATE_FORMAT(d.every_date, '%Y-%m-%d') memoryLossDate
+        from t_date_configuration d
+        where d.every_date &gt;= DATE_ADD(CURDATE(), interval -14 day)
+          and d.every_date &lt;= CURDATE()
+          and not exists(
+                select 1
+                from (
+                         select DATE (t.record_time) record_time, count(1)
+                from t_row_memory t
+                group by DATE (t.record_time) ) t where t.record_time = d.every_date
+        )
+        order by d.every_date
+    </select>
+
+    <!--  根据时间阶段类型获取原始记忆配置数据  -->
+    <select id="getMemoryConfigurationByTimeType"
+            resultType="com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemoryConfiguration">
+        select *
+          from t_row_memory_configuration t
+        <where>
+            <if test="param1 != null">
+                t.time_period_type = #{param1}
+            </if>
+        </where>
+    </select>
 </mapper>

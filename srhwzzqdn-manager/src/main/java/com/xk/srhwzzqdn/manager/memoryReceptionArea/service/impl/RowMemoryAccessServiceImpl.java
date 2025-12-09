@@ -6,6 +6,7 @@ import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.RowMemoryAccessMapper
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.service.RowMemoryAccessService;
 import com.xk.srhwzzqdn.model.dto.memoryReceptionArea.RowMemoryDto;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemory;
+import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemoryConfiguration;
 import com.xk.srhwzzqdn.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,5 +77,26 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
     @Override
     public void deleteAllRowMemoryByIds(List<String> ids) {
         rowMemoryAccessMapper.deleteAllRowMemoryByIds(ids);
+    }
+
+    /**
+     * 获取缺失原始记忆的日期列表
+     * @return
+     */
+    @Override
+    public List<String> getLossRowMemoryDate() {
+        List<String> list = rowMemoryAccessMapper.getLossRowMemoryDate();
+        return list;
+    }
+
+    /**
+     * 根据时间阶段类型获取原始记忆配置数据
+     * @param timePeriodType
+     * @return
+     */
+    @Override
+    public List<RowMemoryConfiguration> getMemoryConfigurationByTimeType(Integer timePeriodType) {
+        List<RowMemoryConfiguration> rowMemoryConfigurations = rowMemoryAccessMapper.getMemoryConfigurationByTimeType(timePeriodType);
+        return rowMemoryConfigurations;
     }
 }
