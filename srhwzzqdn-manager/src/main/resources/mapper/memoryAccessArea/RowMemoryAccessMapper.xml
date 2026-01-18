@@ -20,7 +20,8 @@
         record_end_time,
         record_by,
         update_time,
-        update_by
+        update_by,
+        memory_no
     </sql>
 
     <!--  添加原始记忆  -->
@@ -42,7 +43,8 @@
             memory_associative_status,
             memory_images,
             record_end_time,
-            record_by
+            record_by,
+            memory_no
         ) values (
             #{id},
             #{recordTime},
@@ -60,7 +62,8 @@
             #{memoryAssociativeStatus},
             #{memoryImages},
             #{recordEndTime},
-            #{recordBy}
+            #{recordBy},
+            #{memoryNo}
         )
     </insert>
 
@@ -101,6 +104,7 @@
         select  t.id,
                 t.record_time,
                 t.contact_type,
+                t.memory_no,
                 t.contact,
                 t.memory_place,
                 t.memory_place_detail,
@@ -124,6 +128,9 @@
         <where>
             <if test="contact != null and contact != ''">
                 and t.contact like concat('%', #{contact}, '%')
+            </if>
+            <if test="memoryNo != null and memoryNo != ''">
+                and t.memory_no like concat('%', #{memoryNo}, '%')
             </if>
             <if test="contactType != null and contactType.size() > 0">
                 and t.contact_type in
@@ -154,6 +161,9 @@
                 <foreach collection="memoryAssociativeStatus" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
+            </if>
+            <if test="memoryOwner != null and memoryOwner != ''">
+                and t.memory_owner = #{memoryOwner}
             </if>
         </where>
         order by t.record_time desc

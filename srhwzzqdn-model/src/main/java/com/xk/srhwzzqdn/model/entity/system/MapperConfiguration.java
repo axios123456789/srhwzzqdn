@@ -31,4 +31,7 @@ public class MapperConfiguration {
 
     @Schema(description = "映射B类型字段3")
     private String mapperFieldB3;
+
+    @Schema(description = "映射配置所属人")
+    private String mapperOwner;
 }

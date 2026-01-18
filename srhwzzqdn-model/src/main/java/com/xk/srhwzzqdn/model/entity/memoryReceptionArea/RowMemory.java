@@ -67,4 +67,7 @@ public class RowMemory {
     private Date updateTime;
 
     private String updateBy;
+
+    @Schema(description = "记忆编号")
+    private String memoryNo;
 }

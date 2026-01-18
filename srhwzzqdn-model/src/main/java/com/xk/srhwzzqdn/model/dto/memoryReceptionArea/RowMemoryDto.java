@@ -15,4 +15,6 @@ public class RowMemoryDto {
     private List<Integer> rowMemoryType;
     private List<Integer> memorySource;
     private List<Integer> memoryAssociativeStatus;
+    private String memoryNo;
+    private String memoryOwner;
 }

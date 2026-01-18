@@ -7,6 +7,7 @@ import com.xk.srhwzzqdn.manager.memoryReceptionArea.service.RowMemoryAccessServi
 import com.xk.srhwzzqdn.model.dto.memoryReceptionArea.RowMemoryDto;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemory;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemoryConfiguration;
+import com.xk.srhwzzqdn.util.GenerateNoUtil;
 import com.xk.srhwzzqdn.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
         //开启分页，下一个数据库查询结果将使用分页插件查询
         PageHelper.startPage(current, limit);
 
+        //设置查询条件（记忆所属人）
+        rowMemoryDto.setMemoryOwner(AuthContextUtil.get().getId());
+
         //条件查询所有原始记忆列表
         List<RowMemory> rowMemoryList = rowMemoryAccessMapper.getRowMemoryByCondition(rowMemoryDto);
 
@@ -50,7 +54,7 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
             rowMemory.setId(UUIDUtil.getUUID());
             rowMemory.setMemoryOwner(AuthContextUtil.get().getId());
             rowMemory.setRecordBy(AuthContextUtil.get().getUserName());
-
+            rowMemory.setMemoryNo(GenerateNoUtil.generateNo("ROW"));
             //添加
             rowMemoryAccessMapper.addRowMemory(rowMemory);
         }else {//修改
