@@ -204,4 +204,20 @@ public class SysDictServiceImpl implements SysDictService {
         //删除
         sysDictMapper.deleteSysCodeById(id);
     }
+
+    /**
+     * 根据type获取t_sys_code键值对（所有级数据）
+     * @param type
+     * @return
+     */
+    @Override
+    public List<SysCode> getAllSysCodeByType(String type) {
+        //根据type获取对应所有数据
+        List<SysCode> sysCodes = sysDictMapper.getAllSysCodeByType(type);
+
+        //处理数据为树形
+        List<SysCode> sysCodes1 = SysCodeHelper.buildTree(sysCodes);
+
+        return sysCodes1;
+    }
 }

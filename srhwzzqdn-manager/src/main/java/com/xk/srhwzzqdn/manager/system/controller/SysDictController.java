@@ -112,6 +112,17 @@ public class SysDictController {
     }
 
     /**
+     * 根据type获取t_sys_code键值对（所有级数据）
+     * @param type
+     * @return
+     */
+    @GetMapping("/getAllSysCodeByType/{type}")
+    public Result getAllSysCodeByType(@PathVariable("type") String type){
+        List<SysCode> sysCodes = sysDictService.getAllSysCodeByType(type);
+        return Result.build(sysCodes, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
      * 条件查询code码表
      * @param sysDictDto
      * @return

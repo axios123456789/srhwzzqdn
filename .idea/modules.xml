@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/srhwzzqdn-common/common-service/common-service.iml" filepath="$PROJECT_DIR$/srhwzzqdn-common/common-service/common-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/srhwzzqdn-common/common-util/common-util.iml" filepath="$PROJECT_DIR$/srhwzzqdn-common/common-util/common-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/srhwzzqdn.iml" filepath="$PROJECT_DIR$/.idea/srhwzzqdn.iml" />
+      <module fileurl="file://$PROJECT_DIR$/srhwzzqdn-common/srhwzzqdn-common.iml" filepath="$PROJECT_DIR$/srhwzzqdn-common/srhwzzqdn-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/srhwzzqdn-manager/srhwzzqdn-manager.iml" filepath="$PROJECT_DIR$/srhwzzqdn-manager/srhwzzqdn-manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/srhwzzqdn-model/srhwzzqdn-model.iml" filepath="$PROJECT_DIR$/srhwzzqdn-model/srhwzzqdn-model.iml" />
+    </modules>
+  </component>
+</project>

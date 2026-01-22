@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.system.mapper.SysRoleAndMenuRelationMapper">
+    <!--  为角色分配菜单  -->
+    <insert id="addAllocateData">
+        insert into t_sys_role_menu_relation(
+        id,
+        role_id,
+        menu_id,
+        is_half,
+        create_time
+        ) values
+        <foreach collection="menuIdList" item="item" separator=",">
+            (#{item.zjId}, #{roleId}, #{item.id}, #{item.isHalf}, now())
+        </foreach>
+    </insert>
+    <!--  把isHalf半开  -->
+    <update id="updateSysRoleMenuIsHalf">
+        update t_sys_role_menu_relation set is_half = 1 where menu_id = #{param1}
+    </update>
+
+    <!--  查询分配过的菜单id  -->
+    <select id="selectMenuIdsByRoleId" resultType="java.lang.String">
+        select menu_id from t_sys_role_menu_relation where role_id = #{param1} and is_half = 0
+    </select>
+</mapper>

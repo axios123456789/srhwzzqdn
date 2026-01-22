@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.system.mapper.SysPersonInfoMapper">
+    <sql id="columns">
+        id
+        ,
+        account_id as accountId,
+        name,
+        gender,
+        birth_date as birthDate,
+        height,
+        weight,
+        id_number as idNumber,
+        ethnicity,
+        marital_status as maritalStatus,
+        political_status as politicalStatus,
+        phone,
+        email,
+        wechat,
+        douyin,
+        hometown_address as hometownAddress,
+        current_address as currentAddress,
+        certificates,
+        campus_experience as campusExperience,
+        job_title as jobTitle,
+        job_type as jobType,
+        company,
+        job_start_date as jobStartDate,
+        work_years as workYears,
+        salary,
+        position,
+        bank_account as bankAccount,
+        deposit,
+        has_driver_license as hasDriverLicense,
+        blood_type as bloodType,
+        allergy_history as allergyHistory,
+        chronic_diseases as chronicDiseases,
+        hobbies,
+        languages,
+        personal_statement as personalStatement,
+        create_time as createTime,
+        create_by as createBy,
+        update_time as updateTime,
+        update_by as updateBy,
+        person_picture as personPicture,
+        is_deleted as isDeleted,
+        hometown_address_text as hometownAddressText,
+        current_address_text as currentAddressText
+    </sql>
+
+    <!--  添加个人信息  -->
+    <insert id="addPersonInfo">
+        insert into t_sys_person_info (id,
+                                       account_id,
+                                       create_time,
+                                       create_by)
+        values (#{id},
+                #{accountId},
+                now(),
+                #{createBy})
+    </insert>
+
+    <!--  添加学校模块信息  -->
+    <insert id="addPersonSchoolInfo">
+        insert into t_sys_person_school_info (
+            id,
+            person_info_id,
+            school_level,
+            school,
+            graduation_time,
+            major
+        )values (
+            #{id},
+            #{personInfoId},
+            #{schoolLevel},
+            #{school},
+            #{graduationTime},
+            #{major}
+        )
+    </insert>
+
+    <!--  修改个人信息  -->
+    <update id="updatePersonInfo">
+        update t_sys_person_info set
+            <choose>
+                <when test="codeBlock == 'basic'">
+                    name = #{name},
+                    birth_date = #{birthDate},
+                    gender = #{gender},
+                    person_picture = #{personPicture},
+                    height = #{height},
+                    weight = #{weight},
+                    id_number = #{idNumber},
+                    ethnicity = #{ethnicity},
+                    marital_status = #{maritalStatus},
+                    political_status = #{politicalStatus}
+                </when>
+                <when test="codeBlock == 'contact'">
+                    phone = #{phone},
+                    email = #{email},
+                    wechat = #{wechat},
+                    douyin = #{douyin},
+                    hometown_address = #{hometownAddress},
+                    current_address = #{currentAddress},
+                    hometown_address_text = #{hometownAddressText},
+                    current_address_text = #{currentAddressText}
+                </when>
+                <when test="codeBlock == 'education'">
+                    certificates = #{certificates},
+                    campus_experience = #{campusExperience}
+                </when>
+                <when test="codeBlock == 'career'">
+                    job_title = #{jobTitle},
+                    job_type = #{jobType},
+                    company = #{company},
+                    `position` = #{position},
+                    job_start_date = #{jobStartDate},
+                    work_years = #{workYears},
+                    salary = #{salary}
+                </when>
+                <when test="codeBlock == 'other'">
+                    bank_account = #{bankAccount},
+                    deposit = #{deposit},
+                    has_driver_license = #{hasDriverLicense},
+                    blood_type = #{bloodType},
+                    allergy_history = #{allergyHistory},
+                    chronic_diseases = #{chronicDiseases},
+                    hobbies = #{hobbies},
+                    languages = #{languages},
+                    personal_statement = #{personalStatement}
+                </when>
+            </choose>
+        where id = #{id}
+    </update>
+
+    <!--  修改学校模块信息  -->
+    <update id="updatePersonSchoolInfo">
+        update t_sys_person_school_info set
+            school_level = #{schoolLevel},
+            school = #{school},
+            graduation_time = #{graduationTime},
+            major = #{major}
+        where id = #{id}
+    </update>
+
+    <!--  根据account_id获取个人信息  -->
+    <select id="getPersonInfo" resultType="com.xk.srhwzzqdn.model.entity.system.SysPersonInfo">
+        select
+        <include refid="columns"/>
+        from t_sys_person_info t
+        where t.is_deleted = 0
+        and t.account_id = #{param1}
+    </select>
+
+    <!-- 根据person_info_id获取个人学历信息   -->
+    <select id="getPersonSchoolInfos" resultType="com.xk.srhwzzqdn.model.entity.system.SysPersonSchoolInfo">
+        select t.id,
+               t.person_info_id,
+               t.school_level,
+               t.school,
+               t.graduation_time,
+               t.major
+        from t_sys_person_school_info t
+        where t.person_info_id = #{param1}
+        order by school_level
+    </select>
+</mapper>

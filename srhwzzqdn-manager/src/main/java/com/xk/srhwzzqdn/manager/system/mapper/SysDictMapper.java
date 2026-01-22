@@ -61,4 +61,7 @@ public interface SysDictMapper {
     //根据id删除数据字典（sysCode）
     @Delete("delete from t_sys_code where id = #{param1}")
     void deleteSysCodeById(String id);
+
+    //根据type获取所有的sysCode数据
+    List<SysCode> getAllSysCodeByType(String type);
 }

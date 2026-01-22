@@ -42,4 +42,7 @@ public interface SysDictService {
 
     //根据id删除码值
     void deleteSysCodeById(String id);
+
+    //根据type获取t_sys_code键值对（所有级数据）
+    List<SysCode> getAllSysCodeByType(String type);
 }

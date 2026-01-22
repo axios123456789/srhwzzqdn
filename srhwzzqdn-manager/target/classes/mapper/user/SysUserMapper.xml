@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.system.mapper.SysUserMapper">
+    <sql id="columns">
+        id,
+        account,
+        password,
+        user_name as userName,
+        status,
+        level,
+        avatar,
+        create_time as createTime,
+        create_by as createBy,
+        update_time as updateTime,
+        update_by as updateBy,
+        is_deleted as isDeleted,
+        description
+    </sql>
+
+    <!--  添加用户  -->
+    <insert id="addUser">
+        insert into t_sys_user(
+            id,
+            account,
+            password,
+            user_name,
+            status,
+            level,
+            avatar,
+            create_time,
+            description,
+            create_by
+        )values (
+                    #{id},
+                    #{account},
+                    #{password},
+                    #{userName},
+                    #{status},
+                    #{level},
+                    #{avatar},
+                    now(),
+                    #{description},
+                    #{createBy}
+                )
+    </insert>
+
+    <!--  修改用户  -->
+    <update id="updateUser">
+        update t_sys_user set
+        <if test="account != null and account != ''">
+            account = #{account},
+        </if>
+        <if test="password != null and password != ''">
+            password = #{password},
+        </if>
+        <if test="userName != null and userName != ''">
+            user_name = #{userName},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+        <if test="level != null">
+            level = #{level},
+        </if>
+        <if test="avatar != null and avatar != ''">
+            avatar = #{avatar},
+        </if>
+        <if test="description != null and description != ''">
+            description = #{description},
+        </if>
+        update_time = now(),
+        update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  根据账号查询用户信息  -->
+    <select id="getSysUserByAccount" resultType="com.xk.srhwzzqdn.model.entity.system.SysUser">
+        select <include refid="columns"/>
+          from t_sys_user t
+        where t.account = #{loginAccount}
+          and t.is_deleted = 0
+    </select>
+
+    <!--  条件分页查询系统用户  -->
+    <select id="findByPage" resultType="com.xk.srhwzzqdn.model.entity.system.SysUser">
+        select id,
+        account,
+        password,
+        user_name userName,
+        status,
+        `level`,
+        (select c.value from t_sys_dict c where c.type = 't_sys_user_level' and c.code = t.level and c.is_deleted = 0 limit 1) as levelName,
+        avatar,
+        create_time createTime,
+        update_time updateTime,
+        create_by createBy,
+        update_by updateBy,
+        is_deleted isDeleted,
+        description
+        from t_sys_user t
+        <where>
+            <if test="account != null and account != ''">
+                and t.account like concat('%', #{account},'%')
+            </if>
+            <if test="name != null and name != ''">
+                and t.user_name like concat('%', #{name}, '%')
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.create_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.create_time &lt;= #{endTime}
+            </if>
+            <if test="level != null and level.size() > 0">
+                and t.level in
+                <foreach collection="level" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="status != null and status != null">
+                and t.status = #{status}
+            </if>
+            and t.is_deleted = 0
+            and t.level > #{currentUserLevel}
+        </where>
+        order by t.create_time desc
+    </select>
+</mapper>

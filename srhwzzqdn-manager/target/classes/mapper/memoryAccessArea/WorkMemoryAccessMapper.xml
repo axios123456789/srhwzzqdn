@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.WorkMemoryAccessMapper">
+    <sql id="columns">
+        id,
+        memory_no,
+        work_business_type,
+        work_tech_type,
+        memory_source,
+        begin_time,
+        end_time,
+        work_duration,
+        work_content,
+        work_business_node,
+        work_tech_node,
+        work_document,
+        memory_owner,
+        work_address,
+        work_address_detail,
+        create_time,
+        update_time,
+        update_by,
+        memory_images
+    </sql>
+    <!--    条件查询所有工作记忆列表   -->
+    <select id="getWorkMemoryByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.memoryReceptionArea.WorkMemory">
+        select  t.id,
+                t.memory_no,
+                t.work_business_type,
+                t.work_tech_type,
+                t.memory_source,
+                t.begin_time,
+                t.end_time,
+                t.work_duration,
+                t.work_content,
+                t.work_business_node,
+                t.work_tech_node,
+                t.work_document,
+                t.memory_owner,
+                t.work_address,
+                t.work_address_detail,
+                t.create_time,
+                t.update_time,
+                t.update_by,
+                t.memory_images,
+                i.name as memoryOwnerName
+        from t_work_memory t
+        left join t_sys_person_info i
+        on i.account_id = t.memory_owner
+        <where>
+            <if test="memoryNo != null and memoryNo != ''">
+                and t.memory_no like concat('%', #{memoryNo}, '%')
+            </if>
+            <if test="workBusinessType != null and workBusinessType != ''">
+                and t.work_business_type = #{workBusinessType}
+            </if>
+            <if test="workTechType != null and workTechType != ''">
+                and t.work_tech_type = #{workTechType}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.begin_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.begin_time &lt;= #{endTime}
+            </if>
+            <if test="memorySource != null and memorySource.size() > 0">
+                and t.memory_source in
+                <foreach collection="memorySource" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="memoryOwner != null and memoryOwner != ''">
+                and t.memory_owner = #{memoryOwner}
+            </if>
+        </where>
+        order by t.begin_time desc
+    </select>
+</mapper>
