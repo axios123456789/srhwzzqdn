@@ -74,3 +74,12 @@ export const GetWorkMemoryByConditionAndPage = (
     data: workMemoryDto,
   })
 }
+
+//保存工作记忆
+export const SaveWorkMemory = workMemory => {
+  return request({
+    url: `${base_api2}/saveWorkMemory`,
+    method: 'post',
+    data: workMemory,
+  })
+}
