@@ -22,6 +22,68 @@
         update_by,
         memory_images
     </sql>
+    <!--  添加工作记忆  -->
+    <insert id="addWorkMemory">
+        insert into t_work_memory (
+            id,
+            memory_no,
+            work_business_type,
+            work_tech_type,
+            memory_source,
+            begin_time,
+            end_time,
+            work_duration,
+            work_content,
+            work_business_node,
+            work_tech_node,
+            work_document,
+            memory_owner,
+            work_address,
+            work_address_detail,
+            create_time,
+            memory_images
+        ) values (
+             #{id},
+             #{memoryNo},
+             #{workBusinessType},
+             #{workTechType},
+             #{memorySource},
+             #{beginTime},
+             #{endTime},
+             #{workDuration},
+             #{workContent},
+             #{workBusinessNode},
+             #{workTechNode},
+             #{workDocument},
+             #{memoryOwner},
+             #{workAddress},
+             #{workAddressDetail},
+             now(),
+             #{memoryImages}
+        )
+    </insert>
+    <!--  修改工作记忆  -->
+    <update id="updateWorkMemory">
+        update t_work_memory t
+        <set>
+            work_business_type = #{workBusinessType},
+            work_tech_type = #{workTechType},
+            memory_source = #{memorySource},
+            begin_time = #{beginTime},
+            end_time = #{endTime},
+            work_duration = #{workDuration},
+            work_content = #{workContent},
+            work_business_node = #{workBusinessNode},
+            work_tech_node = #{workTechNode},
+            work_document = #{workDocument},
+            work_address = #{workAddress},
+            work_address_detail = #{workAddressDetail},
+            update_time = now(),
+            update_by = #{updateBy},
+            memory_images = #{memoryImages}
+        </set>
+        where t.id = #{id}
+    </update>
     <!--    条件查询所有工作记忆列表   -->
     <select id="getWorkMemoryByCondition"
             resultType="com.xk.srhwzzqdn.model.entity.memoryReceptionArea.WorkMemory">

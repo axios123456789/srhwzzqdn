@@ -7,10 +7,7 @@ import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.WorkMemory;
 import com.xk.srhwzzqdn.model.vo.common.Result;
 import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/superBrain/memoryReception/workMemoryAccess")
@@ -31,5 +28,20 @@ public class WorkMemoryAccessController {
                                                   @RequestBody WorkMemoryDto workMemoryDto){
         PageInfo<WorkMemory> pageInfo = workMemoryAccessService.getWorkMemoryByConditionAndPage(current, limit, workMemoryDto);
         return Result.build(pageInfo, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 保存工作记忆
+     * @param workMemory
+     * @return
+     */
+    @PostMapping("/saveWorkMemory")
+    public Result saveWorkMemory(@RequestBody WorkMemory workMemory){
+        try {
+            workMemoryAccessService.saveWorkMemory(workMemory);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "保存工作记忆失败！");
+        }
     }
 }

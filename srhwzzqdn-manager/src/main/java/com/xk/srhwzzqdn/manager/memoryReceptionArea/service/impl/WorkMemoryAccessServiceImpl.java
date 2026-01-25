@@ -7,6 +7,8 @@ import com.xk.srhwzzqdn.manager.memoryReceptionArea.service.WorkMemoryAccessServ
 import com.xk.srhwzzqdn.model.dto.memoryReceptionArea.WorkMemoryDto;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.WorkMemory;
 import com.xk.srhwzzqdn.util.AuthContextUtil;
+import com.xk.srhwzzqdn.util.GenerateNoUtil;
+import com.xk.srhwzzqdn.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +41,29 @@ public class WorkMemoryAccessServiceImpl implements WorkMemoryAccessService {
         PageInfo<WorkMemory> workMemoryPageInfo = new PageInfo<>(workMemoryList);
 
         return workMemoryPageInfo;
+    }
+
+    /**
+     * 保存工作记忆
+     * @param workMemory
+     */
+    @Override
+    public void saveWorkMemory(WorkMemory workMemory) {
+        //计算时长(小时)
+        workMemory.setWorkDuration((workMemory.getEndTime().getTime() - workMemory.getBeginTime().getTime())/(1000.0*60*60));
+
+        if (workMemory.getId() == null || "".equals(workMemory.getId())){//添加
+            workMemory.setId(UUIDUtil.getUUID());
+            workMemory.setMemoryNo(GenerateNoUtil.generateNo("WORK"));
+            workMemory.setMemoryOwner(AuthContextUtil.get().getId());
+
+            //添加
+            workMemoryAccessMapper.addWorkMemory(workMemory);
+        }else {//修改
+            workMemory.setUpdateBy(AuthContextUtil.get().getUserName());
+
+            //修改
+            workMemoryAccessMapper.updateWorkMemory(workMemory);
+        }
     }
 }

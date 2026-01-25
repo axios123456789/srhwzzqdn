@@ -7,4 +7,7 @@ import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.WorkMemory;
 public interface WorkMemoryAccessService {
     //条件分页查询工作记忆列表
     PageInfo<WorkMemory> getWorkMemoryByConditionAndPage(Integer current, Integer limit, WorkMemoryDto workMemoryDto);
+
+    //保存工作记忆
+    void saveWorkMemory(WorkMemory workMemory);
 }

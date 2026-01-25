@@ -237,6 +237,7 @@ import {
   GetKeyAndValueByType,
 } from '@/api/sysDict'
 import { GetWorkMemoryByConditionAndPage } from '@/api/memoryReception'
+import { getTodayTimeRange } from '@/utils/common'
 
 //----------------钩子函数-------------------
 onMounted(() => {
@@ -244,6 +245,7 @@ onMounted(() => {
   getWorkMemorySourceItem() //工作记忆来源
   getWorkBusinessTypeItem() //工作记忆业务类型
   getWorkTechTypeItem() //工作记忆技术类型
+  getFormattedAddressOptions() //行政区划
 
   //2.查询条件设置默认时间为今天
   const [startOfDay, endOfDay] = getTodayTimeRange()
@@ -275,54 +277,14 @@ const getWorkTechTypeItem = async () => {
   const { data } = await GetAllSysCode('t_work_memory_tech_type')
   workTechTypeItem.value = data
 }
-//获取中国统计用行政区划
+//获取中国统计用行政区划下拉列表
 const formattedAddressOptions = ref([])
-//获取中国行政区划码值对
 const getFormattedAddressOptions = async () => {
   const { data } = await GetAdministrative()
   formattedAddressOptions.value = data
 }
 
 //-----------------------------------公用函数--------------------------------------
-//获取当天时间范围
-const getTodayTimeRange = () => {
-  const now = new Date()
-  const beginTime = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    0,
-    0,
-    0
-  )
-  const endTime = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    23,
-    59,
-    59
-  )
-  const beginTimeStr = beginTime.toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  })
-  const endTimeStr = endTime.toLocaleString('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-  })
-  return [beginTimeStr, endTimeStr]
-}
 // 通用方法：根据值和映射表获取中文文本
 const getDisplayText = (value, mappingArray) => {
   if (!value) return '-'
@@ -380,6 +342,11 @@ const workFetchData = async () => {
       item.memoryImages = item.memoryImages.split(',')
     } else {
       item.memoryImages = []
+    }
+    if (item.workAddress != null && item.workAddress != '') {
+      item.workAddress = item.workAddress.split(',')
+    } else {
+      item.workAddress = ''
     }
   })
 
