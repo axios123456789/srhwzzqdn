@@ -378,25 +378,6 @@
       </template>
     </el-dialog>
 
-    <!-- 文档预览对话框 -->
-    <el-dialog
-      v-model="documentPreviewVisible"
-      title="文档预览"
-      width="60%"
-      class="document-preview-dialog"
-    >
-      <div v-if="previewDocument.name">
-        <h3>{{ previewDocument.name }}</h3>
-        <p>文件大小: {{ previewDocument.sizeText }}</p>
-        <div class="preview-actions">
-          <el-button type="primary" @click="openPreviewInNewTab">
-            在新标签页中预览
-          </el-button>
-          <el-button @click="downloadCurrentDocument">下载文档</el-button>
-        </div>
-      </div>
-    </el-dialog>
-
     <!-- 列表展示  -->
     <el-table
       :data="workList"
@@ -492,6 +473,14 @@
       <el-table-column prop="workTechNode" label="工作技术笔记" width="180" />
       <el-table-column prop="memoryOwnerName" label="记忆所属人" width="120" />
       <!--  工作文档    -->
+      <el-table-column
+        prop="workDocument"
+        label="工作文档"
+        width="200"
+        #default="scope"
+      >
+        {{ getDocumentNames(scope.row.workDocument) }}
+      </el-table-column>
       <el-table-column prop="updateTime" label="修改时间" width="180" />
       <el-table-column prop="updateBy" label="修改者" width="120" />
     </el-table>
@@ -594,6 +583,25 @@ const getDisplayTextByTree = (value, treeData) => {
     }
   }
   return value
+}
+// 获取文档名称列表，多个文档用逗号分隔
+const getDocumentNames = documentPaths => {
+  if (!documentPaths || documentPaths.length === 0) return '-'
+
+  // 如果是字符串，分割成数组
+  const paths = Array.isArray(documentPaths)
+    ? documentPaths
+    : documentPaths.split(',')
+
+  // 从每个路径中提取文件名并清洗
+  return paths
+    .map(path => {
+      // 从路径中提取文件名部分
+      const fileName = path.substring(path.lastIndexOf('/') + 1)
+      // 使用现有的cleanFileName函数清洗文件名
+      return cleanFileName(fileName)
+    })
+    .join(', ')
 }
 
 //-----------------------------------列表展示---------------------------------------
@@ -839,40 +847,19 @@ const handlePictureCardPreview = file => {
 const documentFileList = ref([]) //文件回显
 const workDocumentList = ref([]) //数据
 
-// 文档预览相关变量
-const documentPreviewVisible = ref(false) // 控制预览对话框显示
-const previewDocument = ref({}) // 当前预览的文档信息
-
-// 文档预览处理函数
+// 文档预览处理函数 - 简化为直接下载
 const handleDocumentPreview = file => {
-  // 获取文件大小（优先使用file对象中的size属性，否则尝试从响应数据中获取）
-  let fileSize = file.size || (file.response ? file.response.size : 0)
-
-  // 如果仍然无法获取文件大小，尝试从文件名中提取或设为0
-  if (!fileSize && file.name) {
-    // 如果是来自服务器的文件，可能需要从URL或响应中获取大小
-    // 这里我们暂时设置一个默认值，实际应用中可能需要通过API获取
-    fileSize = 0
-  }
-
-  // 创建预览文档对象
-  previewDocument.value = {
-    name: cleanFileName(file.name), // 清洗后的文件名
-    size: fileSize,
-    sizeText: formatFileSize(fileSize),
-    url: file.url || file.response?.data, // 文件URL
-    rawFile: file.raw, // 原始文件对象
-  }
-
-  // 检查文件是否适合在线预览
-  if (isSuitableForPreview(fileSize)) {
-    // 直接打开预览
-    window.open(previewDocument.value.url, '_blank')
-  } else {
-    // 提示用户文件过大，建议下载
-    ElMessage.warning(
-      `文件 ${previewDocument.value.name} 大小为 ${previewDocument.value.sizeText}，超过25MB，建议下载后查看`
-    )
+  // 直接下载文件
+  if (file.url) {
+    const link = document.createElement('a')
+    link.href = file.url
+    // 总是从URL中提取文件名并清洗，确保下载时使用的是干净的文件名
+    // 这样可以确保与回显时使用相同的清洗逻辑
+    const fileNameFromUrl = file.url.substring(file.url.lastIndexOf('/') + 1)
+    link.download = cleanFileName(fileNameFromUrl)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 }
 
@@ -909,7 +896,7 @@ const handleUploadError = (error, file, fileList) => {
 // 上传前的处理（可选：添加额外信息）
 const addFileInfo = file => {
   // 记录文件大小以便后续使用
-  console.log('开始上传文件:', file.name, '大小:', formatFileSize(file.size))
+  //console.log('开始上传文件:', file.name, '大小:', formatFileSize(file.size))
   return true // 必须返回true才会继续上传
 }
 // 文档移除处理
@@ -970,6 +957,18 @@ const cleanFileName = fileName => {
     }
   }
 
+  // 方法4: 移除32位UUID（带连字符格式）如 xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  const uuidWithHyphenPattern = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/
+  if (uuidWithHyphenPattern.test(fileName)) {
+    return fileName.substring(36)
+  }
+
+  // 方法5: 移除开头的任意32位十六进制字符（不区分大小写）
+  const hex32AnyPattern = /^[a-fA-F0-9]{32}[._-]?/
+  if (hex32AnyPattern.test(fileName)) {
+    return fileName.replace(hex32AnyPattern, '')
+  }
+
   return fileName
 }
 
@@ -980,31 +979,6 @@ const formatFileSize = bytes => {
   const sizes = ['B', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
-
-// 判断文件是否适合在线预览（25MB以内）
-const isSuitableForPreview = fileSize => {
-  const maxPreviewSize = 25 * 1024 * 1024 // 25MB
-  return fileSize <= maxPreviewSize
-}
-
-// 在新标签页中打开预览
-const openPreviewInNewTab = () => {
-  if (previewDocument.value.url) {
-    window.open(previewDocument.value.url, '_blank')
-  }
-}
-
-// 下载当前文档
-const downloadCurrentDocument = () => {
-  if (previewDocument.value.url) {
-    const link = document.createElement('a')
-    link.href = previewDocument.value.url
-    link.download = previewDocument.value.name
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
 }
 
 //---------------------------------------删除记忆------------------------------------
