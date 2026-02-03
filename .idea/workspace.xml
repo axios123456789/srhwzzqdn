@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="工作记忆">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="工作记忆录入功能完成">
       <change afterPath="$PROJECT_DIR$/私人化外置增强大脑-开发文档.docx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/私人化外置增强大脑-设计说明文档.docx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/私人化外置增强大脑知识点集.docx" afterDir="false" />
@@ -16,7 +16,6 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/memoryReception.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/memoryReception.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/workMemoryAccess.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/workMemoryAccess.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,17 +92,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ManagerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="srhwzzqdn-manager" />
       <extension name="coverage">
@@ -169,6 +157,13 @@
       <workItem from="1769131937295" duration="36000" />
       <workItem from="1769256408330" duration="693000" />
       <workItem from="1769309833247" duration="6408000" />
+      <workItem from="1769390240766" duration="10159000" />
+      <workItem from="1769426160458" duration="696000" />
+      <workItem from="1769481355073" duration="607000" />
+      <workItem from="1769517908070" duration="640000" />
+      <workItem from="1769564855763" duration="119000" />
+      <workItem from="1769757000812" duration="1230000" />
+      <workItem from="1770099937649" duration="1000000" />
     </task>
     <task id="LOCAL-00001" summary="Changes">
       <created>1768721797078</created>
@@ -198,7 +193,14 @@
       <option name="project" value="LOCAL" />
       <updated>1769086277313</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="工作记忆录入功能完成">
+      <created>1769345596036</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1769345596036</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,7 +225,8 @@
     <MESSAGE value="前端提交" />
     <MESSAGE value="工作记忆提交" />
     <MESSAGE value="头像上传优化-针对头像大小限制改为10mb主要改了后端配置" />
-    <option name="LAST_COMMIT_MESSAGE" value="头像上传优化-针对头像大小限制改为10mb主要改了后端配置" />
+    <MESSAGE value="工作记忆录入功能完成" />
+    <option name="LAST_COMMIT_MESSAGE" value="工作记忆录入功能完成" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

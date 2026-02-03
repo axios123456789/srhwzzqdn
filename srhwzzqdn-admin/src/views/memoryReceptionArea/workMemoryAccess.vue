@@ -351,6 +351,7 @@
                     :on-error="handleUploadError"
                     :on-remove="handleDocumentRemove"
                     :before-upload="addFileInfo"
+                    :on-preview="handleDocumentPreview"
                   >
                     <el-button type="primary" class="upload-button">
                       <el-icon><Upload /></el-icon>
@@ -375,6 +376,25 @@
           <el-button type="primary" @click="submitWorkMemory">提交</el-button>
         </span>
       </template>
+    </el-dialog>
+
+    <!-- 文档预览对话框 -->
+    <el-dialog
+      v-model="documentPreviewVisible"
+      title="文档预览"
+      width="60%"
+      class="document-preview-dialog"
+    >
+      <div v-if="previewDocument.name">
+        <h3>{{ previewDocument.name }}</h3>
+        <p>文件大小: {{ previewDocument.sizeText }}</p>
+        <div class="preview-actions">
+          <el-button type="primary" @click="openPreviewInNewTab">
+            在新标签页中预览
+          </el-button>
+          <el-button @click="downloadCurrentDocument">下载文档</el-button>
+        </div>
+      </div>
     </el-dialog>
 
     <!-- 列表展示  -->
@@ -689,9 +709,17 @@ const editWorkMemory = row => {
   })
   //文档文件列表数据设置
   documentFileList.value = []
-  workDocumentList.value = workMemory.value.workDocument
+  workDocumentList.value = Array.isArray(workMemory.value.workDocument)
+    ? [...workMemory.value.workDocument]
+    : []
   workDocumentList.value.forEach(url => {
-    documentFileList.value.push({ url: url })
+    // 从URL中提取文件名并清洗
+    const fileName = url.substring(url.lastIndexOf('/') + 1)
+    const cleanedFileName = cleanFileName(fileName)
+    documentFileList.value.push({
+      name: cleanedFileName,
+      url: url,
+    })
   })
 
   // 重置全屏状态
@@ -785,7 +813,7 @@ const addFullscreenButton = () => {
   }
 }
 
-//-----------------文件上传处理--------------------
+//--------------------文件上传处理------------------------
 const headers = {
   token: useApp().authorization.token, // 从pinia中获取token，在进行文件上传的时候将token设置到请求头中
 }
@@ -810,17 +838,60 @@ const handlePictureCardPreview = file => {
 // 文件列表（如果需要保存到表单数据中）
 const documentFileList = ref([]) //文件回显
 const workDocumentList = ref([]) //数据
+
+// 文档预览相关变量
+const documentPreviewVisible = ref(false) // 控制预览对话框显示
+const previewDocument = ref({}) // 当前预览的文档信息
+
+// 文档预览处理函数
+const handleDocumentPreview = file => {
+  // 获取文件大小（优先使用file对象中的size属性，否则尝试从响应数据中获取）
+  let fileSize = file.size || (file.response ? file.response.size : 0)
+
+  // 如果仍然无法获取文件大小，尝试从文件名中提取或设为0
+  if (!fileSize && file.name) {
+    // 如果是来自服务器的文件，可能需要从URL或响应中获取大小
+    // 这里我们暂时设置一个默认值，实际应用中可能需要通过API获取
+    fileSize = 0
+  }
+
+  // 创建预览文档对象
+  previewDocument.value = {
+    name: cleanFileName(file.name), // 清洗后的文件名
+    size: fileSize,
+    sizeText: formatFileSize(fileSize),
+    url: file.url || file.response?.data, // 文件URL
+    rawFile: file.raw, // 原始文件对象
+  }
+
+  // 检查文件是否适合在线预览
+  if (isSuitableForPreview(fileSize)) {
+    // 直接打开预览
+    window.open(previewDocument.value.url, '_blank')
+  } else {
+    // 提示用户文件过大，建议下载
+    ElMessage.warning(
+      `文件 ${previewDocument.value.name} 大小为 ${previewDocument.value.sizeText}，超过25MB，建议下载后查看`
+    )
+  }
+}
+
 // 上传成功处理
 const handleDocumentSuccess = (response, file, fileList) => {
   // 如果后端返回成功（假设code为200表示成功）
   if (response.code === 200) {
-    // 保存文件信息到列表
-    workDocumentList.value.push(response.data)
+    // 保存文件路径到列表
+    const fileUrl = response.data // response.data 应该是文件的URL路径
+    workDocumentList.value.push(fileUrl)
+
+    // 更新documentFileList以显示文件名（去除UUID部分）
+    const cleanedName = cleanFileName(file.name)
+    file.name = cleanedName
 
     // 如果需要，可以在这里触发事件给父组件
     // emit('upload-success', response.data)
 
-    ElMessage.success('文档上传成功')
+    ElMessage.success(`文档上传成功，文件名：${cleanedName}`)
   } else {
     // 后端返回了错误
     ElMessage.error(response.message || '上传失败')
@@ -837,21 +908,102 @@ const handleUploadError = (error, file, fileList) => {
 }
 // 上传前的处理（可选：添加额外信息）
 const addFileInfo = file => {
-  // 这里可以添加一些文件信息到FormData中
-  // 但不需要做前端的大小验证，完全交给后端
-  //console.log('开始上传文件:', file.name, '大小:', file.size)
+  // 记录文件大小以便后续使用
+  console.log('开始上传文件:', file.name, '大小:', formatFileSize(file.size))
   return true // 必须返回true才会继续上传
 }
 // 文档移除处理
 const handleDocumentRemove = (file, fileList) => {
-  // 从documentFileList中移除
+  // 从workDocumentList中移除对应的URL
+  const urlToRemove = file.url
   const index = workDocumentList.value.findIndex(
-    doc => doc.name === file.name || doc.url === file.url
+    docUrl => docUrl === urlToRemove
   )
 
   if (index !== -1) {
     workDocumentList.value.splice(index, 1)
     ElMessage.success('文档已移除')
+  } else {
+    // 尝试另一种比较方式，防止URL格式差异
+    const altIndex = workDocumentList.value.findIndex(
+      docUrl =>
+        docUrl.includes(urlToRemove.split('/').pop()) ||
+        urlToRemove.includes(docUrl.split('/').pop())
+    )
+    if (altIndex !== -1) {
+      workDocumentList.value.splice(altIndex, 1)
+      ElMessage.success('文档已移除')
+    }
+  }
+
+  // 同时也要从documentFileList中移除（用于界面更新）
+  const fileIndex = documentFileList.value.findIndex(f => f.url === urlToRemove)
+
+  if (fileIndex !== -1) {
+    documentFileList.value.splice(fileIndex, 1)
+  }
+}
+
+//-------------辅助函数（针对文档上传）----------------
+// 文件名清洗函数 - 支持大小写的32位十六进制UUID
+const cleanFileName = fileName => {
+  if (!fileName) return '未知文件'
+
+  // 方法1: 移除32位十六进制UUID前缀（支持大小写）
+  const hex32Pattern = /^[a-fA-F0-9]{32}/
+  if (hex32Pattern.test(fileName)) {
+    return fileName.substring(32)
+  }
+
+  // 方法2: 移除下划线分隔的UUID
+  const underscoreIndex = fileName.indexOf('_')
+  if (underscoreIndex > 0) {
+    return fileName.substring(underscoreIndex + 1)
+  }
+
+  // 方法3: 移除8位数字时间戳前缀
+  const timestampPattern = /^\d{8}(_)?/
+  if (timestampPattern.test(fileName)) {
+    const match = fileName.match(timestampPattern)
+    if (match) {
+      return fileName.substring(match[0].length)
+    }
+  }
+
+  return fileName
+}
+
+// 文件大小格式化函数
+const formatFileSize = bytes => {
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+
+// 判断文件是否适合在线预览（25MB以内）
+const isSuitableForPreview = fileSize => {
+  const maxPreviewSize = 25 * 1024 * 1024 // 25MB
+  return fileSize <= maxPreviewSize
+}
+
+// 在新标签页中打开预览
+const openPreviewInNewTab = () => {
+  if (previewDocument.value.url) {
+    window.open(previewDocument.value.url, '_blank')
+  }
+}
+
+// 下载当前文档
+const downloadCurrentDocument = () => {
+  if (previewDocument.value.url) {
+    const link = document.createElement('a')
+    link.href = previewDocument.value.url
+    link.download = previewDocument.value.name
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
   }
 }
 
