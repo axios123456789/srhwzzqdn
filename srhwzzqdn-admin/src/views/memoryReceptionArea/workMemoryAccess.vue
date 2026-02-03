@@ -509,10 +509,12 @@ import {
 import {
   GetWorkMemoryByConditionAndPage,
   SaveWorkMemory,
+  DeleteWorkMemoryById,
+  DeleteAllWorkMemoryByIds,
 } from '@/api/memoryReception'
 import { getTodayTimeRange } from '@/utils/common'
 import { useApp } from '@/pinia/modules/app'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 //----------------钩子函数-------------------
 onMounted(() => {
@@ -982,6 +984,72 @@ const formatFileSize = bytes => {
 }
 
 //---------------------------------------删除记忆------------------------------------
+//点击删除工作记忆按钮后触发
+const deleteWorkMemoryById = row => {
+  ElMessageBox.confirm('确定要从外置大脑清除这条工作记忆吗?', 'Warning', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(async () => {
+    const { code, message } = await DeleteWorkMemoryById(row.id)
+    if (code === 200) {
+      ElMessage.success(message)
+      workFetchData()
+    } else {
+      ElMessage.error(message)
+    }
+  })
+}
+
+//--------------------------------------------------批量删除记忆功能-------------------------------------------------
+// 选中的行数据
+const selectedRows = ref([])
+// 获取表格引用
+const multipleTable = ref(null)
+
+// 处理选中行变化
+const handleSelectionChange = selection => {
+  selectedRows.value = selection
+}
+// 批量删除函数
+const deleteSelectAll = async () => {
+  if (!selectedRows.value || selectedRows.value.length === 0) {
+    ElMessage.warning('请先选择要删除的工作记忆记录')
+    return
+  }
+
+  await ElMessageBox.confirm(
+    `确定要批量删除选中的 ${selectedRows.value.length} 条工作记忆记录吗？此操作不可恢复！`,
+    '警告',
+    {
+      confirmButtonText: '确定删除',
+      cancelButtonText: '取消',
+      type: 'warning',
+      confirmButtonClass: 'batch-delete-confirm-btn',
+      cancelButtonClass: 'batch-delete-cancel-btn',
+    }
+  )
+
+  // 获取所有选中记录的ID
+  const selectedIds = selectedRows.value.map(row => row.id)
+
+  // 调用批量删除的API
+  const { code, message } = await DeleteAllWorkMemoryByIds(selectedIds)
+  if (code === 200) {
+    // 刷新数据
+    workFetchData()
+
+    // 清空选中状态
+    if (multipleTable.value) {
+      multipleTable.value.clearSelection()
+    }
+    selectedRows.value = []
+
+    ElMessage.success(message)
+  } else {
+    ElMessage.error(message)
+  }
+}
 </script>
 
 <style scoped>

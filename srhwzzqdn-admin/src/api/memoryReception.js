@@ -83,3 +83,20 @@ export const SaveWorkMemory = workMemory => {
     data: workMemory,
   })
 }
+
+//根据id删除工作记忆
+export const DeleteWorkMemoryById = id => {
+  return request({
+    url: `${base_api2}/deleteWorkMemoryById/${id}`,
+    method: 'delete',
+  })
+}
+
+//根据ids批量删除工作记忆
+export const DeleteAllWorkMemoryByIds = ids => {
+  return request({
+    url: `${base_api2}/deleteAllWorkMemoryByIds`,
+    method: 'post',
+    data: ids,
+  })
+}

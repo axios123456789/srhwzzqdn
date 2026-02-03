@@ -9,6 +9,8 @@ import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/superBrain/memoryReception/workMemoryAccess")
 public class WorkMemoryAccessController {
@@ -42,6 +44,36 @@ public class WorkMemoryAccessController {
             return Result.build(null, ResultCodeEnum.SUCCESS);
         } catch (Exception e) {
             return Result.build(null, 500, "保存工作记忆失败！");
+        }
+    }
+
+    /**
+     * 根据id删除工作记忆
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/deleteWorkMemoryById/{id}")
+    public Result deleteWorkMemoryById(@PathVariable("id") String id){
+         try {
+             workMemoryAccessService.deleteWorkMemoryById(id);
+             return Result.build(null, ResultCodeEnum.SUCCESS);
+         } catch (Exception e) {
+             return Result.build(null, 500, "删除工作记忆失败！");
+         }
+    }
+
+    /**
+     * 根据ids批量删除工作记忆
+     * @param ids
+     * @return
+     */
+    @PostMapping("/deleteAllWorkMemoryByIds")
+    public Result deleteAllWorkMemoryByIds(@RequestBody List<String> ids){
+        try {
+            workMemoryAccessService.deleteAllWorkMemoryByIds(ids);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "批量删除工作记忆失败！");
         }
     }
 }

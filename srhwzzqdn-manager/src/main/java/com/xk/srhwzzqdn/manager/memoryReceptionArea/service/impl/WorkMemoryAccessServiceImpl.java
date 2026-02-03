@@ -66,4 +66,22 @@ public class WorkMemoryAccessServiceImpl implements WorkMemoryAccessService {
             workMemoryAccessMapper.updateWorkMemory(workMemory);
         }
     }
+
+    /**
+     * 根据id删除工作记忆
+     * @param id
+     */
+    @Override
+    public void deleteWorkMemoryById(String id) {
+        workMemoryAccessMapper.deleteWorkMemoryById(id);
+    }
+
+    /**
+     * 根据ids批量删除工作记忆
+     * @param ids
+     */
+    @Override
+    public void deleteAllWorkMemoryByIds(List<String> ids) {
+        workMemoryAccessMapper.deleteAllWorkMemoryByIds(ids);
+    }
 }
