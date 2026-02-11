@@ -38,6 +38,13 @@ module.exports = {
     node: true,
     es6: true,
   },
+
+  globals: {
+    defineProps: 'readonly',
+    defineEmits: 'readonly',
+    defineExpose: 'readonly',
+  },
+
   extends: ['plugin:vue/vue3-essential', 'eslint:recommended', '@vue/prettier'],
   parserOptions: {
     parser: 'babel-eslint',
