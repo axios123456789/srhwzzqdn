@@ -568,7 +568,7 @@ const getDisplayText = (value, mappingArray) => {
   const foundItem = mappingArray.find(item => item.value === value)
   return foundItem ? foundItem.text : value
 }
-//通用方法：根据值和映射表获取中文文本（树形）
+//通用方法：根据值和映射表获取中文文本值（树形）
 const getDisplayTextByTree = (value, treeData) => {
   if (!value) return '-'
 
