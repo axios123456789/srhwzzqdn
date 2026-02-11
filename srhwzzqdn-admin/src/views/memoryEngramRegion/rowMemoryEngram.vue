@@ -2,10 +2,6 @@
   原始记忆铭纂
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

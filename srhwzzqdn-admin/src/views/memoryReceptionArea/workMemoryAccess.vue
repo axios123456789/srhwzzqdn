@@ -572,19 +572,21 @@ const getDisplayText = (value, mappingArray) => {
 const getDisplayTextByTree = (value, treeData) => {
   if (!value) return '-'
 
-  for (const item of treeData) {
-    // 1️⃣ 先判断当前节点
-    if (item.value === value) {
-      return item.text
+  const traverse = nodes => {
+    for (const node of nodes) {
+      if (node.value === value) {
+        return node.text
+      }
+      if (node.children?.length) {
+        const result = traverse(node.children)
+        if (result) return result
+      }
     }
-
-    // 2️⃣ 再递归子节点
-    if (item.children?.length) {
-      const result = getDisplayText(value, item.children)
-      if (result) return result
-    }
+    return null
   }
-  return value
+
+  const result = traverse(treeData)
+  return result || value
 }
 // 获取文档名称列表，多个文档用逗号分隔
 const getDocumentNames = documentPaths => {

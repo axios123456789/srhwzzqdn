@@ -5,9 +5,9 @@
       <el-form label-width="70px" size="small">
         <el-form-item label="角色名称">
           <el-input
-              v-model="queryDto.roleName"
-              style="width: 100%"
-              placeholder="角色名称"
+            v-model="queryDto.roleName"
+            style="width: 100%"
+            placeholder="角色名称"
           ></el-input>
         </el-form-item>
         <el-row style="display:flex">
@@ -36,10 +36,10 @@
           </el-form-item>
           <el-form-item label="角色描述">
             <el-input
-                type="textarea"
-                :rows="3"
-                placeholder="请输入内容"
-                v-model="sysRole.description"
+              type="textarea"
+              :rows="3"
+              placeholder="请输入内容"
+              v-model="sysRole.description"
             ></el-input>
           </el-form-item>
           <el-form-item>
@@ -52,25 +52,25 @@
       <!--- 角色表格数据 -->
       <el-table :data="list" style="width: 100%">
         <el-table-column
-            label="操作"
-            align="center"
-            width="280"
-            #default="scope"
+          label="操作"
+          align="center"
+          width="280"
+          #default="scope"
         >
           <el-button type="primary" size="small" @click="editRole(scope.row)">
             修改
           </el-button>
           <el-button
-              type="danger"
-              size="small"
-              @click="deleteRoleById(scope.row)"
+            type="danger"
+            size="small"
+            @click="deleteRoleById(scope.row)"
           >
             删除
           </el-button>
           <el-button
-              type="warning"
-              size="small"
-              @click="showAssignMenu(scope.row)"
+            type="warning"
+            size="small"
+            @click="showAssignMenu(scope.row)"
           >
             分配菜单
           </el-button>
@@ -90,13 +90,13 @@
       <el-dialog v-model="dialogMenuVisible" title="分配菜单" width="40%">
         <el-form label-width="80px">
           <el-tree
-              :data="sysMenuTreeList"
-              ref="tree"
-              show-checkbox
-              default-expand-all
-              :check-on-click-node="true"
-              node-key="id"
-              :props="defaultProps"
+            :data="sysMenuTreeList"
+            ref="tree"
+            show-checkbox
+            default-expand-all
+            :check-on-click-node="true"
+            node-key="id"
+            :props="defaultProps"
           />
           <el-form-item>
             <el-button type="primary" @click="doAssign">提交</el-button>
@@ -107,14 +107,14 @@
 
       <!--分页条-->
       <el-pagination
-          style="margin-top: 30px"
-          v-model:current-page="pageParams.page"
-          v-model:page-size="pageParams.limit"
-          :page-sizes="[10, 20, 50, 100]"
-          @size-change="fetchData"
-          @current-change="fetchData"
-          layout="total, sizes, prev, pager, next"
-          :total="total"
+        style="margin-top: 30px"
+        v-model:current-page="pageParams.page"
+        v-model:page-size="pageParams.limit"
+        :page-sizes="[10, 20, 50, 100]"
+        @size-change="fetchData"
+        @current-change="fetchData"
+        layout="total, sizes, prev, pager, next"
+        :total="total"
       />
     </div>
   </div>
@@ -217,9 +217,9 @@ onMounted(() => {
 //列表方法：axios请求调用接口得到数据
 const fetchData = async () => {
   const { data, code, message } = await GetSysRoleListByPage(
-      pageParams.value.page,
-      pageParams.value.limit,
-      queryDto.value
+    pageParams.value.page,
+    pageParams.value.limit,
+    queryDto.value
   )
   list.value = data.list
   total.value = data.total
@@ -255,11 +255,11 @@ const editRole = row => {
 
 //点击添加或修改模态窗口中的提交按钮后触发
 const submit = async () => {
-  if (sysRole.value.roleName == undefined || sysRole.value.roleName == "") {
+  if (sysRole.value.roleName == undefined || sysRole.value.roleName == '') {
     ElMessage.warning('【角色名称】不能为空')
     return
   }
-  if (sysRole.value.roleCode == undefined || sysRole.value.roleCode == "") {
+  if (sysRole.value.roleCode == undefined || sysRole.value.roleCode == '') {
     ElMessage.warning('【角色编码】不能为空')
     return
   }

@@ -53,19 +53,19 @@ export const IsRegisterMainBrain = () => {
 }
 
 //大脑账号注册
-export const RegisterBrainAccount = (form) => {
+export const RegisterBrainAccount = form => {
   return request({
     url: '/superBrain/system/index/registerBrainAccount',
     method: 'post',
-    data: form
+    data: form,
   })
 }
 
 //修改密码
-export const EditPassword = (editPassword) => {
+export const EditPassword = editPassword => {
   return request({
     url: '/superBrain/system/index/editPassword',
     method: 'post',
-    data: editPassword
+    data: editPassword,
   })
 }

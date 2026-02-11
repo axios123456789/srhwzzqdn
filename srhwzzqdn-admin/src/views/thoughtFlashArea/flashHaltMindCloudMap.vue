@@ -2,10 +2,6 @@
   闪停思维云图
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

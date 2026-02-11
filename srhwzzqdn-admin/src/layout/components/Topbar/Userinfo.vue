@@ -62,7 +62,9 @@
           {{ $t('topbar.center') }}
         </el-dropdown-item>
         <!--        <el-dropdown-item>{{ $t('topbar.center') }}</el-dropdown-item>-->
-        <el-dropdown-item @click="updatePassword">{{ $t('topbar.password') }}</el-dropdown-item>
+        <el-dropdown-item @click="updatePassword">
+          {{ $t('topbar.password') }}
+        </el-dropdown-item>
         <lock-modal />
         <el-dropdown-item @click="logout">
           {{ $t('topbar.logout') }}
@@ -75,13 +77,25 @@
   <el-dialog v-model="dialogVisible" title="修改大脑连接密码" width="30%">
     <el-form label-width="100px">
       <el-form-item label="原密码">
-        <el-input v-model="editPassword.oldPassword" placeholder="请输入原密码" show-password />
+        <el-input
+          v-model="editPassword.oldPassword"
+          placeholder="请输入原密码"
+          show-password
+        />
       </el-form-item>
       <el-form-item label="新密码">
-        <el-input v-model="editPassword.newPassword" placeholder="请输入新密码" show-password />
+        <el-input
+          v-model="editPassword.newPassword"
+          placeholder="请输入新密码"
+          show-password
+        />
       </el-form-item>
       <el-form-item label="确认新密码">
-        <el-input v-model="editPassword.newPassword2" placeholder="请再次输入确认新密码" show-password />
+        <el-input
+          v-model="editPassword.newPassword2"
+          placeholder="请再次输入确认新密码"
+          show-password
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitUpdate">提交</el-button>
@@ -96,9 +110,9 @@ import { useUserinfo } from '@/components/Avatar/hooks/useUserinfo'
 import LockModal from './LockModal.vue'
 import { useApp } from '@/pinia/modules/app'
 
-import {defineComponent, getCurrentInstance, ref} from 'vue'
-import {EditPassword, Logout} from '@/api/login'
-import {ElMessage} from "element-plus";
+import { defineComponent, getCurrentInstance, ref } from 'vue'
+import { EditPassword, Logout } from '@/api/login'
+import { ElMessage } from 'element-plus'
 
 export default defineComponent({
   components: {
@@ -111,47 +125,56 @@ export default defineComponent({
 
     const { proxy: ctx } = getCurrentInstance() // 可以把ctx当成vue2中的this
 
-    const editPassword = ref({}); //存放修改密码参数
-    const dialogVisible = ref(false); //控制修改密码模态窗口开闭
+    const editPassword = ref({}) //存放修改密码参数
+    const dialogVisible = ref(false) //控制修改密码模态窗口开闭
 
     //修改密码点击事件
     const updatePassword = () => {
-        //清空密码框
-        editPassword.value = {};
-        //打开模态窗口
-        dialogVisible.value = true;
+      //清空密码框
+      editPassword.value = {}
+      //打开模态窗口
+      dialogVisible.value = true
     }
 
     //点击修改密码提交按钮后触发
     const submitUpdate = async () => {
-      if (editPassword.value.oldPassword == undefined || editPassword.value.oldPassword == ""){
-        ElMessage.warning("【旧密码】不能为空");
-        return;
+      if (
+        editPassword.value.oldPassword == undefined ||
+        editPassword.value.oldPassword == ''
+      ) {
+        ElMessage.warning('【旧密码】不能为空')
+        return
       }
-      if (editPassword.value.newPassword == undefined || editPassword.value.newPassword == ""){
-        ElMessage.warning("【新密码】不能为空");
-        return;
+      if (
+        editPassword.value.newPassword == undefined ||
+        editPassword.value.newPassword == ''
+      ) {
+        ElMessage.warning('【新密码】不能为空')
+        return
       }
-      if (editPassword.value.newPassword.length < 6){
-        ElMessage.warning("密码长度不能小于6个字符串");
-        return;
+      if (editPassword.value.newPassword.length < 6) {
+        ElMessage.warning('密码长度不能小于6个字符串')
+        return
       }
-      if (editPassword.value.newPassword.length > 20){
-        ElMessage.warning("密码长度不能大于20个字符串 ");
-        return;
+      if (editPassword.value.newPassword.length > 20) {
+        ElMessage.warning('密码长度不能大于20个字符串 ')
+        return
       }
-      if (editPassword.value.newPassword2 == undefined || editPassword.value.newPassword2 == ""){
-        ElMessage.warning("【确认新密码框】不能为空");
-        return;
+      if (
+        editPassword.value.newPassword2 == undefined ||
+        editPassword.value.newPassword2 == ''
+      ) {
+        ElMessage.warning('【确认新密码框】不能为空')
+        return
       }
 
-      const {code, message} = await EditPassword(editPassword.value);
-      if (code === 200){
-        dialogVisible.value = false;
-        ElMessage.success(message + "，密码已被修改！");
+      const { code, message } = await EditPassword(editPassword.value)
+      if (code === 200) {
+        dialogVisible.value = false
+        ElMessage.success(message + '，密码已被修改！')
         router.push('/login')
-      }else {
-        ElMessage.error(message);
+      } else {
+        ElMessage.error(message)
       }
     }
 
@@ -171,7 +194,7 @@ export default defineComponent({
     const center = () => {
       // 跳转到锁屏页面
       router.push(
-          '/personCenter?redirect=' + router.currentRoute.value.fullPath
+        '/personCenter?redirect=' + router.currentRoute.value.fullPath
       )
     }
 

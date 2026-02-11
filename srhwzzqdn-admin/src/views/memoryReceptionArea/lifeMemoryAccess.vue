@@ -2,10 +2,6 @@
   生活记忆接入
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>

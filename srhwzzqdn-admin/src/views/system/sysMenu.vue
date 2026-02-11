@@ -28,11 +28,12 @@
       </el-form>
     </el-dialog>
     <el-table
-        :data="list"
-        style="width: 100%; margin-bottom: 20px"
-        row-key="id"
-        border >
-<!--        default-expand-all-->
+      :data="list"
+      style="width: 100%; margin-bottom: 20px"
+      row-key="id"
+      border
+    >
+      <!--        default-expand-all-->
 
       <el-table-column label="操作" align="center" width="300" #default="scope">
         <el-button type="success" size="small" @click="addShow(scope.row)">

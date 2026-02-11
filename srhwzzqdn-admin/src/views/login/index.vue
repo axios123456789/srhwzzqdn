@@ -2,7 +2,11 @@
   <div class="login-container">
     <!-- 动态背景图容器 -->
     <div class="bg-container">
-      <img class="bg-gif" src="@/assets/system/brainBjtLogin.gif" alt="background">
+      <img
+        class="bg-gif"
+        src="@/assets/system/brainBjtLogin.gif"
+        alt="background"
+      />
     </div>
 
     <!-- 登录表单 -->
@@ -11,48 +15,50 @@
         <h1 class="title">私人化外置增强大脑</h1>
         <el-form-item prop="userName">
           <el-input
-              class="text"
-              v-model="model.userName"
-              prefix-icon="User"
-              clearable
-              :placeholder="$t('login.username')"
+            class="text"
+            v-model="model.userName"
+            prefix-icon="User"
+            clearable
+            :placeholder="$t('login.username')"
           />
         </el-form-item>
         <el-form-item prop="password">
           <el-input
-              class="text"
-              v-model="model.password"
-              prefix-icon="Lock"
-              show-password
-              clearable
-              :placeholder="$t('login.password')"
+            class="text"
+            v-model="model.password"
+            prefix-icon="Lock"
+            show-password
+            clearable
+            :placeholder="$t('login.password')"
           />
         </el-form-item>
         <el-form-item prop="captcha">
           <div class="captcha">
             <el-input
-                class="text"
-                v-model="model.captcha"
-                prefix-icon="Picture"
-                placeholder="请输入大脑连接验证码"
+              class="text"
+              v-model="model.captcha"
+              prefix-icon="Picture"
+              placeholder="请输入大脑连接验证码"
             ></el-input>
             <img :src="captchaSrc" @click="refreshCaptcha" />
           </div>
         </el-form-item>
         <el-form-item>
           <el-button
-              :loading="loading"
-              type="primary"
-              class="btn"
-              size="large"
-              @click="submit"
+            :loading="loading"
+            type="primary"
+            class="btn"
+            size="large"
+            @click="submit"
           >
             {{ btnText }}
           </el-button>
         </el-form-item>
         <el-form-item>
           <div style="width: 100%">
-            <a style="float: right" @click="registerBrainAccount">还未创建属于自己的外置大脑账号，注册一个？</a>
+            <a style="float: right" @click="registerBrainAccount">
+              还未创建属于自己的外置大脑账号，注册一个？
+            </a>
           </div>
         </el-form-item>
       </el-form>
@@ -64,39 +70,39 @@
         <h1 class="title">私人化外置增强大脑账号注册</h1>
         <el-form-item label="外置大脑账号">
           <el-input
-              v-model="form.account"
-              placeholder="输入账号"
-              clearable
+            v-model="form.account"
+            placeholder="输入账号"
+            clearable
           ></el-input>
         </el-form-item>
         <el-form-item label="连接密码">
           <el-input
-              placeholder="请输入密码"
-              v-model="form.password"
-              show-password
+            placeholder="请输入密码"
+            v-model="form.password"
+            show-password
           ></el-input>
         </el-form-item>
         <el-form-item label="确认密码">
           <el-input
-              placeholder="请确认连接密码"
-              v-model="form.password2"
-              show-password
+            placeholder="请确认连接密码"
+            v-model="form.password2"
+            show-password
           ></el-input>
         </el-form-item>
         <el-form-item label="大脑主人名称">
           <el-input
-              v-model="form.userName"
-              placeholder="输入名字"
-              clearable
+            v-model="form.userName"
+            placeholder="输入名字"
+            clearable
           ></el-input>
         </el-form-item>
         <el-form-item label="头像">
           <el-upload
-              class="avatar-uploader"
-              action="http://localhost:8400/superBrain/system/fileUpload"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :headers="headers"
+            class="avatar-uploader"
+            action="http://localhost:8400/superBrain/system/fileUpload"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :headers="headers"
           >
             <img v-if="form.avatar" :src="form.avatar" class="avatar" />
             <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
@@ -104,15 +110,17 @@
         </el-form-item>
         <el-form-item label="描述">
           <el-input
-              type="textarea"
-              :rows="3"
-              placeholder="请输入内容"
-              v-model="form.description"
+            type="textarea"
+            :rows="3"
+            placeholder="请输入内容"
+            v-model="form.description"
           ></el-input>
         </el-form-item>
         <el-form-item>
           <div class="form-buttons">
-            <el-button type="primary" @click="brainRegister">大脑注册</el-button>
+            <el-button type="primary" @click="brainRegister">
+              大脑注册
+            </el-button>
             <el-button class="cancel-btn" @click="cancel">取消</el-button>
           </div>
         </el-form-item>
@@ -126,8 +134,12 @@
           <el-input v-model="form.verificationPassword" show-password />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="verification" style="float:left;">认证</el-button>
-          <el-button @click="brainRegister2" style="float: right">直接注册</el-button>
+          <el-button type="primary" @click="verification" style="float:left;">
+            认证
+          </el-button>
+          <el-button @click="brainRegister2" style="float: right">
+            直接注册
+          </el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -147,15 +159,21 @@ import {
   ref,
   computed,
   onMounted,
-  watch, onUnmounted,
+  watch,
+  onUnmounted,
 } from 'vue'
-import {Login, GetValidateCode, IsRegisterMainBrain, RegisterBrainAccount} from '@/api/login'
+import {
+  Login,
+  GetValidateCode,
+  IsRegisterMainBrain,
+  RegisterBrainAccount,
+} from '@/api/login'
 import { useRouter, useRoute } from 'vue-router'
 import ChangeLang from '@/layout/components/Topbar/ChangeLang.vue'
 import useLang from '@/i18n/useLang'
 import { useApp } from '@/pinia/modules/app'
-import {ElMessage, ElMessageBox} from "element-plus";
-import {DeleteUserById} from "@/api/sysUser";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { DeleteUserById } from '@/api/sysUser'
 
 export default defineComponent({
   components: { ChangeLang },
@@ -202,35 +220,35 @@ export default defineComponent({
     const isLoginVisible = ref(true)
     const isRegisterVisible = ref(false)
     const form = ref({}) //注册表单
-    const rzdialogVisible = ref(false); //控制认证模态窗口的开闭
+    const rzdialogVisible = ref(false) //控制认证模态窗口的开闭
 
     //onMounted钩子函数
     onMounted(() => {
-      isLoginVisible.value = true;
-      isRegisterVisible.value = false;
-      state.refreshCaptcha();
+      isLoginVisible.value = true
+      isRegisterVisible.value = false
+      state.refreshCaptcha()
 
       // 添加键盘事件监听
-      window.addEventListener('keyup', handleKeyUp);
+      window.addEventListener('keyup', handleKeyUp)
     })
 
     //组件被卸载时执行
     onUnmounted(() => {
       // 组件卸载时移除事件监听，防止资源堆积
-      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('keyup', handleKeyUp)
     })
 
     //当敲击Enter时直接登录
-    const handleKeyUp = (e) => {
+    const handleKeyUp = e => {
       if (e.key === 'Enter' && isLoginVisible.value) {
-        state.submit();
+        state.submit()
       }
     }
 
     //注册连接点击事件
     const registerBrainAccount = () => {
-      isLoginVisible.value = false;
-      isRegisterVisible.value = true;
+      isLoginVisible.value = false
+      isRegisterVisible.value = true
     }
 
     //-------------------------------------------------文件上传--------------------------------------------
@@ -241,91 +259,97 @@ export default defineComponent({
 
     //点击注册页面的取消按钮触发
     const cancel = () => {
-      form.value = {};
-      isRegisterVisible.value = false;
-      isLoginVisible.value = true;
+      form.value = {}
+      isRegisterVisible.value = false
+      isLoginVisible.value = true
     }
 
     //点击注册页面的大脑连接按钮触发
     const brainRegister = async () => {
       //必填字段校验
-      if (form.value.account == undefined || form.value.account == ""){
-        ElMessage.warning("【大脑账号】不能为空");
-        return;
+      if (form.value.account == undefined || form.value.account == '') {
+        ElMessage.warning('【大脑账号】不能为空')
+        return
       }
-      if (form.value.password == undefined || form.value.password == ""){
-        ElMessage.warning("【连接密码】不能为空");
-        return;
+      if (form.value.password == undefined || form.value.password == '') {
+        ElMessage.warning('【连接密码】不能为空')
+        return
       }
-      if (form.value.password.length < 6){
-        ElMessage.warning("大脑连接密码不能小于6个字符串");
-        return;
+      if (form.value.password.length < 6) {
+        ElMessage.warning('大脑连接密码不能小于6个字符串')
+        return
       }
-      if (form.value.password.length > 20){
-        ElMessage.warning("大脑连接密码不能大于20个字符串");
-        return;
+      if (form.value.password.length > 20) {
+        ElMessage.warning('大脑连接密码不能大于20个字符串')
+        return
       }
-      if (form.value.userName == undefined || form.value.userName == ""){
-        ElMessage.warning("【大脑主人名称】不能为空");
-        return;
+      if (form.value.userName == undefined || form.value.userName == '') {
+        ElMessage.warning('【大脑主人名称】不能为空')
+        return
       }
 
       //判断是否注册了主脑
       const { data } = await IsRegisterMainBrain()
-      if (data){//注册了主脑
+      if (data) {
+        //注册了主脑
         //设置账号等级
-        form.value.level = 3;
+        form.value.level = 3
         //直接调用注册接口完成注册
-        const {code, message} = await RegisterBrainAccount(form.value);
-        if (code === 200){
-          ElMessage.success(message);
+        const { code, message } = await RegisterBrainAccount(form.value)
+        if (code === 200) {
+          ElMessage.success(message)
           //回到登录界面
-          isLoginVisible.value = true;
-          isRegisterVisible.value = false;
-        }else {
-          ElMessage.error(message);
+          isLoginVisible.value = true
+          isRegisterVisible.value = false
+        } else {
+          ElMessage.error(message)
         }
-      }else {//没有注册主脑
+      } else {
+        //没有注册主脑
         //先认证，再注册主脑
-        rzdialogVisible.value = true;
+        rzdialogVisible.value = true
       }
     }
 
     //主脑账号注册认证模态窗口直接注册点击事件
     const brainRegister2 = () => {
-      ElMessageBox.confirm('不认证的情况下将注册普通大脑, 是否继续?', 'Warning', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }).then(async () => {
-        form.value.level = 3;
+      ElMessageBox.confirm(
+        '不认证的情况下将注册普通大脑, 是否继续?',
+        'Warning',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+      ).then(async () => {
+        form.value.level = 3
         //调用注册接口
-        const {code, message} = await RegisterBrainAccount(form.value);
-        if (code === 200){
-          rzdialogVisible.value = false;
-          ElMessage.success(message);
+        const { code, message } = await RegisterBrainAccount(form.value)
+        if (code === 200) {
+          rzdialogVisible.value = false
+          ElMessage.success(message)
           //回到登录界面
-          isLoginVisible.value = true;
-          isRegisterVisible.value = false;
-        }else {
-          ElMessage.error(message);
+          isLoginVisible.value = true
+          isRegisterVisible.value = false
+        } else {
+          ElMessage.error(message)
         }
       })
     }
     //主脑账号注册认证模态窗口认证点击事件
     const verification = async () => {
-      form.value.level = 1;
+      form.value.level = 1
 
       //调用注册接口
-      const {code, message} = await RegisterBrainAccount(form.value);
-      if (code === 200){
-        rzdialogVisible.value = false;
-        ElMessage.success(message);
+      const { code, message } = await RegisterBrainAccount(form.value)
+      if (code === 200) {
+        rzdialogVisible.value = false
+        ElMessage.success(message)
         //回到登录界面
-        isLoginVisible.value = true;
-        isRegisterVisible.value = false;
-      }else {
-        ElMessage.error(message);
+        isLoginVisible.value = true
+        isRegisterVisible.value = false
+      } else {
+        ElMessage.error(message)
       }
     }
 
@@ -345,7 +369,7 @@ export default defineComponent({
         state.captchaSrc = data.codeValue
       },
       btnText: computed(() =>
-          state.loading ? ctx.$t('login.logging') : ctx.$t('login.login')
+        state.loading ? ctx.$t('login.logging') : ctx.$t('login.login')
       ),
       loginForm: ref(null),
       submit: () => {

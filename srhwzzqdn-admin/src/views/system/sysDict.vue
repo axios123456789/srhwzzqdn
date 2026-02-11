@@ -6,8 +6,8 @@
         <span>大脑字典A区</span>
       </div>
       <div
-          style="border-bottom: 3px solid green; color: green"
-          v-if="viewDictType == 1"
+        style="border-bottom: 3px solid green; color: green"
+        v-if="viewDictType == 1"
       >
         <span>大脑字典A区</span>
       </div>
@@ -15,8 +15,8 @@
         <span>大脑字典B区</span>
       </div>
       <div
-          style="border-bottom: 3px solid green; color: green"
-          v-if="viewDictType == 2"
+        style="border-bottom: 3px solid green; color: green"
+        v-if="viewDictType == 2"
       >
         <span>大脑字典B区</span>
       </div>
@@ -24,8 +24,8 @@
         <span>映射配置区</span>
       </div>
       <div
-          style="border-bottom: 3px solid green; color: green"
-          v-if="viewDictType == 3"
+        style="border-bottom: 3px solid green; color: green"
+        v-if="viewDictType == 3"
       >
         <span>映射配置区</span>
       </div>
@@ -39,24 +39,29 @@
             <el-col :span="8">
               <el-form-item label="字典值">
                 <el-input
-                    v-model="queryDto.value"
-                    style="width: 100%"
-                    clearable
+                  v-model="queryDto.value"
+                  style="width: 100%"
+                  clearable
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="字典类型">
                 <el-input
-                    v-model="queryDto.type"
-                    style="width: 100%"
-                    clearable
+                  v-model="queryDto.type"
+                  style="width: 100%"
+                  clearable
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态">
-                <el-select placeholder="请选择" v-model="queryDto.status" style="width: 100%" clearable>
+                <el-select
+                  placeholder="请选择"
+                  v-model="queryDto.status"
+                  style="width: 100%"
+                  clearable
+                >
                   <el-option :key="1" label="正常" :value="1">正常</el-option>
                   <el-option :key="0" label="停用" :value="0">停用</el-option>
                 </el-select>
@@ -74,7 +79,9 @@
 
       <!--添加按钮-->
       <div class="tools-div">
-        <el-button type="success" size="small" @click="addDict">添 加</el-button>
+        <el-button type="success" size="small" @click="addDict">
+          添 加
+        </el-button>
       </div>
 
       <!-- 添加或修改数据字典表单对话框 -->
@@ -97,10 +104,10 @@
           </el-form-item>
           <el-form-item label="描述">
             <el-input
-                type="textarea"
-                :rows="3"
-                placeholder="请输入内容"
-                v-model="sysDict.description"
+              type="textarea"
+              :rows="3"
+              placeholder="请输入内容"
+              v-model="sysDict.description"
             ></el-input>
           </el-form-item>
           <el-form-item>
@@ -112,14 +119,19 @@
 
       <!---数据表格-->
       <el-table :data="list" style="width: 100%">
-        <el-table-column label="操作" align="center" width="200" #default="scope">
+        <el-table-column
+          label="操作"
+          align="center"
+          width="200"
+          #default="scope"
+        >
           <el-button type="primary" size="small" @click="editDict(scope.row)">
             修改
           </el-button>
           <el-button
-              type="danger"
-              size="small"
-              @click="deleteDictById(scope.row)"
+            type="danger"
+            size="small"
+            @click="deleteDictById(scope.row)"
           >
             删除
           </el-button>
@@ -140,14 +152,14 @@
 
       <!--分页条-->
       <el-pagination
-          style="margin-top: 30px"
-          v-model:current-page="pageParams.page"
-          v-model:page-size="pageParams.limit"
-          :page-sizes="[10, 20, 50, 100]"
-          @size-change="fetchData"
-          @current-change="fetchData"
-          layout="total, sizes, prev, pager, next"
-          :total="total"
+        style="margin-top: 30px"
+        v-model:current-page="pageParams.page"
+        v-model:page-size="pageParams.limit"
+        :page-sizes="[10, 20, 50, 100]"
+        @size-change="fetchData"
+        @current-change="fetchData"
+        layout="total, sizes, prev, pager, next"
+        :total="total"
       />
     </div>
 
@@ -159,24 +171,29 @@
             <el-col :span="8">
               <el-form-item label="字典值">
                 <el-input
-                    v-model="queryDto2.value"
-                    style="width: 100%"
-                    clearable
+                  v-model="queryDto2.value"
+                  style="width: 100%"
+                  clearable
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="字典类型">
                 <el-input
-                    v-model="queryDto2.type"
-                    style="width: 100%"
-                    clearable
+                  v-model="queryDto2.type"
+                  style="width: 100%"
+                  clearable
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="状态">
-                <el-select placeholder="请选择" v-model="queryDto2.status" style="width: 100%" clearable>
+                <el-select
+                  placeholder="请选择"
+                  v-model="queryDto2.status"
+                  style="width: 100%"
+                  clearable
+                >
                   <el-option :key="1" label="正常" :value="1">正常</el-option>
                   <el-option :key="0" label="停用" :value="0">停用</el-option>
                 </el-select>
@@ -194,7 +211,9 @@
 
       <!--添加按钮-->
       <div class="tools-div">
-        <el-button type="success" size="small" @click="addCode">添 加</el-button>
+        <el-button type="success" size="small" @click="addCode">
+          添 加
+        </el-button>
       </div>
 
       <!-- 添加或修改数据字典表单对话框 -->
@@ -226,20 +245,30 @@
       </el-dialog>
 
       <el-table
-          :data="codeList"
-          style="width: 100%; margin-bottom: 20px"
-          row-key="id"
-          border >
+        :data="codeList"
+        style="width: 100%; margin-bottom: 20px"
+        row-key="id"
+        border
+      >
         <!--        default-expand-all-->
 
-        <el-table-column label="操作" align="center" width="300" #default="scope">
+        <el-table-column
+          label="操作"
+          align="center"
+          width="300"
+          #default="scope"
+        >
           <el-button type="success" size="small" @click="addCode(scope.row)">
             添加下级节点
           </el-button>
           <el-button type="primary" size="small" @click="editCode(scope.row)">
             修改
           </el-button>
-          <el-button type="danger" size="small" @click="removeCode(scope.row.id)">
+          <el-button
+            type="danger"
+            size="small"
+            @click="removeCode(scope.row.id)"
+          >
             删除
           </el-button>
         </el-table-column>
@@ -262,35 +291,47 @@
             <el-col :span="24">
               <el-form-item label="映射业务类型">
                 <el-input
-                    v-model="mapperConfigurationDto.type"
-                    style="width: 100%"
-                    clearable
+                  v-model="mapperConfigurationDto.type"
+                  style="width: 100%"
+                  clearable
                 ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row style="display:flex">
-            <el-button type="primary" size="small" @click="searchMapperConfiguration">
+            <el-button
+              type="primary"
+              size="small"
+              @click="searchMapperConfiguration"
+            >
               搜索
             </el-button>
-            <el-button size="small" @click="resetMapperConfigurationData">重置</el-button>
+            <el-button size="small" @click="resetMapperConfigurationData">
+              重置
+            </el-button>
           </el-row>
         </el-form>
       </div>
 
       <!--添加按钮-->
       <div class="tools-div">
-        <el-button type="success" size="small" @click="addMapperConfiguration">添 加</el-button>
+        <el-button type="success" size="small" @click="addMapperConfiguration">
+          添 加
+        </el-button>
       </div>
 
       <!-- 添加或修改映射配置表单对话框 -->
-      <el-dialog v-model="dialogVisible3" :title="mapperConfigurationVo.id ? '添加映射配置' : '修改映射配置'" width="40%">
+      <el-dialog
+        v-model="dialogVisible3"
+        :title="mapperConfigurationVo.id ? '添加映射配置' : '修改映射配置'"
+        width="40%"
+      >
         <el-form label-width="120px">
           <el-form-item label="映射业务类型">
             <el-input
-                v-model="mapperConfigurationVo.type"
-                placeholder=""
-                clearable
+              v-model="mapperConfigurationVo.type"
+              placeholder=""
+              clearable
             >
               <template #suffix v-if="mapperConfigurationVo.id == null">
                 <el-icon @click="handleSearchClick" style="cursor: pointer;">
@@ -300,16 +341,25 @@
             </el-input>
           </el-form-item>
           <el-form-item label="业务类型描述">
-            <el-input v-model="mapperConfigurationVo.typeDescription" placeholder="" />
+            <el-input
+              v-model="mapperConfigurationVo.typeDescription"
+              placeholder=""
+            />
           </el-form-item>
           <el-form-item label="映射A类型字段1">
-            <el-input v-model="mapperConfigurationVo.mapperFieldA1" placeholder="" />
+            <el-input
+              v-model="mapperConfigurationVo.mapperFieldA1"
+              placeholder=""
+            />
           </el-form-item>
           <el-form-item label="映射A类型字段2">
             <el-input v-model="mapperConfigurationVo.mapperFieldA2" />
           </el-form-item>
           <el-form-item label="映射B类型字段1">
-            <el-input v-model="mapperConfigurationVo.mapperFieldB1" placeholder="" />
+            <el-input
+              v-model="mapperConfigurationVo.mapperFieldB1"
+              placeholder=""
+            />
           </el-form-item>
           <el-form-item label="映射B类型字段2">
             <el-input v-model="mapperConfigurationVo.mapperFieldB2" />
@@ -319,14 +369,16 @@
           </el-form-item>
           <el-form-item label="映射规则描述">
             <el-input
-                type="textarea"
-                :rows="3"
-                placeholder="请输入内容"
-                v-model="mapperConfigurationVo.mapperRuleDescription"
+              type="textarea"
+              :rows="3"
+              placeholder="请输入内容"
+              v-model="mapperConfigurationVo.mapperRuleDescription"
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitMapperConfiguration">提交</el-button>
+            <el-button type="primary" @click="submitMapperConfiguration">
+              提交
+            </el-button>
             <el-button @click="dialogVisible3 = false">取消</el-button>
           </el-form-item>
         </el-form>
@@ -334,38 +386,75 @@
 
       <!---数据表格-->
       <el-table :data="mapperList" style="width: 100%" height="400">
-        <el-table-column label="操作" align="center" width="200" #default="scope">
-          <el-button type="primary" size="small" @click="editMapperConfiguration(scope.row)">
+        <el-table-column
+          label="操作"
+          align="center"
+          width="200"
+          #default="scope"
+        >
+          <el-button
+            type="primary"
+            size="small"
+            @click="editMapperConfiguration(scope.row)"
+          >
             修改
           </el-button>
           <el-button
-              type="danger"
-              size="small"
-              @click="deleteMapperConfigurationById(scope.row.id)"
+            type="danger"
+            size="small"
+            @click="deleteMapperConfigurationById(scope.row.id)"
           >
             删除
           </el-button>
         </el-table-column>
         <el-table-column prop="type" label="映射业务类型" width="120" />
-        <el-table-column prop="typeDescription" label="业务类型描述" width="180" />
-        <el-table-column prop="mapperFieldA1" label="映射A类型字段1" width="150" />
-        <el-table-column prop="mapperFieldA2" label="映射A类型字段2" width="150" />
-        <el-table-column prop="mapperFieldB1" label="映射B类型字段1" width="150" />
-        <el-table-column prop="mapperFieldB2" label="映射B类型字段2" width="150" />
-        <el-table-column prop="mapperFieldB3" label="映射B类型字段3" width="150" />
-        <el-table-column prop="mapperRuleDescription" label="映射规则描述" width="300" />
+        <el-table-column
+          prop="typeDescription"
+          label="业务类型描述"
+          width="180"
+        />
+        <el-table-column
+          prop="mapperFieldA1"
+          label="映射A类型字段1"
+          width="150"
+        />
+        <el-table-column
+          prop="mapperFieldA2"
+          label="映射A类型字段2"
+          width="150"
+        />
+        <el-table-column
+          prop="mapperFieldB1"
+          label="映射B类型字段1"
+          width="150"
+        />
+        <el-table-column
+          prop="mapperFieldB2"
+          label="映射B类型字段2"
+          width="150"
+        />
+        <el-table-column
+          prop="mapperFieldB3"
+          label="映射B类型字段3"
+          width="150"
+        />
+        <el-table-column
+          prop="mapperRuleDescription"
+          label="映射规则描述"
+          width="300"
+        />
       </el-table>
 
       <!--分页条-->
       <el-pagination
-          style="margin-top: 30px"
-          v-model:current-page="mapperPageParams.page"
-          v-model:page-size="mapperPageParams.limit"
-          :page-sizes="[10, 20, 50, 100]"
-          @size-change="mapperFetchData"
-          @current-change="mapperFetchData"
-          layout="total, sizes, prev, pager, next"
-          :total="mapperTotal"
+        style="margin-top: 30px"
+        v-model:current-page="mapperPageParams.page"
+        v-model:page-size="mapperPageParams.limit"
+        :page-sizes="[10, 20, 50, 100]"
+        @size-change="mapperFetchData"
+        @current-change="mapperFetchData"
+        layout="total, sizes, prev, pager, next"
+        :total="mapperTotal"
       />
     </div>
   </div>
@@ -380,27 +469,28 @@ import {
   GetSysCodeLis,
   GetSysDictList,
   SaveDict,
-  UpdateSysCode
+  UpdateSysCode,
 } from '@/api/sysDict'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   DeleteMapperConfigurationById,
-  GetMapperConfigByConditionAndPage, GetMapperConfigByType,
-  SaveConfiguration
-} from "@/api/mapperConfiguration";
+  GetMapperConfigByConditionAndPage,
+  GetMapperConfigByType,
+  SaveConfiguration,
+} from '@/api/mapperConfiguration'
 //-----------------------------------------------tab标签页切换------------------------------------
-const viewDictType = ref(1);
+const viewDictType = ref(1)
 const brainA = () => {
-  viewDictType.value = 1;
-  fetchData();
+  viewDictType.value = 1
+  fetchData()
 }
 const brainB = () => {
-  viewDictType.value = 2;
-  fetchDateCode();
+  viewDictType.value = 2
+  fetchDateCode()
 }
 const mapperConfiguration = () => {
-  viewDictType.value = 3;
-  mapperFetchData();
+  viewDictType.value = 3
+  mapperFetchData()
 }
 
 //-----------------------------------------------查询数据字典列表----------------------------------
@@ -421,7 +511,7 @@ const pageParams = ref(pageParamsForm)
 const queryDto = ref({
   value: '',
   type: '',
-  status: ''
+  status: '',
 })
 
 //钩子函数
@@ -444,9 +534,9 @@ const resetData = () => {
 //列表方法：axios请求调用接口得到数据
 const fetchData = async () => {
   const { data, code, message } = await GetSysDictList(
-      pageParams.value.page,
-      pageParams.value.limit,
-      queryDto.value
+    pageParams.value.page,
+    pageParams.value.limit,
+    queryDto.value
   )
   list.value = data.list
   total.value = data.total
@@ -458,7 +548,7 @@ const sysDict = ref({
   code: '',
   value: '',
   description: '',
-  status: ''
+  status: '',
 })
 
 const dialogVisible = ref(false)
@@ -478,15 +568,15 @@ const editDict = row => {
 
 //点击添加或修改模态窗口中的提交按钮后触发
 const submit = async () => {
-  if (sysDict.value.type == undefined || sysDict.value.type == "") {
+  if (sysDict.value.type == undefined || sysDict.value.type == '') {
     ElMessage.warning('【字典类型】不能为空')
     return
   }
-  if (sysDict.value.code == undefined || sysDict.value.code == "") {
+  if (sysDict.value.code == undefined || sysDict.value.code == '') {
     ElMessage.warning('【字典状态码】不能为空')
     return
   }
-  if (sysDict.value.value == undefined || sysDict.value.value == "") {
+  if (sysDict.value.value == undefined || sysDict.value.value == '') {
     ElMessage.warning('【字典值】不能为空')
     return
   }
@@ -525,55 +615,56 @@ const deleteDictById = row => {
 
 //-------------------------------------------------------大脑字典B区----------------------------------------------------
 //----------------------------查询列表----------------------------------
-const codeList = ref([]); //数据展示列表
-const queryDto2 = ref({}); //条件查询参数
+const codeList = ref([]) //数据展示列表
+const queryDto2 = ref({}) //条件查询参数
 //获取大脑字典B区数据
 const fetchDateCode = async () => {
-  const {data} = await GetSysCodeLis(queryDto2.value);
-  codeList.value = data;
+  const { data } = await GetSysCodeLis(queryDto2.value)
+  codeList.value = data
 }
 //查询按钮
 const searchSysCode = () => {
-  fetchDateCode();
+  fetchDateCode()
 }
 //重置按钮
 const resetCodeData = () => {
-  queryDto2.value = {};
-  fetchDateCode();
+  queryDto2.value = {}
+  fetchDateCode()
 }
 //---------------------------添加修改-----------------------------------
-const sysCode = ref({}); //页面表单数据
-let dialogVisible2 = ref(false); //控制模态窗口开闭
-const titleName = ref();
+const sysCode = ref({}) //页面表单数据
+let dialogVisible2 = ref(false) //控制模态窗口开闭
+const titleName = ref()
 //添加按钮点击事件
 const addCode = row => {
-  sysCode.value = {};
-  sysCode.value.status = 1;
-  if (!row.id){//添加
-    titleName.value = '添加父级数据字典';
-  }else {
-    titleName.value = '添加下级数据字典';
-    sysCode.value.parentId = row.id;
-    sysCode.value.type = row.type;
+  sysCode.value = {}
+  sysCode.value.status = 1
+  if (!row.id) {
+    //添加
+    titleName.value = '添加父级数据字典'
+  } else {
+    titleName.value = '添加下级数据字典'
+    sysCode.value.parentId = row.id
+    sysCode.value.type = row.type
   }
-  dialogVisible2.value = true;
+  dialogVisible2.value = true
 }
 //修改数据字典
-const editCode = (row) => {
-  sysCode.value = {...row};
-  dialogVisible2.value = true;
+const editCode = row => {
+  sysCode.value = { ...row }
+  dialogVisible2.value = true
 }
 //提交按钮触发
 const submitCode = () => {
-  if (sysCode.value.type == undefined || sysCode.value.type == "") {
+  if (sysCode.value.type == undefined || sysCode.value.type == '') {
     ElMessage.warning('【字典类型】不能为空')
     return
   }
-  if (sysCode.value.value == undefined || sysCode.value.value == "") {
+  if (sysCode.value.value == undefined || sysCode.value.value == '') {
     ElMessage.warning('【字典状态码】不能为空')
     return
   }
-  if (sysCode.value.text == undefined || sysCode.value.text == "") {
+  if (sysCode.value.text == undefined || sysCode.value.text == '') {
     ElMessage.warning('【字典值】不能为空')
     return
   }
@@ -589,24 +680,24 @@ const submitCode = () => {
 }
 //新增
 const saveCodeData = async () => {
-  const {code, message} = await AddSysCode(sysCode.value);
-  if (code === 200){
-    dialogVisible2.value = false;
-    ElMessage.success(message);
-    fetchDateCode();
-  }else {
-    ElMessage.error(message);
+  const { code, message } = await AddSysCode(sysCode.value)
+  if (code === 200) {
+    dialogVisible2.value = false
+    ElMessage.success(message)
+    fetchDateCode()
+  } else {
+    ElMessage.error(message)
   }
 }
 //修改
 const updateCodeData = async () => {
-  const {code, message} = await UpdateSysCode(sysCode.value);
-  if (code === 200){
-    dialogVisible2.value = false;
-    ElMessage.success(message);
-    fetchDateCode();
-  }else {
-    ElMessage.error(message);
+  const { code, message } = await UpdateSysCode(sysCode.value)
+  if (code === 200) {
+    dialogVisible2.value = false
+    ElMessage.success(message)
+    fetchDateCode()
+  } else {
+    ElMessage.error(message)
   }
 }
 //-------------------------------------B区大脑字典删除---------------------------------------
@@ -629,75 +720,82 @@ const removeCode = id => {
 
 //----------------------------------------------------------映射配置区------------------------------------------------------
 //------------------------------------列表---------------------------
-const mapperList = ref([]);
+const mapperList = ref([])
 const mapperPageParams = ref({
   page: 1,
-  limit: 10
-}); //封装分页参数
-const mapperTotal = ref(0); //封装查询条数
+  limit: 10,
+}) //封装分页参数
+const mapperTotal = ref(0) //封装查询条数
 //封装条件查询参数
 const mapperConfigurationDto = ref({
-  type: ""
-});
+  type: '',
+})
 
 //调用后端接口查询映射配置列表
 const mapperFetchData = async () => {
-  const {data} = await GetMapperConfigByConditionAndPage(mapperPageParams.value.page, mapperPageParams.value.limit, mapperConfigurationDto.value);
-  mapperList.value = data.list;
-  mapperTotal.value = data.total;
+  const { data } = await GetMapperConfigByConditionAndPage(
+    mapperPageParams.value.page,
+    mapperPageParams.value.limit,
+    mapperConfigurationDto.value
+  )
+  mapperList.value = data.list
+  mapperTotal.value = data.total
 }
 
 //搜索按钮点击事件
 const searchMapperConfiguration = () => {
-  mapperFetchData();
+  mapperFetchData()
 }
 //重置按钮点击事件
 const resetMapperConfigurationData = () => {
-  mapperConfigurationDto.value = {};
-  mapperFetchData();
+  mapperConfigurationDto.value = {}
+  mapperFetchData()
 }
 
 //------------------------添加修改--------------------------
-const dialogVisible3 = ref(false); //控制映射配置添加修改模态窗口
-const mapperConfigurationVo = ref({}); //添加或修改表单参数
+const dialogVisible3 = ref(false) //控制映射配置添加修改模态窗口
+const mapperConfigurationVo = ref({}) //添加或修改表单参数
 
 //点击添加按钮触发
 const addMapperConfiguration = () => {
-  mapperConfigurationVo.value = {};
-  dialogVisible3.value = true;
+  mapperConfigurationVo.value = {}
+  dialogVisible3.value = true
 }
 
 //点击修改按钮触发
-const editMapperConfiguration = (row) => {
-  mapperConfigurationVo.value = {...row};
-  dialogVisible3.value = true;
+const editMapperConfiguration = row => {
+  mapperConfigurationVo.value = { ...row }
+  dialogVisible3.value = true
 }
 
 //点击模态窗口中的提交按钮触发
 const submitMapperConfiguration = async () => {
   //非空校验
-  if (mapperConfigurationVo.value.type == undefined || mapperConfigurationVo.value.type == ""){
-    ElMessage.warning("【映射业务类型】不能为空")
+  if (
+    mapperConfigurationVo.value.type == undefined ||
+    mapperConfigurationVo.value.type == ''
+  ) {
+    ElMessage.warning('【映射业务类型】不能为空')
     return
   }
-  const {code, message} = await SaveConfiguration(mapperConfigurationVo.value);
+  const { code, message } = await SaveConfiguration(mapperConfigurationVo.value)
   if (code === 200) {
-    dialogVisible3.value = false;
-    ElMessage.success(message);
-    mapperFetchData();
-  }else {
-    ElMessage.error(message);
+    dialogVisible3.value = false
+    ElMessage.success(message)
+    mapperFetchData()
+  } else {
+    ElMessage.error(message)
   }
 }
 
 //点击添加模态窗口中的搜索图标触发
 const handleSearchClick = async () => {
-  const {data} = await GetMapperConfigByType(mapperConfigurationVo.value.type);
-  if (data == null){
+  const { data } = await GetMapperConfigByType(mapperConfigurationVo.value.type)
+  if (data == null) {
     return
   }
-  mapperConfigurationVo.value.typeDescription = data.typeDescription;
-  mapperConfigurationVo.value.mapperRuleDescription = data.mapperRuleDescription;
+  mapperConfigurationVo.value.typeDescription = data.typeDescription
+  mapperConfigurationVo.value.mapperRuleDescription = data.mapperRuleDescription
 }
 
 //点击删除角色按钮后触发
@@ -710,13 +808,12 @@ const deleteMapperConfigurationById = id => {
     const { code, message } = await DeleteMapperConfigurationById(id)
     if (code === 200) {
       ElMessage.success(message)
-      mapperFetchData();
+      mapperFetchData()
     } else {
       ElMessage.error(message)
     }
   })
 }
-
 </script>
 
 <style scoped>

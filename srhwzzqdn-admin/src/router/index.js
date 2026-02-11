@@ -33,29 +33,39 @@ import login from './modules/login'
 import lock from './modules/lock'
 import home from './modules/home'
 import test from './modules/test'
-import system from "@/router/modules/system";
-import personCenter from "@/router/modules/personCenter";
-import memoryReceptionArea from "@/router/modules/memoryReceptionArea";
-import memoryEngramRegion from "@/router/modules/memoryEngramRegion";
-import knowledgeBuildArea from "@/router/modules/knowledgeBuildArea";
-import knowledgeExtractArea from "@/router/modules/knowledgeExtractArea";
-import firmWorldviewArea from "@/router/modules/firmWorldviewArea";
-import futurePlanArea from "@/router/modules/futurePlanArea";
-import assetControlArea from "@/router/modules/assetControlArea";
-import socialConnectionsArea from "@/router/modules/socialConnectionsArea";
-import thoughtFlashArea from "@/router/modules/thoughtFlashArea";
-import trialExecutionArea from "@/router/modules/trialExecutionArea";
-import personalObservationArea from "@/router/modules/personalObservationArea";
+import system from '@/router/modules/system'
+import personCenter from '@/router/modules/personCenter'
+import memoryReceptionArea from '@/router/modules/memoryReceptionArea'
+import memoryEngramRegion from '@/router/modules/memoryEngramRegion'
+import knowledgeBuildArea from '@/router/modules/knowledgeBuildArea'
+import knowledgeExtractArea from '@/router/modules/knowledgeExtractArea'
+import firmWorldviewArea from '@/router/modules/firmWorldviewArea'
+import futurePlanArea from '@/router/modules/futurePlanArea'
+import assetControlArea from '@/router/modules/assetControlArea'
+import socialConnectionsArea from '@/router/modules/socialConnectionsArea'
+import thoughtFlashArea from '@/router/modules/thoughtFlashArea'
+import trialExecutionArea from '@/router/modules/trialExecutionArea'
+import personalObservationArea from '@/router/modules/personalObservationArea'
 
 /* 菜单栏的路由 */
 // 固定菜单
 export const fixedRoutes = [...home]
 // 动态菜单
-export const asyncRoutes = [...test, ...system, ...memoryReceptionArea,
-  ...memoryEngramRegion, ...knowledgeBuildArea, ...knowledgeExtractArea,
-  ...firmWorldviewArea, ...futurePlanArea, ...assetControlArea,
-  ...socialConnectionsArea, ...thoughtFlashArea, ...trialExecutionArea,
-  ...personalObservationArea]
+export const asyncRoutes = [
+  ...test,
+  ...system,
+  ...memoryReceptionArea,
+  ...memoryEngramRegion,
+  ...knowledgeBuildArea,
+  ...knowledgeExtractArea,
+  ...firmWorldviewArea,
+  ...futurePlanArea,
+  ...assetControlArea,
+  ...socialConnectionsArea,
+  ...thoughtFlashArea,
+  ...trialExecutionArea,
+  ...personalObservationArea,
+]
 
 const router = createRouter({
   history: createWebHashHistory(),

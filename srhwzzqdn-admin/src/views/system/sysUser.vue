@@ -7,34 +7,34 @@
           <el-col :span="6">
             <el-form-item label="账号">
               <el-input
-                  v-model="queryDto.account"
-                  style="width: 100%"
-                  placeholder="账号"
-                  clearable
+                v-model="queryDto.account"
+                style="width: 100%"
+                placeholder="账号"
+                clearable
               ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="用户名称">
               <el-input
-                  v-model="queryDto.name"
-                  style="width: 100%"
-                  clearable
+                v-model="queryDto.name"
+                style="width: 100%"
+                clearable
               ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="创建时间">
               <el-date-picker
-                  v-model="createTimes"
-                  type="daterange"
-                  range-separator="To"
-                  start-placeholder="开始时间"
-                  end-placeholder="结束时间"
-                  format="YYYY-MM-DD"
-                  value-format="YYYY-MM-DD"
-                  :editable="false"
-                  clearable
+                v-model="createTimes"
+                type="daterange"
+                range-separator="To"
+                start-placeholder="开始时间"
+                end-placeholder="结束时间"
+                format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD"
+                :editable="false"
+                clearable
               />
             </el-form-item>
           </el-col>
@@ -43,17 +43,17 @@
           <el-col :span="6">
             <el-form-item label="账号等级">
               <el-select
-                  v-model="queryDto.level"
-                  multiple
-                  placeholder="请选择"
-                  style="width: 100%"
-                  clearable
+                v-model="queryDto.level"
+                multiple
+                placeholder="请选择"
+                style="width: 100%"
+                clearable
               >
                 <el-option
-                    v-for="item in levelItem"
-                    :key="item.value"
-                    :label="item.text"
-                    :value="item.value"
+                  v-for="item in levelItem"
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -61,16 +61,16 @@
           <el-col :span="6">
             <el-form-item label="账号状态">
               <el-select
-                  v-model="queryDto.status"
-                  placeholder="请选择"
-                  style="width: 100%"
-                  clearable
+                v-model="queryDto.status"
+                placeholder="请选择"
+                style="width: 100%"
+                clearable
               >
                 <el-option
-                    v-for="item in StatusItem"
-                    :key="item.value"
-                    :label="item.text"
-                    :value="item.value"
+                  v-for="item in StatusItem"
+                  :key="item.value"
+                  :label="item.text"
+                  :value="item.value"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -97,39 +97,35 @@
           <el-input v-model="sysUser.account" />
         </el-form-item>
         <el-form-item v-if="sysUser.id == null" label="密码">
-          <el-input
-              type="password"
-              show-password
-              v-model="sysUser.password"
-          />
+          <el-input type="password" show-password v-model="sysUser.password" />
         </el-form-item>
         <el-form-item v-if="sysUser.id != null" label="状态">
           <el-select
-              v-model="sysUser.status"
-              placeholder="请选择"
-              style="width: 100%"
-              clearable
+            v-model="sysUser.status"
+            placeholder="请选择"
+            style="width: 100%"
+            clearable
           >
             <el-option
-                v-for="item in StatusItem"
-                :key="item.value"
-                :label="item.text"
-                :value="item.value"
+              v-for="item in StatusItem"
+              :key="item.value"
+              :label="item.text"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="账号等级">
           <el-select
-              v-model="sysUser.level"
-              placeholder="请选择"
-              style="width: 100%"
-              clearable
+            v-model="sysUser.level"
+            placeholder="请选择"
+            style="width: 100%"
+            clearable
           >
             <el-option
-                v-for="item in levelItemByPower"
-                :key="item.value"
-                :label="item.text"
-                :value="item.value"
+              v-for="item in levelItemByPower"
+              :key="item.value"
+              :label="item.text"
+              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -138,11 +134,11 @@
         </el-form-item>
         <el-form-item label="头像">
           <el-upload
-              class="avatar-uploader"
-              action="http://localhost:8400/superBrain/system/fileUpload"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :headers="headers"
+            class="avatar-uploader"
+            action="http://localhost:8400/superBrain/system/fileUpload"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :headers="headers"
           >
             <img v-if="sysUser.avatar" :src="sysUser.avatar" class="avatar" />
             <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
@@ -165,16 +161,16 @@
           修改
         </el-button>
         <el-button
-            type="danger"
-            size="small"
-            @click="deleteUserById(scope.row)"
+          type="danger"
+          size="small"
+          @click="deleteUserById(scope.row)"
         >
           删除
         </el-button>
         <el-button
-            type="warning"
-            size="small"
-            @click="showAssignRole(scope.row)"
+          type="warning"
+          size="small"
+          @click="showAssignRole(scope.row)"
         >
           分配角色
         </el-button>
@@ -198,14 +194,14 @@
 
     <!--分页条-->
     <el-pagination
-        style="margin-top: 30px"
-        v-model:current-page="pageParams.page"
-        v-model:page-size="pageParams.limit"
-        :page-sizes="[10, 20, 50, 100]"
-        @size-change="fetchData"
-        @current-change="fetchData"
-        layout="total, sizes, prev, pager, next"
-        :total="total"
+      style="margin-top: 30px"
+      v-model:current-page="pageParams.page"
+      v-model:page-size="pageParams.limit"
+      :page-sizes="[10, 20, 50, 100]"
+      @size-change="fetchData"
+      @current-change="fetchData"
+      layout="total, sizes, prev, pager, next"
+      :total="total"
     />
 
     <!-- 分配角色的模态窗口 -->
@@ -217,21 +213,21 @@
 
         <el-form-item label="角色列表">
           <el-checkbox
-              :indeterminate="isIndeterminate"
-              v-model="checkAll"
-              @change="handleCheckAllChange"
+            :indeterminate="isIndeterminate"
+            v-model="checkAll"
+            @change="handleCheckAllChange"
           >
             全选
           </el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group
-              v-model="userRoleIds"
-              @change="handleCheckedCitiesChange"
+            v-model="userRoleIds"
+            @change="handleCheckedCitiesChange"
           >
             <el-checkbox
-                v-for="role in allRoles"
-                :label="role.id"
-                :key="role.id"
+              v-for="role in allRoles"
+              :label="role.id"
+              :key="role.id"
             >
               {{ role.roleName }}
             </el-checkbox>
@@ -315,9 +311,9 @@ const getStatusItem = async () => {
 //列表方法：axios请求调用接口得到数据
 const fetchData = async () => {
   const { data, code, message } = await GetSysUserListByPage(
-      pageParams.value.page,
-      pageParams.value.limit,
-      queryDto.value
+    pageParams.value.page,
+    pageParams.value.limit,
+    queryDto.value
   )
   list.value = data.list
   total.value = data.total
@@ -371,15 +367,15 @@ const getLevelItemByPower = async () => {
 
 //提交方法
 const submit = async () => {
-  if (sysUser.value.account == undefined || sysUser.value.account == "") {
+  if (sysUser.value.account == undefined || sysUser.value.account == '') {
     ElMessage.warning('【用户账号】不能为空')
     return
   }
-  if (sysUser.value.password == undefined || sysUser.value.password == "") {
+  if (sysUser.value.password == undefined || sysUser.value.password == '') {
     ElMessage.warning('【密码】不能为空')
     return
   }
-  if (sysUser.value.userName == undefined || sysUser.value.userName == "") {
+  if (sysUser.value.userName == undefined || sysUser.value.userName == '') {
     ElMessage.warning('【用户名称】不能为空')
     return
   }
@@ -470,8 +466,8 @@ const handleCheckedCitiesChange = () => {
     isIndeterminate.value = false
   }
   if (
-      userRoleIds.value.length > 0 &&
-      userRoleIds.value.length < allRoles.value.length
+    userRoleIds.value.length > 0 &&
+    userRoleIds.value.length < allRoles.value.length
   ) {
     checkAll.value = false
     isIndeterminate.value = true
