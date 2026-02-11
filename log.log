@@ -1158,3 +1158,27 @@ Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立
 2026-02-11 16:16:38 HikariPool-1 - Starting...
 2026-02-11 16:16:38 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@26c8944d
 2026-02-11 16:16:38 HikariPool-1 - Start completed.
+2026-02-11 16:38:16 HikariPool-1 - Shutdown initiated...
+2026-02-11 16:38:16 HikariPool-1 - Shutdown completed.
+2026-02-11 16:38:19 Starting ManagerApplication using Java 17.0.17 with PID 18336 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-02-11 16:38:19 The following 1 profile is active: "dev"
+2026-02-11 16:38:20 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-02-11 16:38:20 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-02-11 16:38:20 Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
+2026-02-11 16:38:20 Tomcat initialized with port(s): 8400 (http)
+2026-02-11 16:38:20 Initializing ProtocolHandler ["http-nio-8400"]
+2026-02-11 16:38:20 Starting service [Tomcat]
+2026-02-11 16:38:20 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-02-11 16:38:20 Initializing Spring embedded WebApplicationContext
+2026-02-11 16:38:20 Root WebApplicationContext: initialization completed in 994 ms
+2026-02-11 16:38:22 Starting ProtocolHandler ["http-nio-8400"]
+2026-02-11 16:38:22 Tomcat started on port(s): 8400 (http) with context path ''
+2026-02-11 16:38:22 Started ManagerApplication in 2.652 seconds (process running for 3.206)
+2026-02-11 16:38:40 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-02-11 16:38:40 Initializing Servlet 'dispatcherServlet'
+2026-02-11 16:38:40 Completed initialization in 2 ms
+2026-02-11 16:38:49 HikariPool-1 - Starting...
+2026-02-11 16:38:49 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@57928efe
+2026-02-11 16:38:49 HikariPool-1 - Start completed.
+2026-02-11 16:43:27 HikariPool-1 - Shutdown initiated...
+2026-02-11 16:43:27 HikariPool-1 - Shutdown completed.
