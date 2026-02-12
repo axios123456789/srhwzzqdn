@@ -869,6 +869,12 @@
 
     <!--  智能录入  -->
 
+    <!--  记忆联想模态窗口  -->
+    <MemoryRelationDialog
+        v-model:visible="relationDialogVisible"
+        :rowData="currentRow"
+    />
+
     <!--  数据展示列表  -->
     <el-table
       :data="rowList"
@@ -1002,6 +1008,7 @@
 </template>
 
 <script setup>
+import MemoryRelationDialog from '@/views/memoryReceptionArea/receptionAreaComm/memoryRelationDialog.vue'
 import { onMounted, ref, computed, watch, nextTick } from 'vue'
 import { GetAdministrative, GetKeyAndValueByType } from '@/api/sysDict'
 import {
@@ -1738,6 +1745,19 @@ const deleteSelectAll = async () => {
 }
 // 获取表格引用
 const multipleTable = ref(null)
+
+//--------------------------------------------------记忆联想---------------------------------------------------------
+//控制“记忆联想”弹窗
+const relationDialogVisible = ref(false)
+//当前选中的行数据
+const currentRow = ref(null)
+/**
+ * 点击“记忆联想”按钮
+ */
+const memoryAssociative = (row) => {
+  currentRow.value = row
+  relationDialogVisible.value = true
+}
 
 //--------------------------------------------------通用Excel导出功能-------------------------------------------------
 // 导出相关状态

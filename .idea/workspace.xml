@@ -4,14 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="工作记忆列表展示优化">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="原始记忆-记忆联想01">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/workMemoryAccess.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/workMemoryAccess.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/receptionAreaComm/memoryRelationDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/receptionAreaComm/memoryRelationDialog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/rowMemoryAccess.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/rowMemoryAccess.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,7 +163,8 @@
       <workItem from="1769757000812" duration="1230000" />
       <workItem from="1770099937649" duration="1000000" />
       <workItem from="1770796976279" duration="2398000" />
-      <workItem from="1770799435696" duration="1459000" />
+      <workItem from="1770799435696" duration="3305000" />
+      <workItem from="1770857693187" duration="5950000" />
     </task>
     <task id="LOCAL-00001" summary="Changes">
       <created>1768721797078</created>
@@ -204,7 +208,28 @@
       <option name="project" value="LOCAL" />
       <updated>1770800695358</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="工作记忆列表展示优化">
+      <created>1770801066946</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1770801066946</updated>
+    </task>
+    <task id="LOCAL-00008" summary="工作记忆列表展示优化">
+      <created>1770801073974</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1770801073974</updated>
+    </task>
+    <task id="LOCAL-00009" summary="工作记忆列表展示优化">
+      <created>1770801620898</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1770801620898</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -231,7 +256,8 @@
     <MESSAGE value="头像上传优化-针对头像大小限制改为10mb主要改了后端配置" />
     <MESSAGE value="工作记忆录入功能完成" />
     <MESSAGE value="工作记忆列表展示优化" />
-    <option name="LAST_COMMIT_MESSAGE" value="工作记忆列表展示优化" />
+    <MESSAGE value="原始记忆-记忆联想01" />
+    <option name="LAST_COMMIT_MESSAGE" value="原始记忆-记忆联想01" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
