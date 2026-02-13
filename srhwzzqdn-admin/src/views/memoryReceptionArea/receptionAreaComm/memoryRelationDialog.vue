@@ -202,7 +202,7 @@
 
             <!--     联想记忆类型       -->
             <div class="info-item time-item">
-              <div class="item-icon">🕒</div>
+              <div class="item-icon">🏷️</div>
               <div class="item-content">
                 <div class="item-label">联想记忆类型</div>
                 <div class="item-value">
@@ -215,7 +215,7 @@
             <div class="info-item content-item long-text-item">
               <div class="item-icon">💭</div>
               <div class="item-content">
-                <div class="item-label">联想内容</div>
+                <div class="item-label">联想内容（可调整）</div>
                 <div class="item-value content-text">
                   <el-input
                     v-model="associativeMemory.rowMemoryContent"
@@ -227,6 +227,55 @@
                 </div>
               </div>
             </div>
+
+            <!--    ----------------------工作记忆联想数据块------------------        -->
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 1">
+              <div class="item-icon">🏷️</div>
+              <div class="item-content">
+                <div class="item-label">工作业务类型</div>
+                <div class="item-value">
+                  <el-tree-select
+                      v-model="associativeMemory.workBusinessType"
+                      :data="workBusinessTypeItem"
+                      show-checkbox
+                      check-strictly
+                      node-key="value"
+                      :props="{
+                      label: 'text',
+                      value: 'value',
+                      children: 'children',
+                    }"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  ></el-tree-select>
+                </div>
+              </div>
+            </div>
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 1">
+              <div class="item-icon">🏷️</div>
+              <div class="item-content">
+                <div class="item-label">工作技术类型</div>
+                <div class="item-value">
+                  <el-tree-select
+                      v-model="associativeMemory.workTechType"
+                      :data="workTechTypeItem"
+                      show-checkbox
+                      check-strictly
+                      node-key="value"
+                      :props="{
+                      label: 'text',
+                      value: 'value',
+                      children: 'children',
+                    }"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  ></el-tree-select>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -256,7 +305,7 @@
 
 <script setup>
 import {computed, ref, watch} from 'vue'
-import {GetAdministrative, GetKeyAndValueByType} from "@/api/sysDict";
+import {GetAdministrative, GetAllSysCode, GetKeyAndValueByType} from "@/api/sysDict";
 
 // ------------------------------- 基础与父组件建立关系 ------------------------------------------
 /* 接收父组件参数 */
@@ -289,8 +338,11 @@ watch(
         getMemorySourceItem();
         getAssociativeStatusItem();
         getFormattedAddressOptions();
+        getWorkBusinessTypeItem();
+        getWorkTechTypeItem();
 
         //将原始记忆赋值给associativeMemory
+        associativeMemory.value.row_id = props.rowData.id;
         associativeMemory.value.begin_time = props.rowData.recordTime;
         associativeMemory.value.end_time = props.rowData.recordEndTime;
         associativeMemory.value.contactType = props.rowData.contactType;
@@ -375,6 +427,21 @@ const getFormattedAddressOptions = async () => {
   formattedAddressOptions.value = data
 }
 
+//------------工作记忆字典----------------
+//获取业务类型下拉列表
+const workBusinessTypeItem = ref([])
+const getWorkBusinessTypeItem = async () => {
+  const { data } = await GetAllSysCode('t_work_memory_business_type')
+  workBusinessTypeItem.value = data
+}
+//获取技术类型下拉列表
+const workTechTypeItem = ref([])
+const getWorkTechTypeItem = async () => {
+  const { data } = await GetAllSysCode('t_work_memory_tech_type')
+  workTechTypeItem.value = data
+}
+//---------------------------------------
+
 // 通用方法：根据值和映射表获取中文文本
 const getDisplayText = (value, mappingArray) => {
   if (!value) return '-'
@@ -449,6 +516,7 @@ const getTimePeriodDisplay = computed(() => {
 
 //------------------联想操作------------------------
 const associativeMemory = ref({
+  row_id: "", //原始记忆id
   begin_time: "", //联想开始时间
   end_time: "", //联想结束时间
   contactType: "", //联想关系人类型
@@ -464,7 +532,9 @@ const associativeMemory = ref({
   memorySource: "", //联想记忆来源
   memoryImages: "", //联想图片
   memoryNo: "", //联想记忆编号
-  document: "" //联想文件
+  document: "", //联想文件
+  workBusinessType: "", //工作业务类型
+  workTechType: "", //工作技术类型
 }); //联想记忆，用于存储转换联想记忆参数
 
 // ----------------------------------- 提交处理 -------------------------------------------------
@@ -475,7 +545,7 @@ const submit = () => {
     alert('请选择有效的记忆记录')
     return
   }
-  alert(`开始对记忆ID: ${props.rowData.id} 进行联想分析`)
+  alert(`开始对记忆ID: ${associativeMemory.value.row_id} 进行联想分析`)
 }
 </script>
 
