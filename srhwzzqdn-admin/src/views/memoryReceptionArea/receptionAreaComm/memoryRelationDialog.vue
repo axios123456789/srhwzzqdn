@@ -16,142 +16,141 @@
           <h3 class="card-title">原始记忆档案</h3>
         </div>
         
-        <div class="card-content">
-          <div class="info-grid" style="grid-template-columns: repeat(2, 1fr);">
-            <!-- 第一行 -->
-            <div class="info-item timeline" style="grid-column: 1 / span 1;">
-              <div class="item-icon">⏰</div>
-              <div class="item-content">
-                <div class="item-label">记忆时段</div>
-                <div class="item-value">
-                  {{ getTimePeriodDisplay }}
+        <div class="card-content-wrapper">
+          <div class="card-content">
+            <div class="info-grid">
+              <!-- 第一行：3列 -->
+              <div class="info-item timeline">
+                <div class="item-icon">⏰</div>
+                <div class="item-content">
+                  <div class="item-label">记忆时段</div>
+                  <div class="item-value">
+                    {{ getTimePeriodDisplay }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div class="info-item type-item" style="grid-column: 2 / span 1;">
-              <div class="item-icon">🏷️</div>
-              <div class="item-content">
-                <div class="item-label">记忆类型</div>
-                <div class="item-value">
-                  {{ getDisplayText(rowData.rowMemoryType, rowMemoryTypeItem) }}
+              
+              <div class="info-item type-item">
+                <div class="item-icon">🏷️</div>
+                <div class="item-content">
+                  <div class="item-label">记忆类型</div>
+                  <div class="item-value">
+                    {{ getDisplayText(rowData.rowMemoryType, rowMemoryTypeItem) }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <!-- 第二行 -->
-            <div class="info-item source-item" style="grid-column: 1 / span 1;">
-              <div class="item-icon">📌</div>
-              <div class="item-content">
-                <div class="item-label">记忆来源</div>
-                <div class="item-value">
-                  {{ getDisplayText(rowData.memorySource, memorySourceItem) }}
+              
+              <div class="info-item source-item">
+                <div class="item-icon">📌</div>
+                <div class="item-content">
+                  <div class="item-label">记忆来源</div>
+                  <div class="item-value">
+                    {{ getDisplayText(rowData.memorySource, memorySourceItem) }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div class="info-item contact-type-item" style="grid-column: 2 / span 1;">
-              <div class="item-icon">👥</div>
-              <div class="item-content">
-                <div class="item-label">关系人类型</div>
-                <div class="item-value">
-                  {{ getDisplayText(rowData.contactType, contactTypeItem) }}
+              
+              <!-- 第二行：3列 -->
+              <div class="info-item contact-type-item">
+                <div class="item-icon">👥</div>
+                <div class="item-content">
+                  <div class="item-label">关系人类型</div>
+                  <div class="item-value">
+                    {{ getDisplayText(rowData.contactType, contactTypeItem) }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <!-- 第三行 -->
-            <div class="info-item contact-item" style="grid-column: 1 / span 1;">
-              <div class="item-icon">👤</div>
-              <div class="item-content">
-                <div class="item-label">关系人名称</div>
-                <div class="item-value">
-                  {{ rowData.contact || '-' }}
+              
+              <div class="info-item contact-item">
+                <div class="item-icon">👤</div>
+                <div class="item-content">
+                  <div class="item-label">关系人名称</div>
+                  <div class="item-value">
+                    {{ rowData.contact || '-' }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div class="info-item place-item" style="grid-column: 2 / span 1;">
-              <div class="item-icon">📍</div>
-              <div class="item-content">
-                <div class="item-label">记忆地点</div>
-                <div class="item-value">
-                  {{ getMemoryPlaceDisplay(rowData) }}
+              
+              <div class="info-item place-item">
+                <div class="item-icon">📍</div>
+                <div class="item-content">
+                  <div class="item-label">记忆地点</div>
+                  <div class="item-value">
+                    {{ getMemoryPlaceDisplay(rowData) }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <!-- 第四行 -->
-            <div class="info-item owner-item" style="grid-column: 1 / span 1;">
-              <div class="item-icon">👑</div>
-              <div class="item-content">
-                <div class="item-label">记忆所属人</div>
-                <div class="item-value">
-                  {{ rowData.memoryOwnerName || '-' }}
+              
+              <!-- 第三行：3列 -->
+              <div class="info-item owner-item">
+                <div class="item-icon">👑</div>
+                <div class="item-content">
+                  <div class="item-label">记忆所属人</div>
+                  <div class="item-value">
+                    {{ rowData.memoryOwnerName || '-' }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div class="info-item status-item" style="grid-column: 2 / span 1;">
-              <div class="item-icon">📊</div>
-              <div class="item-content">
-                <div class="item-label">联想状态</div>
-                <div class="item-value">
-                  {{ getDisplayText(rowData.memoryAssociativeStatus, associativeStatusItem) }}
+              
+              <div class="info-item status-item">
+                <div class="item-icon">📊</div>
+                <div class="item-content">
+                  <div class="item-label">联想状态</div>
+                  <div class="item-value">
+                    {{ getDisplayText(rowData.memoryAssociativeStatus, associativeStatusItem) }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <!-- 第五行：记忆内容 -->
-            <div class="info-item content-item" style="grid-column: 1 / -1;">
-              <div class="item-icon">📝</div>
-              <div class="item-content">
-                <div class="item-label">记忆内容</div>
-                <div class="item-value content-text">
-                  {{ rowData.rowMemoryContent || '暂无记忆内容' }}
+              
+              <div class="info-item id-item">
+                <div class="item-icon">🔢</div>
+                <div class="item-content">
+                  <div class="item-label">记忆编号</div>
+                  <div class="item-value">
+                    {{ rowData.memoryNo || '-' }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <!-- 第六行：记忆原因 -->
-            <div class="info-item reason-item" style="grid-column: 1 / -1;">
-              <div class="item-icon">❓</div>
-              <div class="item-content">
-                <div class="item-label">记忆原因</div>
-                <div class="item-value content-text">
-                  {{ rowData.rowMemoryReason || '暂无记忆原因说明' }}
+              
+              <!-- 第四行：记录人 -->
+              <div class="info-item recorder-item" style="grid-column: 1 / span 3;">
+                <div class="item-icon">✍️</div>
+                <div class="item-content">
+                  <div class="item-label">记录人</div>
+                  <div class="item-value">
+                    {{ rowData.recordBy || '-' }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <!-- 第七行：记忆行为 -->
-            <div class="info-item action-item" style="grid-column: 1 / -1;">
-              <div class="item-icon">⚡</div>
-              <div class="item-content">
-                <div class="item-label">记忆行为</div>
-                <div class="item-value content-text">
-                  {{ rowData.rowMemoryAction || '暂无相关行为记录' }}
+              
+              <!-- 长文本内容：单独行，高度自适应 -->
+              <div class="info-item content-item long-text-item">
+                <div class="item-icon">📝</div>
+                <div class="item-content">
+                  <div class="item-label">记忆内容</div>
+                  <div class="item-value content-text">
+                    {{ rowData.rowMemoryContent || '暂无记忆内容' }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <!-- 第八行：记忆编号和记录人 -->
-            <div class="info-item id-item" style="grid-column: 1 / span 1;">
-              <div class="item-icon">🔢</div>
-              <div class="item-content">
-                <div class="item-label">记忆编号</div>
-                <div class="item-value">
-                  {{ rowData.memoryNo || '-' }}
+              
+              <div class="info-item reason-item long-text-item">
+                <div class="item-icon">❓</div>
+                <div class="item-content">
+                  <div class="item-label">记忆原因</div>
+                  <div class="item-value content-text">
+                    {{ rowData.rowMemoryReason || '暂无记忆原因说明' }}
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            <div class="info-item recorder-item" style="grid-column: 2 / span 1;">
-              <div class="item-icon">✍️</div>
-              <div class="item-content">
-                <div class="item-label">记录人</div>
-                <div class="item-value">
-                  {{ rowData.recordBy || '-' }}
+              
+              <div class="info-item action-item long-text-item">
+                <div class="item-icon">⚡</div>
+                <div class="item-content">
+                  <div class="item-label">记忆行为</div>
+                  <div class="item-value content-text">
+                    {{ rowData.rowMemoryAction || '暂无相关行为记录' }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -457,14 +456,46 @@ const submit = () => {
   font-weight: 500;
 }
 
+/* 卡片内容容器 - 添加滚动条 */
+.card-content-wrapper {
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 0 24px 24px 24px;
+}
+
+/* 滚动条样式美化 */
+.card-content-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.card-content-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.card-content-wrapper::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.card-content-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
 /* 卡片内容 */
 .card-content {
-  padding: 24px;
+  padding-top: 24px;
 }
 
 .info-grid {
   display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+}
+
+/* 长文本项目样式 */
+.long-text-item {
+  grid-column: 1 / -1;
 }
 
 /* 信息项美化 */
@@ -512,9 +543,12 @@ const submit = () => {
   padding: 14px;
   border-radius: 8px;
   border: 1px solid #e1e8f0;
-  min-height: 80px;
+  min-height: 60px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
 }
 
 /* ================= 联想提示区域 ================= */
