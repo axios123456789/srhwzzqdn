@@ -2,7 +2,7 @@
   <el-dialog
     v-model="dialogVisible"
     title="✨ 记忆联想空间"
-    width="1000px"
+    width="1200px"
     class="memory-enhanced-dialog"
     :close-on-click-modal="false"
     align-center
