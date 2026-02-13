@@ -84,6 +84,14 @@
         </set>
         where t.id = #{id}
     </update>
+
+    <!-- 根据ids批量删除工作记忆   -->
+    <delete id="deleteAllWorkMemoryByIds">
+        delete from t_work_memory where id in
+        <foreach item="item" collection="ids" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
     <!--    条件查询所有工作记忆列表   -->
     <select id="getWorkMemoryByCondition"
             resultType="com.xk.srhwzzqdn.model.entity.memoryReceptionArea.WorkMemory">
