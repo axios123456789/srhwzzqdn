@@ -164,7 +164,7 @@
         <div class="tip-icon">💡</div>
         <div class="tip-content">
           <h4 class="tip-title">智能联想提示</h4>
-          <p class="tip-desc">系统将基于当前记忆内容，为您挖掘深层关联信息</p>
+          <p class="tip-desc">当前记忆内容为基本记忆，您可以根据基础信息关联生活，工作，学习，娱乐等记忆！！！</p>
         </div>
       </div>
     </div>
@@ -221,6 +221,7 @@ onMounted(() => {
   getRowMemoryTypeItem();
   getMemorySourceItem();
   getAssociativeStatusItem();
+  getFormattedAddressOptions();
 })
 
 // ----------------------------------- 逻辑操作 -------------------------------------------------
@@ -232,7 +233,7 @@ const contactTypeItem = ref([]);
 const associativeStatusItem = ref([]);
 
 // 地址映射表（模拟原始记忆中的地址数据结构）
-const formattedAddressOptions = [
+const formattedAddressOptions = ref([
   {
     value: '110000',
     label: '北京市',
@@ -242,26 +243,17 @@ const formattedAddressOptions = [
         label: '市辖区',
         children: [
           { value: '110101', label: '东城区' },
-          { value: '110102', label: '西城区' },
           { value: '110105', label: '朝阳区' },
-          { value: '110106', label: '丰台区' },
-          { value: '110107', label: '石景山区' },
           { value: '110108', label: '海淀区' },
-          { value: '110109', label: '门头沟区' },
-          { value: '110111', label: '房山区' },
           { value: '110112', label: '通州区' },
           { value: '110113', label: '顺义区' },
           { value: '110114', label: '昌平区' },
-          { value: '110115', label: '大兴区' },
-          { value: '110116', label: '怀柔区' },
-          { value: '110117', label: '平谷区' },
-          { value: '110118', label: '密云区' },
-          { value: '110119', label: '延庆区' }
+          { value: '110115', label: '大兴区' }
         ]
       }
     ]
   }
-]
+])
 
 //发送请求，获取关系人类型下拉列表
 const getContactTypeItem = async () => {
@@ -332,22 +324,26 @@ const getMemoryPlaceDisplay = (row) => {
 
 // 根据代码获取地址文本
 const getAddressTextByCode = (code) => {
-  if (!code || !formattedAddressOptions.length) return ''
-  
+  if (!code) return ''
+
+  // ✅ 关键：取 .value
+  const options = formattedAddressOptions.value
+  if (!options || !options.length) return ''
+
   const findLabel = (options, targetCode) => {
     for (const option of options) {
       if (option.value == targetCode) {
         return option.label
       }
-      if (option.children && option.children.length > 0) {
+      if (option.children?.length) {
         const found = findLabel(option.children, targetCode)
         if (found) return found
       }
     }
     return ''
   }
-  
-  return findLabel(formattedAddressOptions, code)
+
+  return findLabel(options, code)
 }
 
 // 计算属性：获取记忆时段显示
@@ -359,6 +355,7 @@ const getTimePeriodDisplay = computed(() => {
 //-------------------------------------------------------------------------
 // 点击提交按钮触发
 const submit = () => {
+  console.log('rowData:', getMemoryPlaceDisplay(props.rowData), props.rowData.memoryPlace)
   if (!props.rowData?.id) {
     alert('请选择有效的记忆记录')
     return
