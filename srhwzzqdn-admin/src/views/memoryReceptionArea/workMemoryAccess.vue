@@ -449,28 +449,45 @@
         {{ getDisplayText(scope.row.memorySource, workMemorySourceItem) }}
       </el-table-column>
       <el-table-column
-        prop="memoryImages"
-        label="工作记录图"
-        #default="scope"
-        width="200"
+          prop="memoryImages"
+          label="工作记录图"
+          #default="scope"
+          width="200"
       >
         <div style="float: left;">
-          <img
-            v-for="(item, index) in scope.row.memoryImages"
-            :key="index"
-            :src="item"
-            width="50"
-            height="50"
-          />
+          <template v-for="(item, index) in scope.row.memoryImages" :key="index">
+            <img
+                v-if="index < 3"
+                :src="item"
+                width="50"
+                height="50"
+                style="margin-right: 5px;"
+            />
+            <span v-else-if="index === 3">...</span>
+          </template>
         </div>
       </el-table-column>
-      <el-table-column prop="workContent" label="工作内容" width="300" />
-      <el-table-column
-        prop="workBusinessNode"
-        label="工作业务笔记"
-        width="180"
-      />
-      <el-table-column prop="workTechNode" label="工作技术笔记" width="180" />
+      <el-table-column prop="workContent" label="工作内容" width="300">
+        <template #default="scope">
+          <span :title="scope.row.workContent">
+            {{ scope.row.workContent && scope.row.workContent.length > 100 ? scope.row.workContent.substring(0, 100) + '...' : scope.row.workContent }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="workBusinessNode" label="工作业务笔记" width="180">
+        <template #default="scope">
+          <span :title="scope.row.workBusinessNode">
+            {{ scope.row.workBusinessNode && scope.row.workBusinessNode.length > 100 ? scope.row.workBusinessNode.substring(0, 100) + '...' : scope.row.workBusinessNode }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="workTechNode" label="工作技术笔记" width="180">
+        <template #default="scope">
+          <span :title="scope.row.workTechNode">
+            {{ scope.row.workTechNode && scope.row.workTechNode.length > 100 ? scope.row.workTechNode.substring(0, 100) + '...' : scope.row.workTechNode }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="memoryOwnerName" label="记忆所属人" width="120" />
       <!--  工作文档    -->
       <el-table-column

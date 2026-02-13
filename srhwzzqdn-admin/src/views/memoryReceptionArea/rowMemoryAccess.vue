@@ -942,13 +942,16 @@
         width="200"
       >
         <div style="float: left;">
-          <img
-            v-for="(item, index) in scope.row.memoryImages"
-            :key="index"
-            :src="item"
-            width="50"
-            height="50"
-          />
+          <template v-for="(item, index) in scope.row.memoryImages" :key="index">
+            <img
+              v-if="index < 3"
+              :src="item"
+              width="50"
+              height="50"
+              style="margin-right: 5px;"
+            />
+            <span v-else-if="index === 3">...</span>
+          </template>
         </div>
       </el-table-column>
       <el-table-column
@@ -959,13 +962,33 @@
       >
         {{ getMemoryPlaceDisplay(scope.row) }}
       </el-table-column>
-      <el-table-column prop="rowMemoryContent" label="记忆内容" width="300" />
-      <el-table-column
-        prop="rowMemoryReason"
-        label="记忆发生原由"
-        width="180"
-      />
-      <el-table-column prop="rowMemoryAction" label="记忆行为" width="180" />
+      <el-table-column prop="rowMemoryContent" label="记忆内容" width="300">
+        <template #default="scope">
+          <span :title="scope.row.rowMemoryContent">
+            {{ scope.row.rowMemoryContent && scope.row.rowMemoryContent.length > 100
+               ? scope.row.rowMemoryContent.substring(0, 100) + '...'
+               : scope.row.rowMemoryContent }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="rowMemoryReason" label="记忆发生原由" width="180">
+        <template #default="scope">
+          <span :title="scope.row.rowMemoryReason">
+            {{ scope.row.rowMemoryReason && scope.row.rowMemoryReason.length > 100
+               ? scope.row.rowMemoryReason.substring(0, 100) + '...'
+               : scope.row.rowMemoryReason }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="rowMemoryAction" label="记忆行为" width="180">
+        <template #default="scope">
+          <span :title="scope.row.rowMemoryAction">
+            {{ scope.row.rowMemoryAction && scope.row.rowMemoryAction.length > 100
+               ? scope.row.rowMemoryAction.substring(0, 100) + '...'
+               : scope.row.rowMemoryAction }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="memoryOwnerName" label="记忆所属人" width="120" />
       <el-table-column
         prop="memorySource"
