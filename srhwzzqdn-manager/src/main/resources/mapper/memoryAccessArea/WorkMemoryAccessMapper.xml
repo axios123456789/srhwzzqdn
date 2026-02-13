@@ -20,7 +20,8 @@
         create_time,
         update_time,
         update_by,
-        memory_images
+        memory_images,
+        row_memory_no
     </sql>
     <!--  添加工作记忆  -->
     <insert id="addWorkMemory">
@@ -114,6 +115,7 @@
                 t.update_time,
                 t.update_by,
                 t.memory_images,
+                t.row_memory_no,
                 i.name as memoryOwnerName
         from t_work_memory t
         left join t_sys_person_info i

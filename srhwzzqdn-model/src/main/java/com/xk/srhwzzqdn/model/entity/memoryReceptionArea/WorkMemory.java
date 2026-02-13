@@ -75,4 +75,7 @@ public class WorkMemory {
 
     @Schema(description = "工作记忆图片")
     private String memoryImages;
+
+    @Schema(description = "原始记忆编号")
+    private String rowMemoryNo;
 }

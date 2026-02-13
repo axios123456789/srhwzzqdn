@@ -163,7 +163,71 @@
         <div class="tip-icon">💡</div>
         <div class="tip-content">
           <h4 class="tip-title">智能联想提示</h4>
-          <p class="tip-desc">当前记忆内容为基本记忆，您可以根据基础信息关联生活，工作，学习，娱乐等记忆！！！</p>
+          <p class="tip-desc">当前记忆内容为基本记忆，您可以根据基础信息联想生活，工作，学习，娱乐等记忆！！！</p>
+        </div>
+      </div>
+    </div>
+
+    <!--  记忆联想  -->
+    <div class="memory-card">
+      <div class="card-header">
+        <div class="header-icon">🔗</div>
+        <h3 class="card-title">记忆联想</h3>
+      </div>
+
+      <div class="card-content-wrapper">
+        <div class="card-content">
+          <div class="info-grid">
+            <!-- 联想开始时间 -->
+            <div class="info-item time-item">
+              <div class="item-icon">🕒</div>
+              <div class="item-content">
+                <div class="item-label">联想开始时间</div>
+                <div class="item-value">
+                  {{ associativeMemory.begin_time || '-' }}
+                </div>
+              </div>
+            </div>
+
+            <!--    联想结束时间        -->
+            <div class="info-item time-item">
+              <div class="item-icon">🕒</div>
+              <div class="item-content">
+                <div class="item-label">联想结束时间</div>
+                <div class="item-value">
+                  {{ associativeMemory.end_time || '-' }}
+                </div>
+              </div>
+            </div>
+
+            <!--     联想记忆类型       -->
+            <div class="info-item time-item">
+              <div class="item-icon">🕒</div>
+              <div class="item-content">
+                <div class="item-label">联想记忆类型</div>
+                <div class="item-value">
+                  {{ getDisplayText(associativeMemory.rowMemoryType, rowMemoryTypeItem) }}
+                </div>
+              </div>
+            </div>
+
+            <!-- 联想内容展示 -->
+            <div class="info-item content-item long-text-item">
+              <div class="item-icon">💭</div>
+              <div class="item-content">
+                <div class="item-label">联想内容</div>
+                <div class="item-value content-text">
+                  <el-input
+                    v-model="associativeMemory.rowMemoryContent"
+                    type="textarea"
+                    :rows="4"
+                    placeholder="请输入联想内容..."
+                    resize="vertical"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -191,7 +255,7 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from 'vue'
+import {computed, ref, watch} from 'vue'
 import {GetAdministrative, GetKeyAndValueByType} from "@/api/sysDict";
 
 // ------------------------------- 基础与父组件建立关系 ------------------------------------------
@@ -214,14 +278,45 @@ const dialogVisible = computed({
   }
 })
 
+//打开模态窗口时触发，监听父组件，模态窗口打开触发
+watch(
+    () => props.visible,
+    (val) => {
+      if (val) {
+        //loadDetail()
+        getContactTypeItem();
+        getRowMemoryTypeItem();
+        getMemorySourceItem();
+        getAssociativeStatusItem();
+        getFormattedAddressOptions();
+
+        //将原始记忆赋值给associativeMemory
+        associativeMemory.value.begin_time = props.rowData.recordTime;
+        associativeMemory.value.end_time = props.rowData.recordEndTime;
+        associativeMemory.value.contactType = props.rowData.contactType;
+        associativeMemory.value.contact = props.rowData.contact;
+        associativeMemory.value.memoryPlace = props.rowData.memoryPlace;
+        associativeMemory.value.memoryPlaceDetail = props.rowData.memoryPlaceDetail;
+        associativeMemory.value.memoryPlaceShort = props.rowData.memoryPlaceShort;
+        associativeMemory.value.rowMemoryType = props.rowData.rowMemoryType;
+        associativeMemory.value.rowMemoryContent = props.rowData.rowMemoryContent;
+        associativeMemory.value.rowMemoryReason = props.rowData.rowMemoryReason;
+        associativeMemory.value.rowMemoryAction = props.rowData.rowMemoryAction;
+        associativeMemory.value.memoryOwner = props.rowData.memoryOwner;
+        associativeMemory.value.memorySource = props.rowData.memorySource;
+        associativeMemory.value.memoryImages = props.rowData.memoryImages;
+        associativeMemory.value.memoryNo = props.rowData.memoryNo;
+      }
+    }
+)
 //钩子函数
-onMounted(() => {
-  getContactTypeItem();
-  getRowMemoryTypeItem();
-  getMemorySourceItem();
-  getAssociativeStatusItem();
-  getFormattedAddressOptions();
-})
+// onMounted(() => {
+//   getContactTypeItem();
+//   getRowMemoryTypeItem();
+//   getMemorySourceItem();
+//   getAssociativeStatusItem();
+//   getFormattedAddressOptions();
+// })
 
 // ----------------------------------- 逻辑操作 -------------------------------------------------
 //--------------------------基本信息展示处理----------------------------------
@@ -350,8 +445,29 @@ const getTimePeriodDisplay = computed(() => {
   if (!props.rowData?.recordTime && !props.rowData?.recordEndTime) return '-'
   return `${props.rowData.recordTime || ''} - ${props.rowData.recordEndTime || ''}`
 })
-
 //-------------------------------------------------------------------------
+
+//------------------联想操作------------------------
+const associativeMemory = ref({
+  begin_time: "", //联想开始时间
+  end_time: "", //联想结束时间
+  contactType: "", //联想关系人类型
+  contact: "", //联想关系人名称
+  memoryPlace: "", //联想记忆地点
+  memoryPlaceDetail: "", //联想记忆地点详情
+  memoryPlaceShort: "", //联想地点简称
+  rowMemoryType: "", //联想原始记忆类型
+  rowMemoryContent: "", //联想原始记忆内容
+  rowMemoryReason: "", //联想记忆原因
+  rowMemoryAction: "", //联想记忆行为
+  memoryOwner: "", //联想记忆人
+  memorySource: "", //联想记忆来源
+  memoryImages: "", //联想图片
+  memoryNo: "", //联想记忆编号
+  document: "" //联想文件
+}); //联想记忆，用于存储转换联想记忆参数
+
+// ----------------------------------- 提交处理 -------------------------------------------------
 // 点击提交按钮触发
 const submit = () => {
   console.log('rowData:', getMemoryPlaceDisplay(props.rowData), props.rowData.memoryPlace)
