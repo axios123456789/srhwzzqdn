@@ -1640,3 +1640,5 @@ Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立
 	at org.apache.coyote.Response.doWrite(Response.java:613)
 	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:334)
 	... 61 common frames omitted
+2026-02-13 17:11:18 HikariPool-1 - Shutdown initiated...
+2026-02-13 17:11:18 HikariPool-1 - Shutdown completed.

@@ -227,6 +227,39 @@
                 </div>
               </div>
             </div>
+            
+            <!--      联想记忆文档      -->
+            <div class="info-item time-item">
+              <div class="item-icon">📂</div>
+              <div class="item-content">
+                <div class="item-label">联想记忆文档</div>
+                <div class="item-value">
+                  <el-upload
+                      class="document-uploader"
+                      action="http://localhost:8400/superBrain/system/fileUpload"
+                      :show-file-list="true"
+                      :file-list="documentFileList"
+                      :headers="headers"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.md"
+                      :on-success="handleDocumentSuccess"
+                      :on-error="handleUploadError"
+                      :on-remove="handleDocumentRemove"
+                      :before-upload="addFileInfo"
+                      :on-preview="handleDocumentPreview"
+                  >
+                    <el-button type="primary" class="upload-button">
+                      <el-icon><Upload /></el-icon>
+                      点击上传文档
+                    </el-button>
+                    <template #tip>
+                      <div class="upload-tip">
+                        支持格式：PDF、Word、Excel、PPT、TXT、MD等文档格式
+                      </div>
+                    </template>
+                  </el-upload>
+                </div>
+              </div>
+            </div>
 
             <!--    ----------------------工作记忆联想数据块------------------        -->
             <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 1">
@@ -275,6 +308,38 @@
                 </div>
               </div>
             </div>
+            <!--     工作业务笔记       -->
+            <div class="info-item content-item long-text-item" v-if="associativeMemory.rowMemoryType == 1">
+              <div class="item-icon">💭</div>
+              <div class="item-content">
+                <div class="item-label">工作业务笔记</div>
+                <div class="item-value content-text">
+                  <el-input
+                      v-model="associativeMemory.workBusinessNode"
+                      type="textarea"
+                      :rows="4"
+                      placeholder="请输入工作业务笔记..."
+                      resize="vertical"
+                  />
+                </div>
+              </div>
+            </div>
+            <!--     工作技术笔记       -->
+            <div class="info-item content-item long-text-item" v-if="associativeMemory.rowMemoryType == 1">
+              <div class="item-icon">💭</div>
+              <div class="item-content">
+                <div class="item-label">工作技术笔记</div>
+                <div class="item-value content-text">
+                  <el-input
+                      v-model="associativeMemory.workTechNode"
+                      type="textarea"
+                      :rows="4"
+                      placeholder="请输入工作技术笔记..."
+                      resize="vertical"
+                  />
+                </div>
+              </div>
+            </div>
 
           </div>
         </div>
@@ -306,6 +371,8 @@
 <script setup>
 import {computed, ref, watch} from 'vue'
 import {GetAdministrative, GetAllSysCode, GetKeyAndValueByType} from "@/api/sysDict";
+import {ElMessage} from "element-plus";
+import {useApp} from "@/pinia/modules/app";
 
 // ------------------------------- 基础与父组件建立关系 ------------------------------------------
 /* 接收父组件参数 */
@@ -340,6 +407,12 @@ watch(
         getFormattedAddressOptions();
         getWorkBusinessTypeItem();
         getWorkTechTypeItem();
+
+        //前置操作
+        associativeMemory.value = [];
+        //文档列表数据重置
+        documentFileList.value = []
+        documentList.value = []
 
         //将原始记忆赋值给associativeMemory
         associativeMemory.value.row_id = props.rowData.id;
@@ -535,17 +608,163 @@ const associativeMemory = ref({
   document: "", //联想文件
   workBusinessType: "", //工作业务类型
   workTechType: "", //工作技术类型
+  workBusinessNode: "", //工作业务笔记
+  workTechNode: "", //工作技术笔记
 }); //联想记忆，用于存储转换联想记忆参数
+
+//-----------------------------------上传处理-----------------------------------
+const headers = {
+  token: useApp().authorization.token, // 从pinia中获取token，在进行文件上传的时候将token设置到请求头中
+}
+//-----------文档上传-------------
+// 文件列表（如果需要保存到表单数据中）
+const documentFileList = ref([]) //文件回显
+const documentList = ref([]) //数据
+
+// 文档预览处理函数 - 简化为直接下载
+const handleDocumentPreview = file => {
+  // 直接下载文件
+  if (file.url) {
+    const link = document.createElement('a')
+    link.href = file.url
+    // 总是从URL中提取文件名并清洗，确保下载时使用的是干净的文件名
+    // 这样可以确保与回显时使用相同的清洗逻辑
+    const fileNameFromUrl = file.url.substring(file.url.lastIndexOf('/') + 1)
+    link.download = cleanFileName(fileNameFromUrl)
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+}
+
+// 上传成功处理
+const handleDocumentSuccess = (response, file, fileList) => {
+  // 如果后端返回成功（假设code为200表示成功）
+  if (response.code === 200) {
+    // 保存文件路径到列表
+    const fileUrl = response.data // response.data 应该是文件的URL路径
+    documentList.value.push(fileUrl)
+
+    // 更新documentFileList以显示文件名（去除UUID部分）
+    const cleanedName = cleanFileName(file.name)
+    file.name = cleanedName
+
+    // 如果需要，可以在这里触发事件给父组件
+    // emit('upload-success', response.data)
+
+    ElMessage.success(`文档上传成功，文件名：${cleanedName}`)
+  } else {
+    // 后端返回了错误
+    ElMessage.error(response.message || '上传失败')
+  }
+}
+// 上传错误处理
+const handleUploadError = (error, file, fileList) => {
+  // 文件大小超过限制的错误通常是HTTP 413
+  if (error.status === 413) {
+    ElMessage.error('文件大小超过限制')
+  } else {
+    ElMessage.error('上传失败，请重试')
+  }
+}
+// 上传前的处理（可选：添加额外信息）
+const addFileInfo = file => {
+  // 记录文件大小以便后续使用
+  //console.log('开始上传文件:', file.name, '大小:', formatFileSize(file.size))
+  return true // 必须返回true才会继续上传
+}
+// 文档移除处理
+const handleDocumentRemove = (file, fileList) => {
+  // 从documentList中移除对应的URL
+  const urlToRemove = file.url
+  const index = documentList.value.findIndex(
+      docUrl => docUrl === urlToRemove
+  )
+
+  if (index !== -1) {
+    documentList.value.splice(index, 1)
+    ElMessage.success('文档已移除')
+  } else {
+    // 尝试另一种比较方式，防止URL格式差异
+    const altIndex = documentList.value.findIndex(
+        docUrl =>
+            docUrl.includes(urlToRemove.split('/').pop()) ||
+            urlToRemove.includes(docUrl.split('/').pop())
+    )
+    if (altIndex !== -1) {
+      documentList.value.splice(altIndex, 1)
+      ElMessage.success('文档已移除')
+    }
+  }
+
+  // 同时也要从documentFileList中移除（用于界面更新）
+  const fileIndex = documentFileList.value.findIndex(f => f.url === urlToRemove)
+
+  if (fileIndex !== -1) {
+    documentFileList.value.splice(fileIndex, 1)
+  }
+}
+
+//-------------辅助函数（针对文档上传）----------------
+// 文件名清洗函数 - 支持大小写的32位十六进制UUID
+const cleanFileName = fileName => {
+  if (!fileName) return '未知文件'
+
+  // 方法1: 移除32位十六进制UUID前缀（支持大小写）
+  const hex32Pattern = /^[a-fA-F0-9]{32}/
+  if (hex32Pattern.test(fileName)) {
+    return fileName.substring(32)
+  }
+
+  // 方法2: 移除下划线分隔的UUID
+  const underscoreIndex = fileName.indexOf('_')
+  if (underscoreIndex > 0) {
+    return fileName.substring(underscoreIndex + 1)
+  }
+
+  // 方法3: 移除8位数字时间戳前缀
+  const timestampPattern = /^\d{8}(_)?/
+  if (timestampPattern.test(fileName)) {
+    const match = fileName.match(timestampPattern)
+    if (match) {
+      return fileName.substring(match[0].length)
+    }
+  }
+
+  // 方法4: 移除32位UUID（带连字符格式）如 xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+  const uuidWithHyphenPattern = /^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}/
+  if (uuidWithHyphenPattern.test(fileName)) {
+    return fileName.substring(36)
+  }
+
+  // 方法5: 移除开头的任意32位十六进制字符（不区分大小写）
+  const hex32AnyPattern = /^[a-fA-F0-9]{32}[._-]?/
+  if (hex32AnyPattern.test(fileName)) {
+    return fileName.replace(hex32AnyPattern, '')
+  }
+
+  return fileName
+}
+
+// 文件大小格式化函数
+const formatFileSize = bytes => {
+  if (bytes === 0) return '0 B'
+  const k = 1024
+  const sizes = ['B', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
 
 // ----------------------------------- 提交处理 -------------------------------------------------
 // 点击提交按钮触发
 const submit = () => {
-  console.log('rowData:', getMemoryPlaceDisplay(props.rowData), props.rowData.memoryPlace)
-  if (!props.rowData?.id) {
-    alert('请选择有效的记忆记录')
-    return
+  //数据处理
+  if (documentList.value != null && documentList.value.length > 0) {
+    associativeMemory.value.document = documentList.value.join(',')
+  } else {
+    associativeMemory.value.document = null
   }
-  alert(`开始对记忆ID: ${associativeMemory.value.row_id} 进行联想分析`)
+  alert(`开始对记忆ID: ${associativeMemory.value.document} 进行联想分析`)
 }
 </script>
 
