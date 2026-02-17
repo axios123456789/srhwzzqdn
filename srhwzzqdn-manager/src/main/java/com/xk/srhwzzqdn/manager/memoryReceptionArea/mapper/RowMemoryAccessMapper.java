@@ -5,6 +5,7 @@ import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemory;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemoryConfiguration;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -31,4 +32,8 @@ public interface RowMemoryAccessMapper {
 
     //根据时间阶段类型获取原始记忆配置数据
     List<RowMemoryConfiguration> getMemoryConfigurationByTimeType(Integer timePeriodType);
+
+    //修改原始记忆联想状态
+    @Update("update t_row_memory set memory_associative_status = #{param2} where id = #{param1}")
+    void updateRowMemoryStatus(String row_id, int status);
 }

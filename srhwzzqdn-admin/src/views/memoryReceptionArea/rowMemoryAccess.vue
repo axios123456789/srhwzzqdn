@@ -905,6 +905,7 @@
             记忆删除
           </el-button>
           <el-button
+            v-if="scope.row.memoryAssociativeStatus == 1"
             type="warning"
             size="small"
             @click="memoryAssociative(scope.row)"

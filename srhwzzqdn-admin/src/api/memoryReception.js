@@ -59,6 +59,15 @@ export const GetMemoryConfigurationByTimeType = timePeriodType => {
   })
 }
 
+//记忆联想
+export const MemoryAssociation = (associativeMemory) => {
+  return request({
+    url: `${base_api}/associativeMemory`,
+    method: 'post',
+    data: associativeMemory
+  })
+}
+
 /*********************************************************************************/
 
 //-----------------------------工作记忆api------------------------------------

@@ -3,6 +3,7 @@ package com.xk.srhwzzqdn.manager.memoryReceptionArea.controller;
 import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.service.RowMemoryAccessService;
 import com.xk.srhwzzqdn.model.dto.memoryReceptionArea.RowMemoryDto;
+import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.AssociativeMemory;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemory;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemoryConfiguration;
 import com.xk.srhwzzqdn.model.vo.common.Result;
@@ -97,5 +98,20 @@ public class RowMemoryAccessController {
     public Result getMemoryConfigurationByTimeType(@PathVariable("timePeriodType") Integer timePeriodType){
         List<RowMemoryConfiguration> rowMemoryConfigurations = rowMemoryAccessService.getMemoryConfigurationByTimeType(timePeriodType);
         return Result.build(rowMemoryConfigurations, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 联想记忆
+     * @param associativeMemory
+     * @return
+     */
+    @PostMapping("/associativeMemory")
+    public Result associativeMemory(@RequestBody AssociativeMemory associativeMemory){
+        try {
+            rowMemoryAccessService.associativeMemory(associativeMemory);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "联想记忆失败！");
+        }
     }
 }

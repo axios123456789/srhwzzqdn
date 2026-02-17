@@ -157,15 +157,6 @@
           </div>
         </div>
       </div>
-      
-      <!-- 联想提示区域 -->
-      <div class="association-tip">
-        <div class="tip-icon">💡</div>
-        <div class="tip-content">
-          <h4 class="tip-title">智能联想提示</h4>
-          <p class="tip-desc">当前记忆内容为基本记忆，您可以根据基础信息联想生活，工作，学习，娱乐等记忆！！！</p>
-        </div>
-      </div>
     </div>
 
     <!--  记忆联想  -->
@@ -310,7 +301,7 @@
             </div>
             <!--     工作业务笔记       -->
             <div class="info-item content-item long-text-item" v-if="associativeMemory.rowMemoryType == 1">
-              <div class="item-icon">💭</div>
+              <div class="item-icon">✍️</div>
               <div class="item-content">
                 <div class="item-label">工作业务笔记</div>
                 <div class="item-value content-text">
@@ -326,7 +317,7 @@
             </div>
             <!--     工作技术笔记       -->
             <div class="info-item content-item long-text-item" v-if="associativeMemory.rowMemoryType == 1">
-              <div class="item-icon">💭</div>
+              <div class="item-icon">✍️</div>
               <div class="item-content">
                 <div class="item-label">工作技术笔记</div>
                 <div class="item-value content-text">
@@ -341,8 +332,19 @@
               </div>
             </div>
 
+            <!--    ----------------------生活记忆联想数据块------------------        -->
+
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- 联想提示区域 -->
+    <div class="association-tip">
+      <div class="tip-icon">💡</div>
+      <div class="tip-content">
+        <h4 class="tip-title">智能联想提示</h4>
+        <p class="tip-desc">当前原始记忆档案内容为基本记忆，您可以根据基础信息联想生活，工作，学习，娱乐等记忆！！！</p>
       </div>
     </div>
 
@@ -373,6 +375,7 @@ import {computed, ref, watch} from 'vue'
 import {GetAdministrative, GetAllSysCode, GetKeyAndValueByType} from "@/api/sysDict";
 import {ElMessage} from "element-plus";
 import {useApp} from "@/pinia/modules/app";
+import {MemoryAssociation} from "@/api/memoryReception";
 
 // ------------------------------- 基础与父组件建立关系 ------------------------------------------
 /* 接收父组件参数 */
@@ -409,7 +412,7 @@ watch(
         getWorkTechTypeItem();
 
         //前置操作
-        associativeMemory.value = [];
+        //associativeMemory.value = [];
         //文档列表数据重置
         documentFileList.value = []
         documentList.value = []
@@ -420,7 +423,7 @@ watch(
         associativeMemory.value.end_time = props.rowData.recordEndTime;
         associativeMemory.value.contactType = props.rowData.contactType;
         associativeMemory.value.contact = props.rowData.contact;
-        associativeMemory.value.memoryPlace = props.rowData.memoryPlace;
+        associativeMemory.value.memoryPlace = props.rowData.memoryPlace.join(',');
         associativeMemory.value.memoryPlaceDetail = props.rowData.memoryPlaceDetail;
         associativeMemory.value.memoryPlaceShort = props.rowData.memoryPlaceShort;
         associativeMemory.value.rowMemoryType = props.rowData.rowMemoryType;
@@ -429,7 +432,7 @@ watch(
         associativeMemory.value.rowMemoryAction = props.rowData.rowMemoryAction;
         associativeMemory.value.memoryOwner = props.rowData.memoryOwner;
         associativeMemory.value.memorySource = props.rowData.memorySource;
-        associativeMemory.value.memoryImages = props.rowData.memoryImages;
+        associativeMemory.value.memoryImages = props.rowData.memoryImages.join(',');
         associativeMemory.value.memoryNo = props.rowData.memoryNo;
       }
     }
@@ -610,6 +613,8 @@ const associativeMemory = ref({
   workTechType: "", //工作技术类型
   workBusinessNode: "", //工作业务笔记
   workTechNode: "", //工作技术笔记
+  //------------生活记忆--------------
+
 }); //联想记忆，用于存储转换联想记忆参数
 
 //-----------------------------------上传处理-----------------------------------
@@ -757,14 +762,29 @@ const formatFileSize = bytes => {
 
 // ----------------------------------- 提交处理 -------------------------------------------------
 // 点击提交按钮触发
-const submit = () => {
+const submit = async () => {
+  //数据校验
+  if (associativeMemory.value.rowMemoryContent == undefined || associativeMemory.value.rowMemoryContent == ''){
+    ElMessage.error('【记忆内容】不能为空')
+  }
+
   //数据处理
   if (documentList.value != null && documentList.value.length > 0) {
     associativeMemory.value.document = documentList.value.join(',')
   } else {
     associativeMemory.value.document = null
   }
-  alert(`开始对记忆ID: ${associativeMemory.value.document} 进行联想分析`)
+
+  //console.log(`开始对记忆ID: ${associativeMemory.value.row_id} 进行联想分析`)
+  //提交数据
+  const {code, message} = await MemoryAssociation(associativeMemory.value);
+  //console.log(`开始对记忆ID2: ${associativeMemory.value} 进行联想分析`)
+  if (code === 200){
+    dialogVisible.value = false;
+    ElMessage.success(message);
+  } else {
+    ElMessage.error(message);
+  }
 }
 </script>
 
