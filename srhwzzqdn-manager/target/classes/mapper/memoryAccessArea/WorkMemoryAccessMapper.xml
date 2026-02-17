@@ -42,7 +42,8 @@
             work_address,
             work_address_detail,
             create_time,
-            memory_images
+            memory_images,
+            row_memory_no
         ) values (
              #{id},
              #{memoryNo},
@@ -60,7 +61,8 @@
              #{workAddress},
              #{workAddressDetail},
              now(),
-             #{memoryImages}
+             #{memoryImages},
+             #{rowMemoryNo}
         )
     </insert>
     <!--  修改工作记忆  -->

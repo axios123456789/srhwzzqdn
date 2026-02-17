@@ -873,6 +873,7 @@
     <MemoryRelationDialog
         v-model:visible="relationDialogVisible"
         :rowData="currentRow"
+        @refresh="rowFetchData"
     />
 
     <!--  数据展示列表  -->

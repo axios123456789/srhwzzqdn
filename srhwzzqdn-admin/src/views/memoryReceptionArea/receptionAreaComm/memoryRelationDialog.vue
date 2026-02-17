@@ -385,7 +385,7 @@ const props = defineProps({
 })
 
 /* 向父组件发送事件 */
-const emit = defineEmits(['update:visible'])
+const emit = defineEmits(['update:visible', 'refresh'])
 
 /* 代理 visible，不能直接改 props */
 const dialogVisible = computed({
@@ -780,7 +780,10 @@ const submit = async () => {
   const {code, message} = await MemoryAssociation(associativeMemory.value);
   //console.log(`开始对记忆ID2: ${associativeMemory.value} 进行联想分析`)
   if (code === 200){
-    dialogVisible.value = false;
+    // 1️⃣ 通知父组件刷新
+    emit('refresh')
+    // 2️⃣ 关闭弹窗
+    emit('update:visible', false)
     ElMessage.success(message);
   } else {
     ElMessage.error(message);
