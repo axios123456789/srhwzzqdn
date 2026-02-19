@@ -7,6 +7,8 @@
     :close-on-click-modal="false"
     align-center
     draggable
+    :fullscreen="isFullscreen"
+    @open="initFullscreen"
   >
     <div class="dialog-body">
       <!-- 记忆信息卡片 -->
@@ -376,6 +378,10 @@ import {GetAdministrative, GetAllSysCode, GetKeyAndValueByType} from "@/api/sysD
 import {ElMessage} from "element-plus";
 import {useApp} from "@/pinia/modules/app";
 import {MemoryAssociation} from "@/api/memoryReception";
+import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
+
+// 在需要全屏的组件中使用 Hook
+const { isFullscreen, initFullscreen } = useFullscreenDialog()
 
 // ------------------------------- 基础与父组件建立关系 ------------------------------------------
 /* 接收父组件参数 */
