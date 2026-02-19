@@ -378,6 +378,20 @@
       </template>
     </el-dialog>
 
+    <!--  导出对话框  -->
+    <ExportDialog
+        v-model="exportDialogVisible"
+        v-model:export-scope="exportScope"
+        v-model:export-file-name="exportFileName"
+        v-model:selected-columns="selectedColumns"
+        :available-columns="exportColumns"
+        :export-loading="exportLoading"
+        :current-count="workList.length"
+        :total-count="workTotal"
+        @confirm="handleExport"
+        @closed="resetExport"
+    />
+
     <!-- 列表展示  -->
     <el-table
       :data="workList"
@@ -532,6 +546,8 @@ import {
 import { getTodayTimeRange } from '@/utils/common'
 import { useApp } from '@/pinia/modules/app'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {useExport} from "@/components/Export/hooks/useExport"
+import ExportDialog from '@/components/Export/ExportDialog.vue'
 
 //----------------钩子函数-------------------
 onMounted(() => {
@@ -1069,6 +1085,95 @@ const deleteSelectAll = async () => {
     ElMessage.error(message)
   }
 }
+
+//-----------------------------------------一键导出功能实现---------------------------------------
+//-----------------------------------导出功能配置-----------------------------------
+// 可导出的列配置
+const exportColumns = [
+  { key: 'workBusinessType', label: '工作业务类型', width: 15 },
+  { key: 'workTechType', label: '工作技术类型', width: 15 },
+  { key: 'memoryNo', label: '记忆编号', width: 20 },
+  { key: 'beginTime', label: '工作开始时间', width: 20 },
+  { key: 'endTime', label: '工作结束时间', width: 20 },
+  { key: 'workDuration', label: '工作时长（h）', width: 12 },
+  { key: 'memorySource', label: '记忆来源', width: 12 },
+  { key: 'workContent', label: '工作内容', width: 40 },
+  { key: 'workBusinessNode', label: '工作业务笔记', width: 30 },
+  { key: 'workTechNode', label: '工作技术笔记', width: 30 },
+  { key: 'memoryOwnerName', label: '记忆所属人', width: 12 },
+  { key: 'workDocument', label: '工作文档', width: 25 },
+  { key: 'updateTime', label: '修改时间', width: 20 },
+  { key: 'updateBy', label: '修改者', width: 12 },
+]
+
+// 数据格式化函数
+const workDataFormatter = (item, key, value) => {
+  switch (key) {
+    case 'workBusinessType':
+      return getDisplayTextByTree(value, workBusinessTypeItem.value)
+    case 'workTechType':
+      return getDisplayTextByTree(value, workTechTypeItem.value)
+    case 'memorySource':
+      return getDisplayText(value, workMemorySourceItem.value)
+    case 'workDocument':
+      return getDocumentNames(value)
+    default:
+      return value
+  }
+}
+
+// 获取全部数据的函数
+const fetchAllWorkData = async () => {
+  const { data } = await GetWorkMemoryByConditionAndPage(
+      1,
+      10000,
+      workMemoryQueryDto.value
+  )
+
+  data.list.forEach(item => {
+    if (item.memoryImages != null && item.memoryImages != '') {
+      item.memoryImages = item.memoryImages.split(',')
+    } else {
+      item.memoryImages = []
+    }
+    if (item.workDocument != null && item.workDocument != '') {
+      item.workDocument = item.workDocument.split(',')
+    } else {
+      item.workDocument = []
+    }
+    if (item.workAddress != null && item.workAddress != '') {
+      item.workAddress = item.workAddress.split(',')
+    } else {
+      item.workAddress = ''
+    }
+  })
+
+  return data.list
+}
+
+// 使用导出Hook
+const {
+  exportDialogVisible,
+  exportScope,
+  exportFileName,
+  exportLoading,
+  selectedColumns,
+  showExportDialog: showExport,
+  handleExport,
+  resetExport
+} = useExport({
+  availableColumns: exportColumns,
+  fetchAllData: fetchAllWorkData,
+  dataFormatter: workDataFormatter,
+  defaultFileName: '工作记忆数据',
+  sheetName: '工作记忆数据'
+})
+
+// 包装显示导出对话框的方法
+const showExportDialog = () => {
+  showExport(workList.value, workTotal.value)
+}
+
 </script>
 
 <style scoped>
