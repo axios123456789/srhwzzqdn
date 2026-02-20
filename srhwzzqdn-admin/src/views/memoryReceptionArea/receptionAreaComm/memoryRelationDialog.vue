@@ -440,6 +440,10 @@ watch(
         associativeMemory.value.memorySource = props.rowData.memorySource;
         associativeMemory.value.memoryImages = props.rowData.memoryImages.join(',');
         associativeMemory.value.memoryNo = props.rowData.memoryNo;
+        associativeMemory.value.workBusinessType = "";
+        associativeMemory.value.workTechType = "";
+        associativeMemory.value.workBusinessNode = "";
+        associativeMemory.value.workTechNode = "";
       }
     }
 )
