@@ -104,6 +104,7 @@
 import {onMounted, ref} from "vue";
 import {getTodayTimeRange} from "@/utils/common";
 import {GetAdministrative, GetKeyAndValueByType} from "@/api/sysDict";
+import {GetLifeMemoryByConditionAndPage} from "@/api/memoryReception";
 
 //--------------------钩子函数-------------------------
 onMounted(() => {
@@ -163,7 +164,24 @@ const beginTimeArea = ref([]);
 
 //发送请求，拿到生活记忆列表
 const lifeFetchData = async () => {
+  const {data} = await GetLifeMemoryByConditionAndPage(lifePageParams.value.page, lifePageParams.value.limit, lifeQueryDto.value);
 
+  //数据处理
+  data.list.forEach(item => {
+    if (item.memoryImages != null && item.memoryImages != '') {
+      item.memoryImages = item.memoryImages.split(',')
+    } else {
+      item.memoryImages = []
+    }
+    if (item.memoryPlace != null && item.memoryPlace != '') {
+      item.memoryPlace = item.memoryPlace.split(',')
+    } else {
+      item.memoryPlace = ''
+    }
+  })
+
+  lifeTotal.value = data.total;
+  lifeList.value = data.list;
 }
 
 //搜索按钮点击触发事件

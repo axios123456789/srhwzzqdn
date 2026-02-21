@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Schema(description = "生活记忆实体类")
-public class lifeMemory {
+public class LifeMemory {
     private Integer id;
 
     @Schema(description = "记忆编号")
@@ -45,6 +45,8 @@ public class lifeMemory {
 
     @Schema(description = "生活记忆所属人")
     private String memoryOwner;
+
+    private String memoryOwnerName;
 
     @Schema(description = "原始记忆编号")
     private String rowMemoryNo;

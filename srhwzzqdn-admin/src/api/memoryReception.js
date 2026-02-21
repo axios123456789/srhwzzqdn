@@ -2,6 +2,7 @@ import request from '@/utils/request'
 
 const base_api = '/superBrain/memoryReception/rowMemoryAccess' //原始记忆基本路径
 const base_api2 = '/superBrain/memoryReception/workMemoryAccess' //工作记忆基本路径
+const base_api3 = '/superBrain/memoryReception/lifeMemoryAccess' //生活记忆基本路径
 
 //-----------------------------原始记忆api------------------------------------
 //获取原始记忆列表【条件分页】
@@ -109,3 +110,15 @@ export const DeleteAllWorkMemoryByIds = ids => {
     data: ids,
   })
 }
+
+
+//------------------------------------生活记忆api--------------------------------------
+//条件分页查询生活记忆列表
+export const GetLifeMemoryByConditionAndPage = (current, limit, lifeMemoryDto) => {
+  return request({
+    url: `${base_api3}/getLifeMemoryByConditionAndPage/${current}/${limit}`,
+    method: 'post',
+    data: lifeMemoryDto,
+  })
+}
+//***********************************************************************************
