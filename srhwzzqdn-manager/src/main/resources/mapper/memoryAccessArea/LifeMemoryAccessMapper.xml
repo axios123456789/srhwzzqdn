@@ -1,28 +1,84 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.LifeMemoryAccessMapper">
+    <!--  新增生活记忆  -->
+    <insert id="addLifeMemory">
+        insert into t_life_memory (memory_no,
+                                   begin_time,
+                                   end_time,
+                                   life_type,
+                                   life_content,
+                                   life_consume,
+                                   memory_place,
+                                   memory_place_detail,
+                                   memory_image,
+                                   memory_source,
+                                   memory_owner,
+                                   row_memory_no)
+        values (#{memoryNo},
+                #{beginTime},
+                #{endTime},
+                #{lifeType},
+                #{lifeContent},
+                #{lifeConsume},
+                #{memoryPlace},
+                #{memoryPlaceDetail},
+                #{memoryImage},
+                #{memorySource},
+                #{memoryOwner},
+                #{rowMemoryNo})
+    </insert>
+
+    <!--  修改生活记忆  -->
+    <update id="updateLifeMemory">
+        update t_life_memory
+        <set>
+            begin_time = #{beginTime},
+            end_time = #{endTime},
+            life_type = #{lifeType},
+            life_content = #{lifeContent},
+            life_consume = #{lifeConsume},
+            memory_place = #{memoryPlace},
+            memory_place_detail = #{memoryPlaceDetail},
+            memory_image = #{memoryImage},
+            memory_source = #{memorySource},
+            row_memory_no = #{rowMemoryNo},
+            update_time = now(),
+            update_by = #{updateBy}
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--   根据ids批量删除生活记忆  -->
+    <delete id="deleteAllLifeMemoryByIds">
+        delete from t_life_memory where id in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
     <!--  条件查询生活记忆列表  -->
     <select id="getLifeMemoryByCondition"
             resultType="com.xk.srhwzzqdn.model.entity.memoryReceptionArea.LifeMemory">
-        select  t.id,
-                t.memory_no,
-                t.begin_time,
-                t.end_time,
-                t.life_type,
-                t.life_content,
-                t.life_consume,
-                t.memory_place,
-                t.memory_place_detail,
-                t.memory_image,
-                t.memory_source,
-                t.memory_owner,
-                t.row_memory_no,
-                t.update_time,
-                t.update_by,
-                i.name as memoryOwnerName
+        select t.id,
+        t.memory_no,
+        t.begin_time,
+        t.end_time,
+        t.life_type,
+        t.life_content,
+        t.life_consume,
+        t.memory_place,
+        t.memory_place_detail,
+        t.memory_image,
+        t.memory_source,
+        t.memory_owner,
+        t.row_memory_no,
+        t.update_time,
+        t.update_by,
+        i.name as memoryOwnerName
         from t_life_memory t
-          left join t_sys_person_info i
-           on i.account_id = t.memory_owner
+        left join t_sys_person_info i
+        on i.account_id = t.memory_owner
         <where>
             <if test="memoryNo != null and memoryNo != ''">
                 and t.memory_no like concat('%', #{memoryNo}, '%')

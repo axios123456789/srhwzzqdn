@@ -97,6 +97,139 @@
       </el-form>
     </div>
 
+    <!--总体操作按钮一览-->
+    <div class="tools-div beautified-tools">
+      <el-button
+          type="success"
+          size="small"
+          @click="addLifeMemory"
+          class="action-btn manual-btn"
+      >
+        <el-icon><DocumentAdd /></el-icon>
+        手动录入
+      </el-button>
+      <el-button
+          type="danger"
+          size="small"
+          @click="deleteSelectAll"
+          class="action-btn batch-delete-btn"
+      >
+        <el-icon><Delete /></el-icon>
+        批量删除
+      </el-button>
+      <el-button
+          type="info"
+          size="small"
+          @click="showExportDialog"
+          class="action-btn export-btn"
+      >
+        <el-icon><Download /></el-icon>
+        一键导出
+      </el-button>
+    </div>
+
+    <!-- 列表展示  -->
+    <el-table
+        :data="lifeList"
+        style="width: 100%"
+        height="300"
+        ref="multipleTable"
+        @selection-change="handleSelectionChange"
+    >
+      <el-table-column type="selection" width="40"></el-table-column>
+      <el-table-column label="操作" align="center" width="280" #default="scope">
+        <div class="action-buttons">
+          <el-button
+              type="primary"
+              size="small"
+              @click="editLifeMemory(scope.row)"
+              class="beautified-edit-btn"
+          >
+            <el-icon><Edit /></el-icon>
+            记忆编辑
+          </el-button>
+          <el-button
+              type="danger"
+              size="small"
+              @click="deleteLifeMemoryById(scope.row)"
+              class="beautified-delete-btn"
+          >
+            <el-icon><Delete /></el-icon>
+            记忆删除
+          </el-button>
+          <el-button
+              type="warning"
+              size="small"
+              @click="memoryAssociative(scope.row)"
+              class="beautified-associative-btn"
+          >
+            <el-icon><Connection /></el-icon>
+            记忆联想
+          </el-button>
+        </div>
+      </el-table-column>
+      <el-table-column prop="memoryNo" label="记忆编号" width="180" />
+      <el-table-column prop="beginTime" label="记忆开始时间" width="180" />
+      <el-table-column prop="endTime" label="记忆结束时间" width="180" />
+      <el-table-column
+          prop="lifeType"
+          label="生活记忆类型"
+          width="120"
+          #default="scope"
+      >
+        {{ getDisplayText(scope.row.lifeType, lifeMemoryTypeItem) }}
+      </el-table-column>
+      <el-table-column
+          prop="memorySource"
+          label="记忆来源"
+          width="120"
+          #default="scope"
+      >
+        {{ getDisplayText(scope.row.memorySource, lifeMemorySourceItem) }}
+      </el-table-column>
+      <el-table-column
+          prop="memoryImages"
+          label="工作记录图"
+          #default="scope"
+          width="200"
+      >
+        <div style="float: left;">
+          <template v-for="(item, index) in scope.row.memoryImages" :key="index">
+            <img
+                v-if="index < 3"
+                :src="item"
+                width="50"
+                height="50"
+                style="margin-right: 5px;"
+            />
+            <span v-else-if="index === 3">...</span>
+          </template>
+        </div>
+      </el-table-column>
+      <el-table-column prop="lifeContent" label="生活记忆内容" width="300">
+        <template #default="scope">
+          <span :title="scope.row.lifeContent">
+            {{ scope.row.lifeContent && scope.row.lifeContent.length > 100 ? scope.row.lifeContent.substring(0, 100) + '...' : scope.row.lifeContent }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="lifeConsume" label="生活消费" width="120" />
+      <el-table-column prop="memoryOwnerName" label="记忆所属人" width="120" />
+      <el-table-column prop="updateTime" label="修改时间" width="180" />
+      <el-table-column prop="updateBy" label="修改者" width="120" />
+    </el-table>
+
+    <!--分页条-->
+    <el-pagination
+        style="margin-top: 30px"
+        v-model:current-page="lifePageParams.page"
+        v-model:page-size="lifePageParams.limit"
+        :page-sizes="[10, 20, 50, 100]"
+        @size-change="lifeFetchData"
+        @current-change="lifeFetchData"
+        layout="total, sizes, prev, pager, next"
+        :total="lifeTotal"
+    />
   </div>
 </template>
 
@@ -304,6 +437,317 @@ const resetLifeMemory = () => {
 .beautified-reset-btn .el-icon {
   font-size: 12px;
   margin-right: 2px;
+}
+/****************************************************************/
+
+/* *************************** 操作按钮图标样式及布局美化 **************************/
+.beautified-search-btn .el-icon,
+.beautified-reset-btn .el-icon {
+  font-size: 12px;
+  margin-right: 2px;
+}
+
+/* 美化工具按钮区域 */
+.beautified-tools {
+  margin: 20px 0;
+  padding: 16px 24px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  float: right;
+  clear: both;
+}
+
+.action-btn {
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  border: none;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn:active {
+  transform: translateY(-1px);
+}
+
+.manual-btn {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  color: white;
+}
+
+.manual-btn:hover {
+  background: linear-gradient(135deg, #389e0d 0%, #52c41a 100%);
+  box-shadow: 0 6px 20px rgba(82, 196, 26, 0.4);
+}
+
+.responsive-btn {
+  background: linear-gradient(135deg, #fa8c16 0%, #ffa940 100%);
+  color: white;
+}
+
+.responsive-btn:hover {
+  background: linear-gradient(135deg, #d46b08 0%, #fa8c16 100%);
+  box-shadow: 0 6px 20px rgba(250, 140, 22, 0.4);
+}
+
+.ai-btn {
+  background: linear-gradient(135deg, #f5222d 0%, #ff4d4f 100%);
+  color: white;
+}
+
+.ai-btn:hover {
+  background: linear-gradient(135deg, #cf1322 0%, #f5222d 100%);
+  box-shadow: 0 6px 20px rgba(245, 34, 45, 0.4);
+}
+
+/* 导出按钮样式 */
+.export-btn {
+  background: linear-gradient(135deg, #909399 0%, #a6a9ad 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(144, 147, 153, 0.3);
+}
+
+.export-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(144, 147, 153, 0.4);
+  background: linear-gradient(135deg, #7a7d81 0%, #8f9296 100%);
+}
+
+.export-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(144, 147, 153, 0.3);
+}
+
+.export-btn:disabled {
+  background: linear-gradient(135deg, #d9d9d9 0%, #bfbfbf 100%);
+  color: #8c8c8c;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 批量删除按钮样式 */
+.batch-delete-btn {
+  background: linear-gradient(135deg, #f5222d 0%, #ff4d4f 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(245, 34, 45, 0.3);
+}
+
+.batch-delete-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(245, 34, 45, 0.4);
+  background: linear-gradient(135deg, #cf1322 0%, #f5222d 100%);
+}
+
+.batch-delete-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(245, 34, 45, 0.3);
+}
+
+.batch-delete-btn:disabled {
+  background: linear-gradient(135deg, #d9d9d9 0%, #bfbfbf 100%);
+  color: #8c8c8c;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn .el-icon {
+  font-size: 16px;
+  margin-right: 4px;
+}
+
+/* 导出对话框样式 */
+.export-dialog-content {
+  padding: 20px 0;
+}
+
+.export-dialog-content .el-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.export-dialog-content .el-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .beautified-tools {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+
+  .action-btn {
+    width: 140px;
+    justify-content: center;
+  }
+}
+/*******************************************************************/
+
+/************************************列表样式***********************************/
+/deep/ .el-table,
+/deep/ .el-table__expanded-cell {
+  background-color: transparent;
+  color: #001528;
+  border: 1px solid;
+}
+/deep/ .el-table th,
+/deep/ .el-table tr,
+/deep/ .el-table td {
+  background-color: transparent;
+  color: #001528;
+  border: 1px solid;
+}
+/******************************************************************************/
+
+/* ****************** 列表操作按钮容器美化 ************************/
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+/* 通用按钮样式 */
+.beautified-edit-btn,
+.beautified-delete-btn,
+.beautified-associative-btn {
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 70px;
+  justify-content: center;
+}
+
+.beautified-edit-btn:hover,
+.beautified-delete-btn:hover,
+.beautified-associative-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.beautified-edit-btn:active,
+.beautified-delete-btn:active,
+.beautified-associative-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 编辑按钮样式 */
+.beautified-edit-btn {
+  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+  color: white;
+  border: 1px solid #409eff;
+}
+
+.beautified-edit-btn:hover {
+  background: linear-gradient(135deg, #337ecc 0%, #529ce3 100%);
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+  border-color: #337ecc;
+}
+
+/* 删除按钮样式 */
+.beautified-delete-btn {
+  background: linear-gradient(135deg, #f56c6c 0%, #f78989 100%);
+  color: white;
+  border: 1px solid #f56c6c;
+}
+
+.beautified-delete-btn:hover {
+  background: linear-gradient(135deg, #d54c4c 0%, #e57373 100%);
+  box-shadow: 0 4px 12px rgba(245, 108, 108, 0.3);
+  border-color: #d54c4c;
+}
+
+/* 联想按钮样式 */
+.beautified-associative-btn {
+  background: linear-gradient(135deg, #e6a23c 0%, #ebb563 100%);
+  color: white;
+  border: 1px solid #e6a23c;
+}
+
+.beautified-associative-btn:hover {
+  background: linear-gradient(135deg, #cf9233 0%, #e2a952 100%);
+  box-shadow: 0 4px 12px rgba(230, 162, 60, 0.3);
+  border-color: #cf9233;
+}
+
+/* 按钮图标样式 */
+.beautified-edit-btn .el-icon,
+.beautified-delete-btn .el-icon,
+.beautified-associative-btn .el-icon {
+  font-size: 12px;
+  margin-right: 2px;
+}
+
+/* 响应式调整 */
+@media (max-width: 1366px) {
+  .action-buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .beautified-edit-btn,
+  .beautified-delete-btn,
+  .beautified-associative-btn {
+    min-width: 80px;
+    padding: 5px 10px;
+    font-size: 11px;
+  }
 }
 /****************************************************************/
 </style>

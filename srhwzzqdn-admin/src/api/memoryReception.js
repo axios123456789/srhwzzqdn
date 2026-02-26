@@ -121,4 +121,30 @@ export const GetLifeMemoryByConditionAndPage = (current, limit, lifeMemoryDto) =
     data: lifeMemoryDto,
   })
 }
+
+//保存生活记忆
+export const SaveLifeMemory = lifeMemory => {
+  return request({
+    url: `${base_api3}/saveLifeMemory`,
+    method: 'post',
+    data: lifeMemory,
+  })
+}
+
+//根据id删除生活记忆
+export const DeleteLifeMemoryById = id => {
+  return request({
+    url: `${base_api3}/deleteLifeMemoryById/${id}`,
+    method: 'delete',
+  })
+}
+
+//根据ids批量删除生活记忆
+export const DeleteAllLifeMemoryByIds = ids => {
+  return request({
+    url: `${base_api3}/deleteAllLifeMemoryByIds`,
+    method: 'post',
+    data: ids,
+  })
+}
 //***********************************************************************************
