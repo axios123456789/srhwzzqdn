@@ -13,5 +13,6 @@ public class LifeMemoryDto {
     private String beginTime;
     private String endTime;
     private List<Integer> memorySource;
+    private List<Integer> consumeType;
     private String memoryOwner;
 }

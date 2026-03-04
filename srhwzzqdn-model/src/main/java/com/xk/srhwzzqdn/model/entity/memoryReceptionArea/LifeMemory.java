@@ -56,4 +56,7 @@ public class LifeMemory {
 
     @Schema(description = "修改人")
     private String updateBy;
+
+    @Schema(description = "消费类型")
+    private Integer consumeType;
 }

@@ -14,7 +14,8 @@
                                    memory_image,
                                    memory_source,
                                    memory_owner,
-                                   row_memory_no)
+                                   row_memory_no,
+                                   consume_type)
         values (#{memoryNo},
                 #{beginTime},
                 #{endTime},
@@ -26,7 +27,8 @@
                 #{memoryImage},
                 #{memorySource},
                 #{memoryOwner},
-                #{rowMemoryNo})
+                #{rowMemoryNo},
+                #{consumeType})
     </insert>
 
     <!--  修改生活记忆  -->
@@ -38,6 +40,7 @@
             life_type = #{lifeType},
             life_content = #{lifeContent},
             life_consume = #{lifeConsume},
+            consume_type = #{consumeType},
             memory_place = #{memoryPlace},
             memory_place_detail = #{memoryPlaceDetail},
             memory_image = #{memoryImage},
@@ -75,6 +78,7 @@
         t.row_memory_no,
         t.update_time,
         t.update_by,
+        t.consume_type,
         i.name as memoryOwnerName
         from t_life_memory t
         left join t_sys_person_info i
@@ -86,6 +90,12 @@
             <if test="lifeType != null and lifeType.size() > 0">
                 and t.life_type in
                 <foreach collection="lifeType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="consumeType != null and consumeType.size() > 0">
+                and t.consume_type in
+                <foreach collection="consumeType" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
             </if>

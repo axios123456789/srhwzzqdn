@@ -74,6 +74,24 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="消费类型">
+              <el-select
+                  v-model="lifeQueryDto.consumeType"
+                  multiple
+                  placeholder="请选择"
+                  style="width: 100%"
+                  clearable
+              >
+                <el-option
+                    v-for="item in consumeTypeItem"
+                    :key="item.value"
+                    :label="item.text"
+                    :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row style="display:flex">
           <el-button
@@ -180,6 +198,14 @@
         {{ getDisplayText(scope.row.lifeType, lifeMemoryTypeItem) }}
       </el-table-column>
       <el-table-column
+          prop="consumeType"
+          label="消费类型"
+          width="120"
+          #default="scope"
+      >
+        {{ getDisplayText(scope.row.consumeType, consumeTypeItem) }}
+      </el-table-column>
+      <el-table-column
           prop="memorySource"
           label="记忆来源"
           width="120"
@@ -245,6 +271,7 @@ onMounted(() => {
   getFormattedAddressOptions() //行政区划
   getLifeMemorySourceItem();
   getLifeMemoryTypeItem();
+  getConsumeTypeItem();
 
   //2.查询条件设置默认时间为今天
   const [startOfDay, endOfDay] = getTodayTimeRange()
@@ -269,6 +296,12 @@ const lifeMemoryTypeItem = ref([]);
 const getLifeMemoryTypeItem = async () => {
   const { data } = await GetKeyAndValueByType('t_life_memory_type')
   lifeMemoryTypeItem.value = data
+}
+//消费类型
+const consumeTypeItem = ref([]);
+const getConsumeTypeItem = async () => {
+  const { data } = await GetKeyAndValueByType('t_life_consume_type')
+  consumeTypeItem.value = data
 }
 //获取中国统计用行政区划下拉列表
 const formattedAddressOptions = ref([])
