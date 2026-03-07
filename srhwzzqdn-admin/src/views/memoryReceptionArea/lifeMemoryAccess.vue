@@ -331,6 +331,20 @@
       </template>
     </el-dialog>
 
+    <!--  导出对话框  -->
+    <ExportDialog
+        v-model="exportDialogVisible"
+        v-model:export-scope="exportScope"
+        v-model:export-file-name="exportFileName"
+        v-model:selected-columns="selectedColumns"
+        :available-columns="exportColumns"
+        :export-loading="exportLoading"
+        :current-count="lifeList.length"
+        :total-count="lifeTotal"
+        @confirm="handleExport"
+        @closed="resetExport"
+    />
+
     <!-- 列表展示  -->
     <el-table
         :data="lifeList"
@@ -448,10 +462,12 @@
 import {onMounted, ref} from "vue";
 import {getTodayTimeRange} from "@/utils/common";
 import {GetAdministrative, GetKeyAndValueByType} from "@/api/sysDict";
-import {GetLifeMemoryByConditionAndPage, SaveLifeMemory} from "@/api/memoryReception";
+import {GetLifeMemoryByConditionAndPage, SaveLifeMemory, DeleteLifeMemoryById, DeleteAllLifeMemoryByIds} from "@/api/memoryReception";
 import {useApp} from "@/pinia/modules/app";
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
+import {useExport} from "@/components/Export/hooks/useExport";
+import ExportDialog from '@/components/Export/ExportDialog.vue';
 
 //--------------------钩子函数-------------------------
 onMounted(() => {
@@ -672,6 +688,152 @@ const dialogImageUrl = ref()
 const handlePictureCardPreview = file => {
   dialogImageUrl.value = file.url
   dialogVisibleHandle.value = true
+}
+
+//---------------------------------------删除记忆------------------------------------
+//点击删除生活记忆按钮后触发
+const deleteLifeMemoryById = row => {
+  ElMessageBox.confirm('确定要从外置大脑清除这条生活记忆吗?', 'Warning', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(async () => {
+    const { code, message } = await DeleteLifeMemoryById(row.id)
+    if (code === 200) {
+      ElMessage.success(message)
+      lifeFetchData()
+    } else {
+      ElMessage.error(message)
+    }
+  })
+}
+
+//--------------------------------------------------批量删除记忆功能-------------------------------------------------
+// 选中的行数据
+const selectedRows = ref([])
+// 获取表格引用
+const multipleTable = ref(null)
+
+// 处理选中行变化
+const handleSelectionChange = selection => {
+  selectedRows.value = selection
+}
+// 批量删除函数
+const deleteSelectAll = async () => {
+  if (!selectedRows.value || selectedRows.value.length === 0) {
+    ElMessage.warning('请先选择要删除的生活记忆记录')
+    return
+  }
+
+  await ElMessageBox.confirm(
+    `确定要批量删除选中的 ${selectedRows.value.length} 条生活记忆记录吗？此操作不可恢复！`,
+    '警告',
+    {
+      confirmButtonText: '确定删除',
+      cancelButtonText: '取消',
+      type: 'warning',
+      confirmButtonClass: 'batch-delete-confirm-btn',
+      cancelButtonClass: 'batch-delete-cancel-btn',
+    }
+  )
+
+  // 获取所有选中记录的ID
+  const selectedIds = selectedRows.value.map(row => row.id)
+
+  // 调用批量删除的API
+  const { code, message } = await DeleteAllLifeMemoryByIds(selectedIds)
+  if (code === 200) {
+    // 刷新数据
+    lifeFetchData()
+
+    // 清空选中状态
+    if (multipleTable.value) {
+      multipleTable.value.clearSelection()
+    }
+    selectedRows.value = []
+
+    ElMessage.success(message)
+  } else {
+    ElMessage.error(message)
+  }
+}
+
+//-----------------------------------------一键导出功能实现---------------------------------------
+//-----------------------------------导出功能配置-----------------------------------
+// 可导出的列配置
+const exportColumns = [
+  { key: 'memoryNo', label: '记忆编号', width: 20 },
+  { key: 'beginTime', label: '记忆开始时间', width: 20 },
+  { key: 'endTime', label: '记忆结束时间', width: 20 },
+  { key: 'lifeType', label: '生活记忆类型', width: 12 },
+  { key: 'consumeType', label: '消费类型', width: 12 },
+  { key: 'memorySource', label: '记忆来源', width: 12 },
+  { key: 'lifeContent', label: '生活记忆内容', width: 40 },
+  { key: 'lifeConsume', label: '生活消费', width: 12 },
+  { key: 'memoryOwnerName', label: '记忆所属人', width: 12 },
+  { key: 'updateTime', label: '修改时间', width: 20 },
+  { key: 'updateBy', label: '修改者', width: 12 },
+]
+
+// 数据格式化函数
+const lifeDataFormatter = (item, key, value) => {
+  switch (key) {
+    case 'lifeType':
+      return getDisplayText(value, lifeMemoryTypeItem.value)
+    case 'consumeType':
+      return getDisplayText(value, consumeTypeItem.value)
+    case 'memorySource':
+      return getDisplayText(value, lifeMemorySourceItem.value)
+    default:
+      return value
+  }
+}
+
+// 获取全部数据的函数
+const fetchAllLifeData = async () => {
+  const { data } = await GetLifeMemoryByConditionAndPage(
+      1,
+      10000,
+      lifeQueryDto.value
+  )
+
+  data.list.forEach(item => {
+    if (item.memoryImages != null && item.memoryImages != '') {
+      item.memoryImages = item.memoryImages.split(',')
+    } else {
+      item.memoryImages = []
+    }
+    if (item.memoryPlace != null && item.memoryPlace != '') {
+      item.memoryPlace = item.memoryPlace.split(',')
+    } else {
+      item.memoryPlace = ''
+    }
+  })
+
+  return data.list
+}
+
+// 使用导出Hook
+const {
+  exportDialogVisible,
+  exportScope,
+  exportFileName,
+  exportLoading,
+  selectedColumns,
+  showExportDialog: showExport,
+  handleExport,
+  resetExport
+} = useExport({
+  availableColumns: exportColumns,
+  fetchAllData: fetchAllLifeData,
+  dataFormatter: lifeDataFormatter,
+  defaultFileName: '生活记忆数据',
+  sheetName: '生活记忆数据'
+})
+
+// 包装显示导出对话框的方法
+const showExportDialog = () => {
+  showExport(lifeList.value, lifeTotal.value)
 }
 </script>
 

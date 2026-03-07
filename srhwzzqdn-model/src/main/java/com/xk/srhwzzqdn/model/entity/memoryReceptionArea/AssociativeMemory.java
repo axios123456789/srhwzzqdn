@@ -73,4 +73,13 @@ public class AssociativeMemory {
 
     @Schema(description = "工作技术笔记")
     private String workTechNode; //工作技术笔记
+
+    @Schema(description = "生活记忆类型")
+    private Integer lifeType;
+
+    @Schema(description = "生活记忆消费")
+    private Double lifeConsume;
+
+    @Schema(description = "消费类型")
+    private Integer consumeType;
 }

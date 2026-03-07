@@ -335,7 +335,68 @@
             </div>
 
             <!--    ----------------------生活记忆联想数据块------------------        -->
+            <!--      生活记忆类型      -->
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 2">
+              <div class="item-icon">🏷️</div>
+              <div class="item-content">
+                <div class="item-label">生活记忆类型</div>
+                <div class="item-value">
+                  <el-select
+                      v-model="associativeMemory.lifeType"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in lifeMemoryTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </div>
+              </div>
+            </div>
+            <!--     消费类型       -->
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 2">
+              <div class="item-icon">🏷️</div>
+              <div class="item-content">
+                <div class="item-label">消费类型</div>
+                <div class="item-value">
+                  <el-select
+                      v-model="associativeMemory.consumeType"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in consumeTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </div>
+              </div>
+            </div>
+            <!--     消费金额       -->
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 2">
+              <div class="item-icon">🏷️</div>
+              <div class="item-content">
+                <div class="item-label">消费金额</div>
+                <div class="item-value">
+                  <el-input-number
+                      v-model="associativeMemory.lifeConsume"
+                      controls-position="right"
+                      :min="0"
+                      :max="10000"
+                      style="width: 100%"
+                  ></el-input-number>
+                </div>
+              </div>
+            </div>
 
+            <!--    ----------------------娱乐记忆联想数据块------------------        -->
           </div>
         </div>
       </div>
@@ -416,6 +477,8 @@ watch(
         getFormattedAddressOptions();
         getWorkBusinessTypeItem();
         getWorkTechTypeItem();
+        getLifeMemoryTypeItem();
+        getConsumeTypeItem();
 
         //前置操作
         //associativeMemory.value = [];
@@ -444,6 +507,9 @@ watch(
         associativeMemory.value.workTechType = "";
         associativeMemory.value.workBusinessNode = "";
         associativeMemory.value.workTechNode = "";
+        associativeMemory.value.lifeType = "";
+        associativeMemory.value.lifeConsume = "";
+        associativeMemory.value.consumeType = "";
       }
     }
 )
@@ -526,6 +592,20 @@ const getWorkTechTypeItem = async () => {
   const { data } = await GetAllSysCode('t_work_memory_tech_type')
   workTechTypeItem.value = data
 }
+//---------生活记忆字典------------------
+//生活记忆类型
+const lifeMemoryTypeItem = ref([]);
+const getLifeMemoryTypeItem = async () => {
+  const { data } = await GetKeyAndValueByType('t_life_memory_type')
+  lifeMemoryTypeItem.value = data
+}
+//消费类型
+const consumeTypeItem = ref([]);
+const getConsumeTypeItem = async () => {
+  const { data } = await GetKeyAndValueByType('t_life_consume_type')
+  consumeTypeItem.value = data
+}
+
 //---------------------------------------
 
 // 通用方法：根据值和映射表获取中文文本
@@ -624,6 +704,10 @@ const associativeMemory = ref({
   workBusinessNode: "", //工作业务笔记
   workTechNode: "", //工作技术笔记
   //------------生活记忆--------------
+  lifeType: "", //生活记忆类型
+  lifeConsume:  "", //生活消费类型
+  consumeType: "", //生活消费类型
+  //------------娱乐记忆--------------
 
 }); //联想记忆，用于存储转换联想记忆参数
 

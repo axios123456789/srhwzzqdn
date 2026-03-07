@@ -2,14 +2,12 @@ package com.xk.srhwzzqdn.manager.memoryReceptionArea.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.LifeMemoryAccessMapper;
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.RowMemoryAccessMapper;
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.WorkMemoryAccessMapper;
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.service.RowMemoryAccessService;
 import com.xk.srhwzzqdn.model.dto.memoryReceptionArea.RowMemoryDto;
-import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.AssociativeMemory;
-import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemory;
-import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.RowMemoryConfiguration;
-import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.WorkMemory;
+import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.*;
 import com.xk.srhwzzqdn.util.GenerateNoUtil;
 import com.xk.srhwzzqdn.util.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +24,9 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
 
     @Autowired
     private WorkMemoryAccessMapper workMemoryAccessMapper;
+
+    @Autowired
+    private LifeMemoryAccessMapper lifeMemoryAccessMapper;
 
     /**
      * 条件分页查询原始记忆列表
@@ -143,7 +144,23 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
             //生成工作记忆
             workMemoryAccessMapper.addWorkMemory(workMemory);
         } else if (associativeMemory.getRowMemoryType() == 2){//生活记忆联想
-            return;
+            LifeMemory lifeMemory = new LifeMemory();
+            lifeMemory.setMemoryNo(GenerateNoUtil.generateNo("LIFE"));
+            lifeMemory.setBeginTime(associativeMemory.getBegin_time());
+            lifeMemory.setEndTime(associativeMemory.getEnd_time());
+            lifeMemory.setLifeType(associativeMemory.getLifeType());
+            lifeMemory.setLifeContent(associativeMemory.getRowMemoryContent());
+            lifeMemory.setLifeConsume(associativeMemory.getLifeConsume());
+            lifeMemory.setMemoryPlace(associativeMemory.getMemoryPlace());
+            lifeMemory.setMemoryPlaceDetail(associativeMemory.getMemoryPlaceDetail());
+            lifeMemory.setMemoryImages(associativeMemory.getMemoryImages());
+            lifeMemory.setMemorySource(2);
+            lifeMemory.setMemoryOwner(associativeMemory.getMemoryOwner());
+            lifeMemory.setRowMemoryNo(associativeMemory.getMemoryNo());
+            lifeMemory.setConsumeType(associativeMemory.getConsumeType());
+
+            //生成生活记忆
+            lifeMemoryAccessMapper.addLifeMemory(lifeMemory);
         } else if (associativeMemory.getRowMemoryType() == 3){//娱乐记忆联想
             return;
         } else if (associativeMemory.getRowMemoryType() == 4){//交际记忆联想
