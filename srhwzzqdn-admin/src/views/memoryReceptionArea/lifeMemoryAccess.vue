@@ -146,6 +146,191 @@
       </el-button>
     </div>
 
+    <!--  手动录入和记忆修改模态窗口 -->
+    <el-dialog
+        v-model="dialogVisible"
+        :title="lifeMemory.id ? '生活记忆重塑' : '生活记忆接入'"
+        width="80%"
+        class="custom-dialog enhanced-dialog"
+        :close-on-click-modal="false"
+        :lock-scroll="false"
+        align-center
+        draggable
+        :fullscreen="isFullscreen"
+        @open="initFullscreen"
+    >
+      <div class="dialog-content">
+        <el-form label-width="120px" class="scrollable-form">
+          <el-form label-width="120px">
+            <!--    第一行    -->
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="工作开始时间">
+                  <el-date-picker
+                      v-model="lifeMemory.beginTime"
+                      type="datetime"
+                      style="width: 100%"
+                      placeholder="选择日期时间"
+                      :editable="false"
+                      :value-format="'YYYY-MM-DD HH:mm:ss'"
+                  ></el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="工作结束时间">
+                  <el-date-picker
+                      v-model="lifeMemory.endTime"
+                      type="datetime"
+                      style="width: 100%"
+                      placeholder="选择日期时间"
+                      :editable="false"
+                      :value-format="'YYYY-MM-DD HH:mm:ss'"
+                  ></el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!--   第二行     -->
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="生活记忆类型">
+                  <el-select
+                      v-model="lifeMemory.lifeType"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in lifeMemoryTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="记忆来源">
+                  <el-select
+                      v-model="lifeMemory.memorySource"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in lifeMemorySourceItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!--   第三行    -->
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="记忆册">
+                  <el-upload
+                      v-model:file-list="fileList"
+                      action="http://localhost:8400/superBrain/system/fileUpload"
+                      list-type="picture-card"
+                      multiple
+                      :on-preview="handlePictureCardPreview"
+                      :on-success="handleSliderSuccess"
+                      :on-remove="handleRemove"
+                      :headers="headers"
+                  >
+                    <el-icon>
+                      <Plus />
+                    </el-icon>
+                  </el-upload>
+                  <el-dialog v-model="dialogVisibleHandle">
+                    <img w-full :src="dialogImageUrl" alt="" />
+                  </el-dialog>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!--   第四行     -->
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="记忆来源">
+                  <el-select
+                      v-model="lifeMemory.consumeType"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in consumeTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <!--     消费金额输入，使用计数器方式         -->
+              <el-col :span="12">
+                <el-form-item label="消费金额">
+                  <el-input-number
+                      v-model="lifeMemory.lifeConsume"
+                      controls-position="right"
+                      :min="0"
+                      :max="10000"
+                      style="width: 100%"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!--    第五行    -->
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="记忆地点">
+                  <el-cascader
+                      v-model="lifeMemory.memoryPlace"
+                      :options="formattedAddressOptions"
+                      clearable
+                      placeholder="请选择记忆地点"
+                      style="width: 100%"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="详细地点">
+                  <el-input
+                      v-model="lifeMemory.memoryPlaceDetail"
+                      style="width: 100%"
+                      clearable
+                  />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!--    第六行    -->
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="生活记忆内容">
+                  <el-input
+                      type="textarea"
+                      style="width: 100%"
+                      :rows="5"
+                      placeholder="请输入生活记忆内容"
+                      v-model="lifeMemory.lifeContent"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+        </el-form>
+      </div>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitLifeMemory">提交</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
     <!-- 列表展示  -->
     <el-table
         :data="lifeList"
@@ -263,7 +448,10 @@
 import {onMounted, ref} from "vue";
 import {getTodayTimeRange} from "@/utils/common";
 import {GetAdministrative, GetKeyAndValueByType} from "@/api/sysDict";
-import {GetLifeMemoryByConditionAndPage} from "@/api/memoryReception";
+import {GetLifeMemoryByConditionAndPage, SaveLifeMemory} from "@/api/memoryReception";
+import {useApp} from "@/pinia/modules/app";
+import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
+import {ElMessage} from "element-plus";
 
 //--------------------钩子函数-------------------------
 onMounted(() => {
@@ -283,6 +471,14 @@ onMounted(() => {
   //3.调用查询数据接口
   lifeFetchData()
 });
+
+//------------------------公共方法---------------------------
+// 通用方法：根据值和映射表获取中文文本
+const getDisplayText = (value, mappingArray) => {
+  if (!value) return '-'
+  const foundItem = mappingArray.find(item => item.value === value)
+  return foundItem ? foundItem.text : value
+}
 
 //---------------------数据字典获取-------------------------
 //生活记忆来源
@@ -368,6 +564,114 @@ const resetLifeMemory = () => {
 
   //调用查询接口
   lifeFetchData()
+}
+
+//-----------------------------------------保存生活记忆-------------------------------------------------
+//工作记忆数据存储
+const lifeMemory = ref({})
+//模特窗口控制
+const dialogVisible = ref(false)
+// 在需要全屏的组件中使用 Hook
+const { isFullscreen, initFullscreen } = useFullscreenDialog()
+
+//手动录入生活记忆按钮点击事件
+const addLifeMemory = () => {
+  //数据重置
+  lifeMemory.value = {}
+  lifeMemory.value.memorySource = 1
+  if (lifeList.value.length > 0) {
+    lifeMemory.value.beginTime = lifeList.value[0].endTime
+  }
+  //图片列表数据重置
+  memoryImageList.value = []
+  fileList.value = []
+
+  //打开模态窗口
+  dialogVisible.value = true;
+}
+
+//修改按钮点击事件
+const editLifeMemory = (row) => {
+  //数据设置
+  lifeMemory.value = { ...row }
+  //图片文件列表数据设置
+  fileList.value = []
+  memoryImageList.value = lifeMemory.value.memoryImages
+  memoryImageList.value.forEach(url => {
+    fileList.value.push({ url: url })
+  })
+
+  //打开模态窗口
+  dialogVisible.value = true
+}
+
+//点击手动录入和修改模态窗口中的提交按钮触发
+const submitLifeMemory = async () => {
+  //console.log("数据"+rowMemory.value.memoryImages.join(','))
+  //基本验证
+  if (
+      lifeMemory.value.beginTime == undefined ||
+      lifeMemory.value.beginTime == ''
+  ) {
+    ElMessage.warning('【记忆开始时间】不能为空')
+    return
+  }
+  if (lifeMemory.value.endTime == undefined || lifeMemory.value.endTime == '') {
+    ElMessage.warning('【记忆结束时间】不能为空')
+    return
+  }
+  if (
+      lifeMemory.value.lifeContent == undefined ||
+      lifeMemory.value.lifeContent == ''
+  ) {
+    ElMessage.warning('【生活记忆内容】不能为空')
+    return
+  }
+  //数据处理
+  if (
+      lifeMemory.value.memoryPlace != null &&
+      lifeMemory.value.memoryPlace != '' &&
+      lifeMemory.value.memoryPlace != undefined
+  ) {
+    lifeMemory.value.memoryPlace = lifeMemory.value.memoryPlace.join(',')
+  } else {
+    lifeMemory.value.memoryPlace = null
+  }
+  if (memoryImageList.value != null && memoryImageList.value.length > 0) {
+    lifeMemory.value.memoryImages = memoryImageList.value.join(',')
+  } else {
+    lifeMemory.value.memoryImages = null
+  }
+  const { code, message } = await SaveLifeMemory(lifeMemory.value)
+  if (code === 200) {
+    dialogVisible.value = false
+    ElMessage.success(message)
+    lifeFetchData()
+  } else {
+    ElMessage.error(message)
+  }
+}
+
+//--------------------文件上传处理------------------------
+const headers = {
+  token: useApp().authorization.token, // 从pinia中获取token，在进行文件上传的时候将token设置到请求头中
+}
+//-----------上传记忆轮播图图片--------
+const memoryImageList = ref([])
+//移除图像触发
+const handleRemove = (uploadFile, uploadFiles) => {
+  memoryImageList.value.splice(memoryImageList.value.indexOf(uploadFile.url), 1)
+}
+const fileList = ref([])
+//上传成功触发
+const handleSliderSuccess = (response, uploadFile) => {
+  memoryImageList.value.push(response.data)
+}
+const dialogVisibleHandle = ref(false)
+const dialogImageUrl = ref()
+const handlePictureCardPreview = file => {
+  dialogImageUrl.value = file.url
+  dialogVisibleHandle.value = true
 }
 </script>
 
@@ -783,4 +1087,276 @@ const resetLifeMemory = () => {
   }
 }
 /****************************************************************/
+
+/* ***************************添加或修改模态窗口样式优化 - 添加全屏功能 ***********************/
+:deep(.enhanced-dialog) {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+  max-height: 80vh !important;
+}
+
+:deep(.enhanced-dialog .el-dialog) {
+  display: flex;
+  flex-direction: column;
+  max-height: 80vh !important;
+  min-height: 600px;
+  transition: all 0.3s ease;
+}
+
+/* 全屏状态下的样式调整 */
+:deep(.enhanced-dialog.is-fullscreen) {
+  max-height: 100vh !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+:deep(.enhanced-dialog.is-fullscreen .el-dialog) {
+  width: 100% !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+:deep(.enhanced-dialog.is-fullscreen .el-dialog__body) {
+  max-height: calc(100vh - 120px) !important;
+  flex: 1;
+}
+
+:deep(.enhanced-dialog.is-fullscreen .scrollable-form) {
+  max-height: calc(100vh - 180px) !important;
+}
+
+/* 重点调整：标题栏高度优化 - 添加全屏按钮 */
+:deep(.enhanced-dialog .el-dialog__header) {
+  background: linear-gradient(135deg, #409eff 0%, #337ecc 100%);
+  margin: 0;
+  padding: 12px 60px 12px 20px; /* 右侧增加内边距为全屏按钮留空间 */
+  display: flex;
+  align-items: center;
+  min-height: 40px; /* 显著减少头部高度 */
+  position: relative;
+}
+
+:deep(.enhanced-dialog .el-dialog__title) {
+  color: white;
+  font-weight: 600;
+  font-size: 16px; /* 适当减小标题字体 */
+  line-height: 1.2;
+  flex: 1;
+}
+
+/* 全屏按钮样式 */
+:deep(.enhanced-dialog .el-dialog__headerbtn.fullscreen-btn) {
+  position: absolute;
+  top: 50% !important;
+  right: 50px; /* 放在关闭按钮左侧 */
+  transform: translateY(-50%);
+  margin-top: 0;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+:deep(.enhanced-dialog .el-dialog__headerbtn.fullscreen-btn:hover) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+:deep(.enhanced-dialog .el-dialog__headerbtn.fullscreen-btn .el-dialog__close) {
+  color: white;
+  font-size: 16px;
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:deep(.enhanced-dialog .el-dialog__headerbtn) {
+  position: absolute;
+  top: 50% !important;
+  right: 16px;
+  transform: translateY(-50%);
+  margin-top: 0;
+  height: 24px; /* 减小关闭按钮尺寸 */
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+:deep(.enhanced-dialog .el-dialog__headerbtn .el-dialog__close) {
+  color: white;
+  font-size: 20px; /* 减小关闭图标大小 */
+  font-weight: bold;
+}
+
+:deep(.enhanced-dialog .el-dialog__body) {
+  padding: 0;
+  max-height: calc(80vh - 100px) !important; /* 相应调整内容区域高度 */
+  overflow: hidden;
+  display: flex;
+  flex: 1;
+}
+
+.dialog-content {
+  width: 100%;
+  padding: 20px;
+}
+
+.scrollable-form {
+  max-height: calc(80vh - 160px); /* 相应调整可滚动区域高度 */
+  overflow-y: auto;
+  padding-right: 12px;
+}
+
+/* 底部按钮区域优化 */
+.dialog-footer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 16px 20px;
+  border-top: 1px solid #e8e8e8;
+  background: #fafafa;
+}
+
+:deep(.enhanced-dialog .el-dialog__footer) {
+  padding: 0;
+}
+
+/* 底部按钮样式优化 */
+.dialog-footer .el-button {
+  min-width: 100px;
+  padding: 10px 24px;
+}
+
+/* 上传区域样式优化 */
+:deep(.avatar-uploader) {
+  border: 2px dashed #dcdfe6;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  height: 178px;
+  width: 178px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+:deep(.avatar-uploader .avatar) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+:deep(.avatar-uploader .el-upload) {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:deep(.avatar-uploader-icon) {
+  font-size: 28px;
+  color: #8c939d;
+}
+
+:deep(.avatar-uploader:hover) {
+  border-color: #409eff;
+  box-shadow: 0 0 8px rgba(64, 158, 255, 0.3);
+}
+
+/* 表单布局优化 */
+:deep(.scrollable-form .el-form-item) {
+  margin-bottom: 18px;
+}
+
+:deep(.scrollable-form .el-row) {
+  margin-bottom: 10px;
+}
+
+/* 单选框组样式调整 */
+:deep(.scrollable-form .el-radio-group) {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  height: 32px;
+}
+
+:deep(.scrollable-form .el-radio) {
+  margin-right: 0;
+}
+
+/* 文本域样式调整 */
+:deep(.scrollable-form .el-textarea .el-textarea__inner) {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* 响应式调整 */
+@media (max-height: 700px) {
+  :deep(.enhanced-dialog) {
+    max-height: 90vh !important;
+  }
+
+  :deep(.enhanced-dialog .el-dialog__body) {
+    max-height: calc(90vh - 100px) !important;
+  }
+
+  .scrollable-form {
+    max-height: calc(90vh - 160px);
+  }
+
+  :deep(.avatar-uploader) {
+    height: 150px;
+    width: 150px;
+  }
+}
+
+/* 动画效果优化 */
+:deep(.enhanced-dialog .el-dialog) {
+  animation: dialog-fade-in 0.3s ease;
+}
+
+@keyframes dialog-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 滚动条优化 */
+.scrollable-form::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollable-form::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.scrollable-form::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.scrollable-form::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+/*****************************************************************/
 </style>

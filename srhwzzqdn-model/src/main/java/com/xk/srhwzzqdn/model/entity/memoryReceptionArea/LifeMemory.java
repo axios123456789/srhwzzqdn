@@ -38,7 +38,7 @@ public class LifeMemory {
     private String memoryPlaceDetail;
 
     @Schema(description = "生活记忆册")
-    private String memoryImage;
+    private String memoryImages;
 
     @Schema(description = "生活记忆来源")
     private Integer memorySource;
@@ -51,6 +51,7 @@ public class LifeMemory {
     @Schema(description = "原始记忆编号")
     private String rowMemoryNo;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Schema(description = "修改时间")
     private Date updateTime;
 
