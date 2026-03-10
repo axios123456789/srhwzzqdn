@@ -2,6 +2,7 @@ package com.xk.srhwzzqdn.manager.memoryReceptionArea.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.FunMemoryAccessMapper;
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.LifeMemoryAccessMapper;
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.RowMemoryAccessMapper;
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.WorkMemoryAccessMapper;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.xk.srhwzzqdn.util.AuthContextUtil;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -27,6 +29,9 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
 
     @Autowired
     private LifeMemoryAccessMapper lifeMemoryAccessMapper;
+
+    @Autowired
+    private FunMemoryAccessMapper funMemoryAccessMapper;
 
     /**
      * 条件分页查询原始记忆列表
@@ -162,7 +167,25 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
             //生成生活记忆
             lifeMemoryAccessMapper.addLifeMemory(lifeMemory);
         } else if (associativeMemory.getRowMemoryType() == 3){//娱乐记忆联想
-            return;
+            FunMemory funMemory = new FunMemory();
+            funMemory.setMemoryNo(GenerateNoUtil.generateNo("FUN"));
+            funMemory.setBeginTime(associativeMemory.getBegin_time());
+            funMemory.setEndTime(associativeMemory.getEnd_time());
+            //设置时长
+            funMemory.setFunDuration(new BigDecimal((associativeMemory.getEnd_time().getTime() - associativeMemory.getBegin_time().getTime())/(1000.0*60*60)));
+            funMemory.setFunType(associativeMemory.getFunType());
+            funMemory.setFunApp(associativeMemory.getFunApp());
+            funMemory.setFunConsume(associativeMemory.getFunConsume());
+            funMemory.setFunContent(associativeMemory.getRowMemoryContent());
+            funMemory.setMemoryOwner(associativeMemory.getMemoryOwner());
+            funMemory.setMemoryPlace(associativeMemory.getMemoryPlace());
+            funMemory.setMemoryPlaceDetail(associativeMemory.getMemoryPlaceDetail());
+            funMemory.setMemoryImages(associativeMemory.getMemoryImages());
+            funMemory.setMemorySource(2);
+            funMemory.setRowMemoryNo(associativeMemory.getMemoryNo());
+
+            //添加娱乐记忆
+            funMemoryAccessMapper.addFunMemory(funMemory);
         } else if (associativeMemory.getRowMemoryType() == 4){//交际记忆联想
             return;
         } else if (associativeMemory.getRowMemoryType() == 5){//学习记忆联想

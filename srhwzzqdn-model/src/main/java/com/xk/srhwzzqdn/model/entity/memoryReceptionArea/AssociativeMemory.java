@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -82,4 +83,13 @@ public class AssociativeMemory {
 
     @Schema(description = "消费类型")
     private Integer consumeType;
+
+    @Schema(description = "娱乐记忆类型")
+    private Integer funType;
+
+    @Schema(description = "娱乐软件")
+    private Integer funApp;
+
+    @Schema(description = "娱乐消费")
+    private BigDecimal funConsume;
 }

@@ -398,6 +398,69 @@
             </div>
 
             <!--    ----------------------娱乐记忆联想数据块------------------        -->
+            <!--      娱乐记忆类型      -->
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 3">
+              <div class="item-icon">🏷️</div>
+              <div class="item-content">
+                <div class="item-label">娱乐记忆类型</div>
+                <div class="item-value">
+                  <el-select
+                      v-model="associativeMemory.funType"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in funMemoryTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </div>
+              </div>
+            </div>
+            <!--     娱乐软件       -->
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 3">
+              <div class="item-icon">📱</div>
+              <div class="item-content">
+                <div class="item-label">娱乐软件</div>
+                <div class="item-value">
+                  <el-select
+                      v-model="associativeMemory.funApp"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in funMemoryAppItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </div>
+              </div>
+            </div>
+            <!--     娱乐消费       -->
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 3">
+              <div class="item-icon">💰️</div>
+              <div class="item-content">
+                <div class="item-label">娱乐消费</div>
+                <div class="item-value">
+                  <el-input-number
+                      v-model="associativeMemory.funConsume"
+                      controls-position="right"
+                      :min="0"
+                      :max="10000"
+                      :precision="2"
+                      style="width: 100%"
+                  ></el-input-number>
+                </div>
+              </div>
+            </div>
+
+            <!--     -----------------交际记忆联想块--------------------       -->
           </div>
         </div>
       </div>
@@ -480,6 +543,8 @@ watch(
         getWorkTechTypeItem();
         getLifeMemoryTypeItem();
         getConsumeTypeItem();
+        getFunMemoryTypeItem();
+        getFunMemoryAppItem();
 
         //前置操作
         //associativeMemory.value = [];
@@ -511,6 +576,9 @@ watch(
         associativeMemory.value.lifeType = "";
         associativeMemory.value.lifeConsume = "";
         associativeMemory.value.consumeType = "";
+        associativeMemory.value.funType = "";
+        associativeMemory.value.funType = "";
+        associativeMemory.value.funConsume = "";
       }
     }
 )
@@ -605,6 +673,19 @@ const consumeTypeItem = ref([]);
 const getConsumeTypeItem = async () => {
   const { data } = await GetKeyAndValueByType('t_life_consume_type')
   consumeTypeItem.value = data
+}
+//---------娱乐记忆字典------------------
+//娱乐记忆类型
+const funMemoryTypeItem = ref([]);
+const getFunMemoryTypeItem = async () => {
+  const { data } = await GetKeyAndValueByType('t_fun_memory_type')
+  funMemoryTypeItem.value = data
+}
+//娱乐软件
+const funMemoryAppItem = ref([]);
+const getFunMemoryAppItem = async () => {
+  const { data } = await GetKeyAndValueByType('t_fun_memory_app')
+  funMemoryAppItem.value = data
 }
 
 //---------------------------------------
@@ -709,7 +790,9 @@ const associativeMemory = ref({
   lifeConsume:  "", //生活消费类型
   consumeType: "", //生活消费类型
   //------------娱乐记忆--------------
-
+  funType: "", //娱乐记忆类型
+  funApp: "", //娱乐软件
+  funConsume: "", //娱乐消费
 }); //联想记忆，用于存储转换联想记忆参数
 
 //-----------------------------------上传处理-----------------------------------
