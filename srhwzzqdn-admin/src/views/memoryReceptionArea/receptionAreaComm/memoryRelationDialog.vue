@@ -577,7 +577,7 @@ watch(
         associativeMemory.value.lifeConsume = "";
         associativeMemory.value.consumeType = "";
         associativeMemory.value.funType = "";
-        associativeMemory.value.funType = "";
+        associativeMemory.value.funApp = "";
         associativeMemory.value.funConsume = "";
       }
     }
