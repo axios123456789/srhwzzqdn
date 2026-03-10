@@ -148,3 +148,42 @@ export const DeleteAllLifeMemoryByIds = ids => {
   })
 }
 //***********************************************************************************
+
+//------------------------------------娱乐记忆api--------------------------------------
+const base_api4 = '/superBrain/memoryReception/funMemoryAccess' //娱乐记忆基本路径
+
+//条件分页查询娱乐记忆列表
+export const GetFunMemoryByConditionAndPage = (current, limit, funMemoryDto) => {
+  return request({
+    url: `${base_api4}/getFunMemoryByConditionAndPage/${current}/${limit}`,
+    method: 'post',
+    data: funMemoryDto,
+  })
+}
+
+//保存娱乐记忆
+export const SaveFunMemory = funMemory => {
+  return request({
+    url: `${base_api4}/saveFunMemory`,
+    method: 'post',
+    data: funMemory,
+  })
+}
+
+//根据id删除娱乐记忆
+export const DeleteFunMemoryById = id => {
+  return request({
+    url: `${base_api4}/deleteFunMemoryById/${id}`,
+    method: 'delete',
+  })
+}
+
+//根据ids批量删除娱乐记忆
+export const DeleteAllFunMemoryByIds = ids => {
+  return request({
+    url: `${base_api4}/deleteAllFunMemoryByIds`,
+    method: 'post',
+    data: ids,
+  })
+}
+//***********************************************************************************

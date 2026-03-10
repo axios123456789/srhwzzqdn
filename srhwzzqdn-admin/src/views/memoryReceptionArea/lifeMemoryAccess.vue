@@ -277,6 +277,7 @@
                       controls-position="right"
                       :min="0"
                       :max="10000"
+                      :precision="2"
                       style="width: 100%"
                   ></el-input-number>
                 </el-form-item>

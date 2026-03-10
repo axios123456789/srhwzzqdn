@@ -359,7 +359,7 @@
             </div>
             <!--     消费类型       -->
             <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 2">
-              <div class="item-icon">🏷️</div>
+              <div class="item-icon">🛒</div>
               <div class="item-content">
                 <div class="item-label">消费类型</div>
                 <div class="item-value">
@@ -381,7 +381,7 @@
             </div>
             <!--     消费金额       -->
             <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 2">
-              <div class="item-icon">🏷️</div>
+              <div class="item-icon">💰️</div>
               <div class="item-content">
                 <div class="item-label">消费金额</div>
                 <div class="item-value">
@@ -390,6 +390,7 @@
                       controls-position="right"
                       :min="0"
                       :max="10000"
+                      :precision="2"
                       style="width: 100%"
                   ></el-input-number>
                 </div>
