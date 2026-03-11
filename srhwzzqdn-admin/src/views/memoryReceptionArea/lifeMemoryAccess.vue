@@ -253,7 +253,7 @@
             <!--   第四行     -->
             <el-row>
               <el-col :span="12">
-                <el-form-item label="记忆来源">
+                <el-form-item label="消费类型">
                   <el-select
                       v-model="lifeMemory.consumeType"
                       placeholder="请选择"

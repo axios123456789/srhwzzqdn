@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="娱乐记忆接入开发-003">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="娱乐记忆接入开发-004">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/funMemoryAccess.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/funMemoryAccess.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/lifeMemoryAccess.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/lifeMemoryAccess.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -199,7 +198,8 @@
       <workItem from="1773112171219" duration="1323000" />
       <workItem from="1773136742100" duration="640000" />
       <workItem from="1773141994941" duration="3284000" />
-      <workItem from="1773189046491" duration="647000" />
+      <workItem from="1773189046491" duration="840000" />
+      <workItem from="1773200172391" duration="607000" />
     </task>
     <task id="LOCAL-00001" summary="Changes">
       <created>1768721797078</created>
@@ -432,7 +432,14 @@
       <option name="project" value="LOCAL" />
       <updated>1773147154950</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="娱乐记忆接入开发-004">
+      <created>1773190906859</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1773190906859</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -475,7 +482,8 @@
     <MESSAGE value="娱乐记忆接入开发-001" />
     <MESSAGE value="娱乐记忆接入开发-002" />
     <MESSAGE value="娱乐记忆接入开发-003" />
-    <option name="LAST_COMMIT_MESSAGE" value="娱乐记忆接入开发-003" />
+    <MESSAGE value="娱乐记忆接入开发-004" />
+    <option name="LAST_COMMIT_MESSAGE" value="娱乐记忆接入开发-004" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
