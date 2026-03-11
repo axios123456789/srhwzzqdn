@@ -777,7 +777,6 @@ const exportColumns = [
   { key: 'funApp', label: '娱乐软件', width: 12 },
   { key: 'funContent', label: '娱乐记忆内容', width: 40 },
   { key: 'funConsume', label: '娱乐消费', width: 12 },
-  { key: 'memoryPlace', label: '记忆地点', width: 20 },
   { key: 'rowMemoryNo', label: '原始记忆编号', width: 20 },
   { key: 'memoryOwnerName', label: '记忆所属人', width: 12 },
   { key: 'updateTime', label: '修改时间', width: 20 },
@@ -793,8 +792,6 @@ const funDataFormatter = (item, key, value) => {
       return getDisplayText(value, funMemorySourceItem.value)
     case 'funApp':
       return getDisplayText(value, funMemoryAppItem.value)
-    case 'memoryPlace':
-      return value ? value.split(',').pop() : '-'
     default:
       return value
   }
