@@ -187,3 +187,42 @@ export const DeleteAllFunMemoryByIds = ids => {
   })
 }
 //***********************************************************************************
+
+//------------------------------------交际记忆api--------------------------------------
+const base_api5 = '/superBrain/memoryReception/communicateMemoryAccess' //交际记忆基本路径
+
+//条件分页查询交际记忆列表
+export const GetCommunicateMemoryByConditionAndPage = (current, limit, communicateMemoryDto) => {
+  return request({
+    url: `${base_api5}/getCommunicateMemoryByConditionAndPage/${current}/${limit}`,
+    method: 'post',
+    data: communicateMemoryDto,
+  })
+}
+
+//保存交际记忆
+export const SaveCommunicateMemory = communicateMemory => {
+  return request({
+    url: `${base_api5}/saveCommunicateMemory`,
+    method: 'post',
+    data: communicateMemory,
+  })
+}
+
+//根据id删除交际记忆
+export const DeleteCommunicateMemoryById = id => {
+  return request({
+    url: `${base_api5}/deleteCommunicateMemoryById/${id}`,
+    method: 'delete',
+  })
+}
+
+//根据ids批量删除交际记忆
+export const DeleteAllCommunicateMemoryByIds = ids => {
+  return request({
+    url: `${base_api5}/deleteAllCommunicateMemoryByIds`,
+    method: 'post',
+    data: ids,
+  })
+}
+//***********************************************************************************

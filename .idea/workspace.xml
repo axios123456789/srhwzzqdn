@@ -5,6 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="娱乐记忆接入开发-004">
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/controller/CommunicateMemoryAccessController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/mapper/CommunicateMemoryAccessMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/CommunicateMemoryAccessService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/impl/CommunicateMemoryAccessServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/memoryAccessArea/CommunicateMemoryAccessMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/memoryReceptionArea/controller/FunMemoryAccessController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/memoryReceptionArea/mapper/FunMemoryAccessMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/FunMemoryAccessService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/impl/FunMemoryAccessServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/memoryAccessArea/FunMemoryAccessMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/dto/memoryReceptionArea/CommunicateMemoryDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/entity/memoryReceptionArea/CommunicateMemory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/memoryReceptionArea/FunMemoryDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/memoryReceptionArea/FunMemory.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -13,6 +27,8 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/memoryReception.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/memoryReception.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/communicateMemoryAccess.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/communicateMemoryAccess.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,6 +105,17 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ManagerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="srhwzzqdn-manager" />
       <extension name="coverage">
@@ -201,7 +228,12 @@
       <workItem from="1773189046491" duration="840000" />
       <workItem from="1773200172391" duration="1904000" />
       <workItem from="1773231294715" duration="628000" />
-      <workItem from="1773275510853" duration="1261000" />
+      <workItem from="1773275510853" duration="2705000" />
+      <workItem from="1773362421019" duration="2439000" />
+      <workItem from="1773399992262" duration="1396000" />
+      <workItem from="1773494067640" duration="253000" />
+      <workItem from="1773494835751" duration="641000" />
+      <workItem from="1773536158348" duration="7573000" />
     </task>
     <task id="LOCAL-00001" summary="Changes">
       <created>1768721797078</created>
@@ -448,7 +480,21 @@
       <option name="project" value="LOCAL" />
       <updated>1773209328853</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="娱乐记忆接入开发-004">
+      <created>1773286452214</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1773286452214</updated>
+    </task>
+    <task id="LOCAL-00037" summary="娱乐记忆接入开发-004">
+      <created>1773286462077</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1773286462077</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
