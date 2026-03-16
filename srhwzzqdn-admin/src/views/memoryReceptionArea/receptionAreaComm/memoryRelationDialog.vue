@@ -461,6 +461,51 @@
             </div>
 
             <!--     -----------------交际记忆联想块--------------------       -->
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 4">
+              <div class="item-icon">🏷️</div>
+              <div class="item-content">
+                <div class="item-label">交际类型</div>
+                <div class="item-value">
+                  <el-select
+                      v-model="associativeMemory.communicateType"
+                      multiple
+                      placeholder="请选择(可多选)"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in communicateTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </div>
+              </div>
+            </div>
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 4">
+              <div class="item-icon">🧩</div>
+              <div class="item-content">
+                <div class="item-label">交际方式</div>
+                <div class="item-value">
+                  <el-select
+                      v-model="associativeMemory.communicateWay"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in communicateWayItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </div>
+              </div>
+            </div>
+            <!--     -----学习记忆联想块----------       -->
+
           </div>
         </div>
       </div>
@@ -545,6 +590,8 @@ watch(
         getConsumeTypeItem();
         getFunMemoryTypeItem();
         getFunMemoryAppItem();
+        getCommunicateTypeItem();
+        getCommunicateWayItem();
 
         //前置操作
         //associativeMemory.value = [];
@@ -579,6 +626,8 @@ watch(
         associativeMemory.value.funType = "";
         associativeMemory.value.funApp = "";
         associativeMemory.value.funConsume = "";
+        associativeMemory.value.communicateType = "";
+        associativeMemory.value.communicateWay = "";
       }
     }
 )
@@ -688,6 +737,20 @@ const getFunMemoryAppItem = async () => {
   funMemoryAppItem.value = data
 }
 
+//-------交际记忆数据字典--------------
+//交际类型
+const communicateTypeItem = ref([]);
+const getCommunicateTypeItem = async () => {
+  const { data } = await GetKeyAndValueByType('t_communicate_memory_type')
+  communicateTypeItem.value = data
+}
+//交际方式
+const communicateWayItem = ref([]);
+const getCommunicateWayItem = async () => {
+  const { data } = await GetKeyAndValueByType('t_communicate_way')
+  communicateWayItem.value = data
+}
+
 //---------------------------------------
 
 // 通用方法：根据值和映射表获取中文文本
@@ -793,6 +856,9 @@ const associativeMemory = ref({
   funType: "", //娱乐记忆类型
   funApp: "", //娱乐软件
   funConsume: "", //娱乐消费
+  //交际记忆
+  communicateType: "", //交际类型（工作，交易，闲聊，问候）
+  communicateWay: "", //交际方式
 }); //联想记忆，用于存储转换联想记忆参数
 
 //-----------------------------------上传处理-----------------------------------
@@ -951,6 +1017,14 @@ const submit = async () => {
     associativeMemory.value.document = documentList.value.join(',')
   } else {
     associativeMemory.value.document = null
+  }
+  //处理交际类型（多选转换为字符串）
+  if (associativeMemory.value.communicateType != null && associativeMemory.value.communicateType.length > 0) {
+    if (Array.isArray(associativeMemory.value.communicateType)) {
+      associativeMemory.value.communicateType = associativeMemory.value.communicateType.join(',')
+    }
+  } else {
+    associativeMemory.value.communicateType = null
   }
 
   //console.log(`开始对记忆ID: ${associativeMemory.value.row_id} 进行联想分析`)

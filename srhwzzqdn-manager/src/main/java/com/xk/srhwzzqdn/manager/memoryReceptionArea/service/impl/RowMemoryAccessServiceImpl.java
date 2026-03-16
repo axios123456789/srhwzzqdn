@@ -2,10 +2,7 @@ package com.xk.srhwzzqdn.manager.memoryReceptionArea.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.FunMemoryAccessMapper;
-import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.LifeMemoryAccessMapper;
-import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.RowMemoryAccessMapper;
-import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.WorkMemoryAccessMapper;
+import com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.*;
 import com.xk.srhwzzqdn.manager.memoryReceptionArea.service.RowMemoryAccessService;
 import com.xk.srhwzzqdn.model.dto.memoryReceptionArea.RowMemoryDto;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.*;
@@ -32,6 +29,9 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
 
     @Autowired
     private FunMemoryAccessMapper funMemoryAccessMapper;
+
+    @Autowired
+    private CommunicateMemoryAccessMapper communicateMemoryAccessMapper;
 
     /**
      * 条件分页查询原始记忆列表
@@ -187,7 +187,25 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
             //添加娱乐记忆
             funMemoryAccessMapper.addFunMemory(funMemory);
         } else if (associativeMemory.getRowMemoryType() == 4){//交际记忆联想
-            return;
+            CommunicateMemory communicateMemory = new CommunicateMemory();
+            communicateMemory.setMemoryNo(GenerateNoUtil.generateNo("COM"));
+            communicateMemory.setBeginTime(associativeMemory.getBegin_time());
+            communicateMemory.setEndTime(associativeMemory.getEnd_time());
+            communicateMemory.setCommunicateDuration(new BigDecimal((associativeMemory.getEnd_time().getTime() - associativeMemory.getBegin_time().getTime())/(1000.0*60*60)));
+            communicateMemory.setMemoryOwner(associativeMemory.getMemoryOwner());
+            communicateMemory.setMemoryPlace(associativeMemory.getMemoryPlace());
+            communicateMemory.setMemoryPlaceDetail(associativeMemory.getMemoryPlaceDetail());
+            communicateMemory.setMemoryImages(associativeMemory.getMemoryImages());
+            communicateMemory.setMemorySource(2);
+            communicateMemory.setRowMemoryNo(associativeMemory.getMemoryNo());
+            communicateMemory.setCommunicatorRelation(associativeMemory.getContactType());
+            communicateMemory.setCommunicator(associativeMemory.getContact());
+            communicateMemory.setCommunicateType(associativeMemory.getCommunicateType());
+            communicateMemory.setCommunicateWay(associativeMemory.getCommunicateWay());
+            communicateMemory.setCommunicateContent(associativeMemory.getRowMemoryContent());
+
+            //添加交际记忆
+            communicateMemoryAccessMapper.addCommunicateMemory(communicateMemory);
         } else if (associativeMemory.getRowMemoryType() == 5){//学习记忆联想
             return;
         }

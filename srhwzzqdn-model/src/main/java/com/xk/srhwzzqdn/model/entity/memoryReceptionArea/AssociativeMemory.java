@@ -92,4 +92,10 @@ public class AssociativeMemory {
 
     @Schema(description = "娱乐消费")
     private BigDecimal funConsume;
+
+    @Schema(description = "交际类型（工作，交易，闲聊，问候）")
+    private String communicateType;
+
+    @Schema(description = "交际方式（线下，微信，QQ，抖音）")
+    private Integer communicateWay;
 }
