@@ -188,13 +188,52 @@ export const DeleteAllFunMemoryByIds = ids => {
 }
 //***********************************************************************************
 
+//------------------------------------学习记忆api--------------------------------------
+const base_api5 = '/superBrain/memoryReception/learnMemoryAccess' //学习记忆基本路径
+
+//条件分页查询学习记忆列表
+export const GetLearnMemoryByConditionAndPage = (current, limit, learnMemoryDto) => {
+  return request({
+    url: `${base_api5}/getLearnMemoryByConditionAndPage/${current}/${limit}`,
+    method: 'post',
+    data: learnMemoryDto,
+  })
+}
+
+//保存学习记忆
+export const SaveLearnMemory = learnMemory => {
+  return request({
+    url: `${base_api5}/saveLearnMemory`,
+    method: 'post',
+    data: learnMemory,
+  })
+}
+
+//根据id删除学习记忆
+export const DeleteLearnMemoryById = id => {
+  return request({
+    url: `${base_api5}/deleteLearnMemoryById/${id}`,
+    method: 'delete',
+  })
+}
+
+//根据ids批量删除学习记忆
+export const DeleteAllLearnMemoryByIds = ids => {
+  return request({
+    url: `${base_api5}/deleteAllLearnMemoryByIds`,
+    method: 'post',
+    data: ids,
+  })
+}
+//***********************************************************************************
+
 //------------------------------------交际记忆api--------------------------------------
-const base_api5 = '/superBrain/memoryReception/communicateMemoryAccess' //交际记忆基本路径
+const base_api6 = '/superBrain/memoryReception/communicateMemoryAccess' //交际记忆基本路径
 
 //条件分页查询交际记忆列表
 export const GetCommunicateMemoryByConditionAndPage = (current, limit, communicateMemoryDto) => {
   return request({
-    url: `${base_api5}/getCommunicateMemoryByConditionAndPage/${current}/${limit}`,
+    url: `${base_api6}/getCommunicateMemoryByConditionAndPage/${current}/${limit}`,
     method: 'post',
     data: communicateMemoryDto,
   })
@@ -203,7 +242,7 @@ export const GetCommunicateMemoryByConditionAndPage = (current, limit, communica
 //保存交际记忆
 export const SaveCommunicateMemory = communicateMemory => {
   return request({
-    url: `${base_api5}/saveCommunicateMemory`,
+    url: `${base_api6}/saveCommunicateMemory`,
     method: 'post',
     data: communicateMemory,
   })
@@ -212,7 +251,7 @@ export const SaveCommunicateMemory = communicateMemory => {
 //根据id删除交际记忆
 export const DeleteCommunicateMemoryById = id => {
   return request({
-    url: `${base_api5}/deleteCommunicateMemoryById/${id}`,
+    url: `${base_api6}/deleteCommunicateMemoryById/${id}`,
     method: 'delete',
   })
 }
@@ -220,7 +259,7 @@ export const DeleteCommunicateMemoryById = id => {
 //根据ids批量删除交际记忆
 export const DeleteAllCommunicateMemoryByIds = ids => {
   return request({
-    url: `${base_api5}/deleteAllCommunicateMemoryByIds`,
+    url: `${base_api6}/deleteAllCommunicateMemoryByIds`,
     method: 'post',
     data: ids,
   })

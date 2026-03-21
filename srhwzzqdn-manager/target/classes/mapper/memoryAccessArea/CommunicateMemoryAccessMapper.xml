@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.CommunicateMemoryAccessMapper">
+    <!--  新增交际记忆  -->
+    <insert id="addCommunicateMemory">
+        insert into t_communicate_memory (memory_no,
+                                          begin_time,
+                                          end_time,
+                                          communicate_duration,
+                                          memory_owner,
+                                          memory_place,
+                                          memory_place_detail,
+                                          memory_images,
+                                          memory_source,
+                                          row_memory_no,
+                                          communicator_relation,
+                                          communicator,
+                                          communicate_type,
+                                          communicate_way,
+                                          communicate_content)
+        values (#{memoryNo},
+                #{beginTime},
+                #{endTime},
+                #{communicateDuration},
+                #{memoryOwner},
+                #{memoryPlace},
+                #{memoryPlaceDetail},
+                #{memoryImages},
+                #{memorySource},
+                #{rowMemoryNo},
+                #{communicatorRelation},
+                #{communicator},
+                #{communicateType},
+                #{communicateWay},
+                #{communicateContent})
+    </insert>
+
+    <!--  修改交际记忆  -->
+    <update id="updateCommunicateMemory">
+        update t_communicate_memory
+        <set>
+            begin_time = #{beginTime},
+            end_time = #{endTime},
+            communicate_duration = #{communicateDuration},
+            memory_place = #{memoryPlace},
+            memory_place_detail = #{memoryPlaceDetail},
+            memory_images = #{memoryImages},
+            memory_source = #{memorySource},
+            row_memory_no = #{rowMemoryNo},
+            communicator_relation = #{communicatorRelation},
+            communicator = #{communicator},
+            communicate_type = #{communicateType},
+            communicate_way = #{communicateWay},
+            communicate_content = #{communicateContent},
+            update_time = now(),
+            update_by = #{updateBy}
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--   根据ids批量删除交际记忆  -->
+    <delete id="deleteAllCommunicateMemoryByIds">
+        delete from t_communicate_memory where id in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--  条件查询交际记忆列表  -->
+    <select id="getCommunicateMemoryByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.memoryReceptionArea.CommunicateMemory">
+        select t.id,
+        t.memory_no,
+        t.begin_time,
+        t.end_time,
+        t.communicate_duration,
+        t.memory_owner,
+        t.memory_place,
+        t.memory_place_detail,
+        t.memory_images,
+        t.memory_source,
+        t.row_memory_no,
+        t.update_time,
+        t.update_by,
+        t.communicator_relation,
+        t.communicator,
+        t.communicate_type,
+        t.communicate_way,
+        t.communicate_content,
+        i.name as memoryOwnerName
+        from t_communicate_memory t
+        left join t_sys_person_info i
+        on i.account_id = t.memory_owner
+        <where>
+            <if test="memoryNo != null and memoryNo != ''">
+                and t.memory_no like concat('%', #{memoryNo}, '%')
+            </if>
+            <if test="communicator != null and communicator != ''">
+                and t.communicator like concat('%', #{communicator}, '%')
+            </if>
+            <if test="communicatorRelation != null and communicatorRelation.size() > 0">
+                and t.communicator_relation in
+                <foreach collection="communicatorRelation" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="communicateType != null and communicateType.size() > 0">
+                and (
+                <foreach collection="communicateType" item="item" open="" close="" separator=" or ">
+                    FIND_IN_SET(#{item}, t.communicate_type)
+                </foreach>
+                )
+            </if>
+            <if test="communicateWay != null and communicateWay.size() > 0">
+                and t.communicate_way in
+                <foreach collection="communicateWay" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.begin_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.begin_time &lt;= #{endTime}
+            </if>
+            <if test="memorySource != null and memorySource.size() > 0">
+                and t.memory_source in
+                <foreach collection="memorySource" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="memoryOwner != null and memoryOwner != ''">
+                and t.memory_owner = #{memoryOwner}
+            </if>
+        </where>
+        order by t.begin_time desc
+    </select>
+</mapper>
