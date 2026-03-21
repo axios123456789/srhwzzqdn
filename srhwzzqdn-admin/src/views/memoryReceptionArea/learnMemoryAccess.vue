@@ -413,6 +413,14 @@
         </template>
       </el-table-column>
       <el-table-column
+        prop="learnDocument"
+        label="学习文档"
+        width="200"
+        #default="scope"
+      >
+        {{ getDocumentNames(scope.row.learnDocument) }}
+      </el-table-column>
+      <el-table-column
           prop="memoryPlace"
           label="记忆地点"
           width="200"
@@ -497,6 +505,26 @@ const getDisplayTextByTree = (value, treeList) => {
   return findText(treeList, value)
 }
 
+// 获取文档名称列表
+const getDocumentNames = documentPaths => {
+  if (!documentPaths || documentPaths.length === 0) return '-'
+
+  // 如果是字符串，分割成数组
+  const paths = Array.isArray(documentPaths)
+    ? documentPaths
+    : documentPaths.split(',')
+
+  // 从每个路径中提取文件名并清洗
+  return paths
+    .map(path => {
+      // 从路径中提取文件名部分
+      const fileName = path.substring(path.lastIndexOf('/') + 1)
+      // 使用现有的cleanFileName函数清洗文件名
+      return cleanFileName(fileName)
+    })
+    .join(', ')
+}
+
 //---------------------数据字典获取-------------------------
 //学习记忆来源
 const learnMemorySourceItem = ref([]);
@@ -550,6 +578,11 @@ const learnFetchData = async () => {
       item.memoryPlace = item.memoryPlace.split(',')
     } else {
       item.memoryPlace = ''
+    }
+    if (item.learnDocument != null && item.learnDocument != '') {
+      item.learnDocument = item.learnDocument.split(',')
+    } else {
+      item.learnDocument = []
     }
   })
 
@@ -607,65 +640,80 @@ const workDocumentList = ref([]);
 
 //新增按钮
 const addLearnMemory = () => {
-  learnMemory.value = {
-    id: null,
-    memoryNo: '',
-    beginTime: '',
-    endTime: '',
-    learnDuration: null,
-    memoryPlace: [],
-    memoryPlaceDetail: '',
-    memoryImages: '',
-    memorySource: 1,
-    rowMemoryNo: '',
-    learnType: '',
-    learnContent: '',
-    learnNode: '',
-    learnDocument: ''
-  };
-  fileList.value = [];
-  documentFileList.value = [];
-  workDocumentList.value = [];
+  //数据重置
+  learnMemory.value = {}
+  learnMemory.value.memorySource = 1
+  if (learnList.value.length > 0) {
+    learnMemory.value.beginTime = learnList.value[0].endTime
+  }
+  //图片列表数据重置
+  memoryImageList.value = []
+  fileList.value = []
+  //文档列表数据重置
+  documentFileList.value = []
+  workDocumentList.value = []
+
+  //打开模态窗口
   dialogVisible.value = true;
 }
 
-//修改按钮
+//修改按钮点击事件
 const editLearnMemory = (row) => {
-  learnMemory.value = { ...row };
-  fileList.value = row.memoryImages ? row.memoryImages.map((url, index) => ({
-    name: `image_${index}`,
-    url: url
-  })) : [];
-  if (row.learnDocument != null && row.learnDocument != '') {
-    const docUrls = row.learnDocument.split(',')
-    documentFileList.value = docUrls.map(url => ({
-      name: cleanFileName(url.substring(url.lastIndexOf('/') + 1)),
-      url: url
-    }))
-    workDocumentList.value = [...docUrls]
-  } else {
-    documentFileList.value = []
-    workDocumentList.value = []
+  //数据设置
+  learnMemory.value = { ...row }
+  //图片文件列表数据设置
+  fileList.value = []
+  memoryImageList.value = learnMemory.value.memoryImages
+  memoryImageList.value.forEach(url => {
+    fileList.value.push({ url: url })
+  })
+  //文档文件列表数据设置
+  documentFileList.value = []
+  workDocumentList.value = Array.isArray(learnMemory.value.learnDocument)
+    ? [...learnMemory.value.learnDocument]
+    : []
+  if (workDocumentList.value != null && workDocumentList.value != '') {
+    workDocumentList.value.forEach(url => {
+      // 从URL中提取文件名并清洗
+      const fileName = url.substring(url.lastIndexOf('/') + 1)
+      const cleanedFileName = cleanFileName(fileName)
+      documentFileList.value.push({
+        name: cleanedFileName,
+        url: url,
+      })
+    })
   }
-  dialogVisible.value = true;
+
+  //打开模态窗口
+  dialogVisible.value = true
 }
 
-//提交按钮
+//点击手动录入和修改模态窗口中的提交按钮触发
 const submitLearnMemory = async () => {
-  if (!learnMemory.value.beginTime || !learnMemory.value.endTime) {
-    ElMessage.warning('请选择学习开始时间和结束时间');
-    return;
+  //基本验证
+  if (
+      learnMemory.value.beginTime == undefined ||
+      learnMemory.value.beginTime == ''
+  ) {
+    ElMessage.warning('【学习开始时间】不能为空')
+    return
   }
-  if (!learnMemory.value.learnContent) {
-    ElMessage.warning('请输入学习内容');
-    return;
+  if (learnMemory.value.endTime == undefined || learnMemory.value.endTime == '') {
+    ElMessage.warning('【学习结束时间】不能为空')
+    return
   }
-
+  if (
+      learnMemory.value.learnContent == undefined ||
+      learnMemory.value.learnContent == ''
+  ) {
+    ElMessage.warning('【学习内容】不能为空')
+    return
+  }
   //数据处理
   if (
-    learnMemory.value.memoryPlace != null &&
-    learnMemory.value.memoryPlace != '' &&
-    learnMemory.value.memoryPlace != undefined
+      learnMemory.value.memoryPlace != null &&
+      learnMemory.value.memoryPlace != '' &&
+      learnMemory.value.memoryPlace != undefined
   ) {
     learnMemory.value.memoryPlace = learnMemory.value.memoryPlace.join(',')
   } else {
@@ -681,7 +729,6 @@ const submitLearnMemory = async () => {
   } else {
     learnMemory.value.learnDocument = null
   }
-
   const { code, message } = await SaveLearnMemory(learnMemory.value)
   if (code === 200) {
     dialogVisible.value = false
@@ -808,80 +855,134 @@ const cleanFileName = fileName => {
   return fileName
 }
 
-//--------------------------------学习记忆删除----------------------------------
-//选择框变化
-const selectedRows = ref([]);
-const handleSelectionChange = (selection) => {
-  selectedRows.value = selection;
-}
-
-//单个删除
-const deleteLearnMemoryById = async (row) => {
-  await ElMessageBox.confirm('确定要删除这条学习记忆吗?', '提示', {
+//---------------------------------------删除记忆------------------------------------
+//点击删除学习记忆按钮后触发
+const deleteLearnMemoryById = row => {
+  ElMessageBox.confirm('确定要从外置大脑清除这条学习记忆吗?', 'Warning', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
-  });
-  await DeleteLearnMemoryById(row.id);
-  ElMessage.success('删除成功');
-  learnFetchData();
+    type: 'warning',
+  }).then(async () => {
+    const { code, message } = await DeleteLearnMemoryById(row.id)
+    if (code === 200) {
+      ElMessage.success(message)
+      learnFetchData()
+    } else {
+      ElMessage.error(message)
+    }
+  })
 }
 
-//批量删除
+//--------------------------------------------------批量删除记忆功能-------------------------------------------------
+// 选中的行数据
+const selectedRows = ref([])
+// 获取表格引用
+const multipleTable = ref(null)
+
+// 处理选中行变化
+const handleSelectionChange = selection => {
+  selectedRows.value = selection
+}
+// 批量删除函数
 const deleteSelectAll = async () => {
-  if (selectedRows.value.length === 0) {
-    ElMessage.warning('请选择要删除的数据');
-    return;
+  if (!selectedRows.value || selectedRows.value.length === 0) {
+    ElMessage.warning('请先选择要删除的学习记忆记录')
+    return
   }
-  await ElMessageBox.confirm(`确定要删除选中的${selectedRows.value.length}条数据吗?`, '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  });
-  const ids = selectedRows.value.map(row => row.id);
-  await DeleteAllLearnMemoryByIds(ids);
-  ElMessage.success('删除成功');
-  learnFetchData();
+
+  await ElMessageBox.confirm(
+    `确定要批量删除选中的 ${selectedRows.value.length} 条学习记忆记录吗？此操作不可恢复！`,
+    '警告',
+    {
+      confirmButtonText: '确定删除',
+      cancelButtonText: '取消',
+      type: 'warning',
+      confirmButtonClass: 'batch-delete-confirm-btn',
+      cancelButtonClass: 'batch-delete-cancel-btn',
+    }
+  )
+
+  // 获取所有选中记录的ID
+  const selectedIds = selectedRows.value.map(row => row.id)
+
+  // 调用批量删除的API
+  const { code, message } = await DeleteAllLearnMemoryByIds(selectedIds)
+  if (code === 200) {
+    // 刷新数据
+    learnFetchData()
+
+    // 清空选中状态
+    if (multipleTable.value) {
+      multipleTable.value.clearSelection()
+    }
+    selectedRows.value = []
+
+    ElMessage.success(message)
+  } else {
+    ElMessage.error(message)
+  }
 }
 
-//--------------------------------学习记忆导出----------------------------------
-//导出配置
-const exportColumns = ref([
-  { prop: 'memoryNo', label: '学习记忆编号' },
-  { prop: 'beginTime', label: '学习开始时间' },
-  { prop: 'endTime', label: '学习结束时间' },
-  { prop: 'learnDuration', label: '学习时长' },
-  { prop: 'memoryOwnerName', label: '记忆所属人' },
-  { prop: 'memoryPlace', label: '记忆地点' },
-  { prop: 'memoryImages', label: '学习记忆册' },
-  { prop: 'rowMemoryNo', label: '原始记忆编号' },
-  { prop: 'memorySource', label: '学习记忆来源' },
-  { prop: 'learnType', label: '学习记忆类型' },
-  { prop: 'learnContent', label: '学习内容' },
-  { prop: 'learnNode', label: '学习笔记' },
-  { prop: 'learnDocument', label: '学习文档' }
-])
+//-----------------------------------------一键导出功能实现---------------------------------------
+//-----------------------------------导出功能配置-----------------------------------
+// 可导出的列配置
+const exportColumns = [
+  { key: 'learnType', label: '学习记忆类型', width: 12 },
+  { key: 'memoryNo', label: '记忆编号', width: 20 },
+  { key: 'beginTime', label: '记忆开始时间', width: 20 },
+  { key: 'endTime', label: '记忆结束时间', width: 20 },
+  { key: 'learnDuration', label: '学习时长(h)', width: 12 },
+  { key: 'memorySource', label: '记忆来源', width: 12 },
+  { key: 'learnContent', label: '学习内容', width: 40 },
+  { key: 'learnNode', label: '学习笔记', width: 40 },
+  { key: 'learnDocument', label: '学习文档', width: 25 },
+  { key: 'rowMemoryNo', label: '原始记忆编号', width: 20 },
+  { key: 'memoryOwnerName', label: '记忆所属人', width: 12 },
+  { key: 'updateTime', label: '修改时间', width: 20 },
+  { key: 'updateBy', label: '修改者', width: 12 },
+]
 
 // 数据格式化函数
-const learnDataFormatter = (item) => {
-  return {
-    ...item,
-    memorySource: getDisplayText(item.memorySource, learnMemorySourceItem.value),
-    learnType: getDisplayTextByTree(item.learnType, learnMemoryTypeItem.value),
-    memoryPlace: getDisplayTextByTree(item.memoryPlace, formattedAddressOptions.value),
-    learnDocument: item.learnDocument ? item.learnDocument.split(',').map(url => cleanFileName(url.substring(url.lastIndexOf('/') + 1))).join(', ') : '',
-    memoryImages: item.memoryImages ? item.memoryImages.join(', ') : ''
+const learnDataFormatter = (item, key, value) => {
+  switch (key) {
+    case 'learnType':
+      return getDisplayTextByTree(value, learnMemoryTypeItem.value)
+    case 'memorySource':
+      return getDisplayText(value, learnMemorySourceItem.value)
+    case 'learnDocument':
+      return getDocumentNames(value)
+    default:
+      return value
   }
 }
 
-// 获取所有学习记忆数据
+// 获取全部数据的函数
 const fetchAllLearnData = async () => {
   const { data } = await GetLearnMemoryByConditionAndPage(
       1,
       10000,
       learnQueryDto.value
   )
-  return data.list || data.records || []
+
+  data.list.forEach(item => {
+    if (item.memoryImages != null && item.memoryImages != '') {
+      item.memoryImages = item.memoryImages.split(',')
+    } else {
+      item.memoryImages = []
+    }
+    if (item.memoryPlace != null && item.memoryPlace != '') {
+      item.memoryPlace = item.memoryPlace.split(',')
+    } else {
+      item.memoryPlace = ''
+    }
+    if (item.learnDocument != null && item.learnDocument != '') {
+      item.learnDocument = item.learnDocument.split(',')
+    } else {
+      item.learnDocument = []
+    }
+  })
+
+  return data.list
 }
 
 // 使用导出Hook
@@ -891,7 +992,7 @@ const {
   exportFileName,
   exportLoading,
   selectedColumns,
-  showExportDialog,
+  showExport: showExport,
   handleExport,
   resetExport
 } = useExport({
@@ -901,6 +1002,11 @@ const {
   defaultFileName: '学习记忆数据',
   sheetName: '学习记忆数据'
 })
+
+// 包装显示导出对话框的方法
+const showExportDialog = () => {
+  showExport(learnList.value, learnTotal.value)
+}
 </script>
 
 <style scoped>
