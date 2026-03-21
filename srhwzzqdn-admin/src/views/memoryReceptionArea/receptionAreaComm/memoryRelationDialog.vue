@@ -505,6 +505,38 @@
               </div>
             </div>
             <!--     -----学习记忆联想块----------       -->
+            <div class="info-item time-item" v-if="associativeMemory.rowMemoryType == 5">
+              <div class="item-icon">🏷️</div>
+              <div class="item-content">
+                <div class="item-label">学习记忆类型</div>
+                <div class="item-value">
+                  <el-tree-select
+                      v-model="associativeMemory.learnType"
+                      :data="learnMemoryTypeItem"
+                      :props="{ value: 'value', label: 'text', children: 'children' }"
+                      placeholder="请选择学习记忆类型"
+                      style="width: 100%"
+                      clearable
+                      check-strictly
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="info-item content-item long-text-item" v-if="associativeMemory.rowMemoryType == 5">
+              <div class="item-icon">✍️</div>
+              <div class="item-content">
+                <div class="item-label">学习笔记</div>
+                <div class="item-value content-text">
+                  <el-input
+                      v-model="associativeMemory.learnNode"
+                      type="textarea"
+                      :rows="4"
+                      placeholder="请输入工作技术笔记..."
+                      resize="vertical"
+                  />
+                </div>
+              </div>
+            </div>
 
           </div>
         </div>
@@ -592,6 +624,7 @@ watch(
         getFunMemoryAppItem();
         getCommunicateTypeItem();
         getCommunicateWayItem();
+        getLearnMemoryTypeItem();
 
         //前置操作
         //associativeMemory.value = [];
@@ -628,6 +661,8 @@ watch(
         associativeMemory.value.funConsume = "";
         associativeMemory.value.communicateType = "";
         associativeMemory.value.communicateWay = "";
+        associativeMemory.value.learnType = "";
+        associativeMemory.value.learnNode = "";
       }
     }
 )
@@ -751,6 +786,14 @@ const getCommunicateWayItem = async () => {
   communicateWayItem.value = data
 }
 
+//------------学习记忆数据字典-------------
+//学习记忆类型
+const learnMemoryTypeItem = ref([]);
+const getLearnMemoryTypeItem = async () => {
+  const { data } = await GetAllSysCode('t_learn_memory_type')
+  learnMemoryTypeItem.value = data
+}
+
 //---------------------------------------
 
 // 通用方法：根据值和映射表获取中文文本
@@ -859,6 +902,9 @@ const associativeMemory = ref({
   //交际记忆
   communicateType: "", //交际类型（工作，交易，闲聊，问候）
   communicateWay: "", //交际方式
+  //---------学习记忆----------------
+  learnType: "", //学习记忆类型
+  learnNode: "", //学习笔记
 }); //联想记忆，用于存储转换联想记忆参数
 
 //-----------------------------------上传处理-----------------------------------

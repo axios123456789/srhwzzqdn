@@ -420,14 +420,14 @@
       >
         {{ getDocumentNames(scope.row.learnDocument) }}
       </el-table-column>
-      <el-table-column
-          prop="memoryPlace"
-          label="记忆地点"
-          width="200"
-          #default="scope"
-      >
-        {{ getDisplayTextByTree(scope.row.memoryPlace, formattedAddressOptions) }}
-      </el-table-column>
+<!--      <el-table-column-->
+<!--          prop="memoryPlace"-->
+<!--          label="记忆地点"-->
+<!--          width="200"-->
+<!--          #default="scope"-->
+<!--      >-->
+<!--        {{ getDisplayTextByTree(scope.row.memoryPlace, formattedAddressOptions) }}-->
+<!--      </el-table-column>-->
       <el-table-column prop="rowMemoryNo" label="原始记忆编号" width="180" />
       <el-table-column prop="memoryOwnerName" label="记忆所属人" width="120" />
       <el-table-column prop="updateTime" label="修改时间" width="180" />

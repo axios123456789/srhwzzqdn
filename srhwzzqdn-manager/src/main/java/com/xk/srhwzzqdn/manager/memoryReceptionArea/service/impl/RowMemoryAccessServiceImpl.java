@@ -33,6 +33,9 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
     @Autowired
     private CommunicateMemoryAccessMapper communicateMemoryAccessMapper;
 
+    @Autowired
+    private LearnMemoryAccessMapper learnMemoryAccessMapper;
+
     /**
      * 条件分页查询原始记忆列表
      * @param current
@@ -207,7 +210,24 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
             //添加交际记忆
             communicateMemoryAccessMapper.addCommunicateMemory(communicateMemory);
         } else if (associativeMemory.getRowMemoryType() == 5){//学习记忆联想
-            return;
+            LearnMemory learnMemory = new LearnMemory();
+            learnMemory.setMemoryNo(GenerateNoUtil.generateNo("LEARN"));
+            learnMemory.setBeginTime(associativeMemory.getBegin_time());
+            learnMemory.setEndTime(associativeMemory.getEnd_time());
+            learnMemory.setLearnDuration(new BigDecimal((associativeMemory.getEnd_time().getTime() - associativeMemory.getBegin_time().getTime())/(1000.0*60*60)));
+            learnMemory.setMemoryOwner(associativeMemory.getMemoryOwner());
+            learnMemory.setMemoryPlace(associativeMemory.getMemoryPlace());
+            learnMemory.setMemoryPlaceDetail(associativeMemory.getMemoryPlaceDetail());
+            learnMemory.setMemoryImages(associativeMemory.getMemoryImages());
+            learnMemory.setMemorySource(2);
+            learnMemory.setRowMemoryNo(associativeMemory.getMemoryNo());
+            learnMemory.setLearnType(associativeMemory.getLearnType());
+            learnMemory.setLearnContent(associativeMemory.getRowMemoryContent());
+            learnMemory.setLearnNode(associativeMemory.getLearnNode());
+            learnMemory.setLearnDocument(associativeMemory.getDocument());
+
+            //添加学习记忆
+            learnMemoryAccessMapper.addLearnMemory(learnMemory);
         }
 
         //2.设置对应的联想记忆状态根据记忆类型

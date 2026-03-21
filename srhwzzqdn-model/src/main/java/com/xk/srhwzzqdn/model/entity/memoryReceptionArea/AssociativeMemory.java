@@ -98,4 +98,10 @@ public class AssociativeMemory {
 
     @Schema(description = "交际方式（线下，微信，QQ，抖音）")
     private Integer communicateWay;
+
+    @Schema(description = "学习记忆类型")
+    private String learnType;
+
+    @Schema(description = "学习笔记")
+    private String learnNode;
 }
