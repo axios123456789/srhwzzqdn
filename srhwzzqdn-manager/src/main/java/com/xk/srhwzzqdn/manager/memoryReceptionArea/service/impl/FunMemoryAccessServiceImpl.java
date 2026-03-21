@@ -31,6 +31,8 @@ public class FunMemoryAccessServiceImpl implements FunMemoryAccessService {
         //1.开启分页
         PageHelper.startPage(current, limit);
 
+        funMemoryDto.setMemoryOwner(AuthContextUtil.get().getId());
+
         //条件查询娱乐记忆列表
         List<FunMemory> funMemoryList = funMemoryAccessMapper.getFunMemoryByCondition(funMemoryDto);
 

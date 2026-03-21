@@ -36,4 +36,7 @@ public class CommunicateMemoryDto {
 
     @Schema(description = "交际记忆来源")
     private List<Integer> memorySource;
+
+    @Schema(description = "记忆所属人")
+    private String memoryOwner;
 }

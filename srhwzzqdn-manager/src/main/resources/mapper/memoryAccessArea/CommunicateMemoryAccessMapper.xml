@@ -129,6 +129,9 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="memoryOwner != null and memoryOwner != ''">
+                and t.memory_owner = #{memoryOwner}
+            </if>
         </where>
         order by t.begin_time desc
     </select>

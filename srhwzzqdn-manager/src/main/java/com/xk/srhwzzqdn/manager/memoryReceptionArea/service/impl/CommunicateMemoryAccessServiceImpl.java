@@ -31,6 +31,8 @@ public class CommunicateMemoryAccessServiceImpl implements CommunicateMemoryAcce
         //1.开启分页
         PageHelper.startPage(current, limit);
 
+        communicateMemoryDto.setMemoryOwner(AuthContextUtil.get().getId());
+
         //条件查询交际记忆列表
         List<CommunicateMemory> communicateMemoryList = communicateMemoryAccessMapper.getCommunicateMemoryByCondition(communicateMemoryDto);
 

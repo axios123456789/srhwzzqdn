@@ -30,6 +30,9 @@ public class LifeMemoryAccessServiceImpl implements LifeMemoryAccessService {
         //1.开启分页
         PageHelper.startPage(current, limit);
 
+        //设置记忆所属人
+        lifeMemoryDto.setMemoryOwner(AuthContextUtil.get().getId());
+
         //条件查询生活记忆列表
         List<LifeMemory> lifeMemoryList = lifeMemoryAccessMapper.getLifeMemoryByCondition(lifeMemoryDto);
 
