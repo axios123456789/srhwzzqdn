@@ -489,20 +489,25 @@ const getDisplayText = (value, mappingArray) => {
   return foundItem ? foundItem.text : value
 }
 
-// 获取树形字典显示文本
-const getDisplayTextByTree = (value, treeList) => {
-  if (!value || !treeList) return '-'
-  const findText = (list, val) => {
-    for (let item of list) {
-      if (item.value == val) return item.text
-      if (item.children) {
-        const result = findText(item.children, val)
+//通用方法：根据值和映射表获取中文文本值（树形）
+const getDisplayTextByTree = (value, treeData) => {
+  if (!value) return '-'
+
+  const traverse = nodes => {
+    for (const node of nodes) {
+      if (node.value === value) {
+        return node.text
+      }
+      if (node.children?.length) {
+        const result = traverse(node.children)
         if (result) return result
       }
     }
-    return '-'
+    return null
   }
-  return findText(treeList, value)
+
+  const result = traverse(treeData)
+  return result || value
 }
 
 // 获取文档名称列表
@@ -992,7 +997,7 @@ const {
   exportFileName,
   exportLoading,
   selectedColumns,
-  showExport: showExport,
+  showExportDialog: showExport,
   handleExport,
   resetExport
 } = useExport({
