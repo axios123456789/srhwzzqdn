@@ -32,7 +32,7 @@ export default [
         name: 'assetOverview',
         component: assetOverview,
         meta: {
-          title: '资产总览',
+          title: '资产台账管理',
         },
         icon: 'DataLine', // 数据曲线图标象征总览
         hidden: false,

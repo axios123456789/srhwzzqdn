@@ -1,5 +1,5 @@
 <template>
-  资产总览
+  资产台账管理
 </template>
 
 <script setup></script>
