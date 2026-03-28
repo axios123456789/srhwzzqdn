@@ -8,7 +8,7 @@
         <div class="value">¥ {{ formatMoney(totalAmount) }}</div>
       </div>
       <div class="summary-card" v-for="(item, key) in assetTypeSummary" :key="key">
-        <div class="label">{{ getAssetTypeName(key) }}</div>
+        <div class="label">{{ getAssetTypeName(Number(key)) }}</div>
         <div class="value">¥ {{ formatMoney(item) }}</div>
       </div>
     </div>
