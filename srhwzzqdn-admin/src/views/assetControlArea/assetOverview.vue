@@ -122,6 +122,17 @@
             <el-icon><Refresh /></el-icon>
             重置
           </el-button>
+        </el-row>
+      </el-form>
+    </div>
+
+    <!-- 🔷 表格区 -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="header-left">
+          <span>资产列表</span>
+        </div>
+        <div class="header-right">
           <el-button
               type="success"
               size="small"
@@ -130,14 +141,10 @@
             <el-icon><DocumentAdd /></el-icon>
             新增
           </el-button>
-        </el-row>
-      </el-form>
-    </div>
-
-    <!-- 🔷 表格区 -->
-    <div class="table-card">
-      <div class="table-header">
-        <span>资产列表</span>
+          <el-button type="danger" @click="batchDelete" size="small">
+            批量删除
+          </el-button>
+        </div>
       </div>
 
       <div class="table-wrapper">
@@ -146,7 +153,9 @@
             border
             stripe
             height="100%"
+            @selection-change="handleSelectionChange"
         >
+          <el-table-column type="selection" width="55" />
           <el-table-column prop="assetName" label="资产名称" min-width="150" />
           <el-table-column prop="assetCode" label="资产官方标识" min-width="150" />
           <el-table-column prop="assetNo" label="资产编号" width="180" />
@@ -320,7 +329,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
-import { GetAssetLedgerByConditionAndPage, SaveAssetLedger, DeleteAssetLedgerById } from "@/api/assetControl"
+import { GetAssetLedgerByConditionAndPage, SaveAssetLedger, DeleteAssetLedgerById, DeleteAllAssetLedgerByIds } from "@/api/assetControl"
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { useApp } from "@/pinia/modules/app"
 
@@ -418,6 +427,7 @@ const pageParams = reactive({
 const tableData = ref([])
 const total = ref(0)
 const assetTypeSummary = ref({})
+const selectedRows = ref([])
 
 const totalAmount = computed(() => {
   let sum = 0
@@ -533,6 +543,44 @@ const deleteRow = async (id) => {
   }
 }
 
+// 处理表格选择变化
+const handleSelectionChange = (selection) => {
+  selectedRows.value = selection
+}
+
+// 批量删除
+const batchDelete = async () => {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning('请先选择要删除的记录')
+    return
+  }
+  
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除选中的 ${selectedRows.value.length} 条记录吗?`,
+      '批量删除确认',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      }
+    )
+    
+    const ids = selectedRows.value.map(row => row.id)
+    const result = await DeleteAllAssetLedgerByIds(ids)
+    if (result.code === 200) {
+      ElMessage.success('批量删除成功')
+      fetchData()
+    } else {
+      ElMessage.error(result.message || '批量删除失败')
+    }
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('批量删除失败')
+    }
+  }
+}
+
 </script>
 
 <style scoped>
@@ -595,6 +643,20 @@ const deleteRow = async (id) => {
   padding: 14px 20px;
   font-weight: 600;
   border-bottom: 1px solid #ebeef5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-right {
+  display: flex;
+  gap: 8px;
 }
 
 /* 表格滚动 */
