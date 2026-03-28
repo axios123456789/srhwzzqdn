@@ -141,6 +141,14 @@
             <el-icon><DocumentAdd /></el-icon>
             新增
           </el-button>
+          <el-button
+              type="info"
+              size="small"
+              @click="showExportDialog"
+          >
+            <el-icon><Download /></el-icon>
+            一键导出
+          </el-button>
           <el-button type="danger" @click="batchDelete" size="small">
             批量删除
           </el-button>
@@ -323,6 +331,20 @@
       </template>
     </el-dialog>
 
+    <!-- 导出对话框 -->
+    <ExportDialog
+        v-model="exportDialogVisible"
+        v-model:export-scope="exportScope"
+        v-model:export-file-name="exportFileName"
+        v-model:selected-columns="selectedColumns"
+        :available-columns="exportColumns"
+        :export-loading="exportLoading"
+        :current-count="tableData.length"
+        :total-count="total"
+        @confirm="handleExport"
+        @closed="resetExport"
+    />
+
   </div>
 </template>
 
@@ -331,7 +353,8 @@ import { ref, reactive, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { GetAssetLedgerByConditionAndPage, SaveAssetLedger, DeleteAssetLedgerById, DeleteAllAssetLedgerByIds } from "@/api/assetControl"
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { useApp } from "@/pinia/modules/app"
+import { useExport } from "@/components/Export/hooks/useExport"
+import ExportDialog from '@/components/Export/ExportDialog.vue'
 
 //--------------------钩子函数-------------------------
 onMounted(() => {
@@ -352,6 +375,78 @@ const getDisplayText = (value, mappingArray) => {
 }
 
 const formatMoney = (v) => Number(v || 0).toLocaleString()
+
+// 导出列定义
+const exportColumns = [
+  { key: 'assetName', label: '资产名称', width: 20 },
+  { key: 'assetCode', label: '资产官方标识', width: 20 },
+  { key: 'assetNo', label: '资产编号', width: 25 },
+  { key: 'assetType', label: '资产类型', width: 12 },
+  { key: 'assetSubType', label: '资产子类', width: 15 },
+  { key: 'amount', label: '资产金额', width: 15 },
+  { key: 'investAmount', label: '投入金额', width: 15 },
+  { key: 'assetStatus', label: '资产状态', width: 12 },
+  { key: 'remark', label: '备注', width: 30 },
+  { key: 'assetOwnerName', label: '资产所属人', width: 12 },
+  { key: 'updateTime', label: '更新时间', width: 20 },
+  { key: 'updateBy', label: '更新人', width: 12 },
+]
+
+// 数据格式化函数
+const assetDataFormatter = (item, key, value) => {
+  switch (key) {
+    case 'assetType':
+      return getDisplayText(value, assetTypeItem.value)
+    case 'assetSubType':
+      return getDisplayText(value, assetSubTypeItem.value)
+    case 'assetStatus':
+      return getDisplayText(value, assetStatusItem.value)
+    case 'amount':
+    case 'investAmount':
+      return value ? formatMoney(value) : '-'
+    default:
+      return value
+  }
+}
+
+// 获取全部数据的函数
+const getAllAssetLedgerData = async () => {
+  try {
+    const result = await GetAssetLedgerByConditionAndPage(1, 999999, query)
+    if (result.code === 200) {
+      return result.data.records || []
+    } else {
+      ElMessage.error(result.message || "获取数据失败")
+      return []
+    }
+  } catch (error) {
+    ElMessage.error("获取数据失败")
+    return []
+  }
+}
+
+// 使用导出hook
+const {
+  exportDialogVisible,
+  exportScope,
+  exportFileName,
+  exportLoading,
+  selectedColumns,
+  showExportDialog: showExport,
+  handleExport,
+  resetExport
+} = useExport({
+  availableColumns: exportColumns,
+  dataFormatter: assetDataFormatter,
+  fetchAllData: getAllAssetLedgerData,
+  defaultFileName: '个人资产台账数据',
+  sheetName: '个人资产台账数据'
+})
+
+// 打开导出对话框
+const showExportDialog = () => {
+  showExport(tableData.value, total.value)
+}
 //-------------------------------------------------
 
 //-------------------------数据字典获取------------------------------
