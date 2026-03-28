@@ -4,25 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产台账管理-002">
-      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/vo/assetControl/AssetLedgerPageVo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/vo/assetControl/AssetLedgerVo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/vo/assetControl/AssetTypeSummaryVO.java" afterDir="false" />
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产台账管理-003">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/assetControl.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/assetControl.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetOverview.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetOverview.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/controller/AssetLedgerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/controller/AssetLedgerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetLedgerMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetLedgerMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/AssetLedgerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/AssetLedgerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetLedgerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetLedgerServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/AssetLedgerMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/AssetLedgerMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,7 +242,7 @@
       <workItem from="1774523076600" duration="3601000" />
       <workItem from="1774571571942" duration="1400000" />
       <workItem from="1774607743370" duration="633000" />
-      <workItem from="1774660096071" duration="13806000" />
+      <workItem from="1774660096071" duration="16259000" />
     </task>
     <task id="LOCAL-00001" summary="Changes">
       <created>1768721797078</created>
@@ -590,7 +580,14 @@
       <option name="project" value="LOCAL" />
       <updated>1774679733830</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="资产台账管理-003">
+      <created>1774687040203</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1774687040203</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -609,7 +606,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="原始记忆-记忆联想02" />
     <MESSAGE value="原始记忆-记忆联想04" />
     <MESSAGE value="原始记忆-记忆联想06" />
     <MESSAGE value="原始记忆-记忆联想07" />
@@ -634,7 +630,8 @@
     <MESSAGE value="学习记忆接入-004" />
     <MESSAGE value="资产台账管理-001" />
     <MESSAGE value="资产台账管理-002" />
-    <option name="LAST_COMMIT_MESSAGE" value="资产台账管理-002" />
+    <MESSAGE value="资产台账管理-003" />
+    <option name="LAST_COMMIT_MESSAGE" value="资产台账管理-003" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

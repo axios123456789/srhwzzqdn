@@ -334,36 +334,18 @@ onMounted(() => {
   fetchData();
 });
 
-//-------------------------列表展示区-----------------------------------
-const query = reactive({
-  assetName: "",
-  assetNo: "",
-  assetType: null,
-  assetSubType: [],
-  amount: null,
-  assetStatus: []
-})
+//----------------公共函数-------------------------
+//通用方法：根据值和映射表获取中文文本
+const getDisplayText = (value, mappingArray) => {
+  if (!value && value !== 0) return '-'
+  const foundItem = mappingArray.find(item => item.value === value)
+  return foundItem ? foundItem.text : value
+}
 
-const pageParams = reactive({
-  page: 1,
-  limit: 10
-})
+const formatMoney = (v) => Number(v || 0).toLocaleString()
+//-------------------------------------------------
 
-const tableData = ref([])
-const total = ref(0)
-const assetTypeSummary = ref({})
-
-const totalAmount = computed(() => {
-  let sum = 0
-  for (let key in assetTypeSummary.value) {
-    sum += Number(assetTypeSummary.value[key] || 0)
-  }
-  return sum
-})
-
-const dialogVisible = ref(false)
-const form = reactive({})
-
+//-------------------------数据字典获取------------------------------
 //数据字典
 const assetTypeItem = ref([])
 const assetSubTypeItem = ref([])
@@ -400,8 +382,9 @@ const getAssetStatusItem = async () => {
     assetStatusItem.value = result.data
 }
 
-//资产类型改变时加载对应的子类
+//新增修改模态窗口资产类型改变时加载对应的子类
 const handleAssetTypeChange = async (val) => {
+  form.assetSubType = []
   await getAssetSubTypeItem(val)
 }
 
@@ -415,13 +398,83 @@ const handleQueryAssetTypeChange = async (val) => {
 const getAssetTypeName = (value) => {
   return getDisplayText(value, assetTypeItem.value)
 }
+//---------------------------------------------------------------------
 
-//通用方法：根据值和映射表获取中文文本
-const getDisplayText = (value, mappingArray) => {
-  if (!value && value !== 0) return '-'
-  const foundItem = mappingArray.find(item => item.value === value)
-  return foundItem ? foundItem.text : value
+//-------------------------列表展示区-----------------------------------
+const query = reactive({
+  assetName: "",
+  assetNo: "",
+  assetType: null,
+  assetSubType: [],
+  amount: null,
+  assetStatus: []
+})
+
+const pageParams = reactive({
+  page: 1,
+  limit: 10
+})
+
+const tableData = ref([])
+const total = ref(0)
+const assetTypeSummary = ref({})
+
+const totalAmount = computed(() => {
+  let sum = 0
+  for (let key in assetTypeSummary.value) {
+    sum += Number(assetTypeSummary.value[key] || 0)
+  }
+  return sum
+})
+
+const handleSearch = () => {
+  pageParams.page = 1
+  fetchData()
 }
+
+const resetQuery = () => {
+  Object.assign(query, {
+    assetName: "",
+    assetNo: "",
+    assetType: null,
+    assetSubType: [],
+    amount: null,
+    assetStatus: []
+  })
+  assetSubTypeItem.value = []
+  pageParams.page = 1
+  fetchData()
+}
+
+const handleSizeChange = (size) => {
+  pageParams.limit = size
+  pageParams.page = 1
+  fetchData()
+}
+
+const handleCurrentChange = (page) => {
+  pageParams.page = page
+  fetchData()
+}
+
+const fetchData = async () => {
+  try {
+    const result = await GetAssetLedgerByConditionAndPage(pageParams.page, pageParams.limit, query)
+    if (result.code === 200) {
+      tableData.value = result.data.records || []
+      total.value = result.data.total || 0
+      assetTypeSummary.value = result.data.assetTypeSummary || {}
+    } else {
+      ElMessage.error(result.message || "查询失败")
+    }
+  } catch (error) {
+    ElMessage.error("查询失败")
+  }
+}
+
+//------------------------资产台账修改/新增-------------------------
+const dialogVisible = ref(false)
+const form = reactive({})
 
 const openDialog = async (row) => {
   dialogVisible.value = true
@@ -458,6 +511,7 @@ const saveData = async () => {
   }
 }
 
+//---------------------------删除资产台账-------------------------------
 const deleteRow = async (id) => {
   try {
     await ElMessageBox.confirm("确定要删除该资产台账吗?", "提示", {
@@ -479,51 +533,6 @@ const deleteRow = async (id) => {
   }
 }
 
-const handleSearch = () => {
-  pageParams.page = 1
-  fetchData()
-}
-
-const resetQuery = () => {
-  Object.assign(query, {
-    assetName: "",
-    assetNo: "",
-    assetType: null,
-    assetSubType: [],
-    amount: null,
-    assetStatus: []
-  })
-  assetSubTypeItem.value = []
-  pageParams.page = 1
-}
-
-const handleSizeChange = (size) => {
-  pageParams.limit = size
-  pageParams.page = 1
-  fetchData()
-}
-
-const handleCurrentChange = (page) => {
-  pageParams.page = page
-  fetchData()
-}
-
-const fetchData = async () => {
-  try {
-    const result = await GetAssetLedgerByConditionAndPage(pageParams.page, pageParams.limit, query)
-    if (result.code === 200) {
-      tableData.value = result.data.records || []
-      total.value = result.data.total || 0
-      assetTypeSummary.value = result.data.assetTypeSummary || {}
-    } else {
-      ElMessage.error(result.message || "查询失败")
-    }
-  } catch (error) {
-    ElMessage.error("查询失败")
-  }
-}
-
-const formatMoney = (v) => Number(v || 0).toLocaleString()
 </script>
 
 <style scoped>
