@@ -174,7 +174,7 @@
           </el-table-column>
           <el-table-column prop="assetSubType" label="资产子类" width="150">
             <template #default="scope">
-              {{ getDisplayText(scope.row.assetSubType, assetSubTypeItem) }}
+              {{ scope.row._assetSubTypeText || scope.row.assetSubType || '-' }}
             </template>
           </el-table-column>
 
@@ -605,7 +605,10 @@ const fetchData = async () => {
   try {
     const result = await GetAssetLedgerByConditionAndPage(pageParams.page, pageParams.limit, query)
     if (result.code === 200) {
-      tableData.value = result.data.records || []
+      const records = result.data.records || []
+      // 预处理资产子类文本，使其在列表中正确显示
+      await processAssetSubTypeText(records)
+      tableData.value = records
       total.value = result.data.total || 0
       assetTypeSummary.value = result.data.assetTypeSummary || {}
     } else {
