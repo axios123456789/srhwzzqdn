@@ -649,12 +649,15 @@ const openDialog = async (row) => {
   if (formRef.value) {
     formRef.value.resetFields()
   }
-  
+
   if (row && row.id) {
+    // 编辑模式:复制整行数据(包含 id)
     Object.assign(form, row)
     await getAssetSubTypeItem(row.assetType)
   } else {
+    // 新增模式:清空所有字段,包括 id
     Object.assign(form, {
+      id: null,  // ✅ 关键修复:清空 id,确保是新增操作
       assetName: "",
       assetCode: "",
       assetType: null,
