@@ -7,35 +7,131 @@
         <div class="label">总资产</div>
         <div class="value">¥ {{ formatMoney(totalAmount) }}</div>
       </div>
-      <div class="summary-card">储蓄 ¥ {{ formatMoney(summary.saving) }}</div>
-      <div class="summary-card">基金 ¥ {{ formatMoney(summary.fund) }}</div>
-      <div class="summary-card">股票 ¥ {{ formatMoney(summary.stock) }}</div>
-      <div class="summary-card">保险 ¥ {{ formatMoney(summary.insurance) }}</div>
+      <div class="summary-card" v-for="(item, key) in assetTypeSummary" :key="key">
+        <div class="label">{{ getAssetTypeName(key) }}</div>
+        <div class="value">¥ {{ formatMoney(item) }}</div>
+      </div>
     </div>
 
     <!-- 🔷 查询区 -->
     <div class="search-card">
-      <div class="search-left">
-        <el-form :inline="true" :model="query">
-          <el-form-item label="资产名称">
-            <el-input v-model="query.name" placeholder="请输入名称" clearable />
-          </el-form-item>
-
-          <el-form-item label="类型">
-            <el-select v-model="query.type" clearable placeholder="请选择">
-              <el-option label="储蓄" value="储蓄" />
-              <el-option label="基金" value="基金" />
-              <el-option label="股票" value="股票" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-
-      <div class="search-right">
-        <el-button type="primary" @click="handleSearch">查询</el-button>
-        <el-button @click="resetQuery">重置</el-button>
-        <el-button type="success" @click="openDialog()">新增</el-button>
-      </div>
+      <el-form label-width="120px" size="small">
+        <!--    第一行查询条件    -->
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="资产名称">
+              <el-input
+                  v-model="query.assetName"
+                  style="width: 100%"
+                  clearable
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="资产编号">
+              <el-input
+                  v-model="query.assetNo"
+                  style="width: 100%"
+                  clearable
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="资产类型">
+              <el-select
+                  v-model="query.assetType"
+                  placeholder="请选择"
+                  style="width: 100%"
+                  clearable
+                  @change="handleQueryAssetTypeChange"
+              >
+                <el-option
+                    v-for="item in assetTypeItem"
+                    :key="item.value"
+                    :label="item.text"
+                    :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="资产子类">
+              <el-select
+                  v-model="query.assetSubType"
+                  placeholder="请先选择资产类型"
+                  style="width: 100%"
+                  clearable
+                  multiple
+                  :disabled="!query.assetType"
+              >
+                <el-option
+                    v-for="item in assetSubTypeItem"
+                    :key="item.value"
+                    :label="item.text"
+                    :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--   第二行查询条件     -->
+        <el-row>
+          <el-col :span="6">
+            <el-form-item label="资产金额(大于)">
+              <el-input-number
+                  v-model="query.amount"
+                  :precision="2"
+                  :step="1000"
+                  style="width: 100%"
+                  clearable
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="资产状态">
+              <el-select
+                  v-model="query.assetStatus"
+                  multiple
+                  placeholder="请选择"
+                  style="width: 100%"
+                  clearable
+              >
+                <el-option
+                    v-for="item in assetStatusItem"
+                    :key="item.value"
+                    :label="item.text"
+                    :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row style="display:flex">
+          <el-button
+              type="primary"
+              size="small"
+              @click="handleSearch"
+          >
+            <el-icon><Search /></el-icon>
+            搜索
+          </el-button>
+          <el-button
+              size="small"
+              @click="resetQuery"
+          >
+            <el-icon><Refresh /></el-icon>
+            重置
+          </el-button>
+          <el-button
+              type="success"
+              size="small"
+              @click="openDialog()"
+          >
+            <el-icon><DocumentAdd /></el-icon>
+            新增
+          </el-button>
+        </el-row>
+      </el-form>
     </div>
 
     <!-- 🔷 表格区 -->
@@ -51,30 +147,47 @@
             stripe
             height="100%"
         >
-          <el-table-column prop="name" label="资产名称" min-width="150" />
-          <el-table-column prop="type" label="类型" width="100" />
-          <el-table-column prop="subType" label="子类" min-width="150" />
+          <el-table-column prop="assetName" label="资产名称" min-width="150" />
+          <el-table-column prop="assetCode" label="资产官方标识" min-width="150" />
+          <el-table-column prop="assetNo" label="资产编号" width="180" />
+          <el-table-column prop="assetType" label="资产类型" width="100">
+            <template #default="scope">
+              {{ getDisplayText(scope.row.assetType, assetTypeItem) }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="assetSubType" label="资产子类" width="150">
+            <template #default="scope">
+              {{ getDisplayText(scope.row.assetSubType, assetSubTypeItem) }}
+            </template>
+          </el-table-column>
 
-          <el-table-column label="金额" width="140" align="right">
+          <el-table-column label="资产金额" width="140" align="right">
             <template #default="scope">
               ¥ {{ formatMoney(scope.row.amount) }}
             </template>
           </el-table-column>
 
-          <el-table-column label="投入额" width="140" align="right">
+          <el-table-column label="投入金额" width="140" align="right">
             <template #default="scope">
               {{ scope.row.investAmount ? formatMoney(scope.row.investAmount) : "-" }}
             </template>
           </el-table-column>
 
-          <el-table-column prop="status" label="状态" width="100" />
-          <el-table-column prop="owner" label="所属人" width="100" />
+          <el-table-column prop="assetStatus" label="资产状态" width="100">
+            <template #default="scope">
+              {{ getDisplayText(scope.row.assetStatus, assetStatusItem) }}
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="remark" label="备注" min-width="200" show-overflow-tooltip />
+          <el-table-column prop="assetOwnerName" label="资产所属人" width="120" />
           <el-table-column prop="updateTime" label="更新时间" width="160" />
+          <el-table-column prop="updateBy" label="更新人" width="120" />
 
           <el-table-column label="操作" width="150" fixed="right">
             <template #default="scope">
               <el-button text size="small" @click="openDialog(scope.row)">编辑</el-button>
-              <el-button text size="small" type="danger" @click="deleteRow(scope.$index)">删除</el-button>
+              <el-button text size="small" type="danger" @click="deleteRow(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -84,36 +197,115 @@
       <div class="pagination">
         <el-pagination
             background
-            layout="total, prev, pager, next"
-            :total="50"
-            :page-size="10"
+            layout="total, sizes, prev, pager, next"
+            :total="total"
+            :page-size="pageParams.limit"
+            :current-page="pageParams.page"
+            :page-sizes="[10, 20, 50, 100]"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
         />
       </div>
     </div>
 
     <!-- 🔷 弹窗 -->
-    <el-dialog v-model="dialogVisible" title="资产信息">
-      <el-form :model="form" label-width="90px">
-        <el-form-item label="名称">
-          <el-input v-model="form.name" />
-        </el-form-item>
-
-        <el-form-item label="类型">
-          <el-select v-model="form.type" @change="handleTypeChange">
-            <el-option label="储蓄" value="储蓄" />
-            <el-option label="基金" value="基金" />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="子类">
-          <el-select v-model="form.subType">
-            <el-option v-for="i in subTypeOptions" :key="i" :label="i" :value="i" />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="金额">
-          <el-input v-model="form.amount" />
-        </el-form-item>
+    <el-dialog
+        v-model="dialogVisible"
+        :title="form.id ? '编辑资产台账' : '新增资产台账'"
+        width="80%"
+        :close-on-click-modal="false"
+        :lock-scroll="false"
+        align-center
+        draggable
+    >
+      <el-form :model="form" label-width="120px">
+        <!--    第一行    -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="资产名称">
+              <el-input v-model="form.assetName" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="资产官方标识">
+              <el-input v-model="form.assetCode" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--   第二行     -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="资产类型">
+              <el-select v-model="form.assetType" @change="handleAssetTypeChange" style="width: 100%">
+                <el-option
+                    v-for="item in assetTypeItem"
+                    :key="item.value"
+                    :label="item.text"
+                    :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="资产子类">
+              <el-select v-model="form.assetSubType" placeholder="请先选择资产类型" style="width: 100%" :disabled="!form.assetType">
+                <el-option
+                    v-for="item in assetSubTypeItem"
+                    :key="item.value"
+                    :label="item.text"
+                    :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--    第三行    -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="资产金额">
+              <el-input-number v-model="form.amount" :precision="2" :step="1000" :min="0" style="width: 100%" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="投入金额">
+              <el-input-number v-model="form.investAmount" :precision="2" :step="1000" :min="0" style="width: 100%" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--    第四行    -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="资产状态">
+              <el-select v-model="form.assetStatus" style="width: 100%">
+                <el-option
+                    v-for="item in assetStatusItem"
+                    :key="item.value"
+                    :label="item.text"
+                    :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="资产所属人">
+              <el-input v-model="form.assetOwnerName" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!--    第五行    -->
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="备注">
+              <el-input
+                  type="textarea"
+                  style="width: 100%"
+                  :rows="3"
+                  placeholder="请输入备注"
+                  v-model="form.remark"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
 
       <template #footer>
@@ -126,53 +318,210 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue"
+import { ref, reactive, computed, onMounted } from "vue"
+import { ElMessage, ElMessageBox } from "element-plus"
+import { GetAssetLedgerByConditionAndPage, SaveAssetLedger, DeleteAssetLedgerById } from "@/api/assetControl"
+import { GetKeyAndValueByType } from "@/api/sysDict"
+import { useApp } from "@/pinia/modules/app"
+
+//--------------------钩子函数-------------------------
+onMounted(() => {
+  //1.加载数据字典
+  getAssetTypeItem();
+  getAssetStatusItem();
+
+  //2.调用查询数据接口
+  fetchData();
+});
 
 //-------------------------列表展示区-----------------------------------
-const query = reactive({ name: "", type: "" })
+const query = reactive({
+  assetName: "",
+  assetNo: "",
+  assetType: null,
+  assetSubType: [],
+  amount: null,
+  assetStatus: []
+})
 
-const tableData = ref([
-  { name: "余额宝", type: "储蓄", subType: "支付宝", amount: 20000 }
-])
+const pageParams = reactive({
+  page: 1,
+  limit: 10
+})
 
-const totalAmount = computed(() =>
-    tableData.value.reduce((sum, i) => sum + Number(i.amount || 0), 0)
-)
+const tableData = ref([])
+const total = ref(0)
+const assetTypeSummary = ref({})
 
-const summary = computed(() => ({
-  saving: totalAmount.value,
-  fund: 0,
-  stock: 0,
-  insurance: 0
-}))
+const totalAmount = computed(() => {
+  let sum = 0
+  for (let key in assetTypeSummary.value) {
+    sum += Number(assetTypeSummary.value[key] || 0)
+  }
+  return sum
+})
 
 const dialogVisible = ref(false)
 const form = reactive({})
 
-const subTypeMap = {
-  储蓄: ["银行卡", "微信"],
-  基金: ["指数基金"]
-}
-const subTypeOptions = ref([])
+//数据字典
+const assetTypeItem = ref([])
+const assetSubTypeItem = ref([])
+const assetStatusItem = ref([])
 
-const handleTypeChange = (val) => {
-  subTypeOptions.value = subTypeMap[val] || []
+//获取资产类型数据字典
+const getAssetTypeItem = async () => {
+    const result = await GetKeyAndValueByType("asset_type")
+    assetTypeItem.value = result.data
 }
 
-const openDialog = (row) => {
+//获取资产子类数据字典
+const getAssetSubTypeItem = async (assetTypeValue) => {
+  try {
+    if (!assetTypeValue) {
+      assetSubTypeItem.value = []
+      return
+    }
+    const type = `asset_type_${assetTypeValue}`
+    const result = await GetKeyAndValueByType(type)
+    if (result.code === 200) {
+      assetSubTypeItem.value = result.data
+    } else {
+      assetSubTypeItem.value = []
+    }
+  } catch (error) {
+    assetSubTypeItem.value = []
+  }
+}
+
+//获取资产状态数据字典
+const getAssetStatusItem = async () => {
+    const result = await GetKeyAndValueByType("asset_status")
+    assetStatusItem.value = result.data
+}
+
+//资产类型改变时加载对应的子类
+const handleAssetTypeChange = async (val) => {
+  await getAssetSubTypeItem(val)
+}
+
+//查询条件中资产类型改变时加载对应的子类
+const handleQueryAssetTypeChange = async (val) => {
+  query.assetSubType = []
+  await getAssetSubTypeItem(val)
+}
+
+//获取资产类型名称
+const getAssetTypeName = (value) => {
+  return getDisplayText(value, assetTypeItem.value)
+}
+
+//通用方法：根据值和映射表获取中文文本
+const getDisplayText = (value, mappingArray) => {
+  if (!value && value !== 0) return '-'
+  const foundItem = mappingArray.find(item => item.value === value)
+  return foundItem ? foundItem.text : value
+}
+
+const openDialog = async (row) => {
   dialogVisible.value = true
-  Object.assign(form, row || {})
+  if (row && row.id) {
+    Object.assign(form, row)
+    await getAssetSubTypeItem(row.assetType)
+  } else {
+    Object.assign(form, {
+      assetName: "",
+      assetCode: "",
+      assetType: null,
+      assetSubType: null,
+      amount: 0,
+      investAmount: 0,
+      assetStatus: null,
+      remark: ""
+    })
+    assetSubTypeItem.value = []
+  }
 }
 
-const saveData = () => {
-  tableData.value.push({ ...form })
-  dialogVisible.value = false
+const saveData = async () => {
+  try {
+    const result = await SaveAssetLedger(form)
+    if (result.code === 200) {
+      ElMessage.success("保存成功")
+      dialogVisible.value = false
+      fetchData()
+    } else {
+      ElMessage.error(result.message || "保存失败")
+    }
+  } catch (error) {
+    ElMessage.error("保存失败")
+  }
 }
 
-const deleteRow = (i) => tableData.value.splice(i, 1)
+const deleteRow = async (id) => {
+  try {
+    await ElMessageBox.confirm("确定要删除该资产台账吗?", "提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning"
+    })
+    const result = await DeleteAssetLedgerById(id)
+    if (result.code === 200) {
+      ElMessage.success("删除成功")
+      fetchData()
+    } else {
+      ElMessage.error(result.message || "删除失败")
+    }
+  } catch (error) {
+    if (error !== "cancel") {
+      ElMessage.error("删除失败")
+    }
+  }
+}
 
-const handleSearch = () => {}
-const resetQuery = () => {}
+const handleSearch = () => {
+  pageParams.page = 1
+  fetchData()
+}
+
+const resetQuery = () => {
+  Object.assign(query, {
+    assetName: "",
+    assetNo: "",
+    assetType: null,
+    assetSubType: [],
+    amount: null,
+    assetStatus: []
+  })
+  assetSubTypeItem.value = []
+  pageParams.page = 1
+}
+
+const handleSizeChange = (size) => {
+  pageParams.limit = size
+  pageParams.page = 1
+  fetchData()
+}
+
+const handleCurrentChange = (page) => {
+  pageParams.page = page
+  fetchData()
+}
+
+const fetchData = async () => {
+  try {
+    const result = await GetAssetLedgerByConditionAndPage(pageParams.page, pageParams.limit, query)
+    if (result.code === 200) {
+      tableData.value = result.data.records || []
+      total.value = result.data.total || 0
+      assetTypeSummary.value = result.data.assetTypeSummary || {}
+    } else {
+      ElMessage.error(result.message || "查询失败")
+    }
+  } catch (error) {
+    ElMessage.error("查询失败")
+  }
+}
 
 const formatMoney = (v) => Number(v || 0).toLocaleString()
 </script>
@@ -218,20 +567,7 @@ const formatMoney = (v) => Number(v || 0).toLocaleString()
   background: #fff;
   border-radius: 12px;
   padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-}
-
-.search-left {
-  display: flex;
-  align-items: center;
-}
-
-.search-right {
-  display: flex;
-  gap: 10px;
 }
 
 /* 表格区 */

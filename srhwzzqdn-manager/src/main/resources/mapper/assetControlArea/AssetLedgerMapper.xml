@@ -2,4 +2,161 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xk.srhwzzqdn.manager.assetControlArea.mapper.AssetLedgerMapper">
 
+    <!--  新增资产台账  -->
+    <insert id="addAssetLedger">
+        insert into t_asset_ledger (asset_name,
+                                  asset_code,
+                                  asset_no,
+                                  asset_type,
+                                  asset_sub_type,
+                                  amount,
+                                  invest_amount,
+                                  asset_status,
+                                  remark,
+                                  asset_owner,
+                                  update_time,
+                                  update_by)
+        values (#{assetName},
+                #{assetCode},
+                #{assetNo},
+                #{assetType},
+                #{assetSubType},
+                #{amount},
+                #{investAmount},
+                #{assetStatus},
+                #{remark},
+                #{assetOwner},
+                now(),
+                #{updateBy})
+    </insert>
+
+    <!--  修改资产台账  -->
+    <update id="updateAssetLedger">
+        update t_asset_ledger
+        <set>
+            <if test="assetName != null and assetName != ''">
+                asset_name = #{assetName},
+            </if>
+            <if test="assetCode != null and assetCode != ''">
+                asset_code = #{assetCode},
+            </if>
+            <if test="assetNo != null and assetNo != ''">
+                asset_no = #{assetNo},
+            </if>
+            <if test="assetType != null">
+                asset_type = #{assetType},
+            </if>
+            <if test="assetSubType != null">
+                asset_sub_type = #{assetSubType},
+            </if>
+            <if test="amount != null">
+                amount = #{amount},
+            </if>
+            <if test="investAmount != null">
+                invest_amount = #{investAmount},
+            </if>
+            <if test="assetStatus != null">
+                asset_status = #{assetStatus},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="assetOwner != null and assetOwner != ''">
+                asset_owner = #{assetOwner},
+            </if>
+            update_time = now(),
+            update_by = #{updateBy}
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--   根据ids批量删除资产台账  -->
+    <delete id="deleteAllAssetLedgerByIds">
+        delete from t_asset_ledger where id in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--  条件查询资产台账列表  -->
+    <select id="getAssetLedgerByCondition"
+            resultType="com.xk.srhwzzqdn.model.vo.assetControl.AssetLedgerVo">
+        select t.id,
+        t.asset_name,
+        t.asset_code,
+        t.asset_no,
+        t.asset_type,
+        t.asset_sub_type,
+        t.amount,
+        t.invest_amount,
+        t.asset_status,
+        t.remark,
+        t.asset_owner,
+        t.update_time,
+        t.update_by,
+        i.name as assetOwnerName
+        from t_asset_ledger t
+        left join t_sys_person_info i
+        on i.account_id = t.asset_owner
+        <where>
+            <if test="assetName != null and assetName != ''">
+                and t.asset_name like concat('%', #{assetName}, '%')
+            </if>
+            <if test="assetNo != null and assetNo != ''">
+                and t.asset_no like concat('%', #{assetNo}, '%')
+            </if>
+            <if test="assetType != null">
+                and t.asset_type = #{assetType}
+            </if>
+            <if test="assetSubType != null and assetSubType.size() > 0">
+                and t.asset_sub_type in
+                <foreach collection="assetSubType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="amount != null">
+                and t.amount &gt;= #{amount}
+            </if>
+            <if test="assetStatus != null and assetStatus.size() > 0">
+                and t.asset_status in
+                <foreach collection="assetStatus" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by t.update_time desc
+    </select>
+
+    <!--  根据资产类型分组统计金额  -->
+    <select id="getAssetLedgerSummaryByType" resultType="com.xk.srhwzzqdn.model.vo.assetControl.AssetTypeSummaryVO">
+        select t.asset_type as assetType, sum(t.amount) as totalAmount
+        from t_asset_ledger t
+        <where>
+            <if test="assetName != null and assetName != ''">
+                and t.asset_name like concat('%', #{assetName}, '%')
+            </if>
+            <if test="assetNo != null and assetNo != ''">
+                and t.asset_no like concat('%', #{assetNo}, '%')
+            </if>
+            <if test="assetType != null">
+                and t.asset_type = #{assetType}
+            </if>
+            <if test="assetSubType != null and assetSubType.size() > 0">
+                and t.asset_sub_type in
+                <foreach collection="assetSubType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="amount != null">
+                and t.amount &gt;= #{amount}
+            </if>
+            <if test="assetStatus != null and assetStatus.size() > 0">
+                and t.asset_status in
+                <foreach collection="assetStatus" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        group by t.asset_type
+    </select>
 </mapper>
