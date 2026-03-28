@@ -237,12 +237,12 @@
         :fullscreen="isFullscreen"
         @open="initFullscreen"
     >
-      <el-form :model="form" label-width="120px">
+      <el-form ref="formRef" :model="form" :rules="formRules" label-width="120px">
         <!--    第一行    -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="资产名称">
-              <el-input v-model="form.assetName" />
+            <el-form-item label="资产名称" prop="assetName">
+              <el-input v-model="form.assetName" placeholder="请输入资产名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -254,8 +254,8 @@
         <!--   第二行     -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="资产类型">
-              <el-select v-model="form.assetType" @change="handleAssetTypeChange" style="width: 100%">
+            <el-form-item label="资产类型" prop="assetType">
+              <el-select v-model="form.assetType" @change="handleAssetTypeChange" style="width: 100%" placeholder="请选择资产类型">
                 <el-option
                     v-for="item in assetTypeItem"
                     :key="item.value"
@@ -294,8 +294,8 @@
         <!--    第四行    -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="资产状态">
-              <el-select v-model="form.assetStatus" style="width: 100%">
+            <el-form-item label="资产状态" prop="assetStatus">
+              <el-select v-model="form.assetStatus" style="width: 100%" placeholder="请选择资产状态">
                 <el-option
                     v-for="item in assetStatusItem"
                     :key="item.value"
@@ -628,9 +628,28 @@ const fetchData = async () => {
 //------------------------资产台账修改/新增-------------------------
 const dialogVisible = ref(false)
 const form = reactive({})
+const formRef = ref(null)
+
+// 表单校验规则
+const formRules = {
+  assetName: [
+    { required: true, message: '请输入资产名称', trigger: 'blur' }
+  ],
+  assetType: [
+    { required: true, message: '请选择资产类型', trigger: 'change' }
+  ],
+  assetStatus: [
+    { required: true, message: '请选择资产状态', trigger: 'change' }
+  ]
+}
 
 const openDialog = async (row) => {
   dialogVisible.value = true
+  // 清空表单校验
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
+  
   if (row && row.id) {
     Object.assign(form, row)
     await getAssetSubTypeItem(row.assetType)
@@ -642,7 +661,7 @@ const openDialog = async (row) => {
       assetSubType: null,
       amount: 0,
       investAmount: 0,
-      assetStatus: null,
+      assetStatus: 1, // 默认设置为"正常"
       remark: ""
     })
     assetSubTypeItem.value = []
@@ -650,6 +669,16 @@ const openDialog = async (row) => {
 }
 
 const saveData = async () => {
+  // 表单校验
+  if (!formRef.value) return
+  
+  try {
+    const valid = await formRef.value.validate()
+    if (!valid) return
+  } catch (error) {
+    return
+  }
+  
   try {
     const result = await SaveAssetLedger(form)
     if (result.code === 200) {
