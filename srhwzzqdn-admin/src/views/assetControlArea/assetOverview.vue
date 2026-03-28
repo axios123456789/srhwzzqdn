@@ -229,11 +229,13 @@
     <el-dialog
         v-model="dialogVisible"
         :title="form.id ? '编辑资产台账' : '新增资产台账'"
-        width="80%"
+        width="60%"
         :close-on-click-modal="false"
         :lock-scroll="false"
         align-center
         draggable
+        :fullscreen="isFullscreen"
+        @open="initFullscreen"
     >
       <el-form :model="form" label-width="120px">
         <!--    第一行    -->
@@ -355,6 +357,10 @@ import { GetAssetLedgerByConditionAndPage, SaveAssetLedger, DeleteAssetLedgerByI
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
+import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
+
+// 在需要全屏的组件中使用 Hook
+const { isFullscreen, initFullscreen } = useFullscreenDialog()
 
 //--------------------钩子函数-------------------------
 onMounted(() => {
