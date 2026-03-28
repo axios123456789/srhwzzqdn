@@ -128,6 +128,7 @@
 <script setup>
 import { ref, reactive, computed } from "vue"
 
+//-------------------------列表展示区-----------------------------------
 const query = reactive({ name: "", type: "" })
 
 const tableData = ref([

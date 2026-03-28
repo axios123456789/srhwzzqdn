@@ -5,6 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产台账管理-001">
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/assetControl.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/controller/AssetLedgerController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetLedgerMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/AssetLedgerService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetLedgerServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/AssetLedgerMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/dto/assetControl/AssetLedgerDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/entity/assetControl/AssetLedger.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -24,8 +32,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Vue Single File Component" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -240,7 +248,10 @@
       <workItem from="1774398835339" duration="1352000" />
       <workItem from="1774438072364" duration="692000" />
       <workItem from="1774485314266" duration="1652000" />
-      <workItem from="1774523076600" duration="3529000" />
+      <workItem from="1774523076600" duration="3601000" />
+      <workItem from="1774571571942" duration="1400000" />
+      <workItem from="1774607743370" duration="633000" />
+      <workItem from="1774660096071" duration="6166000" />
     </task>
     <task id="LOCAL-00001" summary="Changes">
       <created>1768721797078</created>
@@ -557,7 +568,21 @@
       <option name="project" value="LOCAL" />
       <updated>1774360535072</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="资产台账管理-001">
+      <created>1774530637074</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1774530637074</updated>
+    </task>
+    <task id="LOCAL-00047" summary="资产台账管理-001">
+      <created>1774530643653</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1774530643653</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
