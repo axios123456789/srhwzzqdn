@@ -366,7 +366,7 @@ onMounted(() => {
   fetchData();
 });
 
-//----------------公共函数-------------------------
+//----------------公共函数-----------------------------
 //通用方法：根据值和映射表获取中文文本
 const getDisplayText = (value, mappingArray) => {
   if (!value && value !== 0) return '-'
@@ -375,7 +375,9 @@ const getDisplayText = (value, mappingArray) => {
 }
 
 const formatMoney = (v) => Number(v || 0).toLocaleString()
+//--------------------------------------------------------
 
+//---------------------------一键导出功能---------------------------------
 // 导出列定义
 const exportColumns = [
   { key: 'assetName', label: '资产名称', width: 20 },
@@ -398,7 +400,8 @@ const assetDataFormatter = (item, key, value) => {
     case 'assetType':
       return getDisplayText(value, assetTypeItem.value)
     case 'assetSubType':
-      return getDisplayText(value, assetSubTypeItem.value)
+      // 使用预处理的子类文本
+      return item._assetSubTypeText || value || '-'
     case 'assetStatus':
       return getDisplayText(value, assetStatusItem.value)
     case 'amount':
@@ -409,12 +412,45 @@ const assetDataFormatter = (item, key, value) => {
   }
 }
 
+// 预加载所有资产子类数据字典并处理数据
+const processAssetSubTypeText = async (dataList) => {
+  const allSubTypeData = {}
+  // 获取所有不同的资产类型
+  const assetTypes = [...new Set(dataList.map(item => item.assetType).filter(Boolean))]
+  
+  // 并行加载所有资产类型对应的子类数据
+  await Promise.all(assetTypes.map(async (assetType) => {
+    const type = `asset_type_${assetType}`
+    try {
+      const result = await GetKeyAndValueByType(type)
+      if (result.code === 200 && result.data) {
+        allSubTypeData[assetType] = result.data
+      }
+    } catch (error) {
+      console.error(`加载资产类型${assetType}的子类数据失败:`, error)
+    }
+  }))
+  
+  // 为每条数据添加子类文本
+  dataList.forEach(item => {
+    if (item.assetSubType && item.assetType && allSubTypeData[item.assetType]) {
+      const foundItem = allSubTypeData[item.assetType].find(subItem => subItem.value === item.assetSubType)
+      item._assetSubTypeText = foundItem ? foundItem.text : item.assetSubType
+    }
+  })
+  
+  return dataList
+}
+
 // 获取全部数据的函数
 const getAllAssetLedgerData = async () => {
   try {
     const result = await GetAssetLedgerByConditionAndPage(1, 999999, query)
     if (result.code === 200) {
-      return result.data.records || []
+      const records = result.data.records || []
+      // 预处理资产子类文本
+      await processAssetSubTypeText(records)
+      return records
     } else {
       ElMessage.error(result.message || "获取数据失败")
       return []
@@ -444,10 +480,13 @@ const {
 })
 
 // 打开导出对话框
-const showExportDialog = () => {
-  showExport(tableData.value, total.value)
+const showExportDialog = async () => {
+  // 预处理当前页数据的资产子类文本
+  const currentData = JSON.parse(JSON.stringify(tableData.value))
+  await processAssetSubTypeText(currentData)
+  showExport(currentData, total.value)
 }
-//-------------------------------------------------
+//---------------------------------------------------------------
 
 //-------------------------数据字典获取------------------------------
 //数据字典
