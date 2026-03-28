@@ -718,92 +718,342 @@ const batchDelete = async () => {
 </script>
 
 <style scoped>
-/* 页面背景 */
+/* 页面背景 - 金融风格 */
 .container {
   height: 100vh;
-  padding: 16px;
-  background: #f5f7fa;
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
-/* 总览 */
+/* 顶部统计卡片 - 资产台账风格 */
 .summary {
   display: flex;
-  gap: 12px;
+  gap: 16px;
 }
 
 .summary-card {
   flex: 1;
-  padding: 14px;
-  border-radius: 12px;
+  padding: 20px 24px;
+  border-radius: 16px;
   background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
 .summary-card.total {
-  background: linear-gradient(135deg, #409eff, #66b1ff);
+  background: linear-gradient(135deg, #2c5aa0 0%, #4a7bc7 100%);
   color: #fff;
+  border: none;
+  position: relative;
+  overflow: hidden;
 }
 
-.value {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 6px;
+.summary-card.total::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: shimmer 3s infinite;
 }
 
-/* 查询区（重点优化） */
+@keyframes shimmer {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.summary-card .label {
+  font-size: 14px;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.summary-card .value {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 8px;
+  font-family: 'Arial', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+/* 查询区 - 专业金融风格 */
 .search-card {
   background: #fff;
-  border-radius: 12px;
-  padding: 16px 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8eef5;
 }
 
-/* 表格区 */
+.search-card :deep(.el-form-item__label) {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.search-card :deep(.el-input__wrapper),
+.search-card :deep(.el-select__wrapper),
+.search-card :deep(.el-input-number) {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.search-card :deep(.el-input__wrapper:hover),
+.search-card :deep(.el-select__wrapper:hover) {
+  box-shadow: 0 0 0 1px #4a7bc7 inset;
+}
+
+/* 搜索按钮美化 */
+.search-card :deep(.el-button--primary) {
+  background: linear-gradient(135deg, #2c5aa0 0%, #4a7bc7 100%);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.search-card :deep(.el-button--primary:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(44, 90, 160, 0.4);
+}
+
+.search-card :deep(.el-button--default) {
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-weight: 500;
+  border: 1px solid #dcdfe6;
+  transition: all 0.3s ease;
+}
+
+.search-card :deep(.el-button--default:hover) {
+  border-color: #4a7bc7;
+  color: #4a7bc7;
+}
+
+/* 表格区 - 资产台账专业风格 */
 .table-card {
   flex: 1;
   background: #fff;
-  border-radius: 12px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   padding: 0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8eef5;
 }
 
-/* 表头 */
+/* 表头 - 金融风格 */
 .table-header {
-  padding: 14px 20px;
+  padding: 18px 24px;
   font-weight: 600;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 2px solid #e8eef5;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: linear-gradient(to right, #fafbfc, #fff);
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  font-size: 16px;
+  color: #2c3e50;
+  font-weight: 600;
 }
 
 .header-right {
   display: flex;
-  gap: 8px;
+  gap: 10px;
+}
+
+/* 操作按钮美化 */
+.header-right :deep(.el-button--success) {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.header-right :deep(.el-button--success:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.4);
+}
+
+.header-right :deep(.el-button--info) {
+  background: linear-gradient(135deg, #1890ff 0%, #40a9ff 100%);
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.header-right :deep(.el-button--info:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.4);
+}
+
+.header-right :deep(.el-button--danger) {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.header-right :deep(.el-button--danger:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 77, 79, 0.4);
 }
 
 /* 表格滚动 */
 .table-wrapper {
   flex: 1;
-  padding: 10px 20px 0;
+  padding: 12px 24px 0;
   overflow: hidden;
 }
 
-/* 分页 */
+/* 表格样式美化 */
+.table-wrapper :deep(.el-table) {
+  border-radius: 8px;
+}
+
+.table-wrapper :deep(.el-table th) {
+  background: #fafbfc;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.table-wrapper :deep(.el-table td) {
+  font-size: 14px;
+}
+
+.table-wrapper :deep(.el-table--striped .el-table__body tr.el-table__row--striped td) {
+  background: #fafbfc;
+}
+
+.table-wrapper :deep(.el-table__body tr:hover > td) {
+  background: #e6f7ff !important;
+}
+
+/* 金额列特殊样式 */
+.table-wrapper :deep(.el-table td[data-label="资产金额"]),
+.table-wrapper :deep(.el-table td[data-label="投入金额"]) {
+  font-weight: 600;
+  color: #2c5aa0;
+  font-family: 'Arial', sans-serif;
+}
+
+/* 操作按钮 */
+.table-wrapper :deep(.el-button--text) {
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.table-wrapper :deep(.el-button--text:hover) {
+  transform: scale(1.05);
+}
+
+/* 分页 - 金融风格 */
 .pagination {
-  padding: 12px 20px;
+  padding: 16px 24px;
   text-align: right;
-  border-top: 1px solid #ebeef5;
+  border-top: 2px solid #e8eef5;
+  background: #fafbfc;
+  border-radius: 0 0 16px 16px;
+}
+
+.pagination :deep(.el-pagination.is-background .el-pager li:not(.is-disabled).is-active) {
+  background: linear-gradient(135deg, #2c5aa0 0%, #4a7bc7 100%);
+  border-radius: 6px;
+}
+
+.pagination :deep(.el-pagination.is-background .el-pager li:not(.is-disabled):hover) {
+  color: #4a7bc7;
+}
+
+/* 弹窗美化 */
+:deep(.el-dialog) {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+:deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #2c5aa0 0%, #4a7bc7 100%);
+  padding: 20px 24px;
+  margin: 0;
+}
+
+:deep(.el-dialog__title) {
+  color: #fff;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+:deep(.el-dialog__headerbtn .el-dialog__close) {
+  color: #fff;
+  font-size: 20px;
+}
+
+:deep(.el-dialog__body) {
+  padding: 24px;
+}
+
+:deep(.el-dialog__footer) {
+  padding: 16px 24px;
+  border-top: 1px solid #e8eef5;
+  background: #fafbfc;
+}
+
+/* 表单项美化 */
+:deep(.el-form-item__label) {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+:deep(.el-input__wrapper),
+:deep(.el-select__wrapper),
+:deep(.el-textarea__inner) {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+:deep(.el-input__wrapper:hover),
+:deep(.el-select__wrapper:hover),
+:deep(.el-textarea__inner:hover) {
+  box-shadow: 0 0 0 1px #4a7bc7 inset;
+}
+
+:deep(.el-input__wrapper.is-focus),
+:deep(.el-select__wrapper.is-focus),
+:deep(.el-textarea__inner:focus) {
+  box-shadow: 0 0 0 1px #4a7bc7 inset !important;
+}
+
+/* 保存按钮 */
+:deep(.el-button--primary) {
+  background: linear-gradient(135deg, #2c5aa0 0%, #4a7bc7 100%);
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+:deep(.el-button--primary:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(44, 90, 160, 0.4);
 }
 </style>
