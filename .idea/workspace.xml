@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产台账管理-012">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产台账管理-013">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" afterDir="false" />
@@ -89,17 +90,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ManagerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="srhwzzqdn-manager" />
       <extension name="coverage">
@@ -242,14 +232,15 @@
       <workItem from="1774523076600" duration="3601000" />
       <workItem from="1774571571942" duration="1400000" />
       <workItem from="1774607743370" duration="633000" />
-      <workItem from="1774660096071" duration="26098000" />
-    </task>
-    <task id="LOCAL-00010" summary="原始记忆-记忆联想01">
-      <created>1770879275464</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1770879275464</updated>
+      <workItem from="1774660096071" duration="26885000" />
+      <workItem from="1774745617268" duration="1832000" />
+      <workItem from="1774831460436" duration="1264000" />
+      <workItem from="1774867677901" duration="679000" />
+      <workItem from="1774917863931" duration="1351000" />
+      <workItem from="1774924193510" duration="1229000" />
+      <workItem from="1774958307418" duration="980000" />
+      <workItem from="1775004026472" duration="1261000" />
+      <workItem from="1775040855175" duration="658000" />
     </task>
     <task id="LOCAL-00011" summary="原始记忆-记忆联想01">
       <created>1770945794409</created>
@@ -587,7 +578,14 @@
       <option name="project" value="LOCAL" />
       <updated>1774703905921</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="资产台账管理-013">
+      <created>1774706843726</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1774706843726</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -606,7 +604,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="生活记忆接入开发-005" />
     <MESSAGE value="生活记忆接入开发-006" />
     <MESSAGE value="娱乐记忆接入开发-001" />
     <MESSAGE value="娱乐记忆接入开发-002" />
@@ -631,7 +628,8 @@
     <MESSAGE value="资产台账管理-010" />
     <MESSAGE value="资产台账管理-011" />
     <MESSAGE value="资产台账管理-012" />
-    <option name="LAST_COMMIT_MESSAGE" value="资产台账管理-012" />
+    <MESSAGE value="资产台账管理-013" />
+    <option name="LAST_COMMIT_MESSAGE" value="资产台账管理-013" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

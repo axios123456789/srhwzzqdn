@@ -160,7 +160,7 @@
             :data="tableData"
             border
             stripe
-            height="100%"
+            height="500px"
             @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" width="55" />
