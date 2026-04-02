@@ -47,6 +47,21 @@
 
     <!-- 搜索表单区域 -->
     <div class="search-div">
+      <div class="search-header">
+        <span class="search-title">查询条件</span>
+        <el-button
+          type="text"
+          size="small"
+          @click="toggleSearchExpand"
+          class="expand-btn"
+        >
+          <el-icon>
+            <ArrowDown v-if="!searchExpanded" />
+            <ArrowUp v-else />
+          </el-icon>
+          {{ searchExpanded ? '收起' : '展开' }}
+        </el-button>
+      </div>
       <el-form label-width="120px" size="small">
         <el-row>
           <el-col :span="6">
@@ -59,48 +74,77 @@
               <el-input v-model="queryDto.accountName" style="width: 100%" clearable placeholder="请输入记账账户" />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-form-item label="收支类型">
-              <el-select v-model="queryDto.incomeExpenseType" style="width: 100%" clearable placeholder="请选择收支类型">
-                <el-option v-for="item in incomeExpenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="账单类型">
-              <el-select v-model="queryDto.billType" style="width: 100%" clearable placeholder="请选择账单类型">
-                <el-option v-for="item in billTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <el-form-item label="结清状态">
-              <el-select v-model="queryDto.settlementStatus" style="width: 100%" clearable placeholder="请选择结清状态">
-                <el-option v-for="item in settlementStatusOptions" :key="item.value" :label="item.name" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="记账人">
-              <el-input v-model="queryDto.bookkeeper" style="width: 100%" clearable placeholder="请输入记账人" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="记账时间">
               <el-date-picker
                 v-model="queryDto.timeRange"
-                type="daterange"
+                type="datetimerange"
                 range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                start-placeholder="开始时间"
+                end-placeholder="结束时间"
                 style="width: 100%"
-                value-format="YYYY-MM-DD"
+                value-format="YYYY-MM-DD HH:mm:ss"
               />
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+        </el-row>
+        <transition name="el-zoom-in-top">
+          <div v-show="searchExpanded">
+            <el-row>
+              <el-col :span="6">
+                <el-form-item label="记账金额(>)">
+                  <el-input-number v-model="queryDto.minAmount" style="width: 100%" :min="0" :precision="2" placeholder="请输入最小金额" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="账单类型">
+                  <el-select v-model="queryDto.billType" style="width: 100%" clearable placeholder="请选择账单类型">
+                    <el-option v-for="item in billTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="结清状态">
+                  <el-select v-model="queryDto.settlementStatus" style="width: 100%" clearable placeholder="请选择结清状态">
+                    <el-option v-for="item in settlementStatusOptions" :key="item.value" :label="item.name" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="数据来源">
+                  <el-select v-model="queryDto.dataSource" style="width: 100%" clearable placeholder="请选择数据来源">
+                    <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.name" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="6">
+                <el-form-item label="收支类型">
+                  <el-select v-model="queryDto.incomeExpenseType" style="width: 100%" clearable placeholder="请选择收支类型" @change="handleQueryIncomeExpenseChange">
+                    <el-option v-for="item in incomeExpenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6" v-if="queryDto.incomeExpenseType === 'income'">
+                <el-form-item label="收益类型">
+                  <el-select v-model="queryDto.incomeType" style="width: 100%" clearable placeholder="请选择收益类型">
+                    <el-option v-for="item in incomeTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6" v-else-if="queryDto.incomeExpenseType === 'expense'">
+                <el-form-item label="支出类型">
+                  <el-select v-model="queryDto.expenseType" style="width: 100%" clearable placeholder="请选择支出类型">
+                    <el-option v-for="item in expenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </div>
+        </transition>
+        <el-row>
+          <el-col :span="24" style="text-align: right;">
             <el-form-item label-width="10px">
               <el-button type="primary" size="small" @click="searchData" class="beautified-search-btn">
                 <el-icon><Search /></el-icon>
@@ -117,7 +161,7 @@
     </div>
 
     <!-- 操作按钮区域 -->
-    <div class="tools-div beautified-tools">
+    <div class="tools-div beautified-tools" style="text-align: right;">
       <el-button type="success" size="small" @click="addRecord">
         <el-icon><DocumentAdd /></el-icon>
         添加记账
@@ -200,8 +244,14 @@
         </template>
       </el-table-column>
       <el-table-column prop="bookkeeper" label="记账人" align="center" width="100" />
-      <el-table-column prop="dataSource" label="数据来源" align="center" width="100" show-overflow-tooltip />
+      <el-table-column prop="dataSource" label="数据来源" align="center" width="100">
+        <template #default="scope">
+          {{ getDisplayText(scope.row.dataSource, dataSourceOptions) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="remark" label="备注" align="center" min-width="150" show-overflow-tooltip />
+      <el-table-column prop="modifier" label="修改人" align="center" width="100" />
+      <el-table-column prop="modifyTime" label="修改时间" align="center" width="160" />
     </el-table>
 
     <!-- 分页组件 -->
@@ -220,19 +270,19 @@
     <el-dialog
       v-model="dialogVisible"
       :title="dialogTitle"
-      width="85%"
+      width="60%"
       class="custom-dialog enhanced-dialog"
       :close-on-click-modal="false"
     >
       <el-form :model="formData" label-width="120px" :rules="formRules" ref="formRef">
         <el-row :gutter="20">
-          <!-- 第一行：基本信息 -->
-          <el-col :span="8">
+          <!-- 第一行 -->
+          <el-col :span="12">
             <el-form-item label="账单行为" prop="billAction">
               <el-input v-model="formData.billAction" placeholder="请输入账单行为" />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="记账时间" prop="bookingTime">
               <el-date-picker
                 v-model="formData.bookingTime"
@@ -243,28 +293,32 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+        </el-row>
+
+        <el-row :gutter="20">
+          <!-- 第二行 -->
+          <el-col :span="12">
             <el-form-item label="金额" prop="amount">
               <el-input-number v-model="formData.amount" :precision="2" :min="0" style="width: 100%" placeholder="请输入金额" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="记账账户" prop="accountName">
+              <el-input v-model="formData.accountName" placeholder="请输入记账账户" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row :gutter="20">
-          <!-- 第二行：账户信息 -->
-          <el-col :span="8">
-            <el-form-item label="记账账户" prop="accountName">
-              <el-input v-model="formData.accountName" placeholder="请输入记账账户" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
+          <!-- 第三行 -->
+          <el-col :span="12">
             <el-form-item label="账户类型" prop="accountType">
               <el-select v-model="formData.accountType" style="width: 100%" placeholder="请选择账户类型">
                 <el-option v-for="item in accountTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="账户编号" prop="accountNo">
               <el-input v-model="formData.accountNo" placeholder="请输入账户编号" />
             </el-form-item>
@@ -272,22 +326,40 @@
         </el-row>
 
         <el-row :gutter="20">
-          <!-- 第三行：收支类型 -->
-          <el-col :span="8">
+          <!-- 第四行：收支类型 -->
+          <el-col :span="12">
             <el-form-item label="收支类型" prop="incomeExpenseType">
               <el-select v-model="formData.incomeExpenseType" style="width: 100%" placeholder="请选择收支类型" @change="handleIncomeExpenseChange">
                 <el-option v-for="item in incomeExpenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12" v-if="formData.incomeExpenseType === 'income'">
+            <el-form-item label="收益类型" prop="incomeType">
+              <el-select v-model="formData.incomeType" style="width: 100%" placeholder="请选择收益类型">
+                <el-option v-for="item in incomeTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-else-if="formData.incomeExpenseType === 'expense'">
+            <el-form-item label="支出类型" prop="expenseType">
+              <el-select v-model="formData.expenseType" style="width: 100%" placeholder="请选择支出类型">
+                <el-option v-for="item in expenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20">
+          <!-- 第五行 -->
+          <el-col :span="12">
             <el-form-item label="账单类型" prop="billType">
               <el-select v-model="formData.billType" style="width: 100%" placeholder="请选择账单类型">
                 <el-option v-for="item in billTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="结清状态" prop="settlementStatus">
               <el-select v-model="formData.settlementStatus" style="width: 100%" placeholder="请选择结清状态">
                 <el-option v-for="item in settlementStatusOptions" :key="item.value" :label="item.name" :value="item.value" />
@@ -297,36 +369,24 @@
         </el-row>
 
         <el-row :gutter="20">
-          <!-- 第四行：支出/收益类型 -->
-          <el-col :span="8">
-            <el-form-item label="支出类型" prop="expenseType">
-              <el-select v-model="formData.expenseType" style="width: 100%" placeholder="请选择支出类型" :disabled="formData.incomeExpenseType === 'income'">
-                <el-option v-for="item in expenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="收益类型" prop="incomeType">
-              <el-select v-model="formData.incomeType" style="width: 100%" placeholder="请选择收益类型" :disabled="formData.incomeExpenseType === 'expense'">
-                <el-option v-for="item in incomeTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
+          <!-- 第六行 -->
+          <el-col :span="12">
             <el-form-item label="记账人" prop="bookkeeper">
               <el-input v-model="formData.bookkeeper" placeholder="请输入记账人" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="数据来源" prop="dataSource">
+              <el-select v-model="formData.dataSource" style="width: 100%" placeholder="请选择数据来源">
+                <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.name" :value="item.value" />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row :gutter="20">
-          <!-- 第五行：数据来源和备注 -->
-          <el-col :span="12">
-            <el-form-item label="数据来源" prop="dataSource">
-              <el-input v-model="formData.dataSource" placeholder="请输入数据来源" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
+          <!-- 第七行：备注 -->
+          <el-col :span="24">
             <el-form-item label="备注" prop="remark">
               <el-input v-model="formData.remark" type="textarea" :rows="2" placeholder="请输入备注信息" />
             </el-form-item>
@@ -443,6 +503,18 @@ const accountTypeOptions = ref([
   { name: '信用卡', value: 'credit_card' }
 ])
 
+// 数据来源选项
+const dataSourceOptions = ref([
+  { name: '银行转账', value: 'bank_transfer' },
+  { name: '微信支付', value: 'wechat_pay' },
+  { name: '支付宝', value: 'alipay' },
+  { name: '现金支付', value: 'cash' },
+  { name: '信用卡', value: 'credit_card' },
+  { name: '理财产品', value: 'financial_product' },
+  { name: '购物返利', value: 'shopping_rebate' },
+  { name: '微信收款', value: 'wechat_receive' }
+])
+
 // ==================== 模拟数据 ====================
 const mockData = ref([])
 const billNoCounter = ref(1000)
@@ -476,8 +548,10 @@ const initMockData = () => {
       settlementStatus: 'settled',
       incomeType: 'salary',
       bookkeeper: '张三',
-      dataSource: '银行转账',
-      remark: '4月份工资'
+      dataSource: 'bank_transfer',
+      remark: '4月份工资',
+      modifier: '张三',
+      modifyTime: '2026-04-01 09:00:00'
     },
     {
       id: 2,
@@ -494,8 +568,10 @@ const initMockData = () => {
       settlementStatus: 'settled',
       incomeType: '',
       bookkeeper: '张三',
-      dataSource: '微信支付',
-      remark: '公司附近餐厅午餐'
+      dataSource: 'wechat_pay',
+      remark: '公司附近餐厅午餐',
+      modifier: '张三',
+      modifyTime: '2026-04-01 12:30:00'
     },
     {
       id: 3,
@@ -512,8 +588,10 @@ const initMockData = () => {
       settlementStatus: 'settled',
       incomeType: '',
       bookkeeper: '张三',
-      dataSource: '支付宝转账',
-      remark: '4月份房租'
+      dataSource: 'alipay',
+      remark: '4月份房租',
+      modifier: '张三',
+      modifyTime: '2026-04-01 10:00:00'
     },
     {
       id: 4,
@@ -530,8 +608,10 @@ const initMockData = () => {
       settlementStatus: 'settled',
       incomeType: 'part_time',
       bookkeeper: '张三',
-      dataSource: '微信收款',
-      remark: '周末兼职项目收入'
+      dataSource: 'wechat_receive',
+      remark: '周末兼职项目收入',
+      modifier: '张三',
+      modifyTime: '2026-04-01 15:00:00'
     },
     {
       id: 5,
@@ -548,8 +628,10 @@ const initMockData = () => {
       settlementStatus: 'settled',
       incomeType: '',
       bookkeeper: '张三',
-      dataSource: '淘宝购物',
-      remark: '洗发水、牙膏等日用品'
+      dataSource: 'alipay',
+      remark: '洗发水、牙膏等日用品',
+      modifier: '张三',
+      modifyTime: '2026-04-01 18:30:00'
     },
     {
       id: 6,
@@ -566,8 +648,10 @@ const initMockData = () => {
       settlementStatus: 'settled',
       incomeType: 'financial',
       bookkeeper: '张三',
-      dataSource: '理财产品',
-      remark: '货币基金收益'
+      dataSource: 'financial_product',
+      remark: '货币基金收益',
+      modifier: '张三',
+      modifyTime: '2026-04-01 08:00:00'
     },
     {
       id: 7,
@@ -584,8 +668,10 @@ const initMockData = () => {
       settlementStatus: 'settled',
       incomeType: 'commission',
       bookkeeper: '张三',
-      dataSource: '购物返利',
-      remark: '淘宝联盟佣金'
+      dataSource: 'shopping_rebate',
+      remark: '淘宝联盟佣金',
+      modifier: '张三',
+      modifyTime: '2026-04-01 20:00:00'
     },
     {
       id: 8,
@@ -602,8 +688,10 @@ const initMockData = () => {
       settlementStatus: 'settled',
       incomeType: '',
       bookkeeper: '张三',
-      dataSource: '现金支付',
-      remark: '和朋友聚餐'
+      dataSource: 'cash',
+      remark: '和朋友聚餐',
+      modifier: '张三',
+      modifyTime: '2026-04-01 19:00:00'
     },
     {
       id: 9,
@@ -620,8 +708,10 @@ const initMockData = () => {
       settlementStatus: 'pending',
       incomeType: '',
       bookkeeper: '张三',
-      dataSource: '银行转账',
-      remark: '信用卡账单还款'
+      dataSource: 'bank_transfer',
+      remark: '信用卡账单还款',
+      modifier: '张三',
+      modifyTime: '2026-04-01 10:30:00'
     },
     {
       id: 10,
@@ -638,8 +728,10 @@ const initMockData = () => {
       settlementStatus: 'pending',
       incomeType: 'part_time',
       bookkeeper: '张三',
-      dataSource: '微信收款',
-      remark: '线上辅导兼职'
+      dataSource: 'wechat_receive',
+      remark: '线上辅导兼职',
+      modifier: '张三',
+      modifyTime: '2026-04-01 16:00:00'
     }
   ]
   billNoCounter.value = 1011
@@ -649,14 +741,18 @@ const initMockData = () => {
 const list = ref([])
 const total = ref(0)
 const pageParams = ref({ page: 1, limit: 10 })
+const searchExpanded = ref(false)
 const queryDto = ref({
   billNo: '',
   accountName: '',
+  timeRange: [],
+  minAmount: null,
   incomeExpenseType: '',
+  incomeType: '',
+  expenseType: '',
   billType: '',
   settlementStatus: '',
-  bookkeeper: '',
-  timeRange: []
+  dataSource: ''
 })
 
 // ==================== 统计数据 ====================
@@ -690,67 +786,87 @@ const calculateStatistics = (filteredData) => {
 const fetchData = () => {
   // 过滤数据
   let filteredData = [...mockData.value]
-  
+
   // 按账单编号过滤
   if (queryDto.value.billNo) {
-    filteredData = filteredData.filter(item => 
+    filteredData = filteredData.filter(item =>
       item.billNo.includes(queryDto.value.billNo)
     )
   }
-  
+
   // 按记账账户过滤
   if (queryDto.value.accountName) {
-    filteredData = filteredData.filter(item => 
+    filteredData = filteredData.filter(item =>
       item.accountName.includes(queryDto.value.accountName)
     )
   }
-  
-  // 按收支类型过滤
-  if (queryDto.value.incomeExpenseType) {
-    filteredData = filteredData.filter(item => 
-      item.incomeExpenseType === queryDto.value.incomeExpenseType
-    )
-  }
-  
-  // 按账单类型过滤
-  if (queryDto.value.billType) {
-    filteredData = filteredData.filter(item => 
-      item.billType === queryDto.value.billType
-    )
-  }
-  
-  // 按结清状态过滤
-  if (queryDto.value.settlementStatus) {
-    filteredData = filteredData.filter(item => 
-      item.settlementStatus === queryDto.value.settlementStatus
-    )
-  }
-  
-  // 按记账人过滤
-  if (queryDto.value.bookkeeper) {
-    filteredData = filteredData.filter(item => 
-      item.bookkeeper.includes(queryDto.value.bookkeeper)
-    )
-  }
-  
+
   // 按时间范围过滤
   if (queryDto.value.timeRange && queryDto.value.timeRange.length === 2) {
     const startDate = new Date(queryDto.value.timeRange[0])
     const endDate = new Date(queryDto.value.timeRange[1])
-    endDate.setHours(23, 59, 59, 999)
-    
+
     filteredData = filteredData.filter(item => {
       const itemDate = new Date(item.bookingTime)
       return itemDate >= startDate && itemDate <= endDate
     })
   }
-  
+
+  // 按最小金额过滤
+  if (queryDto.value.minAmount !== null && queryDto.value.minAmount !== undefined) {
+    filteredData = filteredData.filter(item =>
+      item.amount >= queryDto.value.minAmount
+    )
+  }
+
+  // 按收支类型过滤
+  if (queryDto.value.incomeExpenseType) {
+    filteredData = filteredData.filter(item =>
+      item.incomeExpenseType === queryDto.value.incomeExpenseType
+    )
+  }
+
+  // 按收益类型过滤
+  if (queryDto.value.incomeType) {
+    filteredData = filteredData.filter(item =>
+      item.incomeType === queryDto.value.incomeType
+    )
+  }
+
+  // 按支出类型过滤
+  if (queryDto.value.expenseType) {
+    filteredData = filteredData.filter(item =>
+      item.expenseType === queryDto.value.expenseType
+    )
+  }
+
+  // 按账单类型过滤
+  if (queryDto.value.billType) {
+    filteredData = filteredData.filter(item =>
+      item.billType === queryDto.value.billType
+    )
+  }
+
+  // 按结清状态过滤
+  if (queryDto.value.settlementStatus) {
+    filteredData = filteredData.filter(item =>
+      item.settlementStatus === queryDto.value.settlementStatus
+    )
+  }
+
+  // 按数据来源过滤
+  if (queryDto.value.dataSource) {
+    filteredData = filteredData.filter(item =>
+      item.dataSource === queryDto.value.dataSource
+    )
+  }
+
   // 计算总数
   total.value = filteredData.length
-  
+
   // 计算统计数据
   calculateStatistics(filteredData)
-  
+
   // 分页
   const start = (pageParams.value.page - 1) * pageParams.value.limit
   const end = start + pageParams.value.limit
@@ -763,16 +879,33 @@ const searchData = () => {
   fetchData()
 }
 
+// 切换搜索条件展开/收起
+const toggleSearchExpand = () => {
+  searchExpanded.value = !searchExpanded.value
+}
+
+// 查询条件收支类型改变事件
+const handleQueryIncomeExpenseChange = (value) => {
+  if (value === 'income') {
+    queryDto.value.expenseType = ''
+  } else if (value === 'expense') {
+    queryDto.value.incomeType = ''
+  }
+}
+
 // 重置
 const resetData = () => {
   queryDto.value = {
     billNo: '',
     accountName: '',
+    timeRange: [],
+    minAmount: null,
     incomeExpenseType: '',
+    incomeType: '',
+    expenseType: '',
     billType: '',
     settlementStatus: '',
-    bookkeeper: '',
-    timeRange: []
+    dataSource: ''
   }
   pageParams.value.page = 1
   fetchData()
@@ -798,7 +931,9 @@ const formData = ref({
   incomeType: '',
   bookkeeper: '',
   dataSource: '',
-  remark: ''
+  remark: '',
+  modifier: '',
+  modifyTime: ''
 })
 
 // 表单验证规则
@@ -832,7 +967,9 @@ const addRecord = () => {
     incomeType: '',
     bookkeeper: '',
     dataSource: '',
-    remark: ''
+    remark: '',
+    modifier: '',
+    modifyTime: ''
   }
   dialogVisible.value = true
 }
@@ -856,17 +993,23 @@ const handleIncomeExpenseChange = (value) => {
 // 提交表单
 const submit = async () => {
   if (!formRef.value) return
-  
+
   await formRef.value.validate(async (valid) => {
     if (!valid) return
 
     try {
+      const currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ')
+
       // 模拟保存操作
       if (formData.value.id) {
         // 编辑：更新模拟数据
         const index = mockData.value.findIndex(item => item.id === formData.value.id)
         if (index !== -1) {
-          mockData.value[index] = { ...formData.value }
+          mockData.value[index] = {
+            ...formData.value,
+            modifier: formData.value.bookkeeper,
+            modifyTime: currentTime
+          }
         }
         ElMessage.success('编辑成功')
       } else {
@@ -874,12 +1017,14 @@ const submit = async () => {
         const newRecord = {
           ...formData.value,
           id: Date.now(),
-          billNo: generateBillNo()
+          billNo: generateBillNo(),
+          modifier: formData.value.bookkeeper,
+          modifyTime: currentTime
         }
         mockData.value.unshift(newRecord)
         ElMessage.success('添加成功')
       }
-      
+
       dialogVisible.value = false
       fetchData()
     } catch (error) {
@@ -1020,6 +1165,38 @@ const resetExport = () => {
   border: 1px solid #ebeef5;
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.search-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.search-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.expand-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #409eff;
+  transition: all 0.3s ease;
+}
+
+.expand-btn:hover {
+  color: #66b1ff;
+}
+
+.expand-btn .el-icon {
+  transition: transform 0.3s ease;
 }
 
 /* 统计模块样式 */
