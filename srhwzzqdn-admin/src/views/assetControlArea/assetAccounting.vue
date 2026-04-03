@@ -71,7 +71,18 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="记账账户">
-              <el-input v-model="queryDto.accountName" style="width: 100%" clearable placeholder="请输入记账账户" />
+              <el-input 
+                v-model="queryDto.accountName" 
+                style="width: 100%" 
+                clearable 
+                placeholder="请选择记账账户"
+                readonly
+                @click="openAssetLedgerDialog('query')"
+              >
+                <template #suffix>
+                  <el-icon><ArrowDown /></el-icon>
+                </template>
+              </el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -300,7 +311,7 @@
                 v-model="formData.accountName" 
                 placeholder="请选择记账账户" 
                 readonly
-                @click="openAssetLedgerDialog"
+                @click="openAssetLedgerDialog('form')"
                 style="cursor: pointer;"
               >
                 <template #suffix>
@@ -963,6 +974,9 @@ const assetLedgerQuery = reactive({
   assetStatus: []
 })
 
+// 选择来源: 'query' 表示条件查询, 'form' 表示表单选择
+const assetLedgerSelectSource = ref('form')
+
 // 资产台账数据字典
 const assetLedgerTypeItem = ref([])
 const assetLedgerSubTypeItem = ref([])
@@ -998,7 +1012,13 @@ const getAssetLedgerStatusItem = async () => {
 }
 
 // 打开资产台账选择对话框
-const openAssetLedgerDialog = async () => {
+const openAssetLedgerDialog = async (source) => {
+  // 设置选择来源
+  assetLedgerSelectSource.value = source
+  
+  // 重置查询条件
+  resetAssetLedgerQuery()
+  
   assetLedgerDialogVisible.value = true
   
   // 加载数据字典
@@ -1051,7 +1071,6 @@ const resetAssetLedgerQuery = () => {
   })
   assetLedgerSubTypeItem.value = []
   assetLedgerPageParams.page = 1
-  fetchAssetLedgerData()
 }
 
 // 资产台账分页
@@ -1068,10 +1087,15 @@ const handleAssetLedgerCurrentChange = (page) => {
 
 // 选择资产台账
 const selectAssetLedger = (row) => {
-  // 设置资产台账id
-  formData.assetLedgerId = row.id
-  // 设置资产台账名称显示
-  formData.accountName = row.assetName
+  // 根据选择来源设置不同的数据
+  if (assetLedgerSelectSource.value === 'query') {
+    // 条件查询选择:只设置账户名称用于查询
+    queryDto.accountName = row.assetName
+  } else if (assetLedgerSelectSource.value === 'form') {
+    // 表单选择:设置资产台账id和账户名称
+    formData.assetLedgerId = row.id
+    formData.accountName = row.assetName
+  }
   
   // 关闭对话框
   assetLedgerDialogVisible.value = false

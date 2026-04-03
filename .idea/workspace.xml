@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产记账-05">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产记账-06">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
@@ -256,14 +256,7 @@
       <workItem from="1775090364700" duration="7686000" />
       <workItem from="1775132288664" duration="1269000" />
       <workItem from="1775176695884" duration="11493000" />
-      <workItem from="1775212256674" duration="5687000" />
-    </task>
-    <task id="LOCAL-00018" summary="原始记忆-记忆联想04">
-      <created>1770973549497</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1770973549497</updated>
+      <workItem from="1775212256674" duration="6603000" />
     </task>
     <task id="LOCAL-00019" summary="原始记忆-记忆联想06">
       <created>1771333766604</created>
@@ -601,7 +594,14 @@
       <option name="project" value="LOCAL" />
       <updated>1775220702911</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="资产记账-06">
+      <created>1775223159885</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1775223159885</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -620,7 +620,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="交际记忆接入开发-002" />
     <MESSAGE value="修复bug-记忆所属人错乱bug修复" />
     <MESSAGE value="学习记忆接入-001" />
     <MESSAGE value="学习记忆接入-002" />
@@ -645,7 +644,8 @@
     <MESSAGE value="资产记账-03" />
     <MESSAGE value="资产记账-04" />
     <MESSAGE value="资产记账-05" />
-    <option name="LAST_COMMIT_MESSAGE" value="资产记账-05" />
+    <MESSAGE value="资产记账-06" />
+    <option name="LAST_COMMIT_MESSAGE" value="资产记账-06" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
