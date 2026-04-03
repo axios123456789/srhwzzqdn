@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产记账-04">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产记账-05">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" afterDir="false" />
@@ -14,16 +13,6 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetAccounting.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetAccounting.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-common/common-service/common-service.iml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-common/common-service/common-service.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-common/common-util/common-util.iml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-common/common-util/common-util.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-common/common-util/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-common/common-util/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-common/common-util/src/main/java/com/xk/srhwzzqdn/util/GenerateNoUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-common/common-util/src/main/java/com/xk/srhwzzqdn/util/GenerateNoUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/controller/AssetTransactionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/controller/AssetTransactionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetTransactionMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetTransactionMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/AssetTransactionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/AssetTransactionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetTransactionServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetTransactionServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/AssetTransactionMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/AssetTransactionMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/entity/assetControl/AssetTransaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/entity/assetControl/AssetTransaction.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,6 +89,19 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ManagerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="srhwzzqdn-manager" />
       <extension name="coverage">
@@ -254,14 +256,7 @@
       <workItem from="1775090364700" duration="7686000" />
       <workItem from="1775132288664" duration="1269000" />
       <workItem from="1775176695884" duration="11493000" />
-      <workItem from="1775212256674" duration="4135000" />
-    </task>
-    <task id="LOCAL-00017" summary="原始记忆-记忆联想04">
-      <created>1770973541113</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1770973541113</updated>
+      <workItem from="1775212256674" duration="5687000" />
     </task>
     <task id="LOCAL-00018" summary="原始记忆-记忆联想04">
       <created>1770973549497</created>
@@ -599,7 +594,14 @@
       <option name="project" value="LOCAL" />
       <updated>1775206464100</updated>
     </task>
-    <option name="localTasksCounter" value="66" />
+    <task id="LOCAL-00066" summary="资产记账-05">
+      <created>1775220702911</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1775220702911</updated>
+    </task>
+    <option name="localTasksCounter" value="67" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -618,7 +620,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="交际记忆接入开发-001" />
     <MESSAGE value="交际记忆接入开发-002" />
     <MESSAGE value="修复bug-记忆所属人错乱bug修复" />
     <MESSAGE value="学习记忆接入-001" />
@@ -643,7 +644,8 @@
     <MESSAGE value="资产记账-02" />
     <MESSAGE value="资产记账-03" />
     <MESSAGE value="资产记账-04" />
-    <option name="LAST_COMMIT_MESSAGE" value="资产记账-04" />
+    <MESSAGE value="资产记账-05" />
+    <option name="LAST_COMMIT_MESSAGE" value="资产记账-05" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

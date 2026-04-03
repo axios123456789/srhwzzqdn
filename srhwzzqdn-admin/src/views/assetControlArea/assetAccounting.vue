@@ -208,12 +208,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="accountName" label="记账账户" align="center" width="120" show-overflow-tooltip />
-      <el-table-column prop="accountType" label="账户类型" align="center" width="100">
-        <template #default="scope">
-          {{ getDisplayText(scope.row.accountType, accountTypeOptions) }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="accountNo" label="账户编号" align="center" width="120" show-overflow-tooltip />
       <el-table-column prop="incomeExpenseType" label="收支类型" align="center" width="100">
         <template #default="scope">
           <el-tag :type="scope.row.incomeExpenseType === 1 ? 'success' : 'danger'" size="small">
@@ -250,8 +244,6 @@
         </template>
       </el-table-column>
       <el-table-column prop="remark" label="备注" align="center" min-width="150" show-overflow-tooltip />
-      <el-table-column prop="modifier" label="修改人" align="center" width="100" />
-      <el-table-column prop="modifyTime" label="修改时间" align="center" width="160" />
     </el-table>
 
     <!-- 分页组件 -->
@@ -304,7 +296,17 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="记账账户" prop="accountName">
-              <el-input v-model="formData.accountName" placeholder="请输入记账账户" />
+              <el-input 
+                v-model="formData.accountName" 
+                placeholder="请选择记账账户" 
+                readonly
+                @click="openAssetLedgerDialog"
+                style="cursor: pointer;"
+              >
+                <template #suffix>
+                  <el-icon><ArrowDown /></el-icon>
+                </template>
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -418,6 +420,165 @@
         </span>
       </template>
     </el-dialog>
+
+    <!-- 选择资产台账对话框 -->
+    <el-dialog
+      v-model="assetLedgerDialogVisible"
+      title="选择资产台账"
+      width="70%"
+      :close-on-click-modal="false"
+    >
+      <!-- 资产台账查询条件 -->
+      <div class="search-card" style="margin-bottom: 15px;">
+        <el-form label-width="120px" size="small">
+          <el-row>
+            <el-col :span="6">
+              <el-form-item label="资产名称">
+                <el-input
+                    v-model="assetLedgerQuery.assetName"
+                    style="width: 100%"
+                    clearable
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="资产编号">
+                <el-input
+                    v-model="assetLedgerQuery.assetNo"
+                    style="width: 100%"
+                    clearable
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="资产类型">
+                <el-select
+                    v-model="assetLedgerQuery.assetType"
+                    placeholder="请选择"
+                    style="width: 100%"
+                    clearable
+                    @change="handleAssetLedgerQueryTypeChange"
+                >
+                  <el-option
+                      v-for="item in assetLedgerTypeItem"
+                      :key="item.value"
+                      :label="item.text"
+                      :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="资产子类">
+                <el-select
+                    v-model="assetLedgerQuery.assetSubType"
+                    placeholder="请先选择资产类型"
+                    style="width: 100%"
+                    clearable
+                    multiple
+                    :disabled="!assetLedgerQuery.assetType"
+                >
+                  <el-option
+                      v-for="item in assetLedgerSubTypeItem"
+                      :key="item.value"
+                      :label="item.text"
+                      :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <el-form-item label="资产状态">
+                <el-select
+                    v-model="assetLedgerQuery.assetStatus"
+                    multiple
+                    placeholder="请选择"
+                    style="width: 100%"
+                    clearable
+                >
+                  <el-option
+                      v-for="item in assetLedgerStatusItem"
+                      :key="item.value"
+                      :label="item.text"
+                      :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row style="display:flex">
+            <el-button
+                type="primary"
+                size="small"
+                @click="handleAssetLedgerSearch"
+            >
+              <el-icon><Search /></el-icon>
+              搜索
+            </el-button>
+            <el-button
+                size="small"
+                @click="resetAssetLedgerQuery"
+            >
+              <el-icon><Refresh /></el-icon>
+              重置
+            </el-button>
+          </el-row>
+        </el-form>
+      </div>
+
+      <!-- 资产台账列表 -->
+      <el-table
+        :data="assetLedgerList"
+        border
+        stripe
+        height="400px"
+        @row-click="selectAssetLedger"
+        style="cursor: pointer;"
+      >
+        <el-table-column prop="assetName" label="资产名称" min-width="150" />
+        <el-table-column prop="assetCode" label="资产官方标识" min-width="150" />
+        <el-table-column prop="assetNo" label="资产编号" width="180" />
+        <el-table-column prop="assetType" label="资产类型" width="100">
+          <template #default="scope">
+            {{ getDisplayText(scope.row.assetType, assetLedgerTypeItem) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="assetSubType" label="资产子类" width="150">
+          <template #default="scope">
+            {{ scope.row._assetSubTypeText || scope.row.assetSubType || '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="assetStatus" label="资产状态" width="100">
+          <template #default="scope">
+            {{ getDisplayText(scope.row.assetStatus, assetLedgerStatusItem) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="remark" label="备注" min-width="200" show-overflow-tooltip />
+        <el-table-column prop="assetOwnerName" label="资产所属人" width="120" />
+      </el-table>
+
+      <!-- 分页 -->
+      <div style="margin-top: 15px; text-align: right;">
+        <el-pagination
+            background
+            layout="total, sizes, prev, pager, next"
+            :total="assetLedgerTotal"
+            :page-size="assetLedgerPageParams.limit"
+            :current-page="assetLedgerPageParams.page"
+            :page-sizes="[10, 20, 50, 100]"
+            @size-change="handleAssetLedgerSizeChange"
+            @current-change="handleAssetLedgerCurrentChange"
+        />
+      </div>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="assetLedgerDialogVisible = false">取消</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -436,7 +597,6 @@ onMounted(() => {
   getSettlementStatusItem()
   getIncomeTypeItem()
   getDataSourceItem()
-  getAccountTypeItem()
 
   // 2.调用查询数据接口
   fetchData()
@@ -499,14 +659,6 @@ const dataSourceOptions = ref([])
 const getDataSourceItem = async () => {
   const result = await GetKeyAndValueByType("asset_transaction_data_source")
   dataSourceOptions.value = result.data
-}
-
-// 账户类型选项
-const accountTypeOptions = ref([])
-// 获取账户类型
-const getAccountTypeItem = async () => {
-  const result = await GetKeyAndValueByType("account_type")
-  accountTypeOptions.value = result.data
 }
 
 // ==================== 列表数据 ====================
@@ -599,8 +751,7 @@ const formData = reactive({
   bookingTime: '',
   amount: 0,
   accountName: '',
-  accountType: '',
-  accountNo: '',
+  assetLedgerId: null, // 资产台账id
   incomeExpenseType: '',
   billType: '',
   expenseType: '',
@@ -608,9 +759,7 @@ const formData = reactive({
   incomeType: '',
   bookkeeper: '',
   dataSource: '',
-  remark: '',
-  modifier: '',
-  modifyTime: ''
+  remark: ''
 })
 
 // 表单验证规则
@@ -618,7 +767,7 @@ const formRules = {
   billAction: [{ required: true, message: '请输入账单行为', trigger: 'blur' }],
   bookingTime: [{ required: true, message: '请选择记账时间', trigger: 'change' }],
   amount: [{ required: true, message: '请输入金额', trigger: 'blur' }],
-  accountName: [{ required: true, message: '请输入记账账户', trigger: 'blur' }],
+  accountName: [{ required: true, message: '请选择记账账户', trigger: 'change' }],
   incomeExpenseType: [{ required: true, message: '请选择收支类型', trigger: 'change' }],
   billType: [{ required: true, message: '请选择账单类型', trigger: 'change' }],
   settlementStatus: [{ required: true, message: '请选择结清状态', trigger: 'change' }],
@@ -640,8 +789,7 @@ const addRecord = () => {
     bookingTime: new Date().toISOString().slice(0, 19).replace('T', ' '),
     amount: 0,
     accountName: '',
-    accountType: '',
-    accountNo: '',
+    assetLedgerId: null,
     incomeExpenseType: '',
     billType: '',
     expenseType: '',
@@ -649,9 +797,7 @@ const addRecord = () => {
     incomeType: '',
     bookkeeper: '',
     dataSource: '',
-    remark: '',
-    modifier: '',
-    modifyTime: ''
+    remark: ''
   })
   dialogVisible.value = true
 }
@@ -775,8 +921,6 @@ const exportColumns = [
   { key: 'bookingTime', label: '记账时间', width: 20 },
   { key: 'amount', label: '金额', width: 15 },
   { key: 'accountName', label: '记账账户', width: 15 },
-  { key: 'accountType', label: '账户类型', width: 12 },
-  { key: 'accountNo', label: '账户编号', width: 15 },
   { key: 'incomeExpenseType', label: '收支类型', width: 12 },
   { key: 'billType', label: '账单类型', width: 15 },
   { key: 'expenseType', label: '支出类型', width: 12 },
@@ -802,6 +946,137 @@ const resetExport = () => {
   exportFileName.value = '资产记账数据'
   exportScope.value = 'current'
 }
+
+// ==================== 选择资产台账功能 ====================
+import { GetAssetLedgerByConditionAndPage } from "@/api/assetControl"
+
+// 资产台账选择对话框
+const assetLedgerDialogVisible = ref(false)
+const assetLedgerList = ref([])
+const assetLedgerTotal = ref(0)
+const assetLedgerPageParams = reactive({ page: 1, limit: 10 })
+const assetLedgerQuery = reactive({
+  assetName: '',
+  assetNo: '',
+  assetType: null,
+  assetSubType: [],
+  assetStatus: []
+})
+
+// 资产台账数据字典
+const assetLedgerTypeItem = ref([])
+const assetLedgerSubTypeItem = ref([])
+const assetLedgerStatusItem = ref([])
+
+// 获取资产台账数据字典
+const getAssetLedgerTypeItem = async () => {
+  const result = await GetKeyAndValueByType("asset_type")
+  assetLedgerTypeItem.value = result.data
+}
+
+const getAssetLedgerSubTypeItem = async (assetTypeValue) => {
+  try {
+    if (!assetTypeValue) {
+      assetLedgerSubTypeItem.value = []
+      return
+    }
+    const type = `asset_type_${assetTypeValue}`
+    const result = await GetKeyAndValueByType(type)
+    if (result.code === 200) {
+      assetLedgerSubTypeItem.value = result.data
+    } else {
+      assetLedgerSubTypeItem.value = []
+    }
+  } catch (error) {
+    assetLedgerSubTypeItem.value = []
+  }
+}
+
+const getAssetLedgerStatusItem = async () => {
+  const result = await GetKeyAndValueByType("asset_status")
+  assetLedgerStatusItem.value = result.data
+}
+
+// 打开资产台账选择对话框
+const openAssetLedgerDialog = async () => {
+  assetLedgerDialogVisible.value = true
+  
+  // 加载数据字典
+  await getAssetLedgerTypeItem()
+  await getAssetLedgerStatusItem()
+  
+  // 查询资产台账数据
+  fetchAssetLedgerData()
+}
+
+// 查询资产台账数据
+const fetchAssetLedgerData = async () => {
+  try {
+    const result = await GetAssetLedgerByConditionAndPage(
+      assetLedgerPageParams.page, 
+      assetLedgerPageParams.limit, 
+      assetLedgerQuery
+    )
+    if (result.code === 200) {
+      assetLedgerList.value = result.data.records || []
+      assetLedgerTotal.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || "查询资产台账失败")
+    }
+  } catch (error) {
+    ElMessage.error("查询资产台账失败")
+  }
+}
+
+// 资产台账查询条件资产类型改变事件
+const handleAssetLedgerQueryTypeChange = async (val) => {
+  assetLedgerQuery.assetSubType = []
+  await getAssetLedgerSubTypeItem(val)
+}
+
+// 资产台账搜索
+const handleAssetLedgerSearch = () => {
+  assetLedgerPageParams.page = 1
+  fetchAssetLedgerData()
+}
+
+// 资产台账重置
+const resetAssetLedgerQuery = () => {
+  Object.assign(assetLedgerQuery, {
+    assetName: '',
+    assetNo: '',
+    assetType: null,
+    assetSubType: [],
+    assetStatus: []
+  })
+  assetLedgerSubTypeItem.value = []
+  assetLedgerPageParams.page = 1
+  fetchAssetLedgerData()
+}
+
+// 资产台账分页
+const handleAssetLedgerSizeChange = (size) => {
+  assetLedgerPageParams.limit = size
+  assetLedgerPageParams.page = 1
+  fetchAssetLedgerData()
+}
+
+const handleAssetLedgerCurrentChange = (page) => {
+  assetLedgerPageParams.page = page
+  fetchAssetLedgerData()
+}
+
+// 选择资产台账
+const selectAssetLedger = (row) => {
+  // 设置资产台账id
+  formData.assetLedgerId = row.id
+  // 设置资产台账名称显示
+  formData.accountName = row.assetName
+  
+  // 关闭对话框
+  assetLedgerDialogVisible.value = false
+}
+
 </script>
 
 <style scoped>
