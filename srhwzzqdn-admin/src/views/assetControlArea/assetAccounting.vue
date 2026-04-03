@@ -598,10 +598,11 @@ import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetAssetAccountingByConditionAndPage, SaveAssetAccounting, DeleteAssetAccountingById, DeleteAllAssetAccountingByIds } from "@/api/assetAccounting"
+import { GetAssetLedgerByConditionAndPage } from "@/api/assetControl"
 
-// ==================== 钩子函数 ====================
+//--------------------钩子函数-------------------------
 onMounted(() => {
-  // 1.加载数据字典
+  //1.加载数据字典
   getTransactionTypeItem()
   getInvoiceTypeItem()
   getExpenseTypeItem()
@@ -609,11 +610,11 @@ onMounted(() => {
   getIncomeTypeItem()
   getDataSourceItem()
 
-  // 2.调用查询数据接口
+  //2.调用查询数据接口
   fetchData()
-})
+});
 
-// ==================== 公共函数 ====================
+//------------------------公共方法---------------------------
 // 通用方法：根据值和映射表获取中文文本
 const getDisplayText = (value, mappingArray) => {
   if (!value && value !== 0) return '-'
@@ -622,6 +623,31 @@ const getDisplayText = (value, mappingArray) => {
 }
 
 const formatMoney = (v) => Number(v || 0).toLocaleString()
+
+// ==================== 列表数据 ====================
+const list = ref([])
+const total = ref(0)
+const pageParams = reactive({ page: 1, limit: 10 })
+const searchExpanded = ref(false)
+const queryDto = reactive({
+  billNo: '',
+  accountName: '',
+  timeRange: [],
+  minAmount: null,
+  incomeExpenseType: '',
+  incomeType: '',
+  expenseType: '',
+  billType: '',
+  settlementStatus: '',
+  dataSource: ''
+})
+
+// ==================== 统计数据 ====================
+const statistics = ref({
+  total: 0,
+  income: 0,
+  expense: 0
+})
 
 // ==================== 数据字典 ====================
 // 收支类型选项
@@ -671,31 +697,6 @@ const getDataSourceItem = async () => {
   const result = await GetKeyAndValueByType("asset_transaction_data_source")
   dataSourceOptions.value = result.data
 }
-
-// ==================== 列表数据 ====================
-const list = ref([])
-const total = ref(0)
-const pageParams = reactive({ page: 1, limit: 10 })
-const searchExpanded = ref(false)
-const queryDto = reactive({
-  billNo: '',
-  accountName: '',
-  timeRange: [],
-  minAmount: null,
-  incomeExpenseType: '',
-  incomeType: '',
-  expenseType: '',
-  billType: '',
-  settlementStatus: '',
-  dataSource: ''
-})
-
-// ==================== 统计数据 ====================
-const statistics = ref({
-  total: 0,
-  income: 0,
-  expense: 0
-})
 
 // 获取数据
 const fetchData = async () => {
@@ -959,8 +960,6 @@ const resetExport = () => {
 }
 
 // ==================== 选择资产台账功能 ====================
-import { GetAssetLedgerByConditionAndPage } from "@/api/assetControl"
-
 // 资产台账选择对话框
 const assetLedgerDialogVisible = ref(false)
 const assetLedgerList = ref([])
