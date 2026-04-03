@@ -99,21 +99,21 @@
               <el-col :span="6">
                 <el-form-item label="账单类型">
                   <el-select v-model="queryDto.billType" style="width: 100%" clearable placeholder="请选择账单类型">
-                    <el-option v-for="item in billTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                    <el-option v-for="item in billTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="结清状态">
                   <el-select v-model="queryDto.settlementStatus" style="width: 100%" clearable placeholder="请选择结清状态">
-                    <el-option v-for="item in settlementStatusOptions" :key="item.value" :label="item.name" :value="item.value" />
+                    <el-option v-for="item in settlementStatusOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="数据来源">
                   <el-select v-model="queryDto.dataSource" style="width: 100%" clearable placeholder="请选择数据来源">
-                    <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.name" :value="item.value" />
+                    <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -122,21 +122,21 @@
               <el-col :span="6">
                 <el-form-item label="收支类型">
                   <el-select v-model="queryDto.incomeExpenseType" style="width: 100%" clearable placeholder="请选择收支类型" @change="handleQueryIncomeExpenseChange">
-                    <el-option v-for="item in incomeExpenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                    <el-option v-for="item in incomeExpenseTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="6" v-if="queryDto.incomeExpenseType === 'income'">
+              <el-col :span="6" v-if="queryDto.incomeExpenseType === 1">
                 <el-form-item label="收益类型">
                   <el-select v-model="queryDto.incomeType" style="width: 100%" clearable placeholder="请选择收益类型">
-                    <el-option v-for="item in incomeTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                    <el-option v-for="item in incomeTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="6" v-else-if="queryDto.incomeExpenseType === 'expense'">
+              <el-col :span="6" v-else-if="queryDto.incomeExpenseType === 2">
                 <el-form-item label="支出类型">
                   <el-select v-model="queryDto.expenseType" style="width: 100%" clearable placeholder="请选择支出类型">
-                    <el-option v-for="item in expenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                    <el-option v-for="item in expenseTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -200,10 +200,10 @@
       <el-table-column prop="billNo" label="账单编号" align="center" width="150" show-overflow-tooltip />
       <el-table-column prop="billAction" label="账单行为" align="center" width="120" show-overflow-tooltip />
       <el-table-column prop="bookingTime" label="记账时间" align="center" width="160" />
-      <el-table-column prop="amount" label="金额(元)" align="center" width="120">
+      <el-table-column prop="amount" label="金额 (元)" align="center" width="120">
         <template #default="scope">
-          <span :style="{ color: scope.row.incomeExpenseType === 'income' ? '#67C23A' : '#F56C6C' }">
-            {{ scope.row.incomeExpenseType === 'income' ? '+' : '-' }}{{ scope.row.amount }}
+          <span :style="{ color: scope.row.incomeExpenseType === 1 ? '#67C23A' : '#F56C6C' }">
+            {{ scope.row.incomeExpenseType === 1 ? '+' : '-' }}{{ scope.row.amount }}
           </span>
         </template>
       </el-table-column>
@@ -216,7 +216,7 @@
       <el-table-column prop="accountNo" label="账户编号" align="center" width="120" show-overflow-tooltip />
       <el-table-column prop="incomeExpenseType" label="收支类型" align="center" width="100">
         <template #default="scope">
-          <el-tag :type="scope.row.incomeExpenseType === 'income' ? 'success' : 'danger'" size="small">
+          <el-tag :type="scope.row.incomeExpenseType === 1 ? 'success' : 'danger'" size="small">
             {{ getDisplayText(scope.row.incomeExpenseType, incomeExpenseTypeOptions) }}
           </el-tag>
         </template>
@@ -310,41 +310,25 @@
         </el-row>
 
         <el-row :gutter="20">
-          <!-- 第三行 -->
-          <el-col :span="12">
-            <el-form-item label="账户类型" prop="accountType">
-              <el-select v-model="formData.accountType" style="width: 100%" placeholder="请选择账户类型">
-                <el-option v-for="item in accountTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="账户编号" prop="accountNo">
-              <el-input v-model="formData.accountNo" placeholder="请输入账户编号" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-row :gutter="20">
           <!-- 第四行：收支类型 -->
           <el-col :span="12">
             <el-form-item label="收支类型" prop="incomeExpenseType">
               <el-select v-model="formData.incomeExpenseType" style="width: 100%" placeholder="请选择收支类型" @change="handleIncomeExpenseChange">
-                <el-option v-for="item in incomeExpenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                <el-option v-for="item in incomeExpenseTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="formData.incomeExpenseType === 'income'">
+          <el-col :span="12" v-if="formData.incomeExpenseType === 1">
             <el-form-item label="收益类型" prop="incomeType">
               <el-select v-model="formData.incomeType" style="width: 100%" placeholder="请选择收益类型">
-                <el-option v-for="item in incomeTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                <el-option v-for="item in incomeTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-else-if="formData.incomeExpenseType === 'expense'">
+          <el-col :span="12" v-else-if="formData.incomeExpenseType === 2">
             <el-form-item label="支出类型" prop="expenseType">
               <el-select v-model="formData.expenseType" style="width: 100%" placeholder="请选择支出类型">
-                <el-option v-for="item in expenseTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                <el-option v-for="item in expenseTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -355,14 +339,14 @@
           <el-col :span="12">
             <el-form-item label="账单类型" prop="billType">
               <el-select v-model="formData.billType" style="width: 100%" placeholder="请选择账单类型">
-                <el-option v-for="item in billTypeOptions" :key="item.value" :label="item.name" :value="item.value" />
+                <el-option v-for="item in billTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="结清状态" prop="settlementStatus">
               <el-select v-model="formData.settlementStatus" style="width: 100%" placeholder="请选择结清状态">
-                <el-option v-for="item in settlementStatusOptions" :key="item.value" :label="item.name" :value="item.value" />
+                <el-option v-for="item in settlementStatusOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -371,14 +355,9 @@
         <el-row :gutter="20">
           <!-- 第六行 -->
           <el-col :span="12">
-            <el-form-item label="记账人" prop="bookkeeper">
-              <el-input v-model="formData.bookkeeper" placeholder="请输入记账人" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
             <el-form-item label="数据来源" prop="dataSource">
               <el-select v-model="formData.dataSource" style="width: 100%" placeholder="请选择数据来源">
-                <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.name" :value="item.value" />
+                <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -445,79 +424,28 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getDisplayText } from '@/utils/common'
+import {GetKeyAndValueByType} from "@/api/sysDict";
 
 // ==================== 钩子函数 ====================
 onMounted(() => {
-  // 初始化模拟数据
-  initMockData()
+  //数据字典加载
+  getTransactionTypeItem();
+  getInvoiceTypeItem();
+  getExpenseTypeItem();
+  getSettlementStatusItem();
+  getIncomeTypeItem();
+  getDataSourceItem();
   // 查询数据
   fetchData()
 })
 
-// ==================== 数据字典 ====================
-// 收支类型选项
-const incomeExpenseTypeOptions = ref([
-  { name: '收入', value: 'income' },
-  { name: '支出', value: 'expense' }
-])
-
-// 账单类型选项
-const billTypeOptions = ref([
-  { name: '挣钱软件佣金', value: 'app_commission' },
-  { name: '兼职', value: 'part_time' },
-  { name: '理财收益', value: 'financial_income' },
-  { name: '饮食支出', value: 'food_expense' },
-  { name: '房租', value: 'rent' },
-  { name: '日用品开销', value: 'daily_necessities' },
-  { name: '工资', value: 'salary' }
-])
-
-// 支出类型选项
-const expenseTypeOptions = ref([
-  { name: '必要', value: 'necessary' },
-  { name: '需要', value: 'needed' },
-  { name: '想要', value: 'wanted' }
-])
-
-// 结清状态选项
-const settlementStatusOptions = ref([
-  { name: '已结清', value: 'settled' },
-  { name: '待结清', value: 'pending' }
-])
-
-// 收益类型选项
-const incomeTypeOptions = ref([
-  { name: '工资', value: 'salary' },
-  { name: '佣金', value: 'commission' },
-  { name: '兼职', value: 'part_time' },
-  { name: '理财', value: 'financial' }
-])
-
-// 账户类型选项
-const accountTypeOptions = ref([
-  { name: '银行卡', value: 'bank_card' },
-  { name: '支付宝', value: 'alipay' },
-  { name: '微信', value: 'wechat' },
-  { name: '现金', value: 'cash' },
-  { name: '信用卡', value: 'credit_card' }
-])
-
-// 数据来源选项
-const dataSourceOptions = ref([
-  { name: '银行转账', value: 'bank_transfer' },
-  { name: '微信支付', value: 'wechat_pay' },
-  { name: '支付宝', value: 'alipay' },
-  { name: '现金支付', value: 'cash' },
-  { name: '信用卡', value: 'credit_card' },
-  { name: '理财产品', value: 'financial_product' },
-  { name: '购物返利', value: 'shopping_rebate' },
-  { name: '微信收款', value: 'wechat_receive' }
-])
-
-// ==================== 模拟数据 ====================
-const mockData = ref([])
-const billNoCounter = ref(1000)
+//=====================公用函数=====================
+//通用方法：根据值和映射表获取中文文本
+const getDisplayText = (value, mappingArray) => {
+  if (!value && value !== 0) return '-'
+  const foundItem = mappingArray.find(item => item.value === value)
+  return foundItem ? foundItem.text : value
+}
 
 // 生成账单编号
 const generateBillNo = () => {
@@ -529,213 +457,58 @@ const generateBillNo = () => {
   return `ZC${year}${month}${day}${counter}`
 }
 
-// 初始化模拟数据
-const initMockData = () => {
-  const now = new Date()
-  mockData.value = [
-    {
-      id: 1,
-      billNo: 'ZC20260401001',
-      billAction: '工资收入',
-      bookingTime: '2026-04-01 09:00:00',
-      amount: 15000.00,
-      accountName: '工商银行',
-      accountType: 'bank_card',
-      accountNo: '6222021234567890123',
-      incomeExpenseType: 'income',
-      billType: 'salary',
-      expenseType: '',
-      settlementStatus: 'settled',
-      incomeType: 'salary',
-      bookkeeper: '张三',
-      dataSource: 'bank_transfer',
-      remark: '4月份工资',
-      modifier: '张三',
-      modifyTime: '2026-04-01 09:00:00'
-    },
-    {
-      id: 2,
-      billNo: 'ZC20260401002',
-      billAction: '午餐消费',
-      bookingTime: '2026-04-01 12:30:00',
-      amount: 35.50,
-      accountName: '微信',
-      accountType: 'wechat',
-      accountNo: 'wx_123456',
-      incomeExpenseType: 'expense',
-      billType: 'food_expense',
-      expenseType: 'necessary',
-      settlementStatus: 'settled',
-      incomeType: '',
-      bookkeeper: '张三',
-      dataSource: 'wechat_pay',
-      remark: '公司附近餐厅午餐',
-      modifier: '张三',
-      modifyTime: '2026-04-01 12:30:00'
-    },
-    {
-      id: 3,
-      billNo: 'ZC20260401003',
-      billAction: '房租支付',
-      bookingTime: '2026-04-01 10:00:00',
-      amount: 3000.00,
-      accountName: '支付宝',
-      accountType: 'alipay',
-      accountNo: 'alipay_789012',
-      incomeExpenseType: 'expense',
-      billType: 'rent',
-      expenseType: 'necessary',
-      settlementStatus: 'settled',
-      incomeType: '',
-      bookkeeper: '张三',
-      dataSource: 'alipay',
-      remark: '4月份房租',
-      modifier: '张三',
-      modifyTime: '2026-04-01 10:00:00'
-    },
-    {
-      id: 4,
-      billNo: 'ZC20260401004',
-      billAction: '兼职收入',
-      bookingTime: '2026-04-01 15:00:00',
-      amount: 800.00,
-      accountName: '微信',
-      accountType: 'wechat',
-      accountNo: 'wx_123456',
-      incomeExpenseType: 'income',
-      billType: 'part_time',
-      expenseType: '',
-      settlementStatus: 'settled',
-      incomeType: 'part_time',
-      bookkeeper: '张三',
-      dataSource: 'wechat_receive',
-      remark: '周末兼职项目收入',
-      modifier: '张三',
-      modifyTime: '2026-04-01 15:00:00'
-    },
-    {
-      id: 5,
-      billNo: 'ZC20260401005',
-      billAction: '日用品采购',
-      bookingTime: '2026-04-01 18:30:00',
-      amount: 156.80,
-      accountName: '支付宝',
-      accountType: 'alipay',
-      accountNo: 'alipay_789012',
-      incomeExpenseType: 'expense',
-      billType: 'daily_necessities',
-      expenseType: 'needed',
-      settlementStatus: 'settled',
-      incomeType: '',
-      bookkeeper: '张三',
-      dataSource: 'alipay',
-      remark: '洗发水、牙膏等日用品',
-      modifier: '张三',
-      modifyTime: '2026-04-01 18:30:00'
-    },
-    {
-      id: 6,
-      billNo: 'ZC20260401006',
-      billAction: '理财收益',
-      bookingTime: '2026-04-01 08:00:00',
-      amount: 520.00,
-      accountName: '工商银行',
-      accountType: 'bank_card',
-      accountNo: '6222021234567890123',
-      incomeExpenseType: 'income',
-      billType: 'financial_income',
-      expenseType: '',
-      settlementStatus: 'settled',
-      incomeType: 'financial',
-      bookkeeper: '张三',
-      dataSource: 'financial_product',
-      remark: '货币基金收益',
-      modifier: '张三',
-      modifyTime: '2026-04-01 08:00:00'
-    },
-    {
-      id: 7,
-      billNo: 'ZC20260401007',
-      billAction: '软件佣金',
-      bookingTime: '2026-04-01 20:00:00',
-      amount: 28.50,
-      accountName: '支付宝',
-      accountType: 'alipay',
-      accountNo: 'alipay_789012',
-      incomeExpenseType: 'income',
-      billType: 'app_commission',
-      expenseType: '',
-      settlementStatus: 'settled',
-      incomeType: 'commission',
-      bookkeeper: '张三',
-      dataSource: 'shopping_rebate',
-      remark: '淘宝联盟佣金',
-      modifier: '张三',
-      modifyTime: '2026-04-01 20:00:00'
-    },
-    {
-      id: 8,
-      billNo: 'ZC20260401008',
-      billAction: '晚餐消费',
-      bookingTime: '2026-04-01 19:00:00',
-      amount: 68.00,
-      accountName: '现金',
-      accountType: 'cash',
-      accountNo: '',
-      incomeExpenseType: 'expense',
-      billType: 'food_expense',
-      expenseType: 'wanted',
-      settlementStatus: 'settled',
-      incomeType: '',
-      bookkeeper: '张三',
-      dataSource: 'cash',
-      remark: '和朋友聚餐',
-      modifier: '张三',
-      modifyTime: '2026-04-01 19:00:00'
-    },
-    {
-      id: 9,
-      billNo: 'ZC20260401009',
-      billAction: '信用卡还款',
-      bookingTime: '2026-04-01 10:30:00',
-      amount: 2500.00,
-      accountName: '工商银行',
-      accountType: 'bank_card',
-      accountNo: '6222021234567890123',
-      incomeExpenseType: 'expense',
-      billType: 'food_expense',
-      expenseType: 'necessary',
-      settlementStatus: 'pending',
-      incomeType: '',
-      bookkeeper: '张三',
-      dataSource: 'bank_transfer',
-      remark: '信用卡账单还款',
-      modifier: '张三',
-      modifyTime: '2026-04-01 10:30:00'
-    },
-    {
-      id: 10,
-      billNo: 'ZC20260401010',
-      billAction: '兼职收入',
-      bookingTime: '2026-04-01 16:00:00',
-      amount: 450.00,
-      accountName: '微信',
-      accountType: 'wechat',
-      accountNo: 'wx_123456',
-      incomeExpenseType: 'income',
-      billType: 'part_time',
-      expenseType: '',
-      settlementStatus: 'pending',
-      incomeType: 'part_time',
-      bookkeeper: '张三',
-      dataSource: 'wechat_receive',
-      remark: '线上辅导兼职',
-      modifier: '张三',
-      modifyTime: '2026-04-01 16:00:00'
-    }
-  ]
-  billNoCounter.value = 1011
+// ==================== 数据字典 ====================
+// 收支类型选项
+const incomeExpenseTypeOptions = ref([])
+//获取收支类型
+const getTransactionTypeItem = async () => {
+  const result = await GetKeyAndValueByType("transaction_type");
+  incomeExpenseTypeOptions.value = result.data
 }
+
+// 账单类型选项
+const billTypeOptions = ref([])
+//获取账单类型
+const getInvoiceTypeItem = async () => {
+  const result = await GetKeyAndValueByType("invoice_type");
+  billTypeOptions.value = result.data;
+}
+
+// 支出类型选项
+const expenseTypeOptions = ref([])
+//获取支出类型
+const getExpenseTypeItem = async () => {
+  const result = await GetKeyAndValueByType("spending_type");
+  expenseTypeOptions.value = result.data;
+}
+
+// 结清状态选项
+const settlementStatusOptions = ref([])
+//获取结清状态
+const getSettlementStatusItem = async () => {
+  const result = await GetKeyAndValueByType("settlement_status");
+  settlementStatusOptions.value = result.data;
+}
+
+// 收益类型选项
+const incomeTypeOptions = ref([])
+//获取收益类型
+const getIncomeTypeItem = async () => {
+  const result = await GetKeyAndValueByType("income_type");
+  incomeTypeOptions.value = result.data;
+}
+
+// 数据来源选项
+const dataSourceOptions = ref([])
+//获取数据来源
+const getDataSourceItem = async () => {
+  const result = await GetKeyAndValueByType("asset_transaction_data_source");
+  dataSourceOptions.value = result.data;
+}
+
+// ==================== 模拟数据 ====================
+const mockData = ref([])
+const billNoCounter = ref(1000)
 
 // ==================== 列表数据 ====================
 const list = ref([])
@@ -766,15 +539,15 @@ const statistics = ref({
 const calculateStatistics = (filteredData) => {
   let income = 0
   let expense = 0
-  
+    
   filteredData.forEach(item => {
-    if (item.incomeExpenseType === 'income') {
+    if (item.incomeExpenseType === 1) {
       income += item.amount
-    } else if (item.incomeExpenseType === 'expense') {
+    } else if (item.incomeExpenseType === 2) {
       expense += item.amount
     }
   })
-  
+    
   statistics.value = {
     total: income - expense,
     income: income,
@@ -886,9 +659,9 @@ const toggleSearchExpand = () => {
 
 // 查询条件收支类型改变事件
 const handleQueryIncomeExpenseChange = (value) => {
-  if (value === 'income') {
+  if (value === 1) {
     queryDto.value.expenseType = ''
-  } else if (value === 'expense') {
+  } else if (value === 2) {
     queryDto.value.incomeType = ''
   }
 }
@@ -983,9 +756,9 @@ const editRecord = (row) => {
 
 // 收支类型改变事件
 const handleIncomeExpenseChange = (value) => {
-  if (value === 'income') {
+  if (value === 1) {
     formData.value.expenseType = ''
-  } else if (value === 'expense') {
+  } else if (value === 2) {
     formData.value.incomeType = ''
   }
 }
