@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@Schema(description = "资产记账业务实体类")
+@Schema(description = "资产记账实体类")
 public class AssetTransaction {
     @Schema(description = "主键（自增）")
     private Integer id;
@@ -26,28 +26,28 @@ public class AssetTransaction {
     @Schema(description = "金额")
     private BigDecimal amount;
 
-    @Schema(description = "记账资产台账 id")
+    @Schema(description = "记账资产台账id")
     private Integer assetLedgerId;
 
     @Schema(description = "收支类型（收入/支出）")
     private Integer transactionType;
 
-    @Schema(description = "账单类型（挣钱软件佣金、兼职、理财收益、饮食支出、房租、日用品开销、工资）")
+    @Schema(description = "账单类型")
     private Integer invoiceType;
 
-    @Schema(description = "支出类型（必要、需要、想要）")
+    @Schema(description = "支出类型")
     private Integer spendingType;
 
-    @Schema(description = "收益类型（劳动报酬、资产增值）")
+    @Schema(description = "收益类型")
     private Integer incomeType;
 
-    @Schema(description = "结清状态（已结清、待结清）")
+    @Schema(description = "结清状态")
     private Integer settlementStatus;
 
     @Schema(description = "账单所属人")
     private String invoiceOwner;
 
-    @Schema(description = "数据来源（手动录入/生活记忆）")
+    @Schema(description = "数据来源")
     private Integer dataSource;
 
     @Schema(description = "备注")

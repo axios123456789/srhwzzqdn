@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.memoryReceptionArea.mapper.LearnMemoryAccessMapper">
+    <!--  新增学习记忆  -->
+    <insert id="addLearnMemory">
+        insert into t_learn_memory (memory_no,
+                                  begin_time,
+                                  end_time,
+                                  learn_duration,
+                                  memory_place,
+                                  memory_place_detail,
+                                  memory_images,
+                                  memory_source,
+                                  memory_owner,
+                                  row_memory_no,
+                                  learn_type,
+                                  learn_content,
+                                  learn_node,
+                                  learn_document)
+        values (#{memoryNo},
+                #{beginTime},
+                #{endTime},
+                #{learnDuration},
+                #{memoryPlace},
+                #{memoryPlaceDetail},
+                #{memoryImages},
+                #{memorySource},
+                #{memoryOwner},
+                #{rowMemoryNo},
+                #{learnType},
+                #{learnContent},
+                #{learnNode},
+                #{learnDocument})
+    </insert>
+
+    <!--  修改学习记忆  -->
+    <update id="updateLearnMemory">
+        update t_learn_memory
+        <set>
+            begin_time = #{beginTime},
+            end_time = #{endTime},
+            learn_duration = #{learnDuration},
+            memory_place = #{memoryPlace},
+            memory_place_detail = #{memoryPlaceDetail},
+            memory_images = #{memoryImages},
+            memory_source = #{memorySource},
+            row_memory_no = #{rowMemoryNo},
+            learn_type = #{learnType},
+            learn_content = #{learnContent},
+            learn_node = #{learnNode},
+            learn_document = #{learnDocument},
+            update_time = now(),
+            update_by = #{updateBy}
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--   根据ids批量删除学习记忆  -->
+    <delete id="deleteAllLearnMemoryByIds">
+        delete from t_learn_memory where id in
+        <foreach collection="ids" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--  条件查询学习记忆列表  -->
+    <select id="getLearnMemoryByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.memoryReceptionArea.LearnMemory">
+        select t.id,
+        t.memory_no,
+        t.begin_time,
+        t.end_time,
+        t.learn_duration,
+        t.memory_place,
+        t.memory_place_detail,
+        t.memory_images,
+        t.memory_source,
+        t.memory_owner,
+        t.row_memory_no,
+        t.learn_type,
+        t.learn_content,
+        t.learn_node,
+        t.learn_document,
+        t.update_time,
+        t.update_by,
+        i.name as memoryOwnerName
+        from t_learn_memory t
+        left join t_sys_person_info i
+        on i.account_id = t.memory_owner
+        <where>
+            <if test="memoryNo != null and memoryNo != ''">
+                and t.memory_no like concat('%', #{memoryNo}, '%')
+            </if>
+            <if test="learnType != null and learnType != ''">
+                and t.learn_type = #{learnType}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.begin_time &gt;= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.begin_time &lt;= #{endTime}
+            </if>
+            <if test="memorySource != null and memorySource.size() > 0">
+                and t.memory_source in
+                <foreach collection="memorySource" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="memoryOwner != null and memoryOwner != ''">
+                and t.memory_owner = #{memoryOwner}
+            </if>
+        </where>
+        order by t.begin_time desc
+    </select>
+</mapper>

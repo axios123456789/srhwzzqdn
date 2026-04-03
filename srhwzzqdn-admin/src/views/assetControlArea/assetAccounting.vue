@@ -422,100 +422,99 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import {GetKeyAndValueByType} from "@/api/sysDict";
+import { GetKeyAndValueByType } from "@/api/sysDict"
+import { GetAssetAccountingByConditionAndPage, SaveAssetAccounting, DeleteAssetAccountingById, DeleteAllAssetAccountingByIds } from "@/api/assetAccounting"
 
 // ==================== 钩子函数 ====================
 onMounted(() => {
-  //数据字典加载
-  getTransactionTypeItem();
-  getInvoiceTypeItem();
-  getExpenseTypeItem();
-  getSettlementStatusItem();
-  getIncomeTypeItem();
-  getDataSourceItem();
-  // 查询数据
+  // 1.加载数据字典
+  getTransactionTypeItem()
+  getInvoiceTypeItem()
+  getExpenseTypeItem()
+  getSettlementStatusItem()
+  getIncomeTypeItem()
+  getDataSourceItem()
+  getAccountTypeItem()
+
+  // 2.调用查询数据接口
   fetchData()
 })
 
-//=====================公用函数=====================
-//通用方法：根据值和映射表获取中文文本
+// ==================== 公共函数 ====================
+// 通用方法：根据值和映射表获取中文文本
 const getDisplayText = (value, mappingArray) => {
   if (!value && value !== 0) return '-'
   const foundItem = mappingArray.find(item => item.value === value)
   return foundItem ? foundItem.text : value
 }
 
-// 生成账单编号
-const generateBillNo = () => {
-  const now = new Date()
-  const year = now.getFullYear()
-  const month = String(now.getMonth() + 1).padStart(2, '0')
-  const day = String(now.getDate()).padStart(2, '0')
-  const counter = String(billNoCounter.value++).padStart(4, '0')
-  return `ZC${year}${month}${day}${counter}`
-}
+const formatMoney = (v) => Number(v || 0).toLocaleString()
 
 // ==================== 数据字典 ====================
 // 收支类型选项
 const incomeExpenseTypeOptions = ref([])
-//获取收支类型
+// 获取收支类型
 const getTransactionTypeItem = async () => {
-  const result = await GetKeyAndValueByType("transaction_type");
+  const result = await GetKeyAndValueByType("transaction_type")
   incomeExpenseTypeOptions.value = result.data
 }
 
 // 账单类型选项
 const billTypeOptions = ref([])
-//获取账单类型
+// 获取账单类型
 const getInvoiceTypeItem = async () => {
-  const result = await GetKeyAndValueByType("invoice_type");
-  billTypeOptions.value = result.data;
+  const result = await GetKeyAndValueByType("invoice_type")
+  billTypeOptions.value = result.data
 }
 
 // 支出类型选项
 const expenseTypeOptions = ref([])
-//获取支出类型
+// 获取支出类型
 const getExpenseTypeItem = async () => {
-  const result = await GetKeyAndValueByType("spending_type");
-  expenseTypeOptions.value = result.data;
+  const result = await GetKeyAndValueByType("spending_type")
+  expenseTypeOptions.value = result.data
 }
 
 // 结清状态选项
 const settlementStatusOptions = ref([])
-//获取结清状态
+// 获取结清状态
 const getSettlementStatusItem = async () => {
-  const result = await GetKeyAndValueByType("settlement_status");
-  settlementStatusOptions.value = result.data;
+  const result = await GetKeyAndValueByType("settlement_status")
+  settlementStatusOptions.value = result.data
 }
 
 // 收益类型选项
 const incomeTypeOptions = ref([])
-//获取收益类型
+// 获取收益类型
 const getIncomeTypeItem = async () => {
-  const result = await GetKeyAndValueByType("income_type");
-  incomeTypeOptions.value = result.data;
+  const result = await GetKeyAndValueByType("income_type")
+  incomeTypeOptions.value = result.data
 }
 
 // 数据来源选项
 const dataSourceOptions = ref([])
-//获取数据来源
+// 获取数据来源
 const getDataSourceItem = async () => {
-  const result = await GetKeyAndValueByType("asset_transaction_data_source");
-  dataSourceOptions.value = result.data;
+  const result = await GetKeyAndValueByType("asset_transaction_data_source")
+  dataSourceOptions.value = result.data
 }
 
-// ==================== 模拟数据 ====================
-const mockData = ref([])
-const billNoCounter = ref(1000)
+// 账户类型选项
+const accountTypeOptions = ref([])
+// 获取账户类型
+const getAccountTypeItem = async () => {
+  const result = await GetKeyAndValueByType("account_type")
+  accountTypeOptions.value = result.data
+}
 
 // ==================== 列表数据 ====================
 const list = ref([])
 const total = ref(0)
-const pageParams = ref({ page: 1, limit: 10 })
+const pageParams = reactive({ page: 1, limit: 10 })
 const searchExpanded = ref(false)
-const queryDto = ref({
+const queryDto = reactive({
   billNo: '',
   accountName: '',
   timeRange: [],
@@ -535,120 +534,25 @@ const statistics = ref({
   expense: 0
 })
 
-// 计算统计数据
-const calculateStatistics = (filteredData) => {
-  let income = 0
-  let expense = 0
-    
-  filteredData.forEach(item => {
-    if (item.incomeExpenseType === 1) {
-      income += item.amount
-    } else if (item.incomeExpenseType === 2) {
-      expense += item.amount
+// 获取数据
+const fetchData = async () => {
+  try {
+    const result = await GetAssetAccountingByConditionAndPage(pageParams.page, pageParams.limit, queryDto)
+    if (result.code === 200) {
+      list.value = result.data.records || []
+      total.value = result.data.total || 0
+      statistics.value = result.data.statistics || { total: 0, income: 0, expense: 0 }
+    } else {
+      ElMessage.error(result.message || "查询失败")
     }
-  })
-    
-  statistics.value = {
-    total: income - expense,
-    income: income,
-    expense: expense
+  } catch (error) {
+    ElMessage.error("查询失败")
   }
-}
-
-// 获取数据（使用模拟数据）
-const fetchData = () => {
-  // 过滤数据
-  let filteredData = [...mockData.value]
-
-  // 按账单编号过滤
-  if (queryDto.value.billNo) {
-    filteredData = filteredData.filter(item =>
-      item.billNo.includes(queryDto.value.billNo)
-    )
-  }
-
-  // 按记账账户过滤
-  if (queryDto.value.accountName) {
-    filteredData = filteredData.filter(item =>
-      item.accountName.includes(queryDto.value.accountName)
-    )
-  }
-
-  // 按时间范围过滤
-  if (queryDto.value.timeRange && queryDto.value.timeRange.length === 2) {
-    const startDate = new Date(queryDto.value.timeRange[0])
-    const endDate = new Date(queryDto.value.timeRange[1])
-
-    filteredData = filteredData.filter(item => {
-      const itemDate = new Date(item.bookingTime)
-      return itemDate >= startDate && itemDate <= endDate
-    })
-  }
-
-  // 按最小金额过滤
-  if (queryDto.value.minAmount !== null && queryDto.value.minAmount !== undefined) {
-    filteredData = filteredData.filter(item =>
-      item.amount >= queryDto.value.minAmount
-    )
-  }
-
-  // 按收支类型过滤
-  if (queryDto.value.incomeExpenseType) {
-    filteredData = filteredData.filter(item =>
-      item.incomeExpenseType === queryDto.value.incomeExpenseType
-    )
-  }
-
-  // 按收益类型过滤
-  if (queryDto.value.incomeType) {
-    filteredData = filteredData.filter(item =>
-      item.incomeType === queryDto.value.incomeType
-    )
-  }
-
-  // 按支出类型过滤
-  if (queryDto.value.expenseType) {
-    filteredData = filteredData.filter(item =>
-      item.expenseType === queryDto.value.expenseType
-    )
-  }
-
-  // 按账单类型过滤
-  if (queryDto.value.billType) {
-    filteredData = filteredData.filter(item =>
-      item.billType === queryDto.value.billType
-    )
-  }
-
-  // 按结清状态过滤
-  if (queryDto.value.settlementStatus) {
-    filteredData = filteredData.filter(item =>
-      item.settlementStatus === queryDto.value.settlementStatus
-    )
-  }
-
-  // 按数据来源过滤
-  if (queryDto.value.dataSource) {
-    filteredData = filteredData.filter(item =>
-      item.dataSource === queryDto.value.dataSource
-    )
-  }
-
-  // 计算总数
-  total.value = filteredData.length
-
-  // 计算统计数据
-  calculateStatistics(filteredData)
-
-  // 分页
-  const start = (pageParams.value.page - 1) * pageParams.value.limit
-  const end = start + pageParams.value.limit
-  list.value = filteredData.slice(start, end)
 }
 
 // 搜索
 const searchData = () => {
-  pageParams.value.page = 1
+  pageParams.page = 1
   fetchData()
 }
 
@@ -660,15 +564,15 @@ const toggleSearchExpand = () => {
 // 查询条件收支类型改变事件
 const handleQueryIncomeExpenseChange = (value) => {
   if (value === 1) {
-    queryDto.value.expenseType = ''
+    queryDto.expenseType = ''
   } else if (value === 2) {
-    queryDto.value.incomeType = ''
+    queryDto.incomeType = ''
   }
 }
 
 // 重置
 const resetData = () => {
-  queryDto.value = {
+  Object.assign(queryDto, {
     billNo: '',
     accountName: '',
     timeRange: [],
@@ -679,8 +583,8 @@ const resetData = () => {
     billType: '',
     settlementStatus: '',
     dataSource: ''
-  }
-  pageParams.value.page = 1
+  })
+  pageParams.page = 1
   fetchData()
 }
 
@@ -688,7 +592,7 @@ const resetData = () => {
 const dialogVisible = ref(false)
 const dialogTitle = ref('添加记账')
 const formRef = ref(null)
-const formData = ref({
+const formData = reactive({
   id: null,
   billNo: '',
   billAction: '',
@@ -724,7 +628,12 @@ const formRules = {
 // 添加记录
 const addRecord = () => {
   dialogTitle.value = '添加记账'
-  formData.value = {
+  // 清空表单校验
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
+  
+  Object.assign(formData, {
     id: null,
     billNo: '',
     billAction: '',
@@ -736,93 +645,83 @@ const addRecord = () => {
     incomeExpenseType: '',
     billType: '',
     expenseType: '',
-    settlementStatus: 'pending',
+    settlementStatus: '',
     incomeType: '',
     bookkeeper: '',
     dataSource: '',
     remark: '',
     modifier: '',
     modifyTime: ''
-  }
+  })
   dialogVisible.value = true
 }
 
 // 编辑记录
 const editRecord = (row) => {
   dialogTitle.value = '编辑记账'
-  formData.value = { ...row }
+  // 清空表单校验
+  if (formRef.value) {
+    formRef.value.resetFields()
+  }
+  Object.assign(formData, row)
   dialogVisible.value = true
 }
 
 // 收支类型改变事件
 const handleIncomeExpenseChange = (value) => {
   if (value === 1) {
-    formData.value.expenseType = ''
+    formData.expenseType = ''
   } else if (value === 2) {
-    formData.value.incomeType = ''
+    formData.incomeType = ''
   }
 }
 
 // 提交表单
 const submit = async () => {
   if (!formRef.value) return
-
-  await formRef.value.validate(async (valid) => {
+  
+  try {
+    const valid = await formRef.value.validate()
     if (!valid) return
-
-    try {
-      const currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ')
-
-      // 模拟保存操作
-      if (formData.value.id) {
-        // 编辑：更新模拟数据
-        const index = mockData.value.findIndex(item => item.id === formData.value.id)
-        if (index !== -1) {
-          mockData.value[index] = {
-            ...formData.value,
-            modifier: formData.value.bookkeeper,
-            modifyTime: currentTime
-          }
-        }
-        ElMessage.success('编辑成功')
-      } else {
-        // 新增：添加到模拟数据
-        const newRecord = {
-          ...formData.value,
-          id: Date.now(),
-          billNo: generateBillNo(),
-          modifier: formData.value.bookkeeper,
-          modifyTime: currentTime
-        }
-        mockData.value.unshift(newRecord)
-        ElMessage.success('添加成功')
-      }
-
+  } catch (error) {
+    return
+  }
+  
+  try {
+    const result = await SaveAssetAccounting(formData)
+    if (result.code === 200) {
+      ElMessage.success(formData.id ? '编辑成功' : '添加成功')
       dialogVisible.value = false
       fetchData()
-    } catch (error) {
-      ElMessage.error('提交失败')
+    } else {
+      ElMessage.error(result.message || "保存失败")
     }
-  })
+  } catch (error) {
+    ElMessage.error('保存失败')
+  }
 }
 
 // ==================== 删除 ====================
-const deleteRecord = (row) => {
-  ElMessageBox.confirm('确定删除该记账记录吗？', '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    // 从模拟数据中删除
-    const index = mockData.value.findIndex(item => item.id === row.id)
-    if (index !== -1) {
-      mockData.value.splice(index, 1)
+const deleteRecord = async (row) => {
+  try {
+    await ElMessageBox.confirm('确定删除该记账记录吗？', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    
+    const result = await DeleteAssetAccountingById(row.id)
+    if (result.code === 200) {
       ElMessage.success('删除成功')
       fetchData()
+    } else {
+      ElMessage.error(result.message || "删除失败")
     }
-  }).catch(() => {
-    // 取消删除
-  })
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败')
+    }
+  }
 }
 
 // ==================== 批量删除 ====================
@@ -839,23 +738,27 @@ const deleteSelectAll = async () => {
     return
   }
 
-  await ElMessageBox.confirm(
-    `确定要批量删除选中的 ${selectedRows.value.length} 条记录吗？`,
-    '警告',
-    { type: 'warning' }
-  )
-
   try {
-    // 从模拟数据中批量删除
-    const selectedIds = selectedRows.value.map(row => row.id)
-    mockData.value = mockData.value.filter(item => !selectedIds.includes(item.id))
+    await ElMessageBox.confirm(
+      `确定要批量删除选中的 ${selectedRows.value.length} 条记录吗？`,
+      '警告',
+      { type: 'warning' }
+    )
     
-    fetchData()
-    multipleTable.value.clearSelection()
-    selectedRows.value = []
-    ElMessage.success('批量删除成功')
+    const ids = selectedRows.value.map(row => row.id)
+    const result = await DeleteAllAssetAccountingByIds(ids)
+    if (result.code === 200) {
+      ElMessage.success('批量删除成功')
+      fetchData()
+      multipleTable.value.clearSelection()
+      selectedRows.value = []
+    } else {
+      ElMessage.error(result.message || '批量删除失败')
+    }
   } catch (error) {
-    ElMessage.error('批量删除失败')
+    if (error !== 'cancel') {
+      ElMessage.error('批量删除失败')
+    }
   }
 }
 
