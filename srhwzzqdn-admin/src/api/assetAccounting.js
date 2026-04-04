@@ -5,7 +5,7 @@ const base_api = '/superBrain/assetControl/assetAccounting' //资产记账基本
 //条件分页查询资产记账列表
 export const GetAssetAccountingByConditionAndPage = (current, limit, assetAccountingDto) => {
   return request({
-    url: `${base_api}/getAssetAccountingByConditionAndPage/${current}/${limit}`,
+    url: `${base_api}/getAssetTransactionListByConditionAndPage/${current}/${limit}`,
     method: 'post',
     data: assetAccountingDto,
   })

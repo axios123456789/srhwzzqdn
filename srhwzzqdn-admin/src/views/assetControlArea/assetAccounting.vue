@@ -66,15 +66,15 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="账单编号">
-              <el-input v-model="queryDto.billNo" style="width: 100%" clearable placeholder="请输入账单编号" />
+              <el-input v-model="queryDto.invoiceNo" style="width: 100%" clearable placeholder="请输入账单编号" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="记账账户">
-              <el-input 
-                v-model="queryDto.accountName" 
-                style="width: 100%" 
-                clearable 
+              <el-input
+                v-model="queryDto.assetLedgerName"
+                style="width: 100%"
+                clearable
                 placeholder="请选择记账账户"
                 readonly
                 @click="openAssetLedgerDialog('query')"
@@ -88,7 +88,7 @@
           <el-col :span="12">
             <el-form-item label="记账时间">
               <el-date-picker
-                v-model="queryDto.timeRange"
+                v-model="queryDto.recordTimeRange"
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始时间"
@@ -104,12 +104,12 @@
             <el-row>
               <el-col :span="6">
                 <el-form-item label="记账金额(>)">
-                  <el-input-number v-model="queryDto.minAmount" style="width: 100%" :min="0" :precision="2" placeholder="请输入最小金额" />
+                  <el-input-number v-model="queryDto.amount" style="width: 100%" :min="0" :precision="2" placeholder="请输入最小金额" />
                 </el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="账单类型">
-                  <el-select v-model="queryDto.billType" style="width: 100%" clearable placeholder="请选择账单类型">
+                  <el-select v-model="queryDto.invoiceType" style="width: 100%" clearable placeholder="请选择账单类型" multiple>
                     <el-option v-for="item in billTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
@@ -123,7 +123,7 @@
               </el-col>
               <el-col :span="6">
                 <el-form-item label="数据来源">
-                  <el-select v-model="queryDto.dataSource" style="width: 100%" clearable placeholder="请选择数据来源">
+                  <el-select v-model="queryDto.dataSource" style="width: 100%" clearable placeholder="请选择数据来源" multiple>
                     <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
@@ -132,21 +132,21 @@
             <el-row>
               <el-col :span="6">
                 <el-form-item label="收支类型">
-                  <el-select v-model="queryDto.incomeExpenseType" style="width: 100%" clearable placeholder="请选择收支类型" @change="handleQueryIncomeExpenseChange">
+                  <el-select v-model="queryDto.transactionType" style="width: 100%" clearable placeholder="请选择收支类型" @change="handleQueryTransactionTypeChange">
                     <el-option v-for="item in incomeExpenseTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="6" v-if="queryDto.incomeExpenseType === 1">
+              <el-col :span="6" v-if="queryDto.transactionType === 1">
                 <el-form-item label="收益类型">
-                  <el-select v-model="queryDto.incomeType" style="width: 100%" clearable placeholder="请选择收益类型">
+                  <el-select v-model="queryDto.incomeType" style="width: 100%" clearable placeholder="请选择收益类型" multiple>
                     <el-option v-for="item in incomeTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="6" v-else-if="queryDto.incomeExpenseType === 2">
+              <el-col :span="6" v-else-if="queryDto.transactionType === 2">
                 <el-form-item label="支出类型">
-                  <el-select v-model="queryDto.expenseType" style="width: 100%" clearable placeholder="请选择支出类型">
+                  <el-select v-model="queryDto.spendingType" style="width: 100%" clearable placeholder="请选择支出类型" multiple>
                     <el-option v-for="item in expenseTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
@@ -265,7 +265,7 @@
       :page-sizes="[10, 20, 50, 100]"
       @size-change="fetchData"
       @current-change="fetchData"
-      layout="total, sizes, prev, pager, next, jumper"
+      layout="total, sizes, prev, pager, next"
       :total="total"
     />
 
@@ -599,6 +599,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetAssetAccountingByConditionAndPage, SaveAssetAccounting, DeleteAssetAccountingById, DeleteAllAssetAccountingByIds } from "@/api/assetAccounting"
 import { GetAssetLedgerByConditionAndPage } from "@/api/assetControl"
+import { getTodayTimeRange } from "@/utils/common"
 
 //--------------------钩子函数-------------------------
 onMounted(() => {
@@ -610,7 +611,11 @@ onMounted(() => {
   getIncomeTypeItem()
   getDataSourceItem()
 
-  //2.调用查询数据接口
+  //2.查询条件设置默认时间为今天
+  const [startOfDay, endOfDay] = getTodayTimeRange()
+  queryDto.recordTimeRange = [startOfDay, endOfDay]
+
+  //3.调用查询数据接口
   fetchData()
 });
 
@@ -623,31 +628,6 @@ const getDisplayText = (value, mappingArray) => {
 }
 
 const formatMoney = (v) => Number(v || 0).toLocaleString()
-
-// ==================== 列表数据 ====================
-const list = ref([])
-const total = ref(0)
-const pageParams = reactive({ page: 1, limit: 10 })
-const searchExpanded = ref(false)
-const queryDto = reactive({
-  billNo: '',
-  accountName: '',
-  timeRange: [],
-  minAmount: null,
-  incomeExpenseType: '',
-  incomeType: '',
-  expenseType: '',
-  billType: '',
-  settlementStatus: '',
-  dataSource: ''
-})
-
-// ==================== 统计数据 ====================
-const statistics = ref({
-  total: 0,
-  income: 0,
-  expense: 0
-})
 
 // ==================== 数据字典 ====================
 // 收支类型选项
@@ -697,15 +677,75 @@ const getDataSourceItem = async () => {
   const result = await GetKeyAndValueByType("asset_transaction_data_source")
   dataSourceOptions.value = result.data
 }
+//=========================================================
+
+// ==================== 列表数据 ====================
+const list = ref([])
+const total = ref(0)
+const pageParams = reactive({ page: 1, limit: 10 })
+const searchExpanded = ref(false)
+const queryDto = reactive({
+  invoiceNo: '',
+  recordTimeRange: [],
+  amount: null,
+  assetLedgerId: null,
+  assetLedgerName: '',
+  transactionType: '',
+  incomeType: [],
+  spendingType: [],
+  invoiceType: [],
+  settlementStatus: '',
+  dataSource: []
+})
+
+// ==================== 统计数据 ====================
+const statistics = ref({
+  total: 0,
+  income: 0,
+  expense: 0
+})
 
 // 获取数据
 const fetchData = async () => {
   try {
-    const result = await GetAssetAccountingByConditionAndPage(pageParams.page, pageParams.limit, queryDto)
+    // 构建请求参数,转换 timeRange 为 start 和 end
+    const requestParams = {
+      ...queryDto,
+      recordTimeStart: queryDto.recordTimeRange && queryDto.recordTimeRange.length > 0 ? queryDto.recordTimeRange[0] : null,
+      recordTimeEnd: queryDto.recordTimeRange && queryDto.recordTimeRange.length > 1 ? queryDto.recordTimeRange[1] : null
+    }
+    // 删除不需要发送的字段
+    delete requestParams.recordTimeRange
+    delete requestParams.assetLedgerName
+
+    const result = await GetAssetAccountingByConditionAndPage(pageParams.page, pageParams.limit, requestParams)
     if (result.code === 200) {
-      list.value = result.data.records || []
-      total.value = result.data.total || 0
-      statistics.value = result.data.statistics || { total: 0, income: 0, expense: 0 }
+      // 后端返回的数据格式：{ dataList: PageInfo, groupList: [{ transactionType, transactionAmount }] }
+      const pageInfo = result.data.dataList || {}
+      list.value = pageInfo.records || []
+      total.value = pageInfo.total || 0
+
+      // 处理分组统计数据
+      const groupList = result.data.groupList || []
+      let income = 0
+      let expense = 0
+
+      if (groupList.length > 0) {
+        groupList.forEach(item => {
+          const amount = Number(item.transactionAmount || 0)
+          if (item.transactionType === '收入') {
+            income += amount
+          } else if (item.transactionType === '支出') {
+            expense += amount
+          }
+        })
+      }
+
+      statistics.value = {
+        total: income - expense,
+        income: income,
+        expense: expense
+      }
     } else {
       ElMessage.error(result.message || "查询失败")
     }
@@ -726,27 +766,28 @@ const toggleSearchExpand = () => {
 }
 
 // 查询条件收支类型改变事件
-const handleQueryIncomeExpenseChange = (value) => {
+const handleQueryTransactionTypeChange = (value) => {
   if (value === 1) {
-    queryDto.expenseType = ''
+    queryDto.spendingType = []
   } else if (value === 2) {
-    queryDto.incomeType = ''
+    queryDto.incomeType = []
   }
 }
 
 // 重置
 const resetData = () => {
   Object.assign(queryDto, {
-    billNo: '',
-    accountName: '',
-    timeRange: [],
-    minAmount: null,
-    incomeExpenseType: '',
-    incomeType: '',
-    expenseType: '',
-    billType: '',
+    invoiceNo: '',
+    recordTimeRange: [],
+    amount: null,
+    assetLedgerId: null,
+    assetLedgerName: '',
+    transactionType: '',
+    incomeType: [],
+    spendingType: [],
+    invoiceType: [],
     settlementStatus: '',
-    dataSource: ''
+    dataSource: []
   })
   pageParams.page = 1
   fetchData()
@@ -808,7 +849,7 @@ const addRecord = () => {
     settlementStatus: '',
     incomeType: '',
     bookkeeper: '',
-    dataSource: '',
+    dataSource: 1,
     remark: ''
   })
   dialogVisible.value = true
@@ -1088,14 +1129,15 @@ const handleAssetLedgerCurrentChange = (page) => {
 const selectAssetLedger = (row) => {
   // 根据选择来源设置不同的数据
   if (assetLedgerSelectSource.value === 'query') {
-    // 条件查询选择:只设置账户名称用于查询
-    queryDto.accountName = row.assetName
+    // 条件查询选择:设置资产台账id和账户名称用于查询
+    queryDto.assetLedgerId = row.id
+    queryDto.assetLedgerName = row.assetName
   } else if (assetLedgerSelectSource.value === 'form') {
     // 表单选择:设置资产台账id和账户名称
     formData.assetLedgerId = row.id
     formData.accountName = row.assetName
   }
-  
+
   // 关闭对话框
   assetLedgerDialogVisible.value = false
 }
