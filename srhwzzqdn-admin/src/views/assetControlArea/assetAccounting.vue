@@ -198,7 +198,7 @@
       stripe
     >
       <el-table-column type="selection" width="40" align="center" />
-      <el-table-column label="操作" align="center" width="180" #default="scope">
+      <el-table-column label="操作" align="center" fixed="left" width="180" #default="scope">
         <el-button type="primary" size="small" @click="editRecord(scope.row)">
           <el-icon><Edit /></el-icon>
           编辑
@@ -1360,22 +1360,29 @@ const selectAssetLedger = (row) => {
   color: #409eff;
 }
 
-/* 表格透明样式 */
-/deep/ .el-table,
-/deep/ .el-table__expanded-cell {
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #001528;
+/* 表格样式 - 参照资产台账 */
+/deep/ .el-table {
+  background-color: #ffffff;
 }
 
-/deep/ .el-table th,
-/deep/ .el-table tr,
+/deep/ .el-table th {
+  background: #fafbfc;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 14px;
+}
+
 /deep/ .el-table td {
-  background-color: transparent;
-  color: #001528;
+  font-size: 14px;
+  background-color: #ffffff;
 }
 
 /deep/ .el-table--striped .el-table__body tr.el-table__row--striped td {
-  background-color: rgba(245, 247, 250, 0.5);
+  background-color: #fafbfc;
+}
+
+/deep/ .el-table__body tr:hover > td {
+  background-color: #e6f7ff !important;
 }
 
 /* 对话框样式 */
