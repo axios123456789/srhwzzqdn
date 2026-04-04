@@ -92,4 +92,135 @@
             #{item}
         </foreach>
     </delete>
+    <select id="getAssetTransactionListByCondition"
+            resultType="com.xk.srhwzzqdn.model.vo.assetControl.AssetTransactionVo">
+        select t.*,
+               l.asset_name,
+               l.asset_code,
+               l.asset_no,
+               (select d.`value` from t_sys_dict d where d.type = 'asset_type' and d.`code` = l.asset_type limit 1) asset_type,
+               (select d.`value` from t_sys_dict d where d.type = concat('asset_type_', l.asset_type) and d.`code` = l.asset_sub_type limit 1) asset_sub_type,
+               i.`name` as invoiceOwnerName
+        from t_asset_transaction t
+        join t_asset_ledger l
+          on t.asset_ledger_id = l.id
+        join t_sys_person_info i
+          on i.account_id = t.invoice_owner
+        <where>
+            <if test="invoiceNo != null and invoiceNo != ''">
+                and t.invoice_no like concat('%', #{invoiceNo}, '%')
+            </if>
+            <if test="invoiceAction != null and invoiceAction != ''">
+                and t.invoice_action like concat('%', #{invoiceAction}, '%')
+            </if>
+            <if test="recordTimeStart != null and recordTimeStart != ''">
+                and t.record_time &gt;= #{recordTimeStart}
+            </if>
+            <if test="recordTimeEnd != null and recordTimeEnd != ''">
+                and t.record_time &lt;= #{recordTimeEnd}
+            </if>
+            <if test="amount != null">
+                and t.amount &gt;= #{amount}
+            </if>
+            <if test="assetLedgerId != null">
+                and t.asset_ledger_id = #{assetLedgerId}
+            </if>
+            <if test="transactionType != null">
+                and t.transaction_type = #{transactionType}
+            </if>
+            <if test="invoiceType != null and invoiceType.size() > 0">
+                and t.invoice_type in
+                <foreach item="item" collection="invoiceType" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="spendingType != null and spendingType.size() > 0">
+                and t.spending_type in
+                <foreach item="item" collection="spendingType" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="incomeType != null and incomeType.size() > 0">
+                and t.income_type in
+                <foreach item="item" collection="incomeType" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="settlementStatus != null">
+                and t.settlement_status = #{settlementStatus}
+            </if>
+            <if test="invoiceOwner != null and invoiceOwner != ''">
+                and t.invoice_owner = #{invoiceOwner}
+            </if>
+            <if test="dataSource != null and dataSource.size() > 0">
+                and t.data_source in
+                <foreach item="item" collection="dataSource" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        order by t.record_time desc
+    </select>
+    <select id="getAssetTransactionTypeGroupListByCondition"
+            resultType="com.xk.srhwzzqdn.model.vo.assetControl.AssetTransactionTypeGroupVo">
+        select (select d.`value`
+                from t_sys_dict d
+                where d.type = 'transaction_type' and d.`code` = t.transaction_type limit 1) transaction_type,
+               sum(t.amount) transaction_amount
+        from t_asset_transaction t
+        <where>
+            <if test="invoiceNo != null and invoiceNo != ''">
+                and t.invoice_no like concat('%', #{invoiceNo}, '%')
+            </if>
+            <if test="invoiceAction != null and invoiceAction != ''">
+                and t.invoice_action like concat('%', #{invoiceAction}, '%')
+            </if>
+            <if test="recordTimeStart != null and recordTimeStart != ''">
+                and t.record_time &gt;= #{recordTimeStart}
+            </if>
+            <if test="recordTimeEnd != null and recordTimeEnd != ''">
+                and t.record_time &lt;= #{recordTimeEnd}
+            </if>
+            <if test="amount != null">
+                and t.amount &gt;= #{amount}
+            </if>
+            <if test="assetLedgerId != null">
+                and t.asset_ledger_id = #{assetLedgerId}
+            </if>
+            <if test="transactionType != null">
+                and t.transaction_type = #{transactionType}
+            </if>
+            <if test="invoiceType != null and invoiceType.size() > 0">
+                and t.invoice_type in
+                <foreach item="item" collection="invoiceType" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="spendingType != null and spendingType.size() > 0">
+                and t.spending_type in
+                <foreach item="item" collection="spendingType" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="incomeType != null and incomeType.size() > 0">
+                and t.income_type in
+                <foreach item="item" collection="incomeType" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="settlementStatus != null">
+                and t.settlement_status = #{settlementStatus}
+            </if>
+            <if test="invoiceOwner != null and invoiceOwner != ''">
+                and t.invoice_owner = #{invoiceOwner}
+            </if>
+            <if test="dataSource != null and dataSource.size() > 0">
+                and t.data_source in
+                <foreach item="item" collection="dataSource" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        group by t.transaction_type
+    </select>
 </mapper>

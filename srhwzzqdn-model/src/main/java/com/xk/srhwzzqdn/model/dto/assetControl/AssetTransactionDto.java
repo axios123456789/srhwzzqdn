@@ -38,7 +38,7 @@ public class AssetTransactionDto {
     private List<Integer> spendingType;
 
     @Schema(description = "收益类型（劳动报酬、资产增值）")
-    private Integer incomeType;
+    private List<Integer> incomeType;
 
     @Schema(description = "结清状态（已结清、待结清）")
     private Integer settlementStatus;
@@ -47,5 +47,5 @@ public class AssetTransactionDto {
     private String invoiceOwner;
 
     @Schema(description = "数据来源（手动录入/生活记忆）")
-    private Integer dataSource;
+    private List<Integer> dataSource;
 }

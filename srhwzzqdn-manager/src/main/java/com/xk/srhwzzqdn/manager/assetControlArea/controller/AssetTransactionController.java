@@ -1,6 +1,7 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.controller;
 
 import com.xk.srhwzzqdn.manager.assetControlArea.service.AssetTransactionService;
+import com.xk.srhwzzqdn.model.dto.assetControl.AssetTransactionDto;
 import com.xk.srhwzzqdn.model.entity.assetControl.AssetTransaction;
 import com.xk.srhwzzqdn.model.vo.common.Result;
 import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
@@ -8,12 +9,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/superBrain/assetControl/assetAccounting")
 public class AssetTransactionController {
     @Autowired
     private AssetTransactionService assetTransactionService;
+
+    /**
+     * 条件分页查询资产记账列表以及查询收支金额合计
+     * @param current
+     * @param limit
+     * @param assetTransactionDto
+     * @return
+     */
+    @RequestMapping("/getAssetTransactionListByConditionAndPage/{current}/{limit}")
+    public Result getAssetTransactionListByConditionAndPage(@PathVariable("current") Integer current,
+                                                            @PathVariable("limit") Integer limit,
+                                                            @RequestBody AssetTransactionDto assetTransactionDto){
+        Map<String, Object> assetTransactionListByConditionAndPage =
+                assetTransactionService.getAssetTransactionListByConditionAndPage(current, limit, assetTransactionDto);
+        return Result.build(assetTransactionListByConditionAndPage, ResultCodeEnum.SUCCESS);
+    }
 
     /**
      * 保存资产记账
