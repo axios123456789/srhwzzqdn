@@ -395,42 +395,18 @@
     </el-dialog>
 
     <!-- 导出对话框 -->
-    <el-dialog
-      v-model="exportDialogVisible"
-      title="导出数据"
-      width="600px"
-    >
-      <el-form label-width="100px">
-        <el-form-item label="导出范围">
-          <el-radio-group v-model="exportScope">
-            <el-radio label="current">当前页数据</el-radio>
-            <el-radio label="all">全部数据</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="文件名称">
-          <el-input v-model="exportFileName" placeholder="请输入文件名称" />
-        </el-form-item>
-        <el-form-item label="导出列">
-          <el-checkbox-group v-model="selectedColumns">
-            <el-checkbox 
-              v-for="col in exportColumns" 
-              :key="col.key" 
-              :label="col.key"
-            >
-              {{ col.label }}
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="resetExport">重置</el-button>
-          <el-button type="primary" @click="handleExport" :loading="exportLoading">
-            导出
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
+    <ExportDialog
+        v-model="exportDialogVisible"
+        v-model:export-scope="exportScope"
+        v-model:export-file-name="exportFileName"
+        v-model:selected-columns="selectedColumns"
+        :available-columns="exportColumns"
+        :export-loading="exportLoading"
+        :current-count="list.length"
+        :total-count="total"
+        @confirm="handleExport"
+        @closed="resetExport"
+    />
 
     <!-- 选择资产台账对话框 -->
     <el-dialog
@@ -600,6 +576,8 @@ import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetAssetAccountingByConditionAndPage, SaveAssetAccounting, DeleteAssetAccountingById, DeleteAllAssetAccountingByIds } from "@/api/assetAccounting"
 import { GetAssetLedgerByConditionAndPage } from "@/api/assetControl"
 import { getTodayTimeRange } from "@/utils/common"
+import { useExport } from "@/components/Export/hooks/useExport"
+import ExportDialog from '@/components/Export/ExportDialog.vue'
 
 //--------------------钩子函数-------------------------
 onMounted(() => {
@@ -966,42 +944,76 @@ const deleteSelectAll = async () => {
 }
 
 // ==================== 导出功能 ====================
-const exportDialogVisible = ref(false)
-const exportScope = ref('current')
-const exportFileName = ref('资产记账数据')
-const exportLoading = ref(false)
-const selectedColumns = ref([])
-
+// 导出列配置
 const exportColumns = [
-  { key: 'billNo', label: '账单编号', width: 20 },
-  { key: 'billAction', label: '账单行为', width: 15 },
-  { key: 'bookingTime', label: '记账时间', width: 20 },
+  { key: 'invoiceNo', label: '账单编号', width: 20 },
+  { key: 'invoiceAction', label: '账单行为', width: 15 },
+  { key: 'recordTime', label: '记账时间', width: 20 },
   { key: 'amount', label: '金额', width: 15 },
-  { key: 'accountName', label: '记账账户', width: 15 },
-  { key: 'incomeExpenseType', label: '收支类型', width: 12 },
-  { key: 'billType', label: '账单类型', width: 15 },
-  { key: 'expenseType', label: '支出类型', width: 12 },
+  { key: 'assetName', label: '记账账户', width: 15 },
+  { key: 'transactionType', label: '收支类型', width: 12 },
+  { key: 'invoiceType', label: '账单类型', width: 15 },
+  { key: 'spendingType', label: '支出类型', width: 12 },
   { key: 'settlementStatus', label: '结清状态', width: 12 },
   { key: 'incomeType', label: '收益类型', width: 12 },
-  { key: 'bookkeeper', label: '记账人', width: 12 },
+  { key: 'updateBy', label: '记账人', width: 12 },
   { key: 'dataSource', label: '数据来源', width: 15 },
   { key: 'remark', label: '备注', width: 30 }
 ]
 
+// 数据格式化函数
+const assetAccountingDataFormatter = (item, key, value) => {
+  switch (key) {
+    case 'transactionType':
+      return getDisplayText(value, incomeExpenseTypeOptions.value)
+    case 'invoiceType':
+      return getDisplayText(value, billTypeOptions.value)
+    case 'spendingType':
+      return getDisplayText(value, expenseTypeOptions.value)
+    case 'incomeType':
+      return getDisplayText(value, incomeTypeOptions.value)
+    case 'settlementStatus':
+      return getDisplayText(value, settlementStatusOptions.value)
+    case 'dataSource':
+      return getDisplayText(value, dataSourceOptions.value)
+    default:
+      return value
+  }
+}
+
+// 获取全部数据的函数
+const fetchAllAssetAccountingData = async () => {
+  const { data } = await GetAssetAccountingByConditionAndPage(
+      1,
+      1000000,
+      queryDto
+  )
+  
+  const pageInfo = data.dataList || {}
+  return pageInfo.list || []
+}
+
+// 使用导出Hook
+const {
+  exportDialogVisible,
+  exportScope,
+  exportFileName,
+  exportLoading,
+  selectedColumns,
+  showExportDialog: showExportDialogMethod,
+  handleExport,
+  resetExport
+} = useExport({
+  availableColumns: exportColumns,
+  fetchAllData: fetchAllAssetAccountingData,
+  dataFormatter: assetAccountingDataFormatter,
+  defaultFileName: '资产记账数据',
+  sheetName: '资产记账数据'
+})
+
+// 包装显示导出对话框的方法
 const showExportDialog = () => {
-  selectedColumns.value = [...exportColumns]
-  exportDialogVisible.value = true
-}
-
-const handleExport = () => {
-  ElMessage.success('导出功能需要后端支持，当前为前端演示')
-  exportDialogVisible.value = false
-}
-
-const resetExport = () => {
-  selectedColumns.value = [...exportColumns]
-  exportFileName.value = '资产记账数据'
-  exportScope.value = 'current'
+  showExportDialogMethod(list.value, total.value)
 }
 
 // ==================== 选择资产台账功能 ====================
