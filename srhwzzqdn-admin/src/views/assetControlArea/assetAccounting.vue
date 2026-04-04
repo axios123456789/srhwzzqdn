@@ -1360,6 +1360,169 @@ const selectAssetLedger = (row) => {
   color: #409eff;
 }
 
+/* 操作按钮区域按钮美化 */
+.beautified-tools .el-button {
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.beautified-tools .el-button--success {
+  background: linear-gradient(135deg, #67C23A 0%, #85ce61 100%);
+  border: none;
+}
+
+.beautified-tools .el-button--success:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(103, 194, 58, 0.4);
+  background: linear-gradient(135deg, #529b2e 0%, #73c050 100%);
+}
+
+.beautified-tools .el-button--danger {
+  background: linear-gradient(135deg, #F56C6C 0%, #f78989 100%);
+  border: none;
+}
+
+.beautified-tools .el-button--danger:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(245, 108, 108, 0.4);
+  background: linear-gradient(135deg, #d84646 0%, #f06b6b 100%);
+}
+
+.beautified-tools .el-button--info {
+  background: linear-gradient(135deg, #909399 0%, #a6a9ad 100%);
+  border: none;
+}
+
+.beautified-tools .el-button--info:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(144, 147, 153, 0.4);
+  background: linear-gradient(135deg, #73767a 0%, #8d9094 100%);
+}
+
+.beautified-tools .el-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* 表格内按钮美化 */
+/deep/ .el-table .el-button {
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.3px;
+  border: none;
+}
+
+/deep/ .el-table .el-button--primary {
+  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+  box-shadow: 0 2px 6px rgba(64, 158, 255, 0.3);
+}
+
+/deep/ .el-table .el-button--primary:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(64, 158, 255, 0.4);
+  background: linear-gradient(135deg, #337ecc 0%, #529ce3 100%);
+}
+
+/deep/ .el-table .el-button--danger {
+  background: linear-gradient(135deg, #F56C6C 0%, #f78989 100%);
+  box-shadow: 0 2px 6px rgba(245, 108, 108, 0.3);
+}
+
+/deep/ .el-table .el-button--danger:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(245, 108, 108, 0.4);
+  background: linear-gradient(135deg, #d84646 0%, #f06b6b 100%);
+}
+
+/deep/ .el-table .el-button:active {
+  transform: translateY(0) scale(0.95);
+}
+
+/* 对话框按钮美化 */
+.dialog-footer .el-button {
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.5px;
+}
+
+.dialog-footer .el-button--primary {
+  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+}
+
+.dialog-footer .el-button--primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(64, 158, 255, 0.4);
+  background: linear-gradient(135deg, #337ecc 0%, #529ce3 100%);
+}
+
+.dialog-footer .el-button--default {
+  border: 2px solid #e4e7ed;
+  background: white;
+  color: #606266;
+}
+
+.dialog-footer .el-button--default:hover {
+  border-color: #409eff;
+  color: #409eff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
+}
+
+.dialog-footer .el-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* 资产台账对话框按钮美化 */
+.search-card .el-button {
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  letter-spacing: 0.5px;
+}
+
+.search-card .el-button--primary {
+  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3);
+}
+
+.search-card .el-button--primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(64, 158, 255, 0.4);
+  background: linear-gradient(135deg, #337ecc 0%, #529ce3 100%);
+}
+
+.search-card .el-button--default {
+  border: 2px solid #e4e7ed;
+  background: white;
+  color: #606266;
+}
+
+.search-card .el-button--default:hover {
+  border-color: #409eff;
+  color: #409eff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
+}
+
+.search-card .el-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
 /* 表格样式 - 参照资产台账 */
 /deep/ .el-table {
   background-color: #ffffff;
@@ -1386,24 +1549,87 @@ const selectAssetLedger = (row) => {
 }
 
 /* 对话框样式 */
-.custom-dialog {
-  border-radius: 8px;
+:deep(.custom-dialog),
+:deep(.enhanced-dialog) {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 16px 48px rgba(102, 126, 234, 0.25) !important;
 }
 
-.enhanced-dialog .el-dialog__header {
+:deep(.enhanced-dialog .el-dialog__header) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 24px 28px !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3) !important;
+  position: relative;
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+:deep(.enhanced-dialog .el-dialog__header::before) {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="50" r="3" fill="rgba(255,255,255,0.08)"/></svg>') repeat;
+  opacity: 0.5;
+}
+
+:deep(.enhanced-dialog .el-dialog__title) {
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 22px !important;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+:deep(.enhanced-dialog .el-dialog__headerbtn .el-dialog__close) {
+  color: white !important;
+  font-size: 22px !important;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+:deep(.enhanced-dialog .el-dialog__headerbtn .el-dialog__close:hover) {
+  transform: rotate(90deg) scale(1.1);
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+:deep(.enhanced-dialog .el-dialog__body) {
+  padding: 28px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+  max-height: 60vh !important;
+  overflow-y: auto !important;
+}
+
+:deep(.enhanced-dialog .el-dialog__body::-webkit-scrollbar) {
+  width: 8px;
+}
+
+:deep(.enhanced-dialog .el-dialog__body::-webkit-scrollbar-track) {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+:deep(.enhanced-dialog .el-dialog__body::-webkit-scrollbar-thumb) {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 8px 8px 0 0;
-  padding: 20px;
+  border-radius: 4px;
 }
 
-.enhanced-dialog .el-dialog__title {
-  color: white;
-  font-weight: 600;
-  font-size: 18px;
+:deep(.enhanced-dialog .el-dialog__body::-webkit-scrollbar-thumb:hover) {
+  background: linear-gradient(135deg, #5568d3 0%, #6a4190 100%);
 }
 
-.enhanced-dialog .el-dialog__headerbtn .el-dialog__close {
-  color: white;
+:deep(.enhanced-dialog .el-dialog__footer) {
+  padding: 20px 28px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+  border-top: 2px solid rgba(102, 126, 234, 0.1) !important;
 }
 
 /* 分页组件样式 */
