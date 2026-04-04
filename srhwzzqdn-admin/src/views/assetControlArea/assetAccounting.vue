@@ -88,7 +88,7 @@
           <el-col :span="12">
             <el-form-item label="记账时间">
               <el-date-picker
-                v-model="queryDto.recordTimeRange"
+                v-model="recordTimeArea"
                 type="datetimerange"
                 range-separator="至"
                 start-placeholder="开始时间"
@@ -208,37 +208,37 @@
           删除
         </el-button>
       </el-table-column>
-      <el-table-column prop="billNo" label="账单编号" align="center" width="150" show-overflow-tooltip />
-      <el-table-column prop="billAction" label="账单行为" align="center" width="120" show-overflow-tooltip />
-      <el-table-column prop="bookingTime" label="记账时间" align="center" width="160" />
+      <el-table-column prop="invoiceNo" label="账单编号" align="center" width="150" show-overflow-tooltip />
+      <el-table-column prop="invoiceAction" label="账单行为" align="center" width="120" show-overflow-tooltip />
+      <el-table-column prop="recordTime" label="记账时间" align="center" width="160" />
       <el-table-column prop="amount" label="金额 (元)" align="center" width="120">
         <template #default="scope">
-          <span :style="{ color: scope.row.incomeExpenseType === 1 ? '#67C23A' : '#F56C6C' }">
-            {{ scope.row.incomeExpenseType === 1 ? '+' : '-' }}{{ scope.row.amount }}
+          <span :style="{ color: scope.row.transactionType === 1 ? '#67C23A' : '#F56C6C' }">
+            {{ scope.row.transactionType === 1 ? '+' : '-' }}{{ scope.row.amount }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column prop="accountName" label="记账账户" align="center" width="120" show-overflow-tooltip />
-      <el-table-column prop="incomeExpenseType" label="收支类型" align="center" width="100">
+      <el-table-column prop="assetName" label="记账账户" align="center" width="120" show-overflow-tooltip />
+      <el-table-column prop="transactionType" label="收支类型" align="center" width="100">
         <template #default="scope">
-          <el-tag :type="scope.row.incomeExpenseType === 1 ? 'success' : 'danger'" size="small">
-            {{ getDisplayText(scope.row.incomeExpenseType, incomeExpenseTypeOptions) }}
+          <el-tag :type="scope.row.transactionType === 1 ? 'success' : 'danger'" size="small">
+            {{ getDisplayText(scope.row.transactionType, incomeExpenseTypeOptions) }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="billType" label="账单类型" align="center" width="120">
+      <el-table-column prop="invoiceType" label="账单类型" align="center" width="120">
         <template #default="scope">
-          {{ getDisplayText(scope.row.billType, billTypeOptions) }}
+          {{ getDisplayText(scope.row.invoiceType, billTypeOptions) }}
         </template>
       </el-table-column>
-      <el-table-column prop="expenseType" label="支出类型" align="center" width="100">
+      <el-table-column prop="spendingType" label="支出类型" align="center" width="100">
         <template #default="scope">
-          {{ getDisplayText(scope.row.expenseType, expenseTypeOptions) }}
+          {{ getDisplayText(scope.row.spendingType, expenseTypeOptions) }}
         </template>
       </el-table-column>
       <el-table-column prop="settlementStatus" label="结清状态" align="center" width="100">
         <template #default="scope">
-          <el-tag :type="scope.row.settlementStatus === 'settled' ? 'success' : 'warning'" size="small">
+          <el-tag :type="scope.row.settlementStatus === 1 ? 'success' : 'warning'" size="small">
             {{ getDisplayText(scope.row.settlementStatus, settlementStatusOptions) }}
           </el-tag>
         </template>
@@ -248,7 +248,7 @@
           {{ getDisplayText(scope.row.incomeType, incomeTypeOptions) }}
         </template>
       </el-table-column>
-      <el-table-column prop="bookkeeper" label="记账人" align="center" width="100" />
+      <el-table-column prop="updateBy" label="记账人" align="center" width="100" />
       <el-table-column prop="dataSource" label="数据来源" align="center" width="100">
         <template #default="scope">
           {{ getDisplayText(scope.row.dataSource, dataSourceOptions) }}
@@ -281,14 +281,14 @@
         <el-row :gutter="20">
           <!-- 第一行 -->
           <el-col :span="12">
-            <el-form-item label="账单行为" prop="billAction">
-              <el-input v-model="formData.billAction" placeholder="请输入账单行为" />
+            <el-form-item label="账单行为" prop="invoiceAction">
+              <el-input v-model="formData.invoiceAction" placeholder="请输入账单行为" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="记账时间" prop="bookingTime">
+            <el-form-item label="记账时间" prop="recordTime">
               <el-date-picker
-                v-model="formData.bookingTime"
+                v-model="formData.recordTime"
                 type="datetime"
                 placeholder="请选择记账时间"
                 style="width: 100%"
@@ -306,10 +306,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="记账账户" prop="accountName">
-              <el-input 
-                v-model="formData.accountName" 
-                placeholder="请选择记账账户" 
+            <el-form-item label="记账账户" prop="assetName">
+              <el-input
+                v-model="formData.assetName"
+                placeholder="请选择记账账户"
                 readonly
                 @click="openAssetLedgerDialog('form')"
                 style="cursor: pointer;"
@@ -325,22 +325,22 @@
         <el-row :gutter="20">
           <!-- 第四行：收支类型 -->
           <el-col :span="12">
-            <el-form-item label="收支类型" prop="incomeExpenseType">
-              <el-select v-model="formData.incomeExpenseType" style="width: 100%" placeholder="请选择收支类型" @change="handleIncomeExpenseChange">
+            <el-form-item label="收支类型" prop="transactionType">
+              <el-select v-model="formData.transactionType" style="width: 100%" placeholder="请选择收支类型" @change="handleIncomeExpenseChange">
                 <el-option v-for="item in incomeExpenseTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="formData.incomeExpenseType === 1">
+          <el-col :span="12" v-if="formData.transactionType === 1">
             <el-form-item label="收益类型" prop="incomeType">
               <el-select v-model="formData.incomeType" style="width: 100%" placeholder="请选择收益类型">
                 <el-option v-for="item in incomeTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-else-if="formData.incomeExpenseType === 2">
-            <el-form-item label="支出类型" prop="expenseType">
-              <el-select v-model="formData.expenseType" style="width: 100%" placeholder="请选择支出类型">
+          <el-col :span="12" v-else-if="formData.transactionType === 2">
+            <el-form-item label="支出类型" prop="spendingType">
+              <el-select v-model="formData.spendingType" style="width: 100%" placeholder="请选择支出类型">
                 <el-option v-for="item in expenseTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -350,8 +350,8 @@
         <el-row :gutter="20">
           <!-- 第五行 -->
           <el-col :span="12">
-            <el-form-item label="账单类型" prop="billType">
-              <el-select v-model="formData.billType" style="width: 100%" placeholder="请选择账单类型">
+            <el-form-item label="账单类型" prop="invoiceType">
+              <el-select v-model="formData.invoiceType" style="width: 100%" placeholder="请选择账单类型">
                 <el-option v-for="item in billTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
@@ -613,7 +613,10 @@ onMounted(() => {
 
   //2.查询条件设置默认时间为今天
   const [startOfDay, endOfDay] = getTodayTimeRange()
-  queryDto.recordTimeRange = [startOfDay, endOfDay]
+  recordTimeArea.value[0] = startOfDay
+  recordTimeArea.value[1] = endOfDay
+  queryDto.recordTimeStart = startOfDay
+  queryDto.recordTimeEnd = endOfDay
 
   //3.调用查询数据接口
   fetchData()
@@ -684,9 +687,11 @@ const list = ref([])
 const total = ref(0)
 const pageParams = reactive({ page: 1, limit: 10 })
 const searchExpanded = ref(false)
+const recordTimeArea = ref([])
 const queryDto = reactive({
   invoiceNo: '',
-  recordTimeRange: [],
+  recordTimeStart: null,
+  recordTimeEnd: null,
   amount: null,
   assetLedgerId: null,
   assetLedgerName: '',
@@ -708,21 +713,12 @@ const statistics = ref({
 // 获取数据
 const fetchData = async () => {
   try {
-    // 构建请求参数,转换 timeRange 为 start 和 end
-    const requestParams = {
-      ...queryDto,
-      recordTimeStart: queryDto.recordTimeRange && queryDto.recordTimeRange.length > 0 ? queryDto.recordTimeRange[0] : null,
-      recordTimeEnd: queryDto.recordTimeRange && queryDto.recordTimeRange.length > 1 ? queryDto.recordTimeRange[1] : null
-    }
-    // 删除不需要发送的字段
-    delete requestParams.recordTimeRange
-    delete requestParams.assetLedgerName
-
-    const result = await GetAssetAccountingByConditionAndPage(pageParams.page, pageParams.limit, requestParams)
+    const result = await GetAssetAccountingByConditionAndPage(pageParams.page, pageParams.limit, queryDto)
     if (result.code === 200) {
       // 后端返回的数据格式：{ dataList: PageInfo, groupList: [{ transactionType, transactionAmount }] }
       const pageInfo = result.data.dataList || {}
-      list.value = pageInfo.records || []
+
+      list.value = pageInfo.list || []
       total.value = pageInfo.total || 0
 
       // 处理分组统计数据
@@ -756,6 +752,10 @@ const fetchData = async () => {
 
 // 搜索
 const searchData = () => {
+  // 时间参数赋值
+  queryDto.recordTimeStart = recordTimeArea.value[0]
+  queryDto.recordTimeEnd = recordTimeArea.value[1]
+  
   pageParams.page = 1
   fetchData()
 }
@@ -776,9 +776,14 @@ const handleQueryTransactionTypeChange = (value) => {
 
 // 重置
 const resetData = () => {
+  // 时间范围重置
+  recordTimeArea.value = []
+  
+  // 参数重置
   Object.assign(queryDto, {
     invoiceNo: '',
-    recordTimeRange: [],
+    recordTimeStart: null,
+    recordTimeEnd: null,
     amount: null,
     assetLedgerId: null,
     assetLedgerName: '',
@@ -799,32 +804,31 @@ const dialogTitle = ref('添加记账')
 const formRef = ref(null)
 const formData = reactive({
   id: null,
-  billNo: '',
-  billAction: '',
-  bookingTime: '',
+  invoiceNo: '',
+  invoiceAction: '',
+  recordTime: '',
   amount: 0,
-  accountName: '',
+  assetName: '',
   assetLedgerId: null, // 资产台账id
-  incomeExpenseType: '',
-  billType: '',
-  expenseType: '',
+  transactionType: '',
+  invoiceType: '',
+  spendingType: '',
   settlementStatus: '',
   incomeType: '',
-  bookkeeper: '',
+  updateBy: '',
   dataSource: '',
   remark: ''
 })
 
 // 表单验证规则
 const formRules = {
-  billAction: [{ required: true, message: '请输入账单行为', trigger: 'blur' }],
-  bookingTime: [{ required: true, message: '请选择记账时间', trigger: 'change' }],
+  invoiceAction: [{ required: true, message: '请输入账单行为', trigger: 'blur' }],
+  recordTime: [{ required: true, message: '请选择记账时间', trigger: 'change' }],
   amount: [{ required: true, message: '请输入金额', trigger: 'blur' }],
-  accountName: [{ required: true, message: '请选择记账账户', trigger: 'change' }],
-  incomeExpenseType: [{ required: true, message: '请选择收支类型', trigger: 'change' }],
-  billType: [{ required: true, message: '请选择账单类型', trigger: 'change' }],
-  settlementStatus: [{ required: true, message: '请选择结清状态', trigger: 'change' }],
-  bookkeeper: [{ required: true, message: '请输入记账人', trigger: 'blur' }]
+  assetName: [{ required: true, message: '请选择记账账户', trigger: 'change' }],
+  transactionType: [{ required: true, message: '请选择收支类型', trigger: 'change' }],
+  invoiceType: [{ required: true, message: '请选择账单类型', trigger: 'change' }],
+  settlementStatus: [{ required: true, message: '请选择结清状态', trigger: 'change' }]
 }
 
 // 添加记录
@@ -834,21 +838,21 @@ const addRecord = () => {
   if (formRef.value) {
     formRef.value.resetFields()
   }
-  
+
   Object.assign(formData, {
     id: null,
-    billNo: '',
-    billAction: '',
-    bookingTime: new Date().toISOString().slice(0, 19).replace('T', ' '),
+    invoiceNo: '',
+    invoiceAction: '',
+    recordTime: new Date().toISOString().slice(0, 19).replace('T', ' '),
     amount: 0,
-    accountName: '',
+    assetName: '',
     assetLedgerId: null,
-    incomeExpenseType: '',
-    billType: '',
-    expenseType: '',
+    transactionType: '',
+    invoiceType: '',
+    spendingType: '',
     settlementStatus: '',
     incomeType: '',
-    bookkeeper: '',
+    updateBy: '',
     dataSource: 1,
     remark: ''
   })
@@ -869,7 +873,7 @@ const editRecord = (row) => {
 // 收支类型改变事件
 const handleIncomeExpenseChange = (value) => {
   if (value === 1) {
-    formData.expenseType = ''
+    formData.spendingType = ''
   } else if (value === 2) {
     formData.incomeType = ''
   }
@@ -1135,7 +1139,7 @@ const selectAssetLedger = (row) => {
   } else if (assetLedgerSelectSource.value === 'form') {
     // 表单选择:设置资产台账id和账户名称
     formData.assetLedgerId = row.id
-    formData.accountName = row.assetName
+    formData.assetName = row.assetName
   }
 
   // 关闭对话框

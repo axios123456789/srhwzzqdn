@@ -4,23 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产记账-09">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产记账-10">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/assetAccounting.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/assetAccounting.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetAccounting.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetAccounting.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/controller/AssetTransactionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/controller/AssetTransactionController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetTransactionMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetTransactionMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/AssetTransactionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/AssetTransactionService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetTransactionServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetTransactionServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/assetControlArea/AssetTransactionMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/assetControlArea/AssetTransactionMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/assetControl/AssetTransactionDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/assetControl/AssetTransactionDto.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -264,14 +256,7 @@
       <workItem from="1775176695884" duration="11493000" />
       <workItem from="1775212256674" duration="7774000" />
       <workItem from="1775263925183" duration="1584000" />
-      <workItem from="1775290260688" duration="8616000" />
-    </task>
-    <task id="LOCAL-00022" summary="一键导出公共部分调用设计">
-      <created>1771497281149</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1771497281149</updated>
+      <workItem from="1775290260688" duration="11139000" />
     </task>
     <task id="LOCAL-00023" summary="一键导出公共部分调用设计">
       <created>1771564192433</created>
@@ -609,7 +594,14 @@
       <option name="project" value="LOCAL" />
       <updated>1775295949340</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="资产记账-10">
+      <created>1775300450276</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1775300450276</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -628,7 +620,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="学习记忆接入-003" />
     <MESSAGE value="学习记忆接入-004" />
     <MESSAGE value="资产台账管理-001" />
     <MESSAGE value="资产台账管理-002" />
@@ -653,7 +644,8 @@
     <MESSAGE value="资产记账-07" />
     <MESSAGE value="资产记账-08" />
     <MESSAGE value="资产记账-09" />
-    <option name="LAST_COMMIT_MESSAGE" value="资产记账-09" />
+    <MESSAGE value="资产记账-10" />
+    <option name="LAST_COMMIT_MESSAGE" value="资产记账-10" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
