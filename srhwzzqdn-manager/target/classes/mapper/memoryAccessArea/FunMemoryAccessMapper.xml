@@ -16,7 +16,8 @@
                                   memory_images,
                                   memory_source,
                                   memory_owner,
-                                  row_memory_no)
+                                  row_memory_no,
+                                  memory_status)
         values (#{memoryNo},
                 #{beginTime},
                 #{endTime},
@@ -30,7 +31,8 @@
                 #{memoryImages},
                 #{memorySource},
                 #{memoryOwner},
-                #{rowMemoryNo})
+                #{rowMemoryNo},
+                #{memoryStatus})
     </insert>
 
     <!--  修改娱乐记忆  -->
@@ -49,6 +51,7 @@
             memory_images = #{memoryImages},
             memory_source = #{memorySource},
             row_memory_no = #{rowMemoryNo},
+            memory_status = #{memoryStatus},
             update_time = now(),
             update_by = #{updateBy}
         </set>
@@ -83,6 +86,7 @@
         t.row_memory_no,
         t.update_time,
         t.update_by,
+        t.memory_status,
         i.name as memoryOwnerName
         from t_fun_memory t
         left join t_sys_person_info i
@@ -117,6 +121,12 @@
             </if>
             <if test="memoryOwner != null and memoryOwner != ''">
                 and t.memory_owner = #{memoryOwner}
+            </if>
+            <if test="memoryStatus != null and memoryStatus.size() > 0">
+                and t.memory_status in
+                <foreach collection="memoryStatus" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
             </if>
         </where>
         order by t.begin_time desc

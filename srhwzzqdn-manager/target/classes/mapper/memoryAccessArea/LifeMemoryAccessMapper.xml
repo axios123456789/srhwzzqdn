@@ -15,7 +15,8 @@
                                    memory_source,
                                    memory_owner,
                                    row_memory_no,
-                                   consume_type)
+                                   consume_type,
+                                   memory_status)
         values (#{memoryNo},
                 #{beginTime},
                 #{endTime},
@@ -28,7 +29,8 @@
                 #{memorySource},
                 #{memoryOwner},
                 #{rowMemoryNo},
-                #{consumeType})
+                #{consumeType},
+                #{memoryStatus})
     </insert>
 
     <!--  修改生活记忆  -->
@@ -46,6 +48,7 @@
             memory_images = #{memoryImages},
             memory_source = #{memorySource},
             row_memory_no = #{rowMemoryNo},
+            memory_status = #{memoryStatus},
             update_time = now(),
             update_by = #{updateBy}
         </set>
@@ -79,6 +82,7 @@
         t.update_time,
         t.update_by,
         t.consume_type,
+        t.memory_status,
         i.name as memoryOwnerName
         from t_life_memory t
         left join t_sys_person_info i
@@ -113,6 +117,12 @@
             </if>
             <if test="memoryOwner != null and memoryOwner != ''">
                 and t.memory_owner = #{memoryOwner}
+            </if>
+            <if test="memoryStatus != null and memoryStatus.size() > 0">
+                and t.memory_status in
+                <foreach collection="memoryStatus" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
             </if>
         </where>
         order by t.begin_time desc
