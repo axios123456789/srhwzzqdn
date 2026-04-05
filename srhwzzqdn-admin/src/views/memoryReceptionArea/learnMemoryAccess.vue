@@ -357,6 +357,15 @@
             <el-icon><Delete /></el-icon>
             记忆删除
           </el-button>
+          <el-button
+              type="warning"
+              size="small"
+              @click="memoryAssociative(scope.row)"
+              class="beautified-associative-btn"
+          >
+            <el-icon><Connection /></el-icon>
+            记忆联想
+          </el-button>
         </div>
       </el-table-column>
       <el-table-column prop="memoryNo" label="学习记忆编号" width="180" />

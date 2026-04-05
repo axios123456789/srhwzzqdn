@@ -376,11 +376,12 @@
           <el-button
               type="warning"
               size="small"
-              @click="memoryAssociative(scope.row)"
+              @click="funInvoice(scope.row)"
+              v-if = "scope.row.funConsume != 0 && scope.row.funConsume != null"
               class="beautified-associative-btn"
           >
             <el-icon><Connection /></el-icon>
-            记忆联想
+            娱乐记账
           </el-button>
         </div>
       </el-table-column>

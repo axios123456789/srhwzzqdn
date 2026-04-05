@@ -378,11 +378,12 @@
           <el-button
               type="warning"
               size="small"
-              @click="memoryAssociative(scope.row)"
+              @click="lifeInvoice(scope.row)"
+              v-if="scope.row.consumeType == 1 || scope.row.consumeType == 2"
               class="beautified-associative-btn"
           >
             <el-icon><Connection /></el-icon>
-            记忆联想
+            生活记账
           </el-button>
         </div>
       </el-table-column>
