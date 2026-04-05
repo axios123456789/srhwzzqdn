@@ -412,32 +412,37 @@
     <el-dialog
       v-model="assetLedgerDialogVisible"
       title="选择资产台账"
-      width="70%"
+      width="50%"
+      class="asset-ledger-dialog"
       :close-on-click-modal="false"
     >
       <!-- 资产台账查询条件 -->
-      <div class="search-card" style="margin-bottom: 15px;">
-        <el-form label-width="120px" size="small">
-          <el-row>
-            <el-col :span="6">
+      <div class="asset-ledger-search">
+        <el-form label-width="100px" size="small">
+          <el-row :gutter="10">
+            <el-col :span="12">
               <el-form-item label="资产名称">
                 <el-input
                     v-model="assetLedgerQuery.assetName"
                     style="width: 100%"
                     clearable
+                    placeholder="请输入资产名称"
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-form-item label="资产编号">
                 <el-input
                     v-model="assetLedgerQuery.assetNo"
                     style="width: 100%"
                     clearable
+                    placeholder="请输入资产编号"
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+          </el-row>
+          <el-row :gutter="10">
+            <el-col :span="12">
               <el-form-item label="资产类型">
                 <el-select
                     v-model="assetLedgerQuery.assetType"
@@ -455,7 +460,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-form-item label="资产子类">
                 <el-select
                     v-model="assetLedgerQuery.assetSubType"
@@ -475,8 +480,8 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="6">
+          <el-row :gutter="10">
+            <el-col :span="12">
               <el-form-item label="资产状态">
                 <el-select
                     v-model="assetLedgerQuery.assetStatus"
@@ -495,22 +500,26 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row style="display:flex">
-            <el-button
-                type="primary"
-                size="small"
-                @click="handleAssetLedgerSearch"
-            >
-              <el-icon><Search /></el-icon>
-              搜索
-            </el-button>
-            <el-button
-                size="small"
-                @click="resetAssetLedgerQuery"
-            >
-              <el-icon><Refresh /></el-icon>
-              重置
-            </el-button>
+          <el-row>
+            <el-col :span="24" style="text-align: right;">
+              <el-button
+                  type="primary"
+                  size="small"
+                  @click="handleAssetLedgerSearch"
+                  class="beautified-search-btn"
+              >
+                <el-icon><Search /></el-icon>
+                搜索
+              </el-button>
+              <el-button
+                  size="small"
+                  @click="resetAssetLedgerQuery"
+                  class="beautified-reset-btn"
+              >
+                <el-icon><Refresh /></el-icon>
+                重置
+              </el-button>
+            </el-col>
           </el-row>
         </el-form>
       </div>
@@ -520,34 +529,33 @@
         :data="assetLedgerList"
         border
         stripe
-        height="400px"
+        height="280px"
         @row-click="selectAssetLedger"
-        style="cursor: pointer;"
+        style="cursor: pointer; width: 100%;"
       >
-        <el-table-column prop="assetName" label="资产名称" min-width="150" />
-        <el-table-column prop="assetCode" label="资产官方标识" min-width="150" />
-        <el-table-column prop="assetNo" label="资产编号" width="180" />
-        <el-table-column prop="assetType" label="资产类型" width="100">
+        <el-table-column prop="assetName" label="资产名称" min-width="120" show-overflow-tooltip />
+        <el-table-column prop="assetCode" label="资产官方标识" min-width="120" show-overflow-tooltip />
+        <el-table-column prop="assetNo" label="资产编号" width="140" show-overflow-tooltip />
+        <el-table-column prop="assetType" label="资产类型" width="90">
           <template #default="scope">
             {{ getDisplayText(scope.row.assetType, assetLedgerTypeItem) }}
           </template>
         </el-table-column>
-        <el-table-column prop="assetSubType" label="资产子类" width="150">
+        <el-table-column prop="assetSubType" label="资产子类" width="120" show-overflow-tooltip>
           <template #default="scope">
             {{ scope.row._assetSubTypeText || scope.row.assetSubType || '-' }}
           </template>
         </el-table-column>
-        <el-table-column prop="assetStatus" label="资产状态" width="100">
+        <el-table-column prop="assetStatus" label="资产状态" width="90">
           <template #default="scope">
             {{ getDisplayText(scope.row.assetStatus, assetLedgerStatusItem) }}
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注" min-width="200" show-overflow-tooltip />
-        <el-table-column prop="assetOwnerName" label="资产所属人" width="120" />
+        <el-table-column prop="assetOwnerName" label="资产所属人" width="100" show-overflow-tooltip />
       </el-table>
 
       <!-- 分页 -->
-      <div style="margin-top: 15px; text-align: right;">
+      <div style="margin-top: 10px; text-align: right;">
         <el-pagination
             background
             layout="total, sizes, prev, pager, next"
@@ -1085,16 +1093,49 @@ const openAssetLedgerDialog = async (source) => {
   fetchAssetLedgerData()
 }
 
+// 预加载所有资产子类数据字典并处理数据
+const processAssetLedgerSubTypeText = async (dataList) => {
+  const allSubTypeData = {}
+  // 获取所有不同的资产类型
+  const assetTypes = [...new Set(dataList.map(item => item.assetType).filter(Boolean))]
+
+  // 并行加载所有资产类型对应的子类数据
+  await Promise.all(assetTypes.map(async (assetType) => {
+    const type = `asset_type_${assetType}`
+    try {
+      const result = await GetKeyAndValueByType(type)
+      if (result.code === 200 && result.data) {
+        allSubTypeData[assetType] = result.data
+      }
+    } catch (error) {
+      console.error(`加载资产类型${assetType}的子类数据失败:`, error)
+    }
+  }))
+
+  // 为每条数据添加子类文本
+  dataList.forEach(item => {
+    if (item.assetSubType && item.assetType && allSubTypeData[item.assetType]) {
+      const foundItem = allSubTypeData[item.assetType].find(subItem => subItem.value === item.assetSubType)
+      item._assetSubTypeText = foundItem ? foundItem.text : item.assetSubType
+    }
+  })
+
+  return dataList
+}
+
 // 查询资产台账数据
 const fetchAssetLedgerData = async () => {
   try {
     const result = await GetAssetLedgerByConditionAndPage(
-      assetLedgerPageParams.page, 
-      assetLedgerPageParams.limit, 
+      assetLedgerPageParams.page,
+      assetLedgerPageParams.limit,
       assetLedgerQuery
     )
     if (result.code === 200) {
-      assetLedgerList.value = result.data.records || []
+      const records = result.data.records || []
+      // 预处理资产子类文本
+      await processAssetLedgerSubTypeText(records)
+      assetLedgerList.value = records
       assetLedgerTotal.value = result.data.total || 0
     } else {
       ElMessage.error(result.message || "查询资产台账失败")
@@ -1630,6 +1671,85 @@ const selectAssetLedger = (row) => {
   padding: 20px 28px !important;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
   border-top: 2px solid rgba(102, 126, 234, 0.1) !important;
+}
+
+/* 资产台账对话框样式 */
+:deep(.asset-ledger-dialog) {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 16px 48px rgba(64, 158, 255, 0.25) !important;
+}
+
+:deep(.asset-ledger-dialog .el-dialog__header) {
+  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%) !important;
+  border-radius: 16px 16px 0 0 !important;
+  padding: 20px 24px !important;
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.3) !important;
+  margin: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+:deep(.asset-ledger-dialog .el-dialog__title) {
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 20px !important;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+:deep(.asset-ledger-dialog .el-dialog__headerbtn .el-dialog__close) {
+  color: white !important;
+  font-size: 20px !important;
+  transition: all 0.3s ease;
+}
+
+:deep(.asset-ledger-dialog .el-dialog__headerbtn .el-dialog__close:hover) {
+  transform: rotate(90deg) scale(1.1);
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+:deep(.asset-ledger-dialog .el-dialog__body) {
+  padding: 16px 20px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+}
+
+.asset-ledger-search {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e4e7ed;
+  margin-bottom: 12px;
+}
+
+:deep(.asset-ledger-dialog .el-table) {
+  background-color: #ffffff;
+}
+
+:deep(.asset-ledger-dialog .el-table th) {
+  background: #fafbfc;
+  color: #2c3e50;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+:deep(.asset-ledger-dialog .el-table td) {
+  font-size: 13px;
+  background-color: #ffffff;
+}
+
+:deep(.asset-ledger-dialog .el-table--striped .el-table__body tr.el-table__row--striped td) {
+  background-color: #fafbfc;
+}
+
+:deep(.asset-ledger-dialog .el-table__body tr:hover > td) {
+  background-color: #e6f7ff !important;
+}
+
+:deep(.asset-ledger-dialog .el-dialog__footer) {
+  padding: 16px 24px !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+  border-top: 2px solid rgba(64, 158, 255, 0.1) !important;
 }
 
 /* 分页组件样式 */
