@@ -18,4 +18,7 @@ public interface FunMemoryAccessService {
 
     //根据ids批量删除娱乐记忆
     void deleteAllFunMemoryByIds(List<Integer> ids);
+
+    //根据id修改娱乐记忆状态
+    void updateMemoryStatusById(Integer id, Integer memoryStatus);
 }

@@ -18,4 +18,7 @@ public interface LifeMemoryAccessService {
 
     //根据ids批量删除生活记忆
     void deleteAllLifeMemoryByIds(List<Integer> ids);
+
+    //根据id更新生活记忆状态
+    void updateMemoryStatusById(Integer id, Integer memoryStatus);
 }

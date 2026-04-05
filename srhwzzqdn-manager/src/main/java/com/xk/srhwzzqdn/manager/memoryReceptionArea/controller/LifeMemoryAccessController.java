@@ -76,4 +76,20 @@ public class LifeMemoryAccessController {
             return Result.build(null, 500, "批量删除生活记忆失败！");
         }
     }
+
+    /**
+     * 根据id更新生活记忆状态
+     * @param id
+     * @param memoryStatus
+     * @return
+     */
+    @PostMapping("/updateMemoryStatusById/{id}/{memoryStatus}")
+    public Result updateMemoryStatusById(@PathVariable("id") Integer id, @PathVariable("memoryStatus") Integer memoryStatus){
+        try {
+            lifeMemoryAccessService.updateMemoryStatusById(id, memoryStatus);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "更新生活记忆状态失败！");
+        }
+    }
 }

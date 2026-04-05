@@ -82,4 +82,14 @@ public class FunMemoryAccessServiceImpl implements FunMemoryAccessService {
     public void deleteAllFunMemoryByIds(List<Integer> ids) {
         funMemoryAccessMapper.deleteAllFunMemoryByIds(ids);
     }
+
+    /**
+     * 根据id修改娱乐记忆状态
+     * @param id
+     * @param memoryStatus
+     */
+    @Override
+    public void updateMemoryStatusById(Integer id, Integer memoryStatus) {
+        funMemoryAccessMapper.updateMemoryStatusById(id, memoryStatus);
+    }
 }

@@ -7,6 +7,7 @@ import com.xk.srhwzzqdn.model.vo.assetControl.AssetLedgerVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
@@ -29,4 +30,7 @@ public interface AssetLedgerMapper {
 
     //根据 ids 批量删除资产台账
     void deleteAllAssetLedgerByIds(List<Integer> ids);
+
+    //账单变动联动修改对应的资产台账
+    void updateLedgerAmountByTransaction(Integer assetLedgerId, Integer transactionType, BigDecimal amount);
 }

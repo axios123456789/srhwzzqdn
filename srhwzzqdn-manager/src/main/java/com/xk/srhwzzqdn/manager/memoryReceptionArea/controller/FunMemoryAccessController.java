@@ -76,4 +76,20 @@ public class FunMemoryAccessController {
             return Result.build(null, 500, "批量删除娱乐记忆失败！");
         }
     }
+
+    /**
+     * 根据id修改娱乐记忆状态
+     * @param id
+     * @param memoryStatus
+     * @return
+     */
+    @PostMapping("/updateMemoryStatusById/{id}/{memoryStatus}")
+    public Result updateMemoryStatusById(@PathVariable("id") Integer id, @PathVariable("memoryStatus") Integer memoryStatus){
+        try {
+            funMemoryAccessService.updateMemoryStatusById(id, memoryStatus);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "修改娱乐记忆状态失败！");
+        }
+    }
 }

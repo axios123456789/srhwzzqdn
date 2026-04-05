@@ -70,6 +70,15 @@
         where id = #{id}
     </update>
 
+    <!--  账单变动联动修改对应的资产台账  -->
+    <update id="updateLedgerAmountByTransaction">
+        update t_asset_ledger t
+        set t.amount = (case when #{param2} = 1 then t.amount + #{param3}
+            else t.amount - #{param3} end),
+            t.update_time = now()
+        where t.id = #{param1}
+    </update>
+
     <!--   根据ids批量删除资产台账  -->
     <delete id="deleteAllAssetLedgerByIds">
         delete from t_asset_ledger where id in

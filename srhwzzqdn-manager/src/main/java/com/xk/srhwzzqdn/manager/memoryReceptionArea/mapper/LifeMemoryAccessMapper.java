@@ -4,6 +4,7 @@ import com.xk.srhwzzqdn.model.dto.memoryReceptionArea.LifeMemoryDto;
 import com.xk.srhwzzqdn.model.entity.memoryReceptionArea.LifeMemory;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -24,4 +25,8 @@ public interface LifeMemoryAccessMapper {
 
     //根据ids批量删除生活记忆
     void deleteAllLifeMemoryByIds(List<Integer> ids);
+
+    //根据id更新生活记忆状态
+    @Update("update t_life_memory set memory_status = #{param2} where id = #{param1}")
+    void updateMemoryStatusById(Integer id, Integer memoryStatus);
 }

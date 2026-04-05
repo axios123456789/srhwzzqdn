@@ -6,19 +6,28 @@
   <component name="ChangeListManager">
     <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产记账-17">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/impl/RowMemoryAccessServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/impl/RowMemoryAccessServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/memoryAccessArea/FunMemoryAccessMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/memoryAccessArea/FunMemoryAccessMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/memoryAccessArea/LifeMemoryAccessMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/memoryAccessArea/LifeMemoryAccessMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/memoryReceptionArea/FunMemoryDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/memoryReceptionArea/FunMemoryDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/memoryReceptionArea/LifeMemoryDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/memoryReceptionArea/LifeMemoryDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/memoryReceptionArea/FunMemory.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/memoryReceptionArea/FunMemory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/memoryReceptionArea/LifeMemory.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/memoryReceptionArea/LifeMemory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/memoryReception.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/memoryReception.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/lifeMemoryAccess.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/memoryReceptionArea/lifeMemoryAccess.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetLedgerMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetLedgerMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetTransactionMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetTransactionMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetTransactionServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetTransactionServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/controller/FunMemoryAccessController.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/controller/FunMemoryAccessController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/controller/LifeMemoryAccessController.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/controller/LifeMemoryAccessController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/mapper/FunMemoryAccessMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/mapper/FunMemoryAccessMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/mapper/LifeMemoryAccessMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/mapper/LifeMemoryAccessMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/FunMemoryAccessService.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/FunMemoryAccessService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/LifeMemoryAccessService.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/LifeMemoryAccessService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/impl/FunMemoryAccessServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/impl/FunMemoryAccessServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/impl/LifeMemoryAccessServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/memoryReceptionArea/service/impl/LifeMemoryAccessServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/AssetLedgerMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/AssetLedgerMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/assetControlArea/AssetLedgerMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/assetControlArea/AssetLedgerMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,14 +261,7 @@
       <workItem from="1775212256674" duration="7774000" />
       <workItem from="1775263925183" duration="1584000" />
       <workItem from="1775290260688" duration="17085000" />
-      <workItem from="1775352061318" duration="11706000" />
-    </task>
-    <task id="LOCAL-00030" summary="生活记忆接入开发-006">
-      <created>1772896873276</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1772896873276</updated>
+      <workItem from="1775352061318" duration="20135000" />
     </task>
     <task id="LOCAL-00031" summary="娱乐记忆接入开发-001">
       <created>1773105655272</created>
@@ -597,7 +599,14 @@
       <option name="project" value="LOCAL" />
       <updated>1775386442424</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="资产记账-17">
+      <created>1775388239790</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1775388239790</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

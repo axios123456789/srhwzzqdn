@@ -147,6 +147,15 @@ export const DeleteAllLifeMemoryByIds = ids => {
     data: ids,
   })
 }
+
+//根据id更新生活记忆状态
+export const UpdateLifeMemoryStatusById = (id, status) => {
+  return request({
+    url: `${base_api3}/updateMemoryStatusById/${id}/${status}`,
+    method: 'post',
+  })
+}
+
 //***********************************************************************************
 
 //------------------------------------娱乐记忆api--------------------------------------
@@ -184,6 +193,14 @@ export const DeleteAllFunMemoryByIds = ids => {
     url: `${base_api4}/deleteAllFunMemoryByIds`,
     method: 'post',
     data: ids,
+  })
+}
+
+//根据id修改娱乐记忆状态
+export const UpdateFunMemoryStatusById = (id, status) => {
+  return request({
+    url: `${base_api4}/updateMemoryStatusById/${id}/${status}`,
+    method: 'post',
   })
 }
 //***********************************************************************************

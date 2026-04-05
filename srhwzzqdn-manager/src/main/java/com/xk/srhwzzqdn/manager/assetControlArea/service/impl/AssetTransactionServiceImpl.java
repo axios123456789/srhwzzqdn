@@ -2,6 +2,7 @@ package com.xk.srhwzzqdn.manager.assetControlArea.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xk.srhwzzqdn.manager.assetControlArea.mapper.AssetLedgerMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.mapper.AssetTransactionMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.AssetTransactionService;
 import com.xk.srhwzzqdn.model.dto.assetControl.AssetTransactionDto;
@@ -12,7 +13,9 @@ import com.xk.srhwzzqdn.util.AuthContextUtil;
 import com.xk.srhwzzqdn.util.GenerateNoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +26,15 @@ public class AssetTransactionServiceImpl implements AssetTransactionService {
     @Autowired
     private AssetTransactionMapper assetTransactionMapper;
 
+    @Autowired
+    private AssetLedgerMapper assetLedgerMapper;
+
     /**
      * 保存资产记账
      * @param assetTransaction
      */
     @Override
+    @Transactional
     public void saveAssetTransaction(AssetTransaction assetTransaction) {
         if (assetTransaction.getId() == null) { // 新增
             // 生成账单编号
@@ -39,12 +46,21 @@ public class AssetTransactionServiceImpl implements AssetTransactionService {
 
             // 新增资产记账
             assetTransactionMapper.addAssetTransaction(assetTransaction);
+
+            //账单变动联动修改对应的资产台账
+            assetLedgerMapper.updateLedgerAmountByTransaction(assetTransaction.getAssetLedgerId(), assetTransaction.getTransactionType(), assetTransaction.getAmount());
         } else { // 修改
             // 设置更新人
             assetTransaction.setUpdateBy(AuthContextUtil.get().getUserName());
 
+            //根据id查询原本记账金额
+            BigDecimal oldAmount = assetTransactionMapper.getAssetTransactionAmountById(assetTransaction.getId());
+
             // 修改资产记账
             assetTransactionMapper.updateAssetTransaction(assetTransaction);
+
+            //账单变动联动修改对应的资产台账
+            assetLedgerMapper.updateLedgerAmountByTransaction(assetTransaction.getAssetLedgerId(), assetTransaction.getTransactionType(), assetTransaction.getAmount().subtract(oldAmount));
         }
     }
 
@@ -54,7 +70,14 @@ public class AssetTransactionServiceImpl implements AssetTransactionService {
      */
     @Override
     public void deleteAssetTransactionById(Integer id) {
+        //根据id查询全部记账
+        AssetTransaction assetTransaction = assetTransactionMapper.getAllById(id);
+
+        //删除记账
         assetTransactionMapper.deleteAssetTransactionById(id);
+
+        //账单变动联动修改对应的资产台账
+        assetLedgerMapper.updateLedgerAmountByTransaction(assetTransaction.getAssetLedgerId(), assetTransaction.getTransactionType(), new BigDecimal(0).subtract(assetTransaction.getAmount()));
     }
 
     /**

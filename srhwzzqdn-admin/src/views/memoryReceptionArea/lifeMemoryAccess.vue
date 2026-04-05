@@ -384,6 +384,14 @@
         @closed="resetExport"
     />
 
+    <!--  生活记账对话框  -->
+    <LifeInvoiceDialog
+        ref="lifeInvoiceDialogRef"
+        v-model="lifeInvoiceDialogVisible"
+        :life-memory-data="currentLifeMemory"
+        @submit="handleInvoiceSubmit"
+    />
+
     <!-- 列表展示  -->
     <el-table
         :data="lifeList"
@@ -508,6 +516,7 @@ import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {useExport} from "@/components/Export/hooks/useExport";
 import ExportDialog from '@/components/Export/ExportDialog.vue';
+import LifeInvoiceDialog from './receptionAreaComm/lifeInvoiceDialog.vue';
 
 //--------------------钩子函数-------------------------
 onMounted(() => {
@@ -637,6 +646,11 @@ const lifeMemory = ref({})
 const dialogVisible = ref(false)
 // 在需要全屏的组件中使用 Hook
 const { isFullscreen, initFullscreen } = useFullscreenDialog()
+
+// 生活记账对话框
+const lifeInvoiceDialogVisible = ref(false)
+const lifeInvoiceDialogRef = ref(null)
+const currentLifeMemory = ref({})
 
 //手动录入生活记忆按钮点击事件
 const addLifeMemory = () => {
@@ -883,6 +897,24 @@ const {
 // 包装显示导出对话框的方法
 const showExportDialog = () => {
   showExport(lifeList.value, lifeTotal.value)
+}
+
+// 生活记账功能
+const lifeInvoice = (row) => {
+  currentLifeMemory.value = row
+  lifeInvoiceDialogVisible.value = true
+  // 等待对话框打开后初始化数据
+  setTimeout(() => {
+    if (lifeInvoiceDialogRef.value) {
+      lifeInvoiceDialogRef.value.handleDialogOpen()
+    }
+  }, 100)
+}
+
+// 生活记账提交成功后的回调
+const handleInvoiceSubmit = () => {
+  // 刷新生活记忆列表
+  lifeFetchData()
 }
 </script>
 

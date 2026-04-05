@@ -79,4 +79,14 @@ public class LifeMemoryAccessServiceImpl implements LifeMemoryAccessService {
     public void deleteAllLifeMemoryByIds(List<Integer> ids) {
         lifeMemoryAccessMapper.deleteAllLifeMemoryByIds(ids);
     }
+
+    /**
+     * 根据id更新生活记忆状态
+     * @param id
+     * @param memoryStatus
+     */
+    @Override
+    public void updateMemoryStatusById(Integer id, Integer memoryStatus) {
+        lifeMemoryAccessMapper.updateMemoryStatusById(id, memoryStatus);
+    }
 }

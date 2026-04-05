@@ -6,7 +6,9 @@ import com.xk.srhwzzqdn.model.vo.assetControl.AssetTransactionTypeGroupVo;
 import com.xk.srhwzzqdn.model.vo.assetControl.AssetTransactionVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
@@ -29,4 +31,12 @@ public interface AssetTransactionMapper {
 
     //获取根据收支类型分类的收支金额合计
     List<AssetTransactionTypeGroupVo> getAssetTransactionTypeGroupListByCondition(AssetTransactionDto assetTransactionDto);
+
+    //根据id查询原本记账金额
+    @Select("select IFNULL(amount, 0) from t_asset_transaction where id = #{param1}")
+    BigDecimal getAssetTransactionAmountById(Integer id);
+
+    //根据id查询全部记账
+    @Select("select * from t_asset_transaction where id = #{param1}")
+    AssetTransaction getAllById(Integer id);
 }
