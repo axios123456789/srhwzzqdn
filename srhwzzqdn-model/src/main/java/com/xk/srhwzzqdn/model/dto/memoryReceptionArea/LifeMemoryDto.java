@@ -15,4 +15,5 @@ public class LifeMemoryDto {
     private List<Integer> memorySource;
     private List<Integer> consumeType;
     private String memoryOwner;
+    private List<Integer> memoryStatus;
 }

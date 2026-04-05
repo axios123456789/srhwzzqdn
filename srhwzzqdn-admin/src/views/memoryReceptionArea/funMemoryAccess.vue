@@ -92,6 +92,24 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="记忆状态">
+              <el-select
+                  v-model="funQueryDto.memoryStatus"
+                  multiple
+                  placeholder="请选择"
+                  style="width: 100%"
+                  clearable
+              >
+                <el-option
+                    v-for="item in memoryStatusItem"
+                    :key="item.value"
+                    :label="item.text"
+                    :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row style="display:flex">
           <el-button
@@ -304,6 +322,26 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <!--    第5.1行        -->
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="记忆状态">
+                  <el-select
+                      v-model="funMemory.memoryStatus"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in memoryStatusItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
             <!--    第六行    -->
             <el-row>
               <el-col :span="24">
@@ -377,7 +415,7 @@
               type="warning"
               size="small"
               @click="funInvoice(scope.row)"
-              v-if = "scope.row.funConsume != 0 && scope.row.funConsume != null"
+              v-if = "scope.row.memoryStatus == 1"
               class="beautified-associative-btn"
           >
             <el-icon><Connection /></el-icon>
@@ -485,6 +523,7 @@ onMounted(() => {
   getFunMemorySourceItem();
   getFunMemoryTypeItem();
   getFunMemoryAppItem();
+  getMemoryStatusItem();
 
   //2.查询条件设置默认时间为今天
   const [startOfDay, endOfDay] = getTodayTimeRange()
@@ -523,6 +562,12 @@ const funMemoryAppItem = ref([]);
 const getFunMemoryAppItem = async () => {
   const { data } = await GetKeyAndValueByType('t_fun_memory_app')
   funMemoryAppItem.value = data
+}
+//娱乐记忆状态
+const memoryStatusItem = ref([]);
+const getMemoryStatusItem = async () => {
+  const { data } = await GetKeyAndValueByType('t_fun_memory_status')
+  memoryStatusItem.value = data
 }
 //获取中国统计用行政区划下拉列表
 const formattedAddressOptions = ref([])
@@ -603,6 +648,7 @@ const addFunMemory = () => {
   //数据重置
   funMemory.value = {}
   funMemory.value.memorySource = 1
+  funMemory.value.memoryStatus = 1
   if (funList.value.length > 0) {
     funMemory.value.beginTime = funList.value[0].endTime
   }

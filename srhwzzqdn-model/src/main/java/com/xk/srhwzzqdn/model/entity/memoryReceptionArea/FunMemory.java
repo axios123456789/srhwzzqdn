@@ -64,4 +64,7 @@ public class FunMemory {
 
     @Schema(description = "修改人")
     private String updateBy;
+
+    @Schema(description = "娱乐记忆状态")
+    private Integer memoryStatus;
 }

@@ -60,4 +60,7 @@ public class LifeMemory {
 
     @Schema(description = "消费类型")
     private Integer consumeType;
+
+    @Schema(description = "生活记忆状态")
+    private Integer memoryStatus;
 }

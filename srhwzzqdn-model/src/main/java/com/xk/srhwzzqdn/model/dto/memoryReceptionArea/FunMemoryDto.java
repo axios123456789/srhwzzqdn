@@ -15,4 +15,5 @@ public class FunMemoryDto {
     private List<Integer> funType;
     private List<Integer> funApp;
     private String memoryOwner;
+    private List<Integer> memoryStatus;
 }

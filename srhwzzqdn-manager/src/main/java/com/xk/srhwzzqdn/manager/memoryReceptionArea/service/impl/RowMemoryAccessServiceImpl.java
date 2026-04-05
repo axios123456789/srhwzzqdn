@@ -166,6 +166,7 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
             lifeMemory.setMemoryOwner(associativeMemory.getMemoryOwner());
             lifeMemory.setRowMemoryNo(associativeMemory.getMemoryNo());
             lifeMemory.setConsumeType(associativeMemory.getConsumeType());
+            lifeMemory.setMemoryStatus(associativeMemory.getConsumeType()==1||associativeMemory.getConsumeType()==2?1:3);
 
             //生成生活记忆
             lifeMemoryAccessMapper.addLifeMemory(lifeMemory);
@@ -186,6 +187,7 @@ public class RowMemoryAccessServiceImpl implements RowMemoryAccessService {
             funMemory.setMemoryImages(associativeMemory.getMemoryImages());
             funMemory.setMemorySource(2);
             funMemory.setRowMemoryNo(associativeMemory.getMemoryNo());
+            funMemory.setMemoryStatus(associativeMemory.getFunConsume() == null || associativeMemory.getFunConsume().compareTo(BigDecimal.ZERO) == 0 ? 3 : 1);
 
             //添加娱乐记忆
             funMemoryAccessMapper.addFunMemory(funMemory);

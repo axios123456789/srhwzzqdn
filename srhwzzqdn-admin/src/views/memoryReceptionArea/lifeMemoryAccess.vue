@@ -92,6 +92,24 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="6">
+            <el-form-item label="记忆状态">
+              <el-select
+                  v-model="lifeQueryDto.memoryStatus"
+                  multiple
+                  placeholder="请选择"
+                  style="width: 100%"
+                  clearable
+              >
+                <el-option
+                    v-for="item in memoryStatusItem"
+                    :key="item.value"
+                    :label="item.text"
+                    :value="item.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row style="display:flex">
           <el-button
@@ -306,6 +324,26 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <!--    第5.1行        -->
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="记忆状态">
+                  <el-select
+                      v-model="lifeMemory.memoryStatus"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                  >
+                    <el-option
+                        v-for="item in memoryStatusItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
             <!--    第六行    -->
             <el-row>
               <el-col :span="24">
@@ -379,7 +417,7 @@
               type="warning"
               size="small"
               @click="lifeInvoice(scope.row)"
-              v-if="scope.row.consumeType == 1 || scope.row.consumeType == 2"
+              v-if="scope.row.memoryStatus == 1"
               class="beautified-associative-btn"
           >
             <el-icon><Connection /></el-icon>
@@ -478,6 +516,7 @@ onMounted(() => {
   getLifeMemorySourceItem();
   getLifeMemoryTypeItem();
   getConsumeTypeItem();
+  getMemoryStatusItem();
 
   //2.查询条件设置默认时间为今天
   const [startOfDay, endOfDay] = getTodayTimeRange()
@@ -517,6 +556,13 @@ const getConsumeTypeItem = async () => {
   const { data } = await GetKeyAndValueByType('t_life_consume_type')
   consumeTypeItem.value = data
 }
+//生活记忆状态
+const memoryStatusItem = ref([]);
+const getMemoryStatusItem = async () => {
+  const { data } = await GetKeyAndValueByType('t_life_memory_status')
+  memoryStatusItem.value = data
+}
+
 //获取中国统计用行政区划下拉列表
 const formattedAddressOptions = ref([])
 const getFormattedAddressOptions = async () => {
@@ -597,6 +643,7 @@ const addLifeMemory = () => {
   //数据重置
   lifeMemory.value = {}
   lifeMemory.value.memorySource = 1
+  lifeMemory.value.memoryStatus = 1
   if (lifeList.value.length > 0) {
     lifeMemory.value.beginTime = lifeList.value[0].endTime
   }
