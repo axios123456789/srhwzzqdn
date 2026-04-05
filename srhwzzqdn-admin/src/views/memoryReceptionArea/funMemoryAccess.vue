@@ -382,6 +382,14 @@
         @closed="resetExport"
     />
 
+    <!--  娱乐记账对话框  -->
+    <FunInvoiceDialog
+        ref="funInvoiceDialogRef"
+        v-model="funInvoiceDialogVisible"
+        :fun-memory-data="currentFunMemory"
+        @submit="handleInvoiceSubmit"
+    />
+
     <!-- 列表展示  -->
     <el-table
         :data="funList"
@@ -509,12 +517,14 @@ import {
   GetFunMemoryByConditionAndPage,
   SaveFunMemory,
   DeleteFunMemoryById,
-  DeleteAllFunMemoryByIds
+  DeleteAllFunMemoryByIds,
+  UpdateFunMemoryStatusById
 } from "@/api/memoryReception";
 import {useApp} from "@/pinia/modules/app";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {useExport} from "@/components/Export/hooks/useExport";
 import ExportDialog from '@/components/Export/ExportDialog.vue';
+import FunInvoiceDialog from './receptionAreaComm/funInvoiceDialog.vue';
 
 //--------------------钩子函数-------------------------
 onMounted(() => {
@@ -594,6 +604,11 @@ const funQueryDto = ref({
 });
 //条件查询时间范围封装
 const beginTimeArea = ref([]);
+
+// 娱乐记账相关变量
+const funInvoiceDialogVisible = ref(false);
+const currentFunMemory = ref({});
+const funInvoiceDialogRef = ref(null);
 
 //发送请求，拿到娱乐记忆列表
 const funFetchData = async () => {
@@ -759,6 +774,27 @@ const deleteFunMemoryById = row => {
       ElMessage.error(message)
     }
   })
+}
+
+//---------------------------------------娱乐记账功能------------------------------------
+// 点击娱乐记账按钮后触发
+const funInvoice = row => {
+  currentFunMemory.value = row
+  funInvoiceDialogVisible.value = true
+  // 等待对话框打开后初始化数据
+  setTimeout(() => {
+    if (funInvoiceDialogRef.value) {
+      funInvoiceDialogRef.value.handleDialogOpen()
+    }
+  }, 100)
+}
+
+// 处理娱乐记账提交
+const handleInvoiceSubmit = () => {
+  // 刷新列表
+  funFetchData()
+  // 关闭对话框
+  funInvoiceDialogVisible.value = false
 }
 
 //--------------------------------------------------批量删除记忆功能-------------------------------------------------
