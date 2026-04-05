@@ -2,7 +2,7 @@
   <el-dialog
     v-model="dialogVisible"
     title="💰 生活记账"
-    width="900px"
+    width="1200px"
     class="life-invoice-dialog"
     :close-on-click-modal="false"
     align-center
@@ -11,14 +11,14 @@
     @open="initFullscreen"
   >
     <div class="dialog-body">
-      <!-- 生活记忆信息卡片 -->
-      <div class="memory-card">
+      <!-- 生活记忆信息卡片 (40%高度) -->
+      <div class="memory-card basic-info-section">
         <div class="card-header">
           <div class="header-icon">🏠</div>
           <h3 class="card-title">生活记忆档案</h3>
         </div>
         
-        <div class="card-content-wrapper">
+        <div class="card-content-wrapper basic-info-content">
           <div class="card-content">
             <div class="info-grid">
               <!-- 第一行：3列 -->
@@ -128,215 +128,215 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <!--  生活记账表单  -->
-    <div class="memory-card">
-      <div class="card-header">
-        <div class="header-icon">💳</div>
-        <h3 class="card-title">记账信息</h3>
-      </div>
+      <!--  生活记账表单 (60%高度)  -->
+      <div class="memory-card invoice-form-section">
+        <div class="card-header">
+          <div class="header-icon">💳</div>
+          <h3 class="card-title">记账信息</h3>
+        </div>
 
-      <div class="card-content-wrapper">
-        <div class="card-content">
-          <div class="info-grid">
-            <!-- 账单行为 -->
-            <div class="info-item form-item">
-              <div class="item-icon">✍️</div>
-              <div class="item-content">
-                <div class="item-label">账单行为</div>
-                <div class="item-value">
-                  <el-input
-                    v-model="invoiceData.invoiceAction"
-                    placeholder="请输入账单行为"
-                    clearable
-                  />
+        <div class="card-content-wrapper invoice-form-content">
+          <div class="card-content">
+            <div class="info-grid">
+              <!-- 账单行为 -->
+              <div class="info-item form-item">
+                <div class="item-icon">✍️</div>
+                <div class="item-content">
+                  <div class="item-label">账单行为</div>
+                  <div class="item-value">
+                    <el-input
+                      v-model="invoiceData.invoiceAction"
+                      placeholder="请输入账单行为"
+                      clearable
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 记账时间（不可编辑，使用生活记忆结束时间） -->
-            <div class="info-item form-item">
-              <div class="item-icon">🕒</div>
-              <div class="item-content">
-                <div class="item-label">记账时间</div>
-                <div class="item-value">
-                  <el-input
-                    v-model="invoiceData.recordTime"
-                    disabled
-                    placeholder="记账时间"
-                  />
+              <!-- 记账时间（不可编辑，使用生活记忆结束时间） -->
+              <div class="info-item form-item">
+                <div class="item-icon">🕒</div>
+                <div class="item-content">
+                  <div class="item-label">记账时间</div>
+                  <div class="item-value">
+                    <el-input
+                      v-model="invoiceData.recordTime"
+                      disabled
+                      placeholder="记账时间"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 金额（可编辑，默认使用生活消费） -->
-            <div class="info-item form-item">
-              <div class="item-icon">💰</div>
-              <div class="item-content">
-                <div class="item-label">金额</div>
-                <div class="item-value">
-                  <el-input-number
-                    v-model="invoiceData.amount"
-                    controls-position="right"
-                    :min="0"
-                    :max="100000"
-                    :precision="2"
-                    style="width: 100%"
-                  />
+              <!-- 金额（可编辑，默认使用生活消费） -->
+              <div class="info-item form-item">
+                <div class="item-icon">💰</div>
+                <div class="item-content">
+                  <div class="item-label">金额</div>
+                  <div class="item-value">
+                    <el-input-number
+                      v-model="invoiceData.amount"
+                      controls-position="right"
+                      :min="0"
+                      :max="100000"
+                      :precision="2"
+                      style="width: 100%"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 记账资产台账 -->
-            <div class="info-item form-item">
-              <div class="item-icon">🏦</div>
-              <div class="item-content">
-                <div class="item-label">记账资产台账</div>
-                <div class="item-value">
-                  <el-input
-                    v-model="invoiceData.assetName"
-                    placeholder="请选择资产台账"
-                    readonly
-                    @click="openAssetLedgerDialog"
-                  >
-                    <template #suffix>
-                      <el-icon><ArrowDown /></el-icon>
-                    </template>
-                  </el-input>
+              <!-- 记账资产台账 -->
+              <div class="info-item form-item">
+                <div class="item-icon">🏦</div>
+                <div class="item-content">
+                  <div class="item-label">记账资产台账</div>
+                  <div class="item-value">
+                    <el-input
+                      v-model="invoiceData.assetName"
+                      placeholder="请选择资产台账"
+                      readonly
+                      @click="openAssetLedgerDialog"
+                    >
+                      <template #suffix>
+                        <el-icon><ArrowDown /></el-icon>
+                      </template>
+                    </el-input>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 收支类型（可编辑，默认根据生活记忆中的消费类型） -->
-            <div class="info-item form-item">
-              <div class="item-icon">📊</div>
-              <div class="item-content">
-                <div class="item-label">收支类型</div>
-                <div class="item-value">
-                  <el-select
-                    v-model="invoiceData.transactionType"
-                    placeholder="请选择"
-                    style="width: 100%"
-                    clearable
-                    @change="handleTransactionTypeChange"
-                  >
-                    <el-option
-                      v-for="item in transactionTypeItem"
-                      :key="item.value"
-                      :label="item.text"
-                      :value="item.value"
-                    ></el-option>
-                  </el-select>
+              <!-- 收支类型（可编辑，默认根据生活记忆中的消费类型） -->
+              <div class="info-item form-item">
+                <div class="item-icon">📊</div>
+                <div class="item-content">
+                  <div class="item-label">收支类型</div>
+                  <div class="item-value">
+                    <el-select
+                      v-model="invoiceData.transactionType"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                      @change="handleTransactionTypeChange"
+                    >
+                      <el-option
+                        v-for="item in transactionTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 账单类型 -->
-            <div class="info-item form-item">
-              <div class="item-icon">📋</div>
-              <div class="item-content">
-                <div class="item-label">账单类型</div>
-                <div class="item-value">
-                  <el-select
-                    v-model="invoiceData.invoiceType"
-                    placeholder="请选择"
-                    style="width: 100%"
-                    clearable
-                  >
-                    <el-option
-                      v-for="item in invoiceTypeItem"
-                      :key="item.value"
-                      :label="item.text"
-                      :value="item.value"
-                    ></el-option>
-                  </el-select>
+              <!-- 账单类型 -->
+              <div class="info-item form-item">
+                <div class="item-icon">📋</div>
+                <div class="item-content">
+                  <div class="item-label">账单类型</div>
+                  <div class="item-value">
+                    <el-select
+                      v-model="invoiceData.invoiceType"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                    >
+                      <el-option
+                        v-for="item in invoiceTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 支出类型（当收支类型为支出时显示） -->
-            <div class="info-item form-item" v-if="invoiceData.transactionType === 2">
-              <div class="item-icon">💸</div>
-              <div class="item-content">
-                <div class="item-label">支出类型</div>
-                <div class="item-value">
-                  <el-select
-                    v-model="invoiceData.spendingType"
-                    placeholder="请选择"
-                    style="width: 100%"
-                    clearable
-                  >
-                    <el-option
-                      v-for="item in spendingTypeItem"
-                      :key="item.value"
-                      :label="item.text"
-                      :value="item.value"
-                    ></el-option>
-                  </el-select>
+              <!-- 支出类型（当收支类型为支出时显示） -->
+              <div class="info-item form-item" v-if="invoiceData.transactionType === 2">
+                <div class="item-icon">💸</div>
+                <div class="item-content">
+                  <div class="item-label">支出类型</div>
+                  <div class="item-value">
+                    <el-select
+                      v-model="invoiceData.spendingType"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                    >
+                      <el-option
+                        v-for="item in spendingTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 收益类型（当收支类型为收入时显示） -->
-            <div class="info-item form-item" v-if="invoiceData.transactionType === 1">
-              <div class="item-icon">📈</div>
-              <div class="item-content">
-                <div class="item-label">收益类型</div>
-                <div class="item-value">
-                  <el-select
-                    v-model="invoiceData.incomeType"
-                    placeholder="请选择"
-                    style="width: 100%"
-                    clearable
-                  >
-                    <el-option
-                      v-for="item in incomeTypeItem"
-                      :key="item.value"
-                      :label="item.text"
-                      :value="item.value"
-                    ></el-option>
-                  </el-select>
+              <!-- 收益类型（当收支类型为收入时显示） -->
+              <div class="info-item form-item" v-if="invoiceData.transactionType === 1">
+                <div class="item-icon">📈</div>
+                <div class="item-content">
+                  <div class="item-label">收益类型</div>
+                  <div class="item-value">
+                    <el-select
+                      v-model="invoiceData.incomeType"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                    >
+                      <el-option
+                        v-for="item in incomeTypeItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 结清状态 -->
-            <div class="info-item form-item">
-              <div class="item-icon">✅</div>
-              <div class="item-content">
-                <div class="item-label">结清状态</div>
-                <div class="item-value">
-                  <el-select
-                    v-model="invoiceData.settlementStatus"
-                    placeholder="请选择"
-                    style="width: 100%"
-                    clearable
-                  >
-                    <el-option
-                      v-for="item in settlementStatusItem"
-                      :key="item.value"
-                      :label="item.text"
-                      :value="item.value"
-                    ></el-option>
-                  </el-select>
+              <!-- 结清状态 -->
+              <div class="info-item form-item">
+                <div class="item-icon">✅</div>
+                <div class="item-content">
+                  <div class="item-label">结清状态</div>
+                  <div class="item-value">
+                    <el-select
+                      v-model="invoiceData.settlementStatus"
+                      placeholder="请选择"
+                      style="width: 100%"
+                      clearable
+                    >
+                      <el-option
+                        v-for="item in settlementStatusItem"
+                        :key="item.value"
+                        :label="item.text"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 备注（可编辑，默认生活记忆内容） -->
-            <div class="info-item content-item long-text-item">
-              <div class="item-icon">📝</div>
-              <div class="item-content">
-                <div class="item-label">备注</div>
-                <div class="item-value content-text">
-                  <el-input
-                    v-model="invoiceData.remark"
-                    type="textarea"
-                    :rows="4"
-                    placeholder="请输入备注..."
-                    resize="vertical"
-                  />
+              <!-- 备注（可编辑，默认生活记忆内容） -->
+              <div class="info-item content-item long-text-item">
+                <div class="item-icon">📝</div>
+                <div class="item-content">
+                  <div class="item-label">备注</div>
+                  <div class="item-value content-text">
+                    <el-input
+                      v-model="invoiceData.remark"
+                      type="textarea"
+                      :rows="4"
+                      placeholder="请输入备注..."
+                      resize="vertical"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -350,6 +350,7 @@
       v-model="assetLedgerDialogVisible"
       title="选择资产台账"
       width="50%"
+      class="asset-ledger-dialog"
       :close-on-click-modal="false"
       append-to-body
     >
@@ -443,6 +444,7 @@
                   type="primary"
                   size="small"
                   @click="handleAssetLedgerSearch"
+                  class="beautified-search-btn"
               >
                 <el-icon><Search /></el-icon>
                 搜索
@@ -450,6 +452,7 @@
               <el-button
                   size="small"
                   @click="resetAssetLedgerQuery"
+                  class="beautified-reset-btn"
               >
                 <el-icon><Refresh /></el-icon>
                 重置
@@ -887,15 +890,43 @@ defineExpose({
 </script>
 
 <style scoped>
+/* 主对话框样式优化 */
+.life-invoice-dialog :deep(.el-dialog__body) {
+  max-height: 65vh;
+  overflow-y: auto;
+  padding: 20px;
+}
+
 .dialog-body {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 基本信息区域 - 40%高度 */
+.basic-info-section {
+  flex: 0 0 auto;
+}
+
+.basic-info-content {
+  max-height: 24vh;
+  overflow-y: auto;
+}
+
+/* 记账表单区域 - 60%高度 */
+.invoice-form-section {
+  flex: 1 1 auto;
+}
+
+.invoice-form-content {
+  max-height: 36vh;
+  overflow-y: auto;
 }
 
 .memory-card {
   border: 1px solid #e4e7ed;
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 20px;
   background-color: #fff;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
@@ -906,6 +937,7 @@ defineExpose({
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .header-icon {
@@ -989,6 +1021,11 @@ defineExpose({
   font-weight: 600;
 }
 
+/* 资产台账对话框样式 - 复用资产记账的样式 */
+.asset-ledger-dialog :deep(.el-dialog__body) {
+  padding: 20px;
+}
+
 .asset-ledger-search {
   margin-bottom: 15px;
   padding: 15px;
@@ -996,9 +1033,55 @@ defineExpose({
   border-radius: 6px;
 }
 
+/* 美化按钮样式 */
+.beautified-search-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  transition: all 0.3s;
+}
+
+.beautified-search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.beautified-reset-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border: none;
+  transition: all 0.3s;
+}
+
+.beautified-reset-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+}
+
 .dialog-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+/* 滚动条样式优化 */
+.basic-info-content::-webkit-scrollbar,
+.invoice-form-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.basic-info-content::-webkit-scrollbar-track,
+.invoice-form-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.basic-info-content::-webkit-scrollbar-thumb,
+.invoice-form-content::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 3px;
+}
+
+.basic-info-content::-webkit-scrollbar-thumb:hover,
+.invoice-form-content::-webkit-scrollbar-thumb:hover {
+  background: #764ba2;
 }
 </style>
