@@ -95,6 +95,7 @@
                 end-placeholder="结束时间"
                 style="width: 100%"
                 value-format="YYYY-MM-DD HH:mm:ss"
+                :unlink-panels="true"
               />
             </el-form-item>
           </el-col>

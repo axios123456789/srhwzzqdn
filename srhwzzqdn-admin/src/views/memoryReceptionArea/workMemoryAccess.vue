@@ -48,6 +48,7 @@
                 format="YYYY-MM-DD HH:mm:ss"
                 value-format="YYYY-MM-DD HH:mm:ss"
                 :editable="false"
+                :unlink-panels="true"
                 clearable
               />
             </el-form-item>
