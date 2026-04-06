@@ -24,6 +24,8 @@ public class AssetLedgerDto {
     @Schema(description = "资产金额（大于）")
     private BigDecimal amount;
 
+    private String assetOwner;
+
     @Schema(description = "资产状态")
     private List<Integer> assetStatus;
 }

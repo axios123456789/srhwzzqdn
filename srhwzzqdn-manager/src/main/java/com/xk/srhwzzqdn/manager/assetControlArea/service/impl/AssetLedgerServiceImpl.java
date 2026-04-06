@@ -36,6 +36,9 @@ public class AssetLedgerServiceImpl implements AssetLedgerService {
         //1.开启分页
         PageHelper.startPage(current, limit);
 
+        //设置所属人
+        assetLedgerDto.setAssetOwner(AuthContextUtil.get().getId());
+
         //条件查询资产台账列表
         List<AssetLedgerVo> assetLedgerList = assetLedgerMapper.getAssetLedgerByCondition(assetLedgerDto);
 

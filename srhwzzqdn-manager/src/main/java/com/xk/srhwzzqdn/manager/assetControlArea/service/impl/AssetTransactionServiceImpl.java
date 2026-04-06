@@ -110,6 +110,9 @@ public class AssetTransactionServiceImpl implements AssetTransactionService {
         //1.开启分页
         PageHelper.startPage(current, limit);
 
+        //设置所属人
+        assetTransactionDto.setInvoiceOwner(AuthContextUtil.get().getId());
+
         //2.条件查询资产记账列表
         List<AssetTransactionVo> assetTransactionList = assetTransactionMapper.getAssetTransactionListByCondition(assetTransactionDto);
 
