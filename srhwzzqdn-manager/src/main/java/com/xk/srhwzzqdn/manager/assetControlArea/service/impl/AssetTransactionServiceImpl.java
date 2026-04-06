@@ -47,20 +47,29 @@ public class AssetTransactionServiceImpl implements AssetTransactionService {
             // 新增资产记账
             assetTransactionMapper.addAssetTransaction(assetTransaction);
 
-            //账单变动联动修改对应的资产台账
-            assetLedgerMapper.updateLedgerAmountByTransaction(assetTransaction.getAssetLedgerId(), assetTransaction.getTransactionType(), assetTransaction.getAmount());
+            //已结清的更新资产台账
+            if (assetTransaction.getSettlementStatus() == 1){
+                //账单变动联动修改对应的资产台账
+                assetLedgerMapper.updateLedgerAmountByTransaction(assetTransaction.getAssetLedgerId(), assetTransaction.getTransactionType(), assetTransaction.getAmount());
+            }
         } else { // 修改
             // 设置更新人
             assetTransaction.setUpdateBy(AuthContextUtil.get().getUserName());
 
-            //根据id查询原本记账金额
-            BigDecimal oldAmount = assetTransactionMapper.getAssetTransactionAmountById(assetTransaction.getId());
+            //根据id查询所有
+            //BigDecimal oldAmount = assetTransactionMapper.getAssetTransactionAmountById(assetTransaction.getId());
+            AssetTransaction allById = assetTransactionMapper.getAllById(assetTransaction.getId());
 
             // 修改资产记账
             assetTransactionMapper.updateAssetTransaction(assetTransaction);
 
-            //账单变动联动修改对应的资产台账
-            assetLedgerMapper.updateLedgerAmountByTransaction(assetTransaction.getAssetLedgerId(), assetTransaction.getTransactionType(), assetTransaction.getAmount().subtract(oldAmount));
+            //未结清到已结清进行另一种记账
+            if (allById.getSettlementStatus() == 2 && assetTransaction.getSettlementStatus() == 1){
+                assetLedgerMapper.updateLedgerAmountByTransaction(assetTransaction.getAssetLedgerId(), assetTransaction.getTransactionType(), allById.getAmount());
+            } else {
+                //账单变动联动修改对应的资产台账
+                assetLedgerMapper.updateLedgerAmountByTransaction(assetTransaction.getAssetLedgerId(), assetTransaction.getTransactionType(), assetTransaction.getAmount().subtract(allById.getAmount()));
+            }
         }
     }
 

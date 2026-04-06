@@ -638,10 +638,10 @@ const loadDictData = async () => {
   try {
     // 并行加载所有数据字典
     const [funType, funSource, funApp, memoryStatus, transType, invType, spendType, incType, settleStatus, assetType, assetStatus] = await Promise.all([
-      GetKeyAndValueByType("fun_memory_type"),
-      GetKeyAndValueByType("fun_memory_source"),
-      GetKeyAndValueByType("fun_memory_app"),
-      GetKeyAndValueByType("memory_status"),
+      GetKeyAndValueByType("t_fun_memory_type"),
+      GetKeyAndValueByType("t_fun_memory_source"),
+      GetKeyAndValueByType("t_fun_memory_app"),
+      GetKeyAndValueByType("t_fun_memory_status"),
       GetKeyAndValueByType("transaction_type"),
       GetKeyAndValueByType("invoice_type"),
       GetKeyAndValueByType("spending_type"),
