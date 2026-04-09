@@ -132,6 +132,9 @@
                     #{item}
                 </foreach>
             </if>
+            <if test="assetOwner != null and assetOwner != ''">
+                and t.asset_owner = #{assetOwner}
+            </if>
         </where>
         order by t.update_time desc
     </select>
@@ -164,6 +167,9 @@
                 <foreach collection="assetStatus" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
+            </if>
+            <if test="assetOwner != null and assetOwner != ''">
+                and t.asset_owner = #{assetOwner}
             </if>
         </where>
         group by t.asset_type
