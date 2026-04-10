@@ -1,10 +1,12 @@
 <template>
   <div class="page-container">
     <!-- 页面标题 -->
-    <h1 style="margin-top: 10px; font-family: 方正姚体; color: black">
-      <el-icon><Notebook /></el-icon>
-      资产记账管理
-    </h1>
+    <div class="page-header">
+      <h1>
+        <el-icon><Notebook /></el-icon>
+        资产记账管理
+      </h1>
+    </div>
 
     <!-- 统计模块 -->
     <div class="statistics-div">
@@ -1230,6 +1232,28 @@ const selectAssetLedger = (row) => {
 .page-container > * {
   position: relative;
   z-index: 1;
+}
+
+/* 页面标题头部 */
+.page-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px 30px;
+  margin-bottom: 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.page-header h1 {
+  margin: 0;
+  font-family: 方正姚体, sans-serif;
+  color: white;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-header h1 .el-icon {
+  font-size: 28px;
 }
 
 /* 搜索表单样式 */
