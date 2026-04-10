@@ -422,7 +422,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .asset-ledger-analysis {
-  padding: 20px;
+  padding: 0;
 }
 
 .overview-cards {
@@ -431,6 +431,14 @@ onBeforeUnmount(() => {
 
 .overview-card {
   height: 150px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.overview-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .card-content {
@@ -456,6 +464,13 @@ onBeforeUnmount(() => {
 
 .chart-card {
   height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .card-header {

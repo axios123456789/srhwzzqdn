@@ -470,14 +470,15 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .asset-accounting-analysis {
-  padding: 20px;
+  padding: 0;
 }
 
 .filter-section {
   margin-bottom: 20px;
-  padding: 15px;
+  padding: 15px 20px;
   background: #f5f7fa;
-  border-radius: 4px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .charts-row {
@@ -486,6 +487,13 @@ onBeforeUnmount(() => {
 
 .chart-card {
   height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
 .card-header {
