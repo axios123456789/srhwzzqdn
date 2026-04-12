@@ -7,6 +7,7 @@
                sum(CASE WHEN asset_type = 1 THEN amount ELSE NULL END)  saving_asset,
                sum(CASE WHEN asset_type != 1 THEN amount ELSE NULL END) invest_asset
         FROM t_asset_ledger
+        WHERE asset_owner = #{param1}
     </select>
 
     <!--  资产聚类分析-资产台账分析-资产类型分组数据获取  -->
@@ -15,7 +16,39 @@
                sum(amount) VALUE
         FROM
             t_asset_ledger
+        WHERE asset_owner = #{param1}
         GROUP BY
             asset_type
+    </select>
+
+    <!--  资产聚类分析-资产台账分析-资产状态分布分组数据获取  -->
+    <select id="getAssetStatusGroup" resultType="com.xk.srhwzzqdn.model.vo.common.GroupTextValueVo">
+        SELECT (SELECT d.`value` FROM t_sys_dict d WHERE d.type = 'asset_status' AND d.`code` = asset_status LIMIT 1) TEXT,
+               sum(amount) VALUE
+        FROM
+            t_asset_ledger
+        WHERE asset_owner = #{param1}
+        GROUP BY
+            asset_status
+    </select>
+
+    <!--  资产聚类分析-资产台账分析-资产金额排行数据获取  -->
+    <select id="getAssetAmountRank" resultType="com.xk.srhwzzqdn.model.vo.common.GroupTextValueVo">
+        select asset_name text,
+               amount value
+        from t_asset_ledger
+        WHERE asset_owner = #{param1}
+        order by amount desc
+    </select>
+
+    <!--  资产聚类分析-资产台账分析-投资收益分析数据获取  -->
+    <select id="getInvestmentReturnAnalysis"
+            resultType="com.xk.srhwzzqdn.model.vo.assetControl.InvestmentReturnAnalysisGroupVo">
+        select asset_name,
+               amount asset_amount,
+               invest_amount
+        from t_asset_ledger
+        where asset_type != 1
+          and asset_owner = #{param1}
     </select>
 </mapper>
