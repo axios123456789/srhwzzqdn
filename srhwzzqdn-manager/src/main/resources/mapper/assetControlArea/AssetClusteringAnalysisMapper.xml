@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.assetControlArea.mapper.AssetClusteringAnalysisMapper">
+    <!--  资产结构(总资产，储蓄资产，投资资产)数据获取  -->
+    <select id="getAssetStructure" resultType="com.xk.srhwzzqdn.model.vo.assetControl.AssetStructureGroupVo">
+        SELECT sum(amount)                                              sum_asset,
+               sum(CASE WHEN asset_type = 1 THEN amount ELSE NULL END)  saving_asset,
+               sum(CASE WHEN asset_type != 1 THEN amount ELSE NULL END) invest_asset
+        FROM t_asset_ledger
+    </select>
+
+    <!--  资产聚类分析-资产台账分析-资产类型分组数据获取  -->
+    <select id="getAssetTypeGroup" resultType="com.xk.srhwzzqdn.model.vo.common.GroupTextValueVo">
+        SELECT (SELECT d.`value` FROM t_sys_dict d WHERE d.type = 'asset_type' AND d.`code` = asset_type LIMIT 1) TEXT,
+               sum(amount) VALUE
+        FROM
+            t_asset_ledger
+        GROUP BY
+            asset_type
+    </select>
+</mapper>

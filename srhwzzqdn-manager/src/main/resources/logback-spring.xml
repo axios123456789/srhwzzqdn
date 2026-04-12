@@ -24,7 +24,7 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <!-- 临界值过滤器 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
+            <level>DEBUG</level>
         </filter>
         <encoder>
             <pattern>${CONSOLE_LOG_PATTERN}</pattern>
@@ -44,9 +44,11 @@
 
     <!-- 开发环境 -->
     <springProfile name="dev">
-        <!-- com.atguigu日志记录器：业务程序INFO级别  -->
-        <logger name="com.example" level="INFO" />
-        <!-- 根日志记录器：INFO级别  -->
+        <!-- 项目业务日志记录器：DEBUG级别，可以打印SQL等详细信息 -->
+        <logger name="com.xk.srhwzzqdn" level="DEBUG" />
+        <!-- MyBatis SQL日志 -->
+        <logger name="com.xk.srhwzzqdn.manager.mapper" level="DEBUG" />
+        <!-- 根日志记录器：INFO级别 -->
         <root level="INFO">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="FILE" />
