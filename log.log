@@ -6865,3 +6865,24 @@ Caused by: java.sql.SQLException: Incorrect DATETIME value: '{}'
 2026-04-14 21:53:07 HikariPool-1 - Start completed.
 2026-04-14 21:57:15 HikariPool-1 - Shutdown initiated...
 2026-04-14 21:57:15 HikariPool-1 - Shutdown completed.
+2026-04-14 21:57:20 Starting ManagerApplication using Java 17.0.17 with PID 19036 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-04-14 21:57:20 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-04-14 21:57:20 The following 1 profile is active: "dev"
+2026-04-14 21:57:21 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-04-14 21:57:21 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-04-14 21:57:21 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-04-14 21:57:21 Tomcat initialized with port(s): 8400 (http)
+2026-04-14 21:57:21 Initializing ProtocolHandler ["http-nio-8400"]
+2026-04-14 21:57:21 Starting service [Tomcat]
+2026-04-14 21:57:21 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-04-14 21:57:21 Initializing Spring embedded WebApplicationContext
+2026-04-14 21:57:21 Root WebApplicationContext: initialization completed in 996 ms
+2026-04-14 21:57:22 Starting ProtocolHandler ["http-nio-8400"]
+2026-04-14 21:57:22 Tomcat started on port(s): 8400 (http) with context path ''
+2026-04-14 21:57:22 Started ManagerApplication in 2.654 seconds (process running for 3.276)
+2026-04-14 21:57:30 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-14 21:57:30 Initializing Servlet 'dispatcherServlet'
+2026-04-14 21:57:30 Completed initialization in 3 ms
+2026-04-14 21:57:31 HikariPool-1 - Starting...
+2026-04-14 21:57:31 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@63bbbf0
+2026-04-14 21:57:31 HikariPool-1 - Start completed.

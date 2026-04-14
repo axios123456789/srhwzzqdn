@@ -19,9 +19,6 @@
           <el-button type="primary" @click="refreshData">
             <el-icon><Search /></el-icon>查询
           </el-button>
-          <el-button @click="resetDateRange">
-            <el-icon><Refresh /></el-icon>重置
-          </el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -94,9 +91,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick, onActivated } from 'vue'
-import { Search, Refresh } from '@element-plus/icons-vue'
+import { ref, onMounted, onBeforeUnmount, onActivated } from 'vue'
+import { Search } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
+import { ElMessage } from 'element-plus'
+import {
+  GetTransactionAmountGroup,
+  GetExpenseStructureGroup,
+  GetSpendingTypeGroup,
+  GetIncomeSourceGroup
+} from '@/api/assetClusteringAnalysis'
 
 // 时间范围
 const dateRange = ref([])
@@ -117,21 +121,97 @@ let incomeSourceChartInstance = null
 // 标记是否已初始化
 let isInitialized = false
 
+// 数据存储
+let transactionAmountData = []
+let expenseStructureData = []
+let expenseTypeData = []
+let incomeSourceData = []
+
+// 处理长文本显示（截断并添加省略号）
+const formatLongText = (text, maxLength = 6) => {
+  if (!text) return ''
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...'
+  }
+  return text
+}
+
+// 获取默认时间范围（当前年份1月1日到当前时间后一天）
+const getDefaultDateRange = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  
+  // 开始时间：当前年份1月1日
+  const startDate = `${year}-01-01`
+  
+  // 结束时间：当前时间后一天
+  const tomorrow = new Date(now)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  const endYear = tomorrow.getFullYear()
+  const endMonth = String(tomorrow.getMonth() + 1).padStart(2, '0')
+  const endDay = String(tomorrow.getDate()).padStart(2, '0')
+  const endDate = `${endYear}-${endMonth}-${endDay}`
+  
+  return [startDate, endDate]
+}
+
 // 处理日期变化
 const handleDateChange = (val) => {
   console.log('日期范围:', val)
 }
 
 // 刷新数据
-const refreshData = () => {
-  console.log('刷新数据, 时间范围:', dateRange.value)
-  // 这里可以根据时间范围重新加载图表数据
-}
-
-// 重置时间范围
-const resetDateRange = () => {
-  dateRange.value = []
-  refreshData()
+const refreshData = async () => {
+  let beginTime, endTime
+  
+  if (dateRange.value && dateRange.value.length === 2) {
+    beginTime = dateRange.value[0]
+    endTime = dateRange.value[1]
+  } else {
+    const defaultRange = getDefaultDateRange()
+    beginTime = defaultRange[0]
+    endTime = defaultRange[1]
+    dateRange.value = defaultRange
+  }
+  
+  try {
+    // 并行请求所有数据
+    const [transactionRes, expenseStructureRes, expenseTypeRes, incomeSourceRes] = await Promise.all([
+      GetTransactionAmountGroup(beginTime, endTime),
+      GetExpenseStructureGroup(beginTime, endTime),
+      GetSpendingTypeGroup(beginTime, endTime),
+      GetIncomeSourceGroup(beginTime, endTime)
+    ])
+    
+    // 处理收支金额数据
+    if (transactionRes.code === 200 && transactionRes.data) {
+      transactionAmountData = transactionRes.data
+    }
+    
+    // 处理支出结构数据
+    if (expenseStructureRes.code === 200 && expenseStructureRes.data) {
+      expenseStructureData = expenseStructureRes.data
+    }
+    
+    // 处理支出类型数据
+    if (expenseTypeRes.code === 200 && expenseTypeRes.data) {
+      expenseTypeData = expenseTypeRes.data
+    }
+    
+    // 处理收入来源数据
+    if (incomeSourceRes.code === 200 && incomeSourceRes.data) {
+      incomeSourceData = incomeSourceRes.data
+    }
+    
+    // 更新所有图表
+    updateAllCharts()
+    
+  } catch (error) {
+    console.error('获取数据失败:', error)
+    ElMessage.error('获取数据失败，请稍后重试')
+  }
 }
 
 // 初始化收入VS支出图表
@@ -139,12 +219,30 @@ const initIncomeExpenseChart = () => {
   if (!incomeExpenseChart.value) return
   
   incomeExpenseChartInstance = echarts.init(incomeExpenseChart.value)
+  updateIncomeExpenseChart()
+}
+
+// 更新收入VS支出图表
+const updateIncomeExpenseChart = () => {
+  if (!incomeExpenseChartInstance || !transactionAmountData.length) return
+  
+  const times = transactionAmountData.map(item => item.timeName)
+  const incomes = transactionAmountData.map(item => item.invoiceAmount || 0)
+  const expenses = transactionAmountData.map(item => item.spendingAmount || 0)
   
   const option = {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
         type: 'shadow'
+      },
+      formatter: (params) => {
+        const originalTime = times[params[0].dataIndex]
+        let result = originalTime + '<br/>'
+        params.forEach(param => {
+          result += `${param.marker}${param.seriesName}: ¥${param.value.toLocaleString()}<br/>`
+        })
+        return result
       }
     },
     legend: {
@@ -160,7 +258,11 @@ const initIncomeExpenseChart = () => {
     },
     xAxis: {
       type: 'category',
-      data: ['1月', '2月', '3月', '4月', '5月', '6月']
+      data: times.map(t => formatLongText(t, 8)),
+      axisLabel: {
+        interval: 0,
+        rotate: times.length > 10 ? 45 : 0
+      }
     },
     yAxis: {
       type: 'value',
@@ -172,7 +274,7 @@ const initIncomeExpenseChart = () => {
       {
         name: '收入',
         type: 'bar',
-        data: [8000, 8500, 9000, 8800, 9200, 9500],
+        data: incomes,
         itemStyle: {
           color: '#67c23a'
         }
@@ -180,7 +282,7 @@ const initIncomeExpenseChart = () => {
       {
         name: '支出',
         type: 'bar',
-        data: [6000, 7000, 6500, 7500, 6800, 7200],
+        data: expenses,
         itemStyle: {
           color: '#f56c6c'
         }
@@ -196,10 +298,29 @@ const initTrendChart = () => {
   if (!trendChart.value) return
   
   trendChartInstance = echarts.init(trendChart.value)
+  updateTrendChart()
+}
+
+// 更新收支趋势图表
+const updateTrendChart = () => {
+  if (!trendChartInstance || !transactionAmountData.length) return
+  
+  const times = transactionAmountData.map(item => item.timeName)
+  const incomes = transactionAmountData.map(item => item.invoiceAmount || 0)
+  const expenses = transactionAmountData.map(item => item.spendingAmount || 0)
+  const balances = transactionAmountData.map(item => item.balanceAmount || 0)
   
   const option = {
     tooltip: {
-      trigger: 'axis'
+      trigger: 'axis',
+      formatter: (params) => {
+        const originalTime = times[params[0].dataIndex]
+        let result = originalTime + '<br/>'
+        params.forEach(param => {
+          result += `${param.marker}${param.seriesName}: ¥${param.value.toLocaleString()}<br/>`
+        })
+        return result
+      }
     },
     legend: {
       data: ['收入', '支出', '结余'],
@@ -215,7 +336,11 @@ const initTrendChart = () => {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: ['1日', '5日', '10日', '15日', '20日', '25日', '30日']
+      data: times.map(t => formatLongText(t, 8)),
+      axisLabel: {
+        interval: 0,
+        rotate: times.length > 10 ? 45 : 0
+      }
     },
     yAxis: {
       type: 'value',
@@ -227,7 +352,7 @@ const initTrendChart = () => {
       {
         name: '收入',
         type: 'line',
-        data: [3000, 1500, 2000, 1800, 2200, 1500, 2500],
+        data: incomes,
         itemStyle: {
           color: '#67c23a'
         }
@@ -235,7 +360,7 @@ const initTrendChart = () => {
       {
         name: '支出',
         type: 'line',
-        data: [2000, 1800, 2200, 1500, 2000, 1800, 1700],
+        data: expenses,
         itemStyle: {
           color: '#f56c6c'
         }
@@ -243,7 +368,7 @@ const initTrendChart = () => {
       {
         name: '结余',
         type: 'line',
-        data: [1000, -300, -200, 300, 200, -300, 800],
+        data: balances,
         itemStyle: {
           color: '#409eff'
         }
@@ -259,16 +384,34 @@ const initExpenseStructureChart = () => {
   if (!expenseStructureChart.value) return
   
   expenseStructureChartInstance = echarts.init(expenseStructureChart.value)
+  updateExpenseStructureChart()
+}
+
+// 更新支出结构图表
+const updateExpenseStructureChart = () => {
+  if (!expenseStructureChartInstance || !expenseStructureData.length) return
+  
+  const data = expenseStructureData.map(item => ({
+    value: item.value || 0,
+    name: item.text
+  }))
   
   const option = {
     tooltip: {
       trigger: 'item',
-      formatter: '{a} <br/>{b}: ¥{c} ({d}%)'
+      formatter: (params) => {
+        return `${params.seriesName}<br/>${params.marker}${params.name}: ¥${params.value.toLocaleString()} (${params.percent}%)`
+      }
     },
     legend: {
       orient: 'vertical',
       left: 'left',
-      top: 'center'
+      top: 'center',
+      formatter: (name) => formatLongText(name, 6),
+      tooltip: {
+        show: true,
+        formatter: (params) => params.name
+      }
     },
     series: [
       {
@@ -290,19 +433,14 @@ const initExpenseStructureChart = () => {
           label: {
             show: true,
             fontSize: '16',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            formatter: (params) => params.name
           }
         },
         labelLine: {
           show: false
         },
-        data: [
-          { value: 2500, name: '饮食' },
-          { value: 2000, name: '房租' },
-          { value: 800, name: '日用品' },
-          { value: 1200, name: '娱乐' },
-          { value: 500, name: '其他' }
-        ]
+        data: data
       }
     ]
   }
@@ -315,16 +453,34 @@ const initExpenseTypeChart = () => {
   if (!expenseTypeChart.value) return
   
   expenseTypeChartInstance = echarts.init(expenseTypeChart.value)
+  updateExpenseTypeChart()
+}
+
+// 更新支出类型图表
+const updateExpenseTypeChart = () => {
+  if (!expenseTypeChartInstance || !expenseTypeData.length) return
+  
+  const data = expenseTypeData.map(item => ({
+    value: item.value || 0,
+    name: item.text
+  }))
   
   const option = {
     tooltip: {
       trigger: 'item',
-      formatter: '{a} <br/>{b}: ¥{c} ({d}%)'
+      formatter: (params) => {
+        return `${params.seriesName}<br/>${params.marker}${params.name}: ¥${params.value.toLocaleString()} (${params.percent}%)`
+      }
     },
     legend: {
       orient: 'vertical',
       left: 'left',
-      top: 'center'
+      top: 'center',
+      formatter: (name) => formatLongText(name, 6),
+      tooltip: {
+        show: true,
+        formatter: (params) => params.name
+      }
     },
     series: [
       {
@@ -346,17 +502,14 @@ const initExpenseTypeChart = () => {
           label: {
             show: true,
             fontSize: '16',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            formatter: (params) => params.name
           }
         },
         labelLine: {
           show: false
         },
-        data: [
-          { value: 4500, name: '必要' },
-          { value: 1500, name: '需要' },
-          { value: 1000, name: '想要' }
-        ]
+        data: data
       }
     ]
   }
@@ -369,16 +522,34 @@ const initIncomeSourceChart = () => {
   if (!incomeSourceChart.value) return
   
   incomeSourceChartInstance = echarts.init(incomeSourceChart.value)
+  updateIncomeSourceChart()
+}
+
+// 更新收入来源图表
+const updateIncomeSourceChart = () => {
+  if (!incomeSourceChartInstance || !incomeSourceData.length) return
+  
+  const data = incomeSourceData.map(item => ({
+    value: item.value || 0,
+    name: item.text
+  }))
   
   const option = {
     tooltip: {
       trigger: 'item',
-      formatter: '{a} <br/>{b}: ¥{c} ({d}%)'
+      formatter: (params) => {
+        return `${params.seriesName}<br/>${params.marker}${params.name}: ¥${params.value.toLocaleString()} (${params.percent}%)`
+      }
     },
     legend: {
       orient: 'vertical',
       left: 'left',
-      top: 'center'
+      top: 'center',
+      formatter: (name) => formatLongText(name, 6),
+      tooltip: {
+        show: true,
+        formatter: (params) => params.name
+      }
     },
     series: [
       {
@@ -400,22 +571,28 @@ const initIncomeSourceChart = () => {
           label: {
             show: true,
             fontSize: '16',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            formatter: (params) => params.name
           }
         },
         labelLine: {
           show: false
         },
-        data: [
-          { value: 8000, name: '工资' },
-          { value: 1000, name: '兼职' },
-          { value: 500, name: '理财' }
-        ]
+        data: data
       }
     ]
   }
   
   incomeSourceChartInstance.setOption(option)
+}
+
+// 更新所有图表
+const updateAllCharts = () => {
+  updateIncomeExpenseChart()
+  updateTrendChart()
+  updateExpenseStructureChart()
+  updateExpenseTypeChart()
+  updateIncomeSourceChart()
 }
 
 // 初始化所有图表
@@ -426,6 +603,9 @@ const initAllCharts = () => {
   initExpenseTypeChart()
   initIncomeSourceChart()
   isInitialized = true
+  
+  // 初始化后立即加载数据
+  refreshData()
 }
 
 // 窗口大小改变时重新渲染图表
@@ -453,6 +633,9 @@ onActivated(() => {
     setTimeout(() => {
       initAllCharts()
     }, 100)
+  } else {
+    // 如果已初始化，重新加载数据
+    refreshData()
   }
 })
 
