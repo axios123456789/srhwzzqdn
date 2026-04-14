@@ -4,6 +4,7 @@ import com.xk.srhwzzqdn.manager.assetControlArea.mapper.AssetClusteringAnalysisM
 import com.xk.srhwzzqdn.manager.assetControlArea.service.AssetClusteringAnalysisService;
 import com.xk.srhwzzqdn.model.vo.assetControl.AssetStructureGroupVo;
 import com.xk.srhwzzqdn.model.vo.assetControl.InvestmentReturnAnalysisGroupVo;
+import com.xk.srhwzzqdn.model.vo.assetControl.TransactionAmountGroup;
 import com.xk.srhwzzqdn.model.vo.common.GroupTextValueVo;
 import com.xk.srhwzzqdn.util.AuthContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,49 @@ public class AssetClusteringAnalysisServiceImpl implements AssetClusteringAnalys
     @Override
     public List<InvestmentReturnAnalysisGroupVo> getInvestmentReturnAnalysis() {
         return assetClusteringAnalysisMapper.getInvestmentReturnAnalysis(AuthContextUtil.get().getId());
+    }
+
+    /**
+     * 资产聚类分析-资产记账分析-收支金额分组数据获取
+     * @param begin_time
+     * @param end_time
+     * @return
+     */
+    @Override
+    public List<TransactionAmountGroup> getTransactionAmountGroup(String begin_time, String end_time) {
+        return assetClusteringAnalysisMapper.getTransactionAmountGroup(begin_time, end_time);
+    }
+
+    /**
+     * 资产聚类分析-资产记账分析-支出结构分组数据获取
+     * @param begin_time
+     * @param end_time
+     * @return
+     */
+    @Override
+    public List<GroupTextValueVo> getExpenseStructureGroup(String begin_time, String end_time) {
+        return assetClusteringAnalysisMapper.getExpenseStructureGroup(begin_time, end_time);
+    }
+
+    /**
+     * 资产聚类分析-资产记账分析-支出类型分组数据获取
+     * @param begin_time
+     * @param end_time
+     * @return
+     */
+    @Override
+    public List<GroupTextValueVo> getSpendingTypeGroup(String begin_time, String end_time) {
+        return assetClusteringAnalysisMapper.getSpendingTypeGroup(begin_time, end_time);
+    }
+
+    /**
+     * 资产聚类分析-资产记账分析-收入来源分组数据获取
+     * @param begin_time
+     * @param end_time
+     * @return
+     */
+    @Override
+    public List<GroupTextValueVo> getIncomeSourceGroup(String begin_time, String end_time) {
+        return assetClusteringAnalysisMapper.getIncomeSourceGroup(begin_time, end_time);
     }
 }
