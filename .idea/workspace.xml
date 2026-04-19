@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产聚类分析-06">
-      <change afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/assetClusteringAnalysis.js" afterDir="false" />
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产聚类分析-07">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -14,8 +13,9 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetClusteringAnalysisTabs/assetAccountingAnalysis.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetClusteringAnalysisTabs/assetAccountingAnalysis.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetClusteringAnalysisTabs/assetLedgerAnalysis.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/assetClusteringAnalysisTabs/assetLedgerAnalysis.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetClusteringAnalysisMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetClusteringAnalysisMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetClusteringAnalysisServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetClusteringAnalysisServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/AssetClusteringAnalysisMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/AssetClusteringAnalysisMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,17 +93,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ManagerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="srhwzzqdn-manager" />
       <extension name="coverage">
@@ -279,14 +268,16 @@
       <workItem from="1776066333795" duration="810000" />
       <workItem from="1776084774532" duration="679000" />
       <workItem from="1776127390126" duration="1544000" />
-      <workItem from="1776164769079" duration="7442000" />
-    </task>
-    <task id="LOCAL-00044" summary="学习记忆接入-004">
-      <created>1774095713011</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1774095713011</updated>
+      <workItem from="1776164769079" duration="7690000" />
+      <workItem from="1776214463744" duration="3380000" />
+      <workItem from="1776251342992" duration="648000" />
+      <workItem from="1776301105715" duration="684000" />
+      <workItem from="1776337001166" duration="734000" />
+      <workItem from="1776386579750" duration="156000" />
+      <workItem from="1776386880710" duration="1292000" />
+      <workItem from="1776423872211" duration="640000" />
+      <workItem from="1776473091581" duration="700000" />
+      <workItem from="1776560509011" duration="1758000" />
     </task>
     <task id="LOCAL-00045" summary="学习记忆接入-004">
       <created>1774360535072</created>
@@ -624,7 +615,14 @@
       <option name="project" value="LOCAL" />
       <updated>1776175136607</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="资产聚类分析-07">
+      <created>1776179184277</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1776179184277</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -643,7 +641,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="资产记账-05" />
     <MESSAGE value="资产记账-06" />
     <MESSAGE value="资产记账-07" />
     <MESSAGE value="资产记账-08" />
@@ -668,7 +665,8 @@
     <MESSAGE value="资产聚类分析-04" />
     <MESSAGE value="资产聚类分析-05" />
     <MESSAGE value="资产聚类分析-06" />
-    <option name="LAST_COMMIT_MESSAGE" value="资产聚类分析-06" />
+    <MESSAGE value="资产聚类分析-07" />
+    <option name="LAST_COMMIT_MESSAGE" value="资产聚类分析-07" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

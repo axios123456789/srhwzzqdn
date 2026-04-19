@@ -70,7 +70,7 @@ public class AssetClusteringAnalysisServiceImpl implements AssetClusteringAnalys
      */
     @Override
     public List<TransactionAmountGroup> getTransactionAmountGroup(String begin_time, String end_time) {
-        return assetClusteringAnalysisMapper.getTransactionAmountGroup(begin_time, end_time);
+        return assetClusteringAnalysisMapper.getTransactionAmountGroup(begin_time, end_time, AuthContextUtil.get().getId());
     }
 
     /**
@@ -81,7 +81,7 @@ public class AssetClusteringAnalysisServiceImpl implements AssetClusteringAnalys
      */
     @Override
     public List<GroupTextValueVo> getExpenseStructureGroup(String begin_time, String end_time) {
-        return assetClusteringAnalysisMapper.getExpenseStructureGroup(begin_time, end_time);
+        return assetClusteringAnalysisMapper.getExpenseStructureGroup(begin_time, end_time, AuthContextUtil.get().getId());
     }
 
     /**
@@ -92,7 +92,7 @@ public class AssetClusteringAnalysisServiceImpl implements AssetClusteringAnalys
      */
     @Override
     public List<GroupTextValueVo> getSpendingTypeGroup(String begin_time, String end_time) {
-        return assetClusteringAnalysisMapper.getSpendingTypeGroup(begin_time, end_time);
+        return assetClusteringAnalysisMapper.getSpendingTypeGroup(begin_time, end_time, AuthContextUtil.get().getId());
     }
 
     /**
@@ -103,6 +103,6 @@ public class AssetClusteringAnalysisServiceImpl implements AssetClusteringAnalys
      */
     @Override
     public List<GroupTextValueVo> getIncomeSourceGroup(String begin_time, String end_time) {
-        return assetClusteringAnalysisMapper.getIncomeSourceGroup(begin_time, end_time);
+        return assetClusteringAnalysisMapper.getIncomeSourceGroup(begin_time, end_time, AuthContextUtil.get().getId());
     }
 }

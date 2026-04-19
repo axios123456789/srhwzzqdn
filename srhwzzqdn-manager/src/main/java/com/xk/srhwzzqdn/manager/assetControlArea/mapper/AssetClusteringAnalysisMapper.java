@@ -26,14 +26,14 @@ public interface AssetClusteringAnalysisMapper {
     List<InvestmentReturnAnalysisGroupVo> getInvestmentReturnAnalysis(String asset_owner);
 
     //资产聚类分析-资产记账分析-收支金额分组数据获取
-    List<TransactionAmountGroup> getTransactionAmountGroup(String begin_time, String end_time);
+    List<TransactionAmountGroup> getTransactionAmountGroup(String begin_time, String end_time, String asset_owner);
 
     //资产聚类分析-资产记账分析-支出结构分组数据获取
-    List<GroupTextValueVo> getExpenseStructureGroup(String begin_time, String end_time);
+    List<GroupTextValueVo> getExpenseStructureGroup(String begin_time, String end_time, String asset_owner);
 
     //资产聚类分析-资产记账分析-支出类型分组数据获取
-    List<GroupTextValueVo> getSpendingTypeGroup(String begin_time, String end_time);
+    List<GroupTextValueVo> getSpendingTypeGroup(String begin_time, String end_time, String asset_owner);
 
     //资产聚类分析-资产记账分析-收入来源分组数据获取
-    List<GroupTextValueVo> getIncomeSourceGroup(String begin_time, String end_time);
+    List<GroupTextValueVo> getIncomeSourceGroup(String begin_time, String end_time, String asset_owner);
 }
