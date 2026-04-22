@@ -11,21 +11,23 @@
     destroy-on-close
   >
     <!-- 标题块 -->
-    <div class="detail-header">
-      <div class="header-left">
-        <el-icon style="margin-right: 8px; font-size: 20px;"><Coin /></el-icon>
+    <div class="detail-header-bar">
+      <div class="detail-header-left">
+        <div class="detail-title-icon">
+          <el-icon :size="18"><Coin /></el-icon>
+        </div>
         <span class="header-title">基金数据维护 - {{ fundData.fundName || '未知基金' }}</span>
-        <el-tag type="info" size="small" style="margin-left: 12px;">{{ fundData.fundCode }}</el-tag>
+        <el-tag type="info" size="small" effect="dark" style="margin-left: 10px;">{{ fundData.fundCode }}</el-tag>
       </div>
-      <div class="header-right">
-        <el-button @click="handleClose" :icon="Close">取消</el-button>
+      <div class="detail-header-right">
+        <el-icon class="close-icon" @click="handleClose"><Close /></el-icon>
       </div>
     </div>
 
     <!-- 按钮操作块 -->
     <div class="detail-actions">
-      <el-button type="primary" @click="handleSave" :icon="Check">保存</el-button>
-      <el-button @click="handleClose" :icon="Close">取消</el-button>
+      <el-button type="primary" size="small" @click="handleSave" :icon="Check">保存</el-button>
+      <el-button size="small" @click="handleClose" :icon="Close">取消</el-button>
     </div>
 
     <!-- 滚动内容区 -->
@@ -889,7 +891,7 @@ const handleClose = () => {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  border-radius: 12px;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -903,93 +905,189 @@ const handleClose = () => {
   display: none;
 }
 
-/* 标题块 */
-.detail-header {
+/* ====== 标题栏（最上面，全宽） ====== */
+.detail-header-bar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 16px 0;
-  border-bottom: 2px solid #e8eef5;
-  margin-bottom: 0;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #2c5aa0 0%, #4a7bc7 100%);
+  padding: 12px 20px;
   position: sticky;
   top: 0;
-  background: #fff;
   z-index: 10;
+  box-shadow: 0 2px 8px rgba(44, 90, 160, 0.2);
+  margin: 0 -20px 0;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-.header-left {
+.detail-header-left {
   display: flex;
   align-items: center;
+}
+
+.detail-title-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-right: 10px;
 }
 
 .header-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
-  color: #2c5aa0;
+  color: #fff;
+  letter-spacing: 0.5px;
 }
 
-/* 按钮操作块 */
+.detail-header-right {
+  display: flex;
+  align-items: center;
+}
+
+.close-icon {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.close-icon:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ====== 按钮操作块（标题下面另起一行） ====== */
 .detail-actions {
   display: flex;
   justify-content: flex-start;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid #e8eef5;
-  margin-bottom: 8px;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e4e9f0;
+  margin-bottom: 12px;
 }
 
-/* 滚动内容区 */
+.detail-actions :deep(.el-button--primary) {
+  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  box-shadow: 0 1px 4px rgba(64, 158, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+.detail-actions :deep(.el-button--primary:hover) {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(64, 158, 255, 0.4);
+}
+
+.detail-actions :deep(.el-button--default) {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.detail-actions :deep(.el-button--default:hover) {
+  transform: translateY(-1px);
+}
+
+/* ====== 滚动内容区 ====== */
 .detail-body {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
-/* 分区块 */
+/* ====== 分区块 ====== */
 .section-block {
   background: #fff;
-  border: 1px solid #e8eef5;
-  border-radius: 12px;
+  border: 1px solid #e4e9f0;
+  border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
 }
 
 .section-title {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 20px;
+  padding: 12px 18px;
   background: linear-gradient(135deg, #f0f5ff 0%, #e8eef5 100%);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #2c5aa0;
-  border-bottom: 1px solid #e8eef5;
+  border-bottom: 1px solid #e4e9f0;
 }
 
 .section-content {
-  padding: 16px 20px;
+  padding: 14px 18px;
 }
 
-/* 子区块工具栏 */
+/* ====== 子区块工具栏 ====== */
 .sub-section-toolbar {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-/* 子区块分页 */
+.sub-section-toolbar :deep(.el-button--primary) {
+  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(64, 158, 255, 0.25);
+  transition: all 0.2s ease;
+}
+
+.sub-section-toolbar :deep(.el-button--primary:hover) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(64, 158, 255, 0.35);
+}
+
+.sub-section-toolbar :deep(.el-button--default) {
+  border-radius: 5px;
+  transition: all 0.2s ease;
+}
+
+.sub-section-toolbar :deep(.el-button--default:hover) {
+  transform: translateY(-1px);
+}
+
+.sub-section-toolbar :deep(.el-button--success) {
+  background: linear-gradient(135deg, #67c23a 0%, #85ce61 100%);
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(103, 194, 58, 0.25);
+  transition: all 0.2s ease;
+}
+
+.sub-section-toolbar :deep(.el-button--success:hover) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(103, 194, 58, 0.35);
+}
+
+/* ====== 子区块分页 ====== */
 .sub-pagination {
   display: flex;
   justify-content: flex-end;
-  margin-top: 12px;
+  margin-top: 10px;
 }
 
-/* 涨跌颜色 */
+/* ====== 涨跌颜色 ====== */
 .text-red { color: #f56c6c; font-weight: 600; }
 .text-green { color: #67c23a; font-weight: 600; }
 
-/* 子编辑对话框 */
+/* ====== 子编辑对话框 ====== */
 .sub-edit-dialog :deep(.el-dialog) {
   border-radius: 12px;
 }

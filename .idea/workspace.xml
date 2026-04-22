@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产聚类分析-08">
-      <change afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/fundAssetManagement.vue" afterDir="false" />
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="基金资产管理-01">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/router/modules/assetControlArea.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/router/modules/assetControlArea.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -294,14 +291,7 @@
       <workItem from="1776773048597" duration="629000" />
       <workItem from="1776818761183" duration="1852000" />
       <workItem from="1776855068962" duration="113000" />
-      <workItem from="1776855276910" duration="3590000" />
-    </task>
-    <task id="LOCAL-00046" summary="资产台账管理-001">
-      <created>1774530637074</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1774530637074</updated>
+      <workItem from="1776855276910" duration="4149000" />
     </task>
     <task id="LOCAL-00047" summary="资产台账管理-001">
       <created>1774530643653</created>
@@ -639,7 +629,14 @@
       <option name="project" value="LOCAL" />
       <updated>1776594830011</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="基金资产管理-01">
+      <created>1776861308715</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1776861308717</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -658,7 +655,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="资产记账-07" />
     <MESSAGE value="资产记账-08" />
     <MESSAGE value="资产记账-09" />
     <MESSAGE value="资产记账-10" />
@@ -683,7 +679,8 @@
     <MESSAGE value="资产聚类分析-06" />
     <MESSAGE value="资产聚类分析-07" />
     <MESSAGE value="资产聚类分析-08" />
-    <option name="LAST_COMMIT_MESSAGE" value="资产聚类分析-08" />
+    <MESSAGE value="基金资产管理-01" />
+    <option name="LAST_COMMIT_MESSAGE" value="基金资产管理-01" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
