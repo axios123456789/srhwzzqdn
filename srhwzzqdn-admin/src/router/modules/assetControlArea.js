@@ -5,6 +5,8 @@ const assetAccounting = () =>
 const assetOverview = () => import('@/views/assetControlArea/assetOverview.vue')
 const assetClusteringAnalysis = () =>
   import('@/views/assetControlArea/assetClusteringAnalysis.vue')
+const fundAssetManagement = () =>
+  import('@/views/assetControlArea/fundAssetManagement.vue')
 
 // 导出该组件
 export default [
@@ -35,6 +37,17 @@ export default [
           title: '资产台账管理',
         },
         icon: 'DataLine', // 数据曲线图标象征总览
+        hidden: false,
+      },
+      {
+        path: '/fundAssetManagement',
+        name: 'fundAssetManagement',
+        component: fundAssetManagement,
+        meta: {
+          title: '基金资产管理',
+        },
+        //基金资产管理图标
+        icon: 'finished',
         hidden: false,
       },
       {
