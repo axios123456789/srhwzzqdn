@@ -4,14 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="基金资产管理-01">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="基金资产管理-02">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage-cache.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/fundDetailDialog/fundDetailDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/fundDetailDialog/fundDetailDialog.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,17 +91,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ManagerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="srhwzzqdn-manager" />
       <extension name="coverage">
@@ -291,14 +282,10 @@
       <workItem from="1776773048597" duration="629000" />
       <workItem from="1776818761183" duration="1852000" />
       <workItem from="1776855068962" duration="113000" />
-      <workItem from="1776855276910" duration="4149000" />
-    </task>
-    <task id="LOCAL-00047" summary="资产台账管理-001">
-      <created>1774530643653</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1774530643653</updated>
+      <workItem from="1776855276910" duration="4567000" />
+      <workItem from="1776904844483" duration="1235000" />
+      <workItem from="1776943522691" duration="1258000" />
+      <workItem from="1777026687500" duration="1601000" />
     </task>
     <task id="LOCAL-00048" summary="资产台账管理-002">
       <created>1774679733830</created>
@@ -636,7 +623,14 @@
       <option name="project" value="LOCAL" />
       <updated>1776861308717</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="基金资产管理-02">
+      <created>1776866032875</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1776866032875</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -655,7 +649,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="资产记账-08" />
     <MESSAGE value="资产记账-09" />
     <MESSAGE value="资产记账-10" />
     <MESSAGE value="资产记账-11" />
@@ -680,7 +673,8 @@
     <MESSAGE value="资产聚类分析-07" />
     <MESSAGE value="资产聚类分析-08" />
     <MESSAGE value="基金资产管理-01" />
-    <option name="LAST_COMMIT_MESSAGE" value="基金资产管理-01" />
+    <MESSAGE value="基金资产管理-02" />
+    <option name="LAST_COMMIT_MESSAGE" value="基金资产管理-02" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

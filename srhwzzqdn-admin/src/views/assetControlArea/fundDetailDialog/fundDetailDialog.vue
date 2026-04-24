@@ -9,6 +9,8 @@
     :show-close="false"
     class="fund-detail-dialog"
     destroy-on-close
+    :fullscreen="isFullscreen"
+    @open="initFullscreen"
   >
     <!-- 标题块 -->
     <div class="detail-header-bar">
@@ -547,6 +549,10 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Close, Check, Search, Refresh, Plus } from '@element-plus/icons-vue'
+import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
+
+// 在需要全屏的组件中使用 Hook
+const { isFullscreen, initFullscreen } = useFullscreenDialog()
 
 // ============ Props & Emit ============
 const props = defineProps({
