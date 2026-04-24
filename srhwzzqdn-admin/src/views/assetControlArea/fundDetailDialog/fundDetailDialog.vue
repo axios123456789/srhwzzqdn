@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     v-model="dialogVisible"
-    title=""
     width="90%"
     :close-on-click-modal="false"
     :lock-scroll="false"
@@ -10,21 +9,26 @@
     class="fund-detail-dialog"
     destroy-on-close
     :fullscreen="isFullscreen"
-    @open="initFullscreen"
   >
-    <!-- 标题块 -->
-    <div class="detail-header-bar">
-      <div class="detail-header-left">
-        <div class="detail-title-icon">
-          <el-icon :size="18"><Coin /></el-icon>
+    <!-- 标题块 - 使用header插槽 -->
+    <template #header>
+      <div class="detail-header-bar">
+        <div class="detail-header-left">
+          <div class="detail-title-icon">
+            <el-icon :size="18"><Coin /></el-icon>
+          </div>
+          <span class="header-title">基金数据维护 - {{ fundData.fundName || '未知基金' }}</span>
+          <el-tag type="info" size="small" effect="dark" style="margin-left: 10px;">{{ fundData.fundCode }}</el-tag>
         </div>
-        <span class="header-title">基金数据维护 - {{ fundData.fundName || '未知基金' }}</span>
-        <el-tag type="info" size="small" effect="dark" style="margin-left: 10px;">{{ fundData.fundCode }}</el-tag>
+        <div class="detail-header-right">
+          <el-icon class="fullscreen-icon" @click="toggleFullscreen">
+            <FullScreen v-if="!isFullscreen" />
+            <aim v-else />
+          </el-icon>
+          <el-icon class="close-icon" @click="handleClose"><Close /></el-icon>
+        </div>
       </div>
-      <div class="detail-header-right">
-        <el-icon class="close-icon" @click="handleClose"><Close /></el-icon>
-      </div>
-    </div>
+    </template>
 
     <!-- 按钮操作块 -->
     <div class="detail-actions">
@@ -548,11 +552,11 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Close, Check, Search, Refresh, Plus } from '@element-plus/icons-vue'
+import { Close, Check, Search, Refresh, Plus, FullScreen, Aim } from '@element-plus/icons-vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 
 // 在需要全屏的组件中使用 Hook
-const { isFullscreen, initFullscreen } = useFullscreenDialog()
+const { isFullscreen, initFullscreen, toggleFullscreen } = useFullscreenDialog()
 
 // ============ Props & Emit ============
 const props = defineProps({
@@ -901,14 +905,15 @@ const handleClose = () => {
   overflow: hidden;
 }
 
+.fund-detail-dialog :deep(.el-dialog__header) {
+  padding: 0;
+  margin: 0;
+}
+
 .fund-detail-dialog :deep(.el-dialog__body) {
   flex: 1;
   overflow-y: auto;
   padding: 0 20px 20px;
-}
-
-.fund-detail-dialog :deep(.el-dialog__header) {
-  display: none;
 }
 
 /* ====== 标题栏（最上面，全宽） ====== */
@@ -918,13 +923,7 @@ const handleClose = () => {
   justify-content: space-between;
   background: linear-gradient(135deg, #2c5aa0 0%, #4a7bc7 100%);
   padding: 12px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
   box-shadow: 0 2px 8px rgba(44, 90, 160, 0.2);
-  margin: 0 -20px 0;
-  padding-left: 20px;
-  padding-right: 20px;
 }
 
 .detail-header-left {
@@ -954,8 +953,10 @@ const handleClose = () => {
 .detail-header-right {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
+.fullscreen-icon,
 .close-icon {
   font-size: 20px;
   color: rgba(255, 255, 255, 0.7);
@@ -965,6 +966,7 @@ const handleClose = () => {
   border-radius: 4px;
 }
 
+.fullscreen-icon:hover,
 .close-icon:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.2);
