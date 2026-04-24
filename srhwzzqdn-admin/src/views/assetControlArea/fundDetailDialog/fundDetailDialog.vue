@@ -239,18 +239,14 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="持仓盈亏">
-                  <span :class="shareData.positionProfit >= 0 ? 'text-red' : 'text-green'" style="font-weight: 600; font-size: 14px;">
-                    {{ shareData.positionProfit.toFixed(2) }}
-                  </span>
+                  <el-input-number v-model="shareData.positionProfit" :precision="2" :step="100" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="持仓收益率(%)">
-                  <span :class="shareData.positionProfitRate >= 0 ? 'text-red' : 'text-green'" style="font-weight: 600; font-size: 14px;">
-                    {{ shareData.positionProfitRate.toFixed(2) }}%
-                  </span>
+                  <el-input-number v-model="shareData.positionProfitRate" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -656,9 +652,21 @@ const resetNavQuery = () => { navQuery.timeRange = null; navPage.page = 1 }
 const shareData = reactive({
   holdShares: 0, availableShares: 0, frozenShares: 0,
   positionCost: 0, positionValue: 0,
-  positionProfit: computed(() => shareData.positionValue - shareData.positionCost),
-  positionProfitRate: computed(() => shareData.positionCost > 0 ? ((shareData.positionValue - shareData.positionCost) / shareData.positionCost * 100) : 0)
+  positionProfit: 0,
+  positionProfitRate: 0
 })
+
+// 监听持仓成本和市值变化,自动计算盈亏和收益率
+watch(
+  () => [shareData.positionCost, shareData.positionValue],
+  () => {
+    shareData.positionProfit = shareData.positionValue - shareData.positionCost
+    shareData.positionProfitRate = shareData.positionCost > 0 
+      ? ((shareData.positionValue - shareData.positionCost) / shareData.positionCost * 100) 
+      : 0
+  },
+  { immediate: true }
+)
 
 // ============ 交易与流水 ============
 const tradeData = ref([])
@@ -850,7 +858,9 @@ const initDialogData = () => {
   Object.assign(shareData, {
     holdShares: row.holdShares || 0, availableShares: row.availableShares || 0,
     frozenShares: row.frozenShares || 0, positionCost: row.positionCost || 0,
-    positionValue: row.positionValue || 0
+    positionValue: row.positionValue || 0,
+    positionProfit: row.positionProfit || 0,
+    positionProfitRate: row.positionProfitRate || 0
   })
 
   // 交易数据
@@ -880,7 +890,8 @@ const handleSave = () => {
     navList: JSON.parse(JSON.stringify(navData.value)),
     holdShares: shareData.holdShares, availableShares: shareData.availableShares,
     frozenShares: shareData.frozenShares, positionCost: shareData.positionCost,
-    positionValue: shareData.positionValue,
+    positionValue: shareData.positionValue, positionProfit: shareData.positionProfit,
+    positionProfitRate: shareData.positionProfitRate,
     tradeList: JSON.parse(JSON.stringify(tradeData.value)),
     dividendList: JSON.parse(JSON.stringify(dividendData.value)),
     riskList: JSON.parse(JSON.stringify(riskData.value)),
@@ -896,13 +907,15 @@ const handleClose = () => {
 </script>
 
 <style scoped>
+/* ====== 对话框整体容器 ====== */
 .fund-detail-dialog :deep(.el-dialog) {
   height: 100%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  border-radius: 0;
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .fund-detail-dialog :deep(.el-dialog__header) {
@@ -913,190 +926,284 @@ const handleClose = () => {
 .fund-detail-dialog :deep(.el-dialog__body) {
   flex: 1;
   overflow-y: auto;
-  padding: 0 20px 20px;
+  padding: 0;
+  background: #f5f7fa;
 }
 
-/* ====== 标题栏（最上面，全宽） ====== */
+/* ====== 标题栏 ====== */
 .detail-header-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #2c5aa0 0%, #4a7bc7 100%);
-  padding: 12px 20px;
-  box-shadow: 0 2px 8px rgba(44, 90, 160, 0.2);
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  padding: 16px 24px;
+  box-shadow: 0 2px 12px rgba(30, 60, 114, 0.3);
 }
 
 .detail-header-left {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .detail-title-icon {
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  margin-right: 10px;
+  backdrop-filter: blur(10px);
 }
 
 .header-title {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 600;
   color: #fff;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 .detail-header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .fullscreen-icon,
 .close-icon {
-  font-size: 20px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 4px;
-  border-radius: 4px;
+  transition: all 0.3s ease;
+  padding: 6px;
+  border-radius: 6px;
 }
 
 .fullscreen-icon:hover,
 .close-icon:hover {
   color: #fff;
   background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }
 
-/* ====== 按钮操作块（标题下面另起一行） ====== */
+/* ====== 按钮操作块 ====== */
 .detail-actions {
   display: flex;
   justify-content: flex-start;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid #e4e9f0;
-  margin-bottom: 12px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e8ecf1;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .detail-actions :deep(.el-button--primary) {
-  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   border-radius: 6px;
   font-weight: 500;
-  box-shadow: 0 1px 4px rgba(64, 158, 255, 0.3);
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  padding: 8px 20px;
 }
 
 .detail-actions :deep(.el-button--primary:hover) {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(64, 158, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
 }
 
 .detail-actions :deep(.el-button--default) {
   border-radius: 6px;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+  padding: 8px 20px;
+  border-color: #dcdfe6;
 }
 
 .detail-actions :deep(.el-button--default:hover) {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  border-color: #c0c4cc;
+  background: #f5f7fa;
 }
 
 /* ====== 滚动内容区 ====== */
 .detail-body {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  padding: 20px 24px;
 }
 
 /* ====== 分区块 ====== */
 .section-block {
   background: #fff;
-  border: 1px solid #e4e9f0;
-  border-radius: 10px;
+  border: 1px solid #e8ecf1;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+.section-block:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .section-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 18px;
-  background: linear-gradient(135deg, #f0f5ff 0%, #e8eef5 100%);
-  font-size: 14px;
+  gap: 10px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #f8f9fc 0%, #eef1f5 100%);
+  font-size: 15px;
   font-weight: 600;
-  color: #2c5aa0;
-  border-bottom: 1px solid #e4e9f0;
+  color: #2a5298;
+  border-bottom: 1px solid #e8ecf1;
+}
+
+.section-title :deep(.el-icon) {
+  font-size: 18px;
+  color: #667eea;
 }
 
 .section-content {
-  padding: 14px 18px;
+  padding: 20px;
+}
+
+/* ====== 表单样式优化 ====== */
+.section-content :deep(.el-form) {
+  width: 100%;
+}
+
+.section-content :deep(.el-form-item) {
+  margin-bottom: 18px;
+}
+
+.section-content :deep(.el-form-item__label) {
+  font-weight: 500;
+  color: #606266;
 }
 
 /* ====== 子区块工具栏 ====== */
 .sub-section-toolbar {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: #fafbfc;
+  border-radius: 6px;
+  border: 1px solid #e8ecf1;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
+}
+
+.sub-section-toolbar :deep(.el-date-editor) {
+  border-radius: 6px;
 }
 
 .sub-section-toolbar :deep(.el-button--primary) {
-  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-weight: 500;
-  box-shadow: 0 1px 3px rgba(64, 158, 255, 0.25);
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
 }
 
 .sub-section-toolbar :deep(.el-button--primary:hover) {
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(64, 158, 255, 0.35);
+  box-shadow: 0 3px 8px rgba(102, 126, 234, 0.4);
 }
 
 .sub-section-toolbar :deep(.el-button--default) {
-  border-radius: 5px;
-  transition: all 0.2s ease;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  border-color: #dcdfe6;
 }
 
 .sub-section-toolbar :deep(.el-button--default:hover) {
   transform: translateY(-1px);
+  background: #f5f7fa;
 }
 
 .sub-section-toolbar :deep(.el-button--success) {
-  background: linear-gradient(135deg, #67c23a 0%, #85ce61 100%);
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   font-weight: 500;
-  box-shadow: 0 1px 3px rgba(103, 194, 58, 0.25);
-  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(17, 153, 142, 0.3);
+  transition: all 0.3s ease;
 }
 
 .sub-section-toolbar :deep(.el-button--success:hover) {
   transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(103, 194, 58, 0.35);
+  box-shadow: 0 3px 8px rgba(17, 153, 142, 0.4);
+}
+
+/* ====== 表格样式优化 ====== */
+.section-content :deep(.el-table) {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.section-content :deep(.el-table th) {
+  background: #f8f9fc;
+  color: #606266;
+  font-weight: 600;
+}
+
+.section-content :deep(.el-table td) {
+  padding: 10px 0;
 }
 
 /* ====== 子区块分页 ====== */
 .sub-pagination {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f2f5;
+}
+
+.sub-pagination :deep(.el-pagination) {
+  gap: 8px;
 }
 
 /* ====== 涨跌颜色 ====== */
-.text-red { color: #f56c6c; font-weight: 600; }
-.text-green { color: #67c23a; font-weight: 600; }
+.text-red {
+  color: #f56c6c;
+  font-weight: 600;
+}
+
+.text-green {
+  color: #67c23a;
+  font-weight: 600;
+}
 
 /* ====== 子编辑对话框 ====== */
 .sub-edit-dialog :deep(.el-dialog) {
-  border-radius: 12px;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.sub-edit-dialog :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #f8f9fc 0%, #eef1f5 100%);
+  border-bottom: 1px solid #e8ecf1;
+  padding: 16px 20px;
+}
+
+.sub-edit-dialog :deep(.el-dialog__title) {
+  font-weight: 600;
+  color: #2a5298;
+}
+
+.sub-edit-dialog :deep(.el-dialog__body) {
+  padding: 24px;
+}
+
+.sub-edit-dialog :deep(.el-form-item) {
+  margin-bottom: 20px;
 }
 </style>
