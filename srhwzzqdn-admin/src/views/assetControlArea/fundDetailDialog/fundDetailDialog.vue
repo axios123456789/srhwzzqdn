@@ -34,6 +34,7 @@
     <div class="detail-actions">
       <el-button type="primary" size="small" @click="handleSave" :icon="Check">保存</el-button>
       <el-button size="small" @click="handleClose" :icon="Close">取消</el-button>
+      <el-button type="warning" size="small" @click="handleFetchRealTimeData" :icon="Download" :loading="fetchLoading">实时数据</el-button>
     </div>
 
     <!-- 滚动内容区 -->
@@ -548,7 +549,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Close, Check, Search, Refresh, Plus, FullScreen, Aim } from '@element-plus/icons-vue'
+import { Close, Check, Search, Refresh, Plus, FullScreen, Aim, Download } from '@element-plus/icons-vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 
 // 在需要全屏的组件中使用 Hook
@@ -904,6 +905,22 @@ const handleSave = () => {
 const handleClose = () => {
   dialogVisible.value = false
 }
+
+// ============ 获取实时数据 ============
+const fetchLoading = ref(false)
+
+const handleFetchRealTimeData = async () => {
+  fetchLoading.value = true
+  try {
+    // TODO: 调用API获取实时数据(最新净值、持仓等)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    ElMessage.success('实时数据获取成功')
+  } catch (error) {
+    ElMessage.error('获取实时数据失败')
+  } finally {
+    fetchLoading.value = false
+  }
+}
 </script>
 
 <style scoped>
@@ -1027,6 +1044,21 @@ const handleClose = () => {
   transform: translateY(-2px);
   border-color: #c0c4cc;
   background: #f5f7fa;
+}
+
+.detail-actions :deep(.el-button--warning) {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(240, 147, 251, 0.4);
+  transition: all 0.3s ease;
+  padding: 8px 20px;
+}
+
+.detail-actions :deep(.el-button--warning:hover) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(240, 147, 251, 0.5);
 }
 
 /* ====== 滚动内容区 ====== */

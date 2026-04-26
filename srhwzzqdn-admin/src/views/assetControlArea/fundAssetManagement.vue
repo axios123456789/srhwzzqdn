@@ -69,12 +69,12 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row style="display: flex">
-          <el-button type="primary" size="small" @click="handleSearch">
+        <el-row style="display: flex; gap: 10px; padding-left: 10px;">
+          <el-button type="primary" size="small" @click="handleSearch" class="beautified-search-btn">
             <el-icon><Search /></el-icon>
             搜索
           </el-button>
-          <el-button size="small" @click="resetQuery">
+          <el-button size="small" @click="resetQuery" class="beautified-reset-btn">
             <el-icon><Refresh /></el-icon>
             重置
           </el-button>
@@ -84,11 +84,11 @@
 
     <!-- 操作按钮区 -->
     <div class="action-section">
-      <el-button type="danger" size="small" @click="batchDelete">
+      <el-button type="danger" size="small" @click="batchDelete" class="action-btn-danger">
         <el-icon><Delete /></el-icon>
         批量删除
       </el-button>
-      <el-button type="info" size="small" @click="handleExport">
+      <el-button type="info" size="small" @click="handleExport" class="action-btn-export">
         <el-icon><Download /></el-icon>
         一键导出
       </el-button>
@@ -171,11 +171,11 @@
               </div>
             </div>
             <div class="card-footer">
-              <el-button type="primary" size="small" text @click="openDetailDialog(item)">
+              <el-button type="primary" size="small" @click="openDetailDialog(item)" class="card-action-btn-edit">
                 <el-icon><Edit /></el-icon>
                 数据维护
               </el-button>
-              <el-button type="danger" size="small" text @click="deleteFund(item)">
+              <el-button type="danger" size="small" @click="deleteFund(item)" class="card-action-btn-delete">
                 <el-icon><Delete /></el-icon>
                 删除
               </el-button>
@@ -332,8 +332,8 @@
         </el-row>
       </el-form>
       <template #footer>
-        <el-button @click="fetchDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="submitFetchResult">提交入库</el-button>
+        <el-button @click="fetchDialogVisible = false" class="dialog-cancel-btn">取消</el-button>
+        <el-button type="primary" @click="submitFetchResult" class="dialog-submit-btn">提交入库</el-button>
       </template>
     </el-dialog>
 
@@ -437,8 +437,20 @@ const query = reactive({
   assetScaleGt: null, operationMode: '', closedPeriodGt: null
 })
 
+// 实际用于筛选的条件(只有点击搜索按钮时才更新)
+const activeQuery = reactive({
+  fundName: '', fundCode: '', fundType: [],
+  assetScaleGt: null, operationMode: '', closedPeriodGt: null
+})
+
 const resetQuery = () => {
+  // 清空输入框的条件
   Object.assign(query, {
+    fundName: '', fundCode: '', fundType: [],
+    assetScaleGt: null, operationMode: '', closedPeriodGt: null
+  })
+  // 同时清空实际筛选条件
+  Object.assign(activeQuery, {
     fundName: '', fundCode: '', fundType: [],
     assetScaleGt: null, operationMode: '', closedPeriodGt: null
   })
@@ -528,12 +540,12 @@ const pageParams = reactive({ page: 1, limit: 10 })
 
 const filterData = computed(() => {
   return fundList.value.filter(item => {
-    if (query.fundName && !item.fundName.includes(query.fundName)) return false
-    if (query.fundCode && !item.fundCode.includes(query.fundCode)) return false
-    if (query.fundType.length > 0 && !query.fundType.includes(item.fundType)) return false
-    if (query.assetScaleGt && item.assetScale < query.assetScaleGt) return false
-    if (query.operationMode && item.operationMode !== query.operationMode) return false
-    if (query.closedPeriodGt && item.closedPeriod < query.closedPeriodGt) return false
+    if (activeQuery.fundName && !item.fundName.includes(activeQuery.fundName)) return false
+    if (activeQuery.fundCode && !item.fundCode.includes(activeQuery.fundCode)) return false
+    if (activeQuery.fundType.length > 0 && !activeQuery.fundType.includes(item.fundType)) return false
+    if (activeQuery.assetScaleGt && item.assetScale < activeQuery.assetScaleGt) return false
+    if (activeQuery.operationMode && item.operationMode !== activeQuery.operationMode) return false
+    if (activeQuery.closedPeriodGt && item.closedPeriod < activeQuery.closedPeriodGt) return false
     return true
   })
 })
@@ -543,7 +555,12 @@ const pageData = computed(() => {
   return filterData.value.slice(s, s + pageParams.limit)
 })
 
-const handleSearch = () => { pageParams.page = 1 }
+const handleSearch = () => {
+  // 点击搜索按钮时,将查询条件应用到实际筛选条件
+  Object.assign(activeQuery, JSON.parse(JSON.stringify(query)))
+  pageParams.page = 1
+}
+
 const handleSizeChange = (size) => { pageParams.limit = size; pageParams.page = 1 }
 const handleCurrentChange = (page) => { pageParams.page = page }
 
@@ -640,54 +657,58 @@ const handleDetailSave = (saveData) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: linear-gradient(135deg, #2c5aa0 0%, #4a7bc7 100%);
-  padding: 12px 24px;
-  box-shadow: 0 2px 12px rgba(44, 90, 160, 0.25);
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  padding: 16px 28px;
+  box-shadow: 0 4px 20px rgba(30, 60, 114, 0.3);
   flex-shrink: 0;
 }
 
 .top-bar-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .page-title-icon {
-  width: 36px;
-  height: 36px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
+  backdrop-filter: blur(10px);
 }
 
 .page-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 700;
   color: #fff;
   letter-spacing: 1px;
   font-family: 'Microsoft YaHei', sans-serif;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .top-bar-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .top-bar-right :deep(.el-input__wrapper) {
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
 }
 
 .top-bar-right :deep(.el-input__wrapper:hover),
 .top-bar-right :deep(.el-input__wrapper.is-focus) {
   background: rgba(255, 255, 255, 0.25);
   border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
 .top-bar-right :deep(.el-input__inner) {
@@ -703,41 +724,89 @@ const handleDetailSave = (saveData) => {
 }
 
 .top-bar-right :deep(.el-button--primary) {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 6px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
   color: #fff;
-  font-weight: 500;
-  transition: all 0.2s ease;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  padding: 8px 20px;
 }
 
 .top-bar-right :deep(.el-button--primary:hover) {
-  background: rgba(255, 255, 255, 0.35);
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5);
 }
 
 /* ====== 查询区 ====== */
 .search-section {
-  background: rgba(255, 255, 255, 0.85);
-  padding: 12px 20px;
-  border-bottom: 1px solid #e8eef5;
+  background: #fff;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e8ecf1;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .search-section :deep(.el-form-item__label) {
-  font-weight: 500;
+  font-weight: 600;
   color: #2c3e50;
+}
+
+.search-section :deep(.el-input__wrapper),
+.search-section :deep(.el-select__wrapper),
+.search-section :deep(.el-input-number) {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.search-section :deep(.el-input__wrapper:hover),
+.search-section :deep(.el-select__wrapper:hover) {
+  box-shadow: 0 0 0 1px #409eff inset;
 }
 
 /* ====== 操作按钮区 ====== */
 .action-section {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
-  padding: 8px 20px;
-  background: rgba(255, 255, 255, 0.6);
-  border-bottom: 1px solid #e8eef5;
+  padding: 12px 24px;
+  background: #fff;
+  border-bottom: 1px solid #e8ecf1;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.action-btn-danger {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(240, 147, 251, 0.4) !important;
+  transition: all 0.3s ease !important;
+  padding: 8px 20px !important;
+}
+
+.action-btn-danger:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(240, 147, 251, 0.5) !important;
+}
+
+.action-btn-export {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(79, 172, 254, 0.4) !important;
+  transition: all 0.3s ease !important;
+  padding: 8px 20px !important;
+}
+
+.action-btn-export:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.5) !important;
 }
 
 /* ====== 卡片列表区 ====== */
@@ -752,35 +821,40 @@ const handleDetailSave = (saveData) => {
 .card-scroll-wrapper {
   flex: 1;
   overflow-y: auto;
-  padding: 14px 20px;
+  padding: 20px 24px;
 }
 
 .card-scroll-wrapper::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+}
+
+.card-scroll-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
 }
 
 .card-scroll-wrapper::-webkit-scrollbar-thumb {
-  background: #c0c4cc;
-  border-radius: 3px;
+  background: linear-gradient(180deg, #c0c4cc, #909399);
+  border-radius: 4px;
 }
 
 .card-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #909399;
+  background: linear-gradient(180deg, #909399, #606266);
 }
 
 .card-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
+  gap: 20px;
 }
 
 /* ====== 基金卡片 ====== */
 .fund-card {
-  background: linear-gradient(180deg, #fafcff 0%, #f5f7fa 100%);
-  border-radius: 10px;
-  border: 1px solid #e4e9f0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: all 0.25s ease;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8ecf1;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -791,16 +865,16 @@ const handleDetailSave = (saveData) => {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #2c5aa0, #4a7bc7);
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 0.3s ease;
 }
 
 .fund-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(44, 90, 160, 0.12);
-  border-color: #b3cde8;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+  border-color: #c0c4cc;
 }
 
 .fund-card:hover::before {
@@ -808,88 +882,121 @@ const handleDetailSave = (saveData) => {
 }
 
 .fund-card.card-selected {
-  border-color: #409eff;
-  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.15);
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 .fund-card.card-selected::before {
   opacity: 1;
-  background: linear-gradient(90deg, #409eff, #66b1ff);
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
 }
 
 .card-checkbox {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   z-index: 2;
 }
 
 .card-header {
-  padding: 14px 18px 8px;
-  border-bottom: 1px solid #eef1f6;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid #f0f2f5;
+  background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
 }
 
 .card-title-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 3px;
+  gap: 10px;
+  margin-bottom: 4px;
 }
 
 .card-fund-name {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: #2c3e50;
+  letter-spacing: 0.5px;
 }
 
 .card-code {
-  font-size: 12px;
+  font-size: 13px;
   color: #909399;
-  font-family: 'Consolas', monospace;
+  font-family: 'Consolas', 'Monaco', monospace;
   letter-spacing: 0.5px;
 }
 
 .card-body {
-  padding: 10px 18px;
+  padding: 12px 20px;
 }
 
 .card-info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 6px 14px;
+  gap: 8px 16px;
 }
 
 .info-cell {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 3px 0;
+  padding: 4px 0;
 }
 
 .info-label {
-  font-size: 12px;
+  font-size: 13px;
   color: #909399;
   white-space: nowrap;
 }
 
 .info-value {
-  font-size: 13px;
+  font-size: 14px;
   color: #303133;
-  font-weight: 500;
+  font-weight: 600;
   text-align: right;
 }
 
 .card-footer {
-  padding: 6px 18px 10px;
+  padding: 10px 20px 14px;
   display: flex;
   justify-content: flex-end;
-  gap: 6px;
-  border-top: 1px solid #eef1f6;
+  gap: 10px;
+  border-top: 1px solid #f0f2f5;
+  background: #fafbfc;
+}
+
+.card-action-btn-edit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.card-action-btn-edit:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(102, 126, 234, 0.4) !important;
+}
+
+.card-action-btn-delete {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 6px rgba(240, 147, 251, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.card-action-btn-delete:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 3px 8px rgba(240, 147, 251, 0.4) !important;
 }
 
 /* ====== 空状态 ====== */
 .empty-state {
-  padding: 60px 0;
+  padding: 80px 0;
   text-align: center;
 }
 
@@ -897,84 +1004,123 @@ const handleDetailSave = (saveData) => {
 .pagination-section {
   display: flex;
   justify-content: flex-end;
-  padding: 8px 20px;
-  border-top: 1px solid #eef1f6;
+  padding: 12px 24px;
+  border-top: 1px solid #e8ecf1;
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.85);
+  background: #fff;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.pagination-section :deep(.el-pagination) {
+  gap: 8px;
+}
+
+.pagination-section :deep(.el-pagination button),
+.pagination-section :deep(.el-pager li) {
+  border-radius: 6px;
+  transition: all 0.3s ease;
 }
 
 /* ====== 按钮美化 ====== */
-.search-section :deep(.beautified-search-btn),
-.action-section :deep(.el-button--primary) {
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
-  border: none;
-  color: #fff;
-  box-shadow: 0 1px 4px rgba(64, 158, 255, 0.3);
+.beautified-search-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4) !important;
+  transition: all 0.3s ease !important;
+  padding: 8px 20px !important;
 }
 
-.search-section :deep(.beautified-search-btn:hover),
-.action-section :deep(.el-button--primary:hover) {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(64, 158, 255, 0.4);
+.beautified-search-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5) !important;
 }
 
-.search-section :deep(.beautified-reset-btn) {
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.2s ease;
+.beautified-reset-btn {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  border: 1px solid #dcdfe6 !important;
 }
 
-.search-section :deep(.beautified-reset-btn:hover) {
-  transform: translateY(-1px);
-}
-
-.action-section :deep(.el-button--danger) {
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  background: linear-gradient(135deg, #f56c6c 0%, #f78989 100%);
-  border: none;
-  color: #fff;
-  box-shadow: 0 1px 4px rgba(245, 108, 108, 0.3);
-}
-
-.action-section :deep(.el-button--danger:hover) {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(245, 108, 108, 0.4);
-  background: linear-gradient(135deg, #d84646 0%, #f06b6b 100%);
-}
-
-.action-section :deep(.el-button--info) {
-  border-radius: 6px;
-  font-weight: 500;
-  transition: all 0.2s ease;
-  background: linear-gradient(135deg, #909399 0%, #a6a9ad 100%);
-  border: none;
-  color: #fff;
-  box-shadow: 0 1px 4px rgba(144, 147, 153, 0.3);
-}
-
-.action-section :deep(.el-button--info:hover) {
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(144, 147, 153, 0.4);
-  background: linear-gradient(135deg, #73767a 0%, #8d9094 100%);
-}
-
-/* 卡片内操作按钮 */
-.card-footer :deep(.el-button) {
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.card-footer :deep(.el-button:hover) {
-  transform: translateY(-1px);
+.beautified-reset-btn:hover {
+  transform: translateY(-2px) !important;
+  background: #f5f7fa !important;
+  border-color: #c0c4cc !important;
 }
 
 /* ====== 数据获取结果对话框 ====== */
 .fetch-result-dialog :deep(.el-dialog) {
-  border-radius: 12px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.fetch-result-dialog :deep(.el-dialog__header) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px 24px;
+  border-bottom: none;
+}
+
+.fetch-result-dialog :deep(.el-dialog__title) {
+  color: #fff;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.fetch-result-dialog :deep(.el-dialog__headerbtn .el-dialog__close) {
+  color: #fff;
+}
+
+.fetch-result-dialog :deep(.el-dialog__body) {
+  padding: 24px;
+  background: #fafbfc;
+}
+
+.fetch-result-dialog :deep(.el-form-item__label) {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.fetch-result-dialog :deep(.el-input__wrapper),
+.fetch-result-dialog :deep(.el-select__wrapper),
+.fetch-result-dialog :deep(.el-input-number) {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.fetch-result-dialog :deep(.el-dialog__footer) {
+  padding: 16px 24px;
+  background: #fff;
+  border-top: 1px solid #e8ecf1;
+}
+
+.dialog-cancel-btn {
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  padding: 10px 24px !important;
+}
+
+.dialog-cancel-btn:hover {
+  transform: translateY(-2px) !important;
+}
+
+.dialog-submit-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4) !important;
+  transition: all 0.3s ease !important;
+  padding: 10px 24px !important;
+}
+
+.dialog-submit-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5) !important;
 }
 </style>
