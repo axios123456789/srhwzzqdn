@@ -35,13 +35,13 @@ public class FundAssetServiceImpl implements FundAssetService {
     private SysDictMapper sysDictMapper;
 
     /**
-     * 获取基金基本数据
+     * 获取基金测试数据
      * 从东方财富接口拉取基金数据，解析后打印到控制台
      *
      * @param fundCode 基金代码，如 "460001" 表示华泰柏瑞盛世中国混合
      */
     @Override
-    public void getFundBaseData(String fundCode) {
+    public void getFundTestData(String fundCode) {
         // 1. 获取基金基本数据获取的url配置
         // 从系统字典表查询配置的接口地址模板，例如: "https://fund.eastmoney.com/pingzhongdata/{fund_code}.js"
         String fund_base_url = sysDictMapper.getConfigValueById("get_fund_base_data_url");
@@ -130,18 +130,32 @@ public class FundAssetServiceImpl implements FundAssetService {
      */
     private void printStockHoldings(FundDataParser.FundData fundData) {
         System.out.println("\n【三、持仓股票（前十大重仓股）】");
-        // 获取最新的持仓股票代码列表（带市场标识的版本）
+
+        // 方式一：使用原有的 stockCodesNew 列表，手动转换
         List<String> stockCodes = fundData.getStockCodesNew();
         if (stockCodes != null && !stockCodes.isEmpty()) {
+            System.out.println("  【方式一：编码转换】");
             for (int i = 0; i < stockCodes.size(); i++) {
-                String code = stockCodes.get(i);
-                // 根据代码前缀判断所属市场
-                // 0.xxx 表示深市股票，1.xxx 表示沪市/科创板股票
-                String market = code.startsWith("0.") ? "深市" : (code.startsWith("1.") ? "沪市/科创板" : "未知");
-                System.out.printf("  %2d. %s (%s)%n", i + 1, code, market);
+                String encodedCode = stockCodes.get(i);
+                String realCode = FundDataParser.decodeStockCode(encodedCode);
+                String stockName = FundDataParser.getStockName(realCode);
+                String market = FundDataParser.getStockMarket(encodedCode);
+                System.out.printf("  %2d. %s -> %s (%s) - %s%n",
+                        i + 1, encodedCode, realCode, market,
+                        stockName.isEmpty() ? "待补充" : stockName);
             }
         } else {
             System.out.println("  无持仓数据");
+        }
+
+        // 方式二：使用新增的 stockInfoList（更简洁）
+        List<FundDataParser.StockInfo> stockInfoList = fundData.getStockInfoList();
+        if (stockInfoList != null && !stockInfoList.isEmpty()) {
+            System.out.println("\n  【方式二：使用StockInfo对象】");
+            for (int i = 0; i < stockInfoList.size(); i++) {
+                FundDataParser.StockInfo info = stockInfoList.get(i);
+                System.out.printf("  %2d. %s%n", i + 1, info);
+            }
         }
     }
 

@@ -19,14 +19,14 @@ public class FundAssetController {
     private static final Logger logger = LoggerFactory.getLogger(FundAssetController.class);
 
     /**
-     * 获取基金基本数据
+     * 获取基金测试数据（控制台打印）
      * @param fundCode
      * @return
      */
-    @RequestMapping("/getFundBaseData/{fundCode}")
-    public Result getFundBaseData(@PathVariable("fundCode") String fundCode) {
+    @RequestMapping("/getFundTestData/{fundCode}")
+    public Result getFundTestData(@PathVariable("fundCode") String fundCode) {
         try {
-            fundAssetService.getFundBaseData(fundCode);
+            fundAssetService.getFundTestData(fundCode);
             return Result.build(null, ResultCodeEnum.SUCCESS);
         } catch (Exception e) {
             logger.error("获取资产金额排名数据失败", e);

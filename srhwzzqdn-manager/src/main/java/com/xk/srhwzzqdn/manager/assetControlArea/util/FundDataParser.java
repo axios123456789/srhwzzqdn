@@ -16,6 +16,125 @@ public class FundDataParser {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
+    // ==================== 股票名称映射表（静态常量） ====================
+
+    /**
+     * 股票代码到名称的映射表
+     * 可根据需要扩展，也可改为从数据库或第三方接口获取
+     */
+    private static final Map<String, String> STOCK_NAME_MAP = new HashMap<>();
+
+    static {
+        // 初始化股票名称映射（基于本次解析的持仓数据）
+        STOCK_NAME_MAP.put("000768", "中航西飞");
+        STOCK_NAME_MAP.put("600760", "中航沈飞");
+        STOCK_NAME_MAP.put("600893", "航发动力");
+        STOCK_NAME_MAP.put("600030", "中信证券");
+        STOCK_NAME_MAP.put("002080", "中材科技");
+        STOCK_NAME_MAP.put("000738", "航发控制");
+        STOCK_NAME_MAP.put("601211", "国泰君安");
+        STOCK_NAME_MAP.put("688543", "国科军工");
+        STOCK_NAME_MAP.put("688778", "厦钨新能");
+        STOCK_NAME_MAP.put("300073", "当升科技");
+
+        // 可继续添加更多常见股票的映射
+        // STOCK_NAME_MAP.put("600519", "贵州茅台");
+        // STOCK_NAME_MAP.put("000858", "五粮液");
+        // ... 更多映射可根据需要添加
+    }
+
+    // ==================== 股票代码解析工具方法 ====================
+
+    /**
+     * 将东方财富编码转换为真实股票代码
+     * 编码格式说明：
+     * - "0.xxxxxx" 表示深圳证券交易所股票（含创业板），真实代码为 "xxxxxx"
+     * - "1.xxxxxx" 表示上海证券交易所股票（含科创板），真实代码为 "xxxxxx"
+     *
+     * @param encodedCode 东方财富编码，如 "0.000768" 或 "1.600760"
+     * @return 真实股票代码，如 "000768" 或 "600760"
+     */
+    public static String decodeStockCode(String encodedCode) {
+        if (encodedCode == null || encodedCode.isEmpty()) {
+            return "";
+        }
+        // 如果包含点号，取点号后面的部分
+        if (encodedCode.contains(".")) {
+            return encodedCode.substring(encodedCode.indexOf(".") + 1);
+        }
+        return encodedCode;
+    }
+
+    /**
+     * 根据真实股票代码获取股票名称
+     * 优先从本地映射表获取，如果不存在则返回空字符串（可后续从数据库或接口补充）
+     *
+     * @param realCode 真实股票代码，如 "000768"
+     * @return 股票名称，如 "中航西飞"
+     */
+    public static String getStockName(String realCode) {
+        if (realCode == null || realCode.isEmpty()) {
+            return "";
+        }
+        return STOCK_NAME_MAP.getOrDefault(realCode, "");
+    }
+
+    /**
+     * 获取股票所属市场
+     *
+     * @param encodedCode 东方财富编码
+     * @return 市场名称：深市/沪市/科创板/创业板/未知
+     */
+    public static String getStockMarket(String encodedCode) {
+        if (encodedCode == null || encodedCode.isEmpty()) {
+            return "未知";
+        }
+        if (encodedCode.startsWith("0.")) {
+            return "深市";
+        } else if (encodedCode.startsWith("1.")) {
+            // 进一步区分沪市主板和科创板
+            String realCode = decodeStockCode(encodedCode);
+            if (realCode.startsWith("688")) {
+                return "科创板";
+            }
+            return "沪市";
+        } else if (encodedCode.startsWith("3.")) {  // 创业板（如果有）
+            return "创业板";
+        }
+        return "未知";
+    }
+
+    /**
+     * 获取完整的股票信息（代码+名称+市场）
+     *
+     * @param encodedCode 东方财富编码
+     * @return 股票信息对象
+     */
+    public static StockInfo getStockInfo(String encodedCode) {
+        StockInfo info = new StockInfo();
+        info.setEncodedCode(encodedCode);
+        info.setRealCode(decodeStockCode(encodedCode));
+        info.setName(getStockName(info.getRealCode()));
+        info.setMarket(getStockMarket(encodedCode));
+        return info;
+    }
+
+    /**
+     * 股票信息内部类
+     */
+    @Data
+    public static class StockInfo {
+        private String encodedCode;   // 原始编码，如 "0.000768"
+        private String realCode;      // 真实代码，如 "000768"
+        private String name;          // 股票名称，如 "中航西飞"
+        private String market;        // 所属市场，如 "深市"
+
+        @Override
+        public String toString() {
+            return String.format("%s (%s) - %s [%s]", encodedCode, realCode, name, market);
+        }
+    }
+
     // ==================== 1. 基础信息解析 ====================
 
     public static String extractString(String content, String varName) {
@@ -565,6 +684,9 @@ public class FundDataParser {
         private PerformanceEvaluation performanceEvaluation;
         private FluctuationScale fluctuationScale;
         private HolderStructure holderStructure;
+
+        // 股票信息（新增）
+        private List<StockInfo> stockInfoList;   // 解析后的股票详细信息列表
     }
 
     /**
@@ -580,8 +702,18 @@ public class FundDataParser {
         fundData.setCurrentRate(extractDouble(content, "fund_Rate"));
 
         // 2. 持仓股票
+        List<String> stockCodesNew = extractStringArray(content, "stockCodesNew");
         fundData.setStockCodes(extractStringArray(content, "stockCodes"));
-        fundData.setStockCodesNew(extractStringArray(content, "stockCodesNew"));
+        fundData.setStockCodesNew(stockCodesNew);
+
+        // 2.1 解析股票详细信息（新增）
+        if (stockCodesNew != null && !stockCodesNew.isEmpty()) {
+            List<StockInfo> stockInfoList = new ArrayList<>();
+            for (String encodedCode : stockCodesNew) {
+                stockInfoList.add(getStockInfo(encodedCode));
+            }
+            fundData.setStockInfoList(stockInfoList);
+        }
 
         // 3. 收益率
         fundData.setReturn1Year(extractDouble(content, "syl_1n"));
