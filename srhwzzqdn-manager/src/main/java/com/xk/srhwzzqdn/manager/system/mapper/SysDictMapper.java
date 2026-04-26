@@ -64,4 +64,8 @@ public interface SysDictMapper {
 
     //根据type获取所有的sysCode数据
     List<SysCode> getAllSysCodeByType(String type);
+
+    //根据id获取配置值
+    @Select("select value from t_sys_comm_config where id = #{param1}")
+    String getConfigValueById(String id);
 }

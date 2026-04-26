@@ -60,6 +60,12 @@
             <version>4.1.2</version>
         </dependency>
 
+        <!--  http客户端通信  -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+
         <!--  common-service模块      -->
         <dependency>
             <groupId>org.example</groupId>
