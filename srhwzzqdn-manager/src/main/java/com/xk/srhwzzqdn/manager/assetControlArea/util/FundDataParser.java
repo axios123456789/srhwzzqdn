@@ -1,4 +1,5 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.util;
+
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -8,25 +9,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 东方财富基金数据解析工具类
+ * 东方财富基金数据解析工具类（完整修复版）
  * 用于解析 https://fund.eastmoney.com/pingzhongdata/{基金代码}.js 接口返回的数据
  */
 public class FundDataParser {
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     // ==================== 1. 基础信息解析 ====================
 
-    /**
-     * 提取字符串值（如基金名称、代码等）
-     */
     public static String extractString(String content, String varName) {
         Pattern p = Pattern.compile(varName + "\\s*=\\s*\"([^\"]*)\"");
         Matcher m = p.matcher(content);
         return m.find() ? m.group(1) : null;
     }
 
-    /**
-     * 提取数值（如收益率、费率等）
-     */
     public static Double extractDouble(String content, String varName) {
         Pattern p = Pattern.compile(varName + "\\s*=\\s*\"?([0-9.-]+)\"?");
         Matcher m = p.matcher(content);
@@ -35,9 +32,6 @@ public class FundDataParser {
 
     // ==================== 2. 数组数据解析 ====================
 
-    /**
-     * 提取简单字符串数组（如股票代码列表）
-     */
     public static List<String> extractStringArray(String content, String varName) {
         List<String> result = new ArrayList<>();
         Pattern p = Pattern.compile(varName + "\\s*=\\s*\\[([^\\]]+)\\]");
@@ -56,39 +50,27 @@ public class FundDataParser {
 
     // ==================== 3. 净值走势数据解析（核心） ====================
 
-    /**
-     * 净值走势数据类
-     */
+    @Data
     public static class NavData {
-        private Date date;          // 日期
-        private BigDecimal nav;     // 单位净值
-        private BigDecimal dailyReturn; // 日收益率(%)
-        private String dividendInfo;    // 分红/拆分信息
-        private BigDecimal accumulatedNav; // 累计净值（可选）
+        private Date date;
+        private BigDecimal nav;              // 单位净值
+        private BigDecimal dailyReturn;      // 日收益率(%)
+        private String dividendInfo;         // 分红/拆分信息
+        private BigDecimal accumulatedNav;   // 累计净值
 
-        // getters and setters
-        public Date getDate() { return date; }
-        public void setDate(Date date) { this.date = date; }
-        public BigDecimal getNav() { return nav; }
-        public void setNav(BigDecimal nav) { this.nav = nav; }
-        public BigDecimal getDailyReturn() { return dailyReturn; }
-        public void setDailyReturn(BigDecimal dailyReturn) { this.dailyReturn = dailyReturn; }
-        public String getDividendInfo() { return dividendInfo; }
-        public void setDividendInfo(String dividendInfo) { this.dividendInfo = dividendInfo; }
-        public BigDecimal getAccumulatedNav() { return accumulatedNav; }
-        public void setAccumulatedNav(BigDecimal accumulatedNav) { this.accumulatedNav = accumulatedNav; }
+        public String getDateStr() {
+            return date != null ? DATE_FORMAT.format(date) : "";
+        }
 
         @Override
         public String toString() {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            return String.format("NavData{date=%s, nav=%s, dailyReturn=%s, dividendInfo=%s}",
-                    sdf.format(date), nav, dailyReturn, dividendInfo);
+            return String.format("NavData{date=%s, nav=%s, dailyReturn=%s, accNav=%s, dividend=%s}",
+                    getDateStr(), nav, dailyReturn, accumulatedNav, dividendInfo);
         }
     }
 
     /**
-     * 解析单位净值走势数据（Data_netWorthTrend）
-     * 返回按日期升序排列的列表
+     * 解析单位净值走势数据
      */
     public static List<NavData> parseNetWorthTrend(String content) {
         List<NavData> list = new ArrayList<>();
@@ -99,33 +81,35 @@ public class FundDataParser {
             String[] objects = arrayStr.split("\\},\\{");
             for (String obj : objects) {
                 NavData navData = parseNavObject(obj);
-                if (navData != null) {
+                if (navData != null && navData.getDate() != null) {
                     list.add(navData);
                 }
             }
         }
-        // 按时间升序排列（最早的在前）
         list.sort(Comparator.comparing(NavData::getDate));
         return list;
     }
 
     /**
-     * 解析累计净值走势数据（Data_ACWorthTrend）
+     * 解析累计净值走势数据（修复版：正确处理数据格式）
      */
     public static List<NavData> parseACWorthTrend(String content) {
         List<NavData> list = new ArrayList<>();
         Pattern p = Pattern.compile("Data_ACWorthTrend\\s*=\\s*\\[([\\s\\S]*?)\\];");
         Matcher m = p.matcher(content);
         if (m.find()) {
-            String arrayStr = getInnerArray(m.group(1));
-            String[] objects = arrayStr.split("\\},\\{");
-            for (String obj : objects) {
-                Map<String, String> kv = parseKeyValue(obj);
-                if (kv.containsKey("x") && kv.containsKey("y")) {
+            String arrayStr = m.group(1);
+            // 累计净值数据格式为 [[timestamp, value], [timestamp, value], ...]
+            Pattern entry = Pattern.compile("\\[([0-9]+),([0-9.]+)\\]");
+            Matcher em = entry.matcher(arrayStr);
+            while (em.find()) {
+                try {
                     NavData navData = new NavData();
-                    navData.setDate(new Date(Long.parseLong(kv.get("x"))));
-                    navData.setAccumulatedNav(new BigDecimal(kv.get("y")));
+                    navData.setDate(new Date(Long.parseLong(em.group(1))));
+                    navData.setAccumulatedNav(new BigDecimal(em.group(2)));
                     list.add(navData);
+                } catch (Exception e) {
+                    // 忽略解析错误
                 }
             }
         }
@@ -134,22 +118,40 @@ public class FundDataParser {
     }
 
     /**
-     * 解析单个净值对象
+     * 合并单位净值和累计净值
      */
+    public static List<NavData> mergeNavData(List<NavData> netWorthList, List<NavData> accWorthList) {
+        Map<Long, NavData> map = new HashMap<>();
+        for (NavData nav : netWorthList) {
+            if (nav.getDate() != null) {
+                map.put(nav.getDate().getTime(), nav);
+            }
+        }
+        for (NavData accNav : accWorthList) {
+            if (accNav.getDate() != null) {
+                long key = accNav.getDate().getTime();
+                if (map.containsKey(key)) {
+                    map.get(key).setAccumulatedNav(accNav.getAccumulatedNav());
+                } else {
+                    map.put(key, accNav);
+                }
+            }
+        }
+        List<NavData> result = new ArrayList<>(map.values());
+        result.sort(Comparator.comparing(NavData::getDate));
+        return result;
+    }
+
     private static NavData parseNavObject(String obj) {
-        // 处理对象开头和结尾的大括号
         obj = obj.replace("{", "").replace("}", "");
         Map<String, String> kv = parseKeyValue(obj);
-
         if (!kv.containsKey("x") || !kv.containsKey("y")) {
             return null;
         }
-
         NavData navData = new NavData();
         try {
             navData.setDate(new Date(Long.parseLong(kv.get("x"))));
             navData.setNav(new BigDecimal(kv.get("y")));
-
             if (kv.containsKey("equityReturn") && !kv.get("equityReturn").isEmpty()) {
                 navData.setDailyReturn(new BigDecimal(kv.get("equityReturn")));
             }
@@ -162,12 +164,8 @@ public class FundDataParser {
         return navData;
     }
 
-    /**
-     * 解析对象中的键值对（处理引号）
-     */
     private static Map<String, String> parseKeyValue(String objStr) {
         Map<String, String> result = new HashMap<>();
-        // 按逗号分割，但要小心值内部可能包含逗号
         String[] pairs = objStr.split(",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
         for (String pair : pairs) {
             String[] parts = pair.split(":", 2);
@@ -180,9 +178,6 @@ public class FundDataParser {
         return result;
     }
 
-    /**
-     * 获取数组内部内容（考虑嵌套）
-     */
     private static String getInnerArray(String arrayContent) {
         int start = arrayContent.indexOf('[');
         int end = arrayContent.lastIndexOf(']');
@@ -194,16 +189,15 @@ public class FundDataParser {
 
     // ==================== 4. 股票仓位数据解析 ====================
 
+    @Data
     public static class PositionData {
         private Date date;
-        private BigDecimal positionPercent; // 股票仓位百分比
+        private BigDecimal positionPercent;
 
         public PositionData(long timestamp, double percent) {
             this.date = new Date(timestamp);
             this.positionPercent = new BigDecimal(percent);
         }
-        public Date getDate() { return date; }
-        public BigDecimal getPositionPercent() { return positionPercent; }
     }
 
     public static List<PositionData> parseSharesPositions(String content) {
@@ -223,30 +217,26 @@ public class FundDataParser {
 
     // ==================== 5. 累计收益率走势解析 ====================
 
+    @Data
     public static class GrandTotalData {
         private String name;
         private List<NavData> data;
-        // getters and setters...
     }
 
     public static List<GrandTotalData> parseGrandTotal(String content) {
         List<GrandTotalData> result = new ArrayList<>();
-        // 解析Data_grandTotal数组
         Pattern p = Pattern.compile("Data_grandTotal\\s*=\\s*\\[([\\s\\S]*?)\\];");
         Matcher m = p.matcher(content);
         if (m.find()) {
             String arrayStr = getInnerArray(m.group(1));
-            // 按"}]},{"分割每个基金对象
             String[] objects = arrayStr.split("\\},\\{");
             for (String obj : objects) {
                 GrandTotalData gd = new GrandTotalData();
-                // 提取name
                 Pattern nameP = Pattern.compile("\"name\":\"([^\"]+)\"");
                 Matcher nameM = nameP.matcher(obj);
                 if (nameM.find()) {
-                    gd.name = nameM.group(1);
+                    gd.setName(nameM.group(1));
                 }
-                // 提取data数组
                 Pattern dataP = Pattern.compile("\"data\":\\[([\\s\\S]*)\\]");
                 Matcher dataM = dataP.matcher(obj);
                 if (dataM.find()) {
@@ -262,7 +252,7 @@ public class FundDataParser {
                             dataList.add(nd);
                         }
                     }
-                    gd.data = dataList;
+                    gd.setData(dataList);
                 }
                 result.add(gd);
             }
@@ -270,40 +260,24 @@ public class FundDataParser {
         return result;
     }
 
-    // ==================== 6. 同类型基金涨幅榜解析 ====================
+    // ==================== 6. 资产配置解析 ====================
 
-    public static List<List<String>> parseSameTypeRanking(String content) {
-        List<List<String>> result = new ArrayList<>();
-        Pattern p = Pattern.compile("swithSameType\\s*=\\s*\\[([\\s\\S]*?)\\];");
-        Matcher m = p.matcher(content);
-        if (m.find()) {
-            String arrayStr = getInnerArray(m.group(1));
-            // 按"],["分割每个子数组
-            String[] subArrays = arrayStr.split("\\],\\[");
-            for (String sub : subArrays) {
-                List<String> list = new ArrayList<>();
-                String[] items = sub.replace("[", "").replace("]", "").split(",");
-                for (String item : items) {
-                    list.add(item.trim().replaceAll("'", ""));
-                }
-                result.add(list);
-            }
-        }
-        return result;
-    }
-
-    // ==================== 7. 资产配置解析 ====================
     @Data
     public static class AssetAllocation {
         private List<String> categories;
         private Map<String, List<Double>> series;
-        private List<Double> netAssets; // 净资产
+        private List<Double> netAssets;
+        private List<Double> stockRatio;      // 股票占净比
+        private List<Double> bondRatio;       // 债券占净比
+        private List<Double> cashRatio;       // 现金占净比
 
         public AssetAllocation() {
             this.series = new HashMap<>();
             this.netAssets = new ArrayList<>();
+            this.stockRatio = new ArrayList<>();
+            this.bondRatio = new ArrayList<>();
+            this.cashRatio = new ArrayList<>();
         }
-        // getters and setters...
     }
 
     public static AssetAllocation parseAssetAllocation(String content) {
@@ -312,121 +286,257 @@ public class FundDataParser {
         Matcher m = p.matcher(content);
         if (m.find()) {
             String jsonStr = m.group(1);
-            // 简化解析 - 提取categories
+
+            // 提取categories
             Pattern catP = Pattern.compile("\"categories\":\\[([^\\]]+)\\]");
             Matcher catM = catP.matcher(jsonStr);
             if (catM.find()) {
                 String[] cats = catM.group(1).split(",");
-                aa.categories = new ArrayList<>();
+                aa.setCategories(new ArrayList<>());
                 for (String cat : cats) {
-                    aa.categories.add(cat.trim().replaceAll("\"", ""));
+                    aa.getCategories().add(cat.trim().replaceAll("\"", ""));
                 }
             }
-            // 解析净资产（最后一组数据）
-            Pattern netP = Pattern.compile("\"data\":\\[([0-9.]+),([0-9.]+),([0-9.]+),([0-9.]+)\\]");
-            Matcher netM = netP.matcher(jsonStr);
-            while (netM.find()) {
-                List<Double> values = new ArrayList<>();
-                for (int i = 1; i <= netM.groupCount(); i++) {
-                    values.add(Double.parseDouble(netM.group(i)));
+
+            // 提取series中的股票、债券、现金数据
+            Pattern seriesP = Pattern.compile("\"name\":\"([^\"]+)\".*?\"data\":\\[([0-9.,]+)\\]");
+            Matcher seriesM = seriesP.matcher(jsonStr);
+            while (seriesM.find()) {
+                String name = seriesM.group(1);
+                String dataStr = seriesM.group(2);
+                String[] dataArr = dataStr.split(",");
+                List<Double> dataList = new ArrayList<>();
+                for (String d : dataArr) {
+                    dataList.add(Double.parseDouble(d.trim()));
                 }
-                aa.netAssets = values;
+                if ("股票占净比".equals(name)) {
+                    aa.setStockRatio(dataList);
+                } else if ("债券占净比".equals(name)) {
+                    aa.setBondRatio(dataList);
+                } else if ("现金占净比".equals(name)) {
+                    aa.setCashRatio(dataList);
+                }
+                aa.getSeries().put(name, dataList);
+            }
+
+            // 提取净资产
+            Pattern netP = Pattern.compile("\"name\":\"净资产\",\"type\":\"line\",\"data\":\\[([0-9.,]+)\\]");
+            Matcher netM = netP.matcher(jsonStr);
+            if (netM.find()) {
+                String[] netArr = netM.group(1).split(",");
+                for (String net : netArr) {
+                    aa.getNetAssets().add(Double.parseDouble(net.trim()));
+                }
             }
         }
         return aa;
     }
 
-    // ==================== 8. 基金经理信息解析 ====================
+    // ==================== 7. 基金经理信息解析（修复版） ====================
+
     @Data
     public static class FundManager {
+        private String id;
         private String name;
         private int star;
         private String workTime;
         private String fundSize;
-        // experience/return/risk/stability/timing
-        private Map<String, Double> abilities;
+        private String picUrl;
+        private Map<String, Double> abilities;  // 能力评分
 
         public FundManager() {
             this.abilities = new HashMap<>();
         }
-        // getters and setters...
     }
 
+    /**
+     * 解析基金经理信息（修复版：精确匹配，避免误匹配其他数据）
+     */
     public static List<FundManager> parseCurrentFundManager(String content) {
         List<FundManager> managers = new ArrayList<>();
-        Pattern p = Pattern.compile("Data_currentFundManager\\s*=\\s*\\[([\\s\\S]*?)\\];");
+        // 精确匹配基金经理对象，避免匹配到申购赎回数据
+        Pattern p = Pattern.compile("\\{\"id\":\"(\\d+)\",\"pic\":\"([^\"]*)\",\"name\":\"([^\"]+)\",\"star\":(\\d+),\"workTime\":\"([^\"]*)\",\"fundSize\":\"([^\"]*)\"[^}]*\\}");
         Matcher m = p.matcher(content);
-        if (m.find()) {
-            String arrayStr = m.group(1);
-            String[] managerObjs = arrayStr.split("\\},\\{");
-            for (String obj : managerObjs) {
-                FundManager fm = new FundManager();
-                // 提取姓名
-                Pattern nameP = Pattern.compile("\"name\":\"([^\"]+)\"");
-                Matcher nameM = nameP.matcher(obj);
-                if (nameM.find()) {
-                    fm.setName(nameM.group(1));
-                }
-                // 提取星级
-                Pattern starP = Pattern.compile("\"star\":([0-9]+)");
-                Matcher starM = starP.matcher(obj);
-                if (starM.find()) {
-                    fm.setStar(Integer.parseInt(starM.group(1)));
-                }
-                // 提取从业时间
-                Pattern workP = Pattern.compile("\"workTime\":\"([^\"]+)\"");
-                Matcher workM = workP.matcher(obj);
-                if (workM.find()) {
-                    fm.setWorkTime(workM.group(1));
-                }
-                managers.add(fm);
-            }
+        while (m.find()) {
+            FundManager fm = new FundManager();
+            fm.setId(m.group(1));
+            fm.setPicUrl(m.group(2));
+            fm.setName(m.group(3));
+            fm.setStar(Integer.parseInt(m.group(4)));
+            fm.setWorkTime(m.group(5));
+            fm.setFundSize(m.group(6));
+            managers.add(fm);
         }
         return managers;
     }
 
-    // ==================== 9. 业绩评价解析 ====================
+    // ==================== 8. 业绩评价解析 ====================
 
-    public static Map<String, Object> parsePerformanceEvaluation(String content) {
-        Map<String, Object> result = new HashMap<>();
+    @Data
+    public static class PerformanceEvaluation {
+        private double avgScore;
+        private List<String> categories;
+        private List<Double> scores;
+        private List<String> descriptions;
+    }
+
+    public static PerformanceEvaluation parsePerformanceEvaluation(String content) {
+        PerformanceEvaluation pe = new PerformanceEvaluation();
         Pattern p = Pattern.compile("Data_performanceEvaluation\\s*=\\s*(\\{[\\s\\S]*?\\});");
         Matcher m = p.matcher(content);
         if (m.find()) {
             String jsonStr = m.group(1);
+
             // 提取平均分
             Pattern avgP = Pattern.compile("\"avr\":\"([^\"]+)\"");
             Matcher avgM = avgP.matcher(jsonStr);
             if (avgM.find()) {
-                result.put("avgScore", Double.parseDouble(avgM.group(1)));
+                pe.setAvgScore(Double.parseDouble(avgM.group(1)));
             }
-            // 提取各项得分
-            Pattern dataP = Pattern.compile("\"data\":\\[([^\\]]+)\\]");
-            Matcher dataM = dataP.matcher(jsonStr);
-            if (dataM.find()) {
-                String[] scores = dataM.group(1).split(",");
-                List<Double> scoreList = new ArrayList<>();
-                for (String score : scores) {
-                    scoreList.add(Double.parseDouble(score.trim()));
-                }
-                result.put("scores", scoreList);
-            }
-            // 提取分类名称
+
+            // 提取分类
             Pattern catP = Pattern.compile("\"categories\":\\[([^\\]]+)\\]");
             Matcher catM = catP.matcher(jsonStr);
             if (catM.find()) {
                 String[] cats = catM.group(1).split(",");
-                List<String> catList = new ArrayList<>();
+                pe.setCategories(new ArrayList<>());
                 for (String cat : cats) {
-                    catList.add(cat.trim().replaceAll("\"", ""));
+                    pe.getCategories().add(cat.trim().replaceAll("\"", ""));
                 }
-                result.put("categories", catList);
+            }
+
+            // 提取分数
+            Pattern scoreP = Pattern.compile("\"data\":\\[([^\\]]+)\\]");
+            Matcher scoreM = scoreP.matcher(jsonStr);
+            if (scoreM.find()) {
+                String[] scores = scoreM.group(1).split(",");
+                pe.setScores(new ArrayList<>());
+                for (String score : scores) {
+                    pe.getScores().add(Double.parseDouble(score.trim()));
+                }
+            }
+
+            // 提取描述
+            Pattern descP = Pattern.compile("\"dsc\":\\[([^\\]]+)\\]");
+            Matcher descM = descP.matcher(jsonStr);
+            if (descM.find()) {
+                String[] descs = descM.group(1).split(",");
+                pe.setDescriptions(new ArrayList<>());
+                for (String desc : descs) {
+                    pe.getDescriptions().add(desc.trim().replaceAll("\"", ""));
+                }
             }
         }
-        return result;
+        return pe;
     }
 
-    // ==================== 10. 统一数据集合 ====================
+    // ==================== 9. 规模变动解析 ====================
 
+    @Data
+    public static class FluctuationScale {
+        private List<String> categories;
+        private List<Double> scale;
+        private List<String> mom;
+    }
+
+    public static FluctuationScale parseFluctuationScale(String content) {
+        FluctuationScale fs = new FluctuationScale();
+        Pattern p = Pattern.compile("Data_fluctuationScale\\s*=\\s*(\\{[\\s\\S]*?\\});");
+        Matcher m = p.matcher(content);
+        if (m.find()) {
+            String jsonStr = m.group(1);
+
+            // 提取categories
+            Pattern catP = Pattern.compile("\"categories\":\\[([^\\]]+)\\]");
+            Matcher catM = catP.matcher(jsonStr);
+            if (catM.find()) {
+                String[] cats = catM.group(1).split(",");
+                fs.setCategories(new ArrayList<>());
+                for (String cat : cats) {
+                    fs.getCategories().add(cat.trim().replaceAll("\"", ""));
+                }
+            }
+
+            // 提取规模数据
+            Pattern scaleP = Pattern.compile("\"y\":([0-9.]+),\"mom\":\"([^\"]+)\"");
+            Matcher scaleM = scaleP.matcher(jsonStr);
+            fs.setScale(new ArrayList<>());
+            fs.setMom(new ArrayList<>());
+            while (scaleM.find()) {
+                fs.getScale().add(Double.parseDouble(scaleM.group(1)));
+                fs.getMom().add(scaleM.group(2));
+            }
+        }
+        return fs;
+    }
+
+    // ==================== 10. 持有人结构解析 ====================
+
+    @Data
+    public static class HolderStructure {
+        private List<String> categories;
+        private List<Double> institutionRatio;  // 机构持有比例
+        private List<Double> individualRatio;   // 个人持有比例
+        private List<Double> internalRatio;     // 内部持有比例
+    }
+
+    public static HolderStructure parseHolderStructure(String content) {
+        HolderStructure hs = new HolderStructure();
+        Pattern p = Pattern.compile("Data_holderStructure\\s*=\\s*(\\{[\\s\\S]*?\\});");
+        Matcher m = p.matcher(content);
+        if (m.find()) {
+            String jsonStr = m.group(1);
+
+            // 提取categories
+            Pattern catP = Pattern.compile("\"categories\":\\[([^\\]]+)\\]");
+            Matcher catM = catP.matcher(jsonStr);
+            if (catM.find()) {
+                String[] cats = catM.group(1).split(",");
+                hs.setCategories(new ArrayList<>());
+                for (String cat : cats) {
+                    hs.getCategories().add(cat.trim().replaceAll("\"", ""));
+                }
+            }
+
+            // 提取机构持有比例
+            Pattern instP = Pattern.compile("\"name\":\"机构持有比例\",\"data\":\\[([0-9.,]+)\\]");
+            Matcher instM = instP.matcher(jsonStr);
+            if (instM.find()) {
+                String[] data = instM.group(1).split(",");
+                hs.setInstitutionRatio(new ArrayList<>());
+                for (String d : data) {
+                    hs.getInstitutionRatio().add(Double.parseDouble(d.trim()));
+                }
+            }
+
+            // 提取个人持有比例
+            Pattern indvP = Pattern.compile("\"name\":\"个人持有比例\",\"data\":\\[([0-9.,]+)\\]");
+            Matcher indvM = indvP.matcher(jsonStr);
+            if (indvM.find()) {
+                String[] data = indvM.group(1).split(",");
+                hs.setIndividualRatio(new ArrayList<>());
+                for (String d : data) {
+                    hs.getIndividualRatio().add(Double.parseDouble(d.trim()));
+                }
+            }
+
+            // 提取内部持有比例
+            Pattern intP = Pattern.compile("\"name\":\"内部持有比例\",\"data\":\\[([0-9.,]+)\\]");
+            Matcher intM = intP.matcher(jsonStr);
+            if (intM.find()) {
+                String[] data = intM.group(1).split(",");
+                hs.setInternalRatio(new ArrayList<>());
+                for (String d : data) {
+                    hs.getInternalRatio().add(Double.parseDouble(d.trim()));
+                }
+            }
+        }
+        return hs;
+    }
+
+    // ==================== 11. 统一数据集合 ====================
+
+    @Data
     public static class FundData {
         // 基础信息
         private String fundName;
@@ -445,49 +555,16 @@ public class FundDataParser {
         // 净值数据（最重要）
         private List<NavData> netWorthTrend;
         private List<NavData> accumulatedWorthTrend;
+        private List<NavData> mergedWorthTrend;  // 合并后的净值数据
 
         // 其他数据
         private List<PositionData> sharesPositions;
         private List<GrandTotalData> grandTotal;
         private AssetAllocation assetAllocation;
         private List<FundManager> fundManagers;
-        private Map<String, Object> performanceEvaluation;
-
-        // getters and setters...
-        public String getFundName() { return fundName; }
-        public void setFundName(String fundName) { this.fundName = fundName; }
-        public String getFundCode() { return fundCode; }
-        public void setFundCode(String fundCode) { this.fundCode = fundCode; }
-        public Double getSourceRate() { return sourceRate; }
-        public void setSourceRate(Double sourceRate) { this.sourceRate = sourceRate; }
-        public Double getCurrentRate() { return currentRate; }
-        public void setCurrentRate(Double currentRate) { this.currentRate = currentRate; }
-        public List<String> getStockCodes() { return stockCodes; }
-        public void setStockCodes(List<String> stockCodes) { this.stockCodes = stockCodes; }
-        public List<String> getStockCodesNew() { return stockCodesNew; }
-        public void setStockCodesNew(List<String> stockCodesNew) { this.stockCodesNew = stockCodesNew; }
-        public Double getReturn1Year() { return return1Year; }
-        public void setReturn1Year(Double return1Year) { this.return1Year = return1Year; }
-        public Double getReturn6Month() { return return6Month; }
-        public void setReturn6Month(Double return6Month) { this.return6Month = return6Month; }
-        public Double getReturn3Month() { return return3Month; }
-        public void setReturn3Month(Double return3Month) { this.return3Month = return3Month; }
-        public Double getReturn1Month() { return return1Month; }
-        public void setReturn1Month(Double return1Month) { this.return1Month = return1Month; }
-        public List<NavData> getNetWorthTrend() { return netWorthTrend; }
-        public void setNetWorthTrend(List<NavData> netWorthTrend) { this.netWorthTrend = netWorthTrend; }
-        public List<NavData> getAccumulatedWorthTrend() { return accumulatedWorthTrend; }
-        public void setAccumulatedWorthTrend(List<NavData> accumulatedWorthTrend) { this.accumulatedWorthTrend = accumulatedWorthTrend; }
-        public List<PositionData> getSharesPositions() { return sharesPositions; }
-        public void setSharesPositions(List<PositionData> sharesPositions) { this.sharesPositions = sharesPositions; }
-        public List<GrandTotalData> getGrandTotal() { return grandTotal; }
-        public void setGrandTotal(List<GrandTotalData> grandTotal) { this.grandTotal = grandTotal; }
-        public AssetAllocation getAssetAllocation() { return assetAllocation; }
-        public void setAssetAllocation(AssetAllocation assetAllocation) { this.assetAllocation = assetAllocation; }
-        public List<FundManager> getFundManagers() { return fundManagers; }
-        public void setFundManagers(List<FundManager> fundManagers) { this.fundManagers = fundManagers; }
-        public Map<String, Object> getPerformanceEvaluation() { return performanceEvaluation; }
-        public void setPerformanceEvaluation(Map<String, Object> performanceEvaluation) { this.performanceEvaluation = performanceEvaluation; }
+        private PerformanceEvaluation performanceEvaluation;
+        private FluctuationScale fluctuationScale;
+        private HolderStructure holderStructure;
     }
 
     /**
@@ -513,8 +590,11 @@ public class FundDataParser {
         fundData.setReturn1Month(extractDouble(content, "syl_1y"));
 
         // 4. 净值数据（核心）
-        fundData.setNetWorthTrend(parseNetWorthTrend(content));
-        fundData.setAccumulatedWorthTrend(parseACWorthTrend(content));
+        List<NavData> netWorthList = parseNetWorthTrend(content);
+        List<NavData> accWorthList = parseACWorthTrend(content);
+        fundData.setNetWorthTrend(netWorthList);
+        fundData.setAccumulatedWorthTrend(accWorthList);
+        fundData.setMergedWorthTrend(mergeNavData(netWorthList, accWorthList));
 
         // 5. 其他数据
         fundData.setSharesPositions(parseSharesPositions(content));
@@ -522,57 +602,9 @@ public class FundDataParser {
         fundData.setAssetAllocation(parseAssetAllocation(content));
         fundData.setFundManagers(parseCurrentFundManager(content));
         fundData.setPerformanceEvaluation(parsePerformanceEvaluation(content));
+        fundData.setFluctuationScale(parseFluctuationScale(content));
+        fundData.setHolderStructure(parseHolderStructure(content));
 
         return fundData;
-    }
-
-    // ==================== 11. 测试方法 ====================
-
-    public static void main(String[] args) {
-        // 假设已获取到接口内容
-        String content = fetchFundDataFromApi("460001");
-
-        // 解析完整数据
-        FundData fundData = parseAllFundData(content);
-
-        System.out.println("========== 基金基本信息 ==========");
-        System.out.println("基金名称: " + fundData.getFundName());
-        System.out.println("基金代码: " + fundData.getFundCode());
-        System.out.println("原费率: " + fundData.getSourceRate() + "%");
-        System.out.println("现费率: " + fundData.getCurrentRate() + "%");
-
-        System.out.println("\n========== 收益率 ==========");
-        System.out.println("近1月: " + fundData.getReturn1Month() + "%");
-        System.out.println("近3月: " + fundData.getReturn3Month() + "%");
-        System.out.println("近6月: " + fundData.getReturn6Month() + "%");
-        System.out.println("近1年: " + fundData.getReturn1Year() + "%");
-
-        System.out.println("\n========== 持仓股票 ==========");
-        if (fundData.getStockCodesNew() != null) {
-            for (String code : fundData.getStockCodesNew()) {
-                System.out.println(code);
-            }
-        }
-
-        System.out.println("\n========== 净值数据 ==========");
-        System.out.println("共 " + fundData.getNetWorthTrend().size() + " 条净值记录");
-        System.out.println("最新净值: " + fundData.getNetWorthTrend().get(fundData.getNetWorthTrend().size() - 1));
-        System.out.println("最早净值: " + fundData.getNetWorthTrend().get(0));
-
-        System.out.println("\n========== 基金经理 ==========");
-        if (fundData.getFundManagers() != null) {
-            for (FundManager fm : fundData.getFundManagers()) {
-                System.out.println("姓名: " + fm.getName() + ", 星级: " + fm.getStar() + ", 从业: " + fm.getWorkTime());
-            }
-        }
-    }
-
-    /**
-     * 获取接口数据（示例）
-     */
-    private static String fetchFundDataFromApi(String fundCode) {
-        // 实际使用时替换为HTTP请求代码
-        // 这里返回示例数据或通过HTTP客户端请求
-        return "";
     }
 }
