@@ -109,7 +109,7 @@
             </div>
             <div class="card-header">
               <div class="card-title-row">
-                <span class="card-fund-name">{{ item.fundName }}</span>
+                <span class="card-fund-name clickable" @click="openViewDialog(item)">{{ item.fundName }}</span>
                 <el-tag :type="getFundTypeTagType(item.fundType)" size="small">{{ item.fundType || '未知' }}</el-tag>
               </div>
               <div class="card-code">{{ item.fundCode }}</div>
@@ -343,13 +343,21 @@
       :fund-row-data="currentFundRow"
       @save="handleDetailSave"
     />
+
+    <!-- 基金详情查看模态窗口 -->
+    <FundViewDialog
+      v-model:visible="viewDialogVisible"
+      :fund-data="currentViewFund"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Coin, Search, Download, Refresh, Delete, Edit } from '@element-plus/icons-vue'
 import FundDetailDialog from './fundDetailDialog/fundDetailDialog.vue'
+import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
 
 // ============ 选项常量 ============
 const fundTypeOptions = [
@@ -636,6 +644,15 @@ const handleDetailSave = (saveData) => {
   }
   detailDialogVisible.value = false
 }
+
+// ============ 基金详情查看模态窗口 ============
+const viewDialogVisible = ref(false)
+const currentViewFund = ref({})
+
+const openViewDialog = (item) => {
+  currentViewFund.value = JSON.parse(JSON.stringify(item))
+  viewDialogVisible.value = true
+}
 </script>
 
 <style scoped>
@@ -916,6 +933,20 @@ const handleDetailSave = (saveData) => {
   font-weight: 700;
   color: #2c3e50;
   letter-spacing: 0.5px;
+}
+
+.card-fund-name.clickable {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #1e3c72;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(30, 60, 114, 0.4);
+}
+
+.card-fund-name.clickable:hover {
+  color: #409eff;
+  text-decoration-color: #409eff;
 }
 
 .card-code {
