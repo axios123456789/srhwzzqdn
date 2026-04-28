@@ -61,7 +61,7 @@
               <el-col :span="8">
                 <el-form-item label="基金类型">
                   <el-select v-model="fundData.fundType" placeholder="请选择" style="width: 100%" clearable>
-                    <el-option v-for="item in fundTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                    <el-option v-for="item in fundTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -116,7 +116,7 @@
               <el-col :span="8">
                 <el-form-item label="运作方式">
                   <el-select v-model="fundData.operationMode" placeholder="请选择" style="width: 100%" clearable>
-                    <el-option v-for="item in operationModeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                    <el-option v-for="item in operationModeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -436,7 +436,7 @@
           </el-form-item>
           <el-form-item label="交易类型">
             <el-select v-model="subFormData.tradeType" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in tradeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in tradeTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="交易份额">
@@ -476,7 +476,7 @@
         <template v-if="subDialogType === 'risk'">
           <el-form-item label="时间标识">
             <el-select v-model="subFormData.timePeriod" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in timePeriodOptions" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in timePeriodOptions" :key="item.value" :label="item.text" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="最大回撤(%)">
@@ -508,7 +508,7 @@
           </el-form-item>
           <el-form-item label="持仓类型">
             <el-select v-model="subFormData.holdingType" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in holdingTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in holdingTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="持仓代码">
@@ -528,12 +528,12 @@
           </el-form-item>
           <el-form-item label="行业分类">
             <el-select v-model="subFormData.industryClass" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in industryClassOptions" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in industryClassOptions" :key="item.value" :label="item.text" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="数据来源">
             <el-select v-model="subFormData.dataSource" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.label" :value="item.value" />
+              <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.text" :value="item.value" />
             </el-select>
           </el-form-item>
         </template>
@@ -547,10 +547,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Close, Check, Search, Refresh, Plus, FullScreen, Aim, Download } from '@element-plus/icons-vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
+import { GetKeyAndValueByType } from "@/api/sysDict"
 
 // 在需要全屏的组件中使用 Hook
 const { isFullscreen, initFullscreen, toggleFullscreen } = useFullscreenDialog()
@@ -568,56 +569,89 @@ const dialogVisible = computed({
   set(val) { emit('update:visible', val) }
 })
 
-// ============ 选项常量 ============
-const fundTypeOptions = [
-  { label: '股票型', value: '股票型' },
-  { label: '债券型', value: '债券型' },
-  { label: '货币型', value: '货币型' },
-  { label: '混合型', value: '混合型' },
-  { label: '指数型', value: '指数型' }
-]
-const operationModeOptions = [
-  { label: '开放式', value: '开放式' },
-  { label: '封闭式', value: '封闭式' }
-]
-const tradeTypeOptions = [
-  { label: '申购', value: '申购' },
-  { label: '赎回', value: '赎回' },
-  { label: '分红再投', value: '分红再投' },
-  { label: '转换', value: '转换' }
-]
+// ============ 数据字典选项 ============
+// 基金类型选项
+const fundTypeOptions = ref([])
+const getFundTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_type")
+  fundTypeOptions.value = result.data
+}
+
+// 运作方式选项
+const operationModeOptions = ref([])
+const getOperationModeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_run_way")
+  operationModeOptions.value = result.data
+}
+
+// 交易类型选项
+const tradeTypeOptions = ref([])
+const getTransactionTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_transaction_type")
+  tradeTypeOptions.value = result.data
+}
+
+// 持仓类型选项
+const holdingTypeOptions = ref([])
+const getPositionTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_position_type")
+  holdingTypeOptions.value = result.data
+}
+
+// 行业分类选项
+const industryClassOptions = ref([])
+const getSectorTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_sector_type")
+  industryClassOptions.value = result.data
+}
+
+// 数据来源选项
+const dataSourceOptions = ref([])
+const getDataSourceItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_data_source")
+  dataSourceOptions.value = result.data
+}
+
+// 其他选项（暂时保留硬编码，因为没有对应的字典类型）
 const dividendMethodOptions = [
   { label: '现金分红', value: '现金分红' },
   { label: '红利再投', value: '红利再投' }
 ]
-const timePeriodOptions = [
-  { label: '近1年', value: '近1年' },
-  { label: '近3年', value: '近3年' },
-  { label: '近5年', value: '近5年' }
-]
-const holdingTypeOptions = [
-  { label: '股票', value: '股票' },
-  { label: '债券', value: '债券' },
-  { label: '基金', value: '基金' },
-  { label: '现金', value: '现金' }
-]
-const industryClassOptions = [
-  { label: '通信装备', value: '通信装备' },
-  { label: '电池', value: '电池' },
-  { label: '半导体', value: '半导体' }
-]
-const dataSourceOptions = [
-  { label: '支付宝', value: '支付宝' },
-  { label: '天天基金', value: '天天基金' }
-]
+
+// 时间标识选项
+const timePeriodOptions = ref([])
+const getTimePeriodItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_time_flag")
+  timePeriodOptions.value = result.data
+}
 
 // ============ 文本映射 ============
-const getTradeTypeText = (v) => (tradeTypeOptions.find(i => i.value === v) || {}).label || v || '-'
+const getTradeTypeText = (v) => {
+  if (!v) return '-'
+  const found = tradeTypeOptions.value.find(i => i.value === v)
+  return found ? found.text : v
+}
 const getDividendMethodText = (v) => (dividendMethodOptions.find(i => i.value === v) || {}).label || v || '-'
-const getTimePeriodText = (v) => (timePeriodOptions.find(i => i.value === v) || {}).label || v || '-'
-const getHoldingTypeText = (v) => (holdingTypeOptions.find(i => i.value === v) || {}).label || v || '-'
-const getIndustryClassText = (v) => (industryClassOptions.find(i => i.value === v) || {}).label || v || '-'
-const getDataSourceText = (v) => (dataSourceOptions.find(i => i.value === v) || {}).label || v || '-'
+const getTimePeriodText = (v) => {
+  if (!v) return '-'
+  const found = timePeriodOptions.value.find(i => i.value === v)
+  return found ? found.text : v
+}
+const getHoldingTypeText = (v) => {
+  if (!v) return '-'
+  const found = holdingTypeOptions.value.find(i => i.value === v)
+  return found ? found.text : v
+}
+const getIndustryClassText = (v) => {
+  if (!v) return '-'
+  const found = industryClassOptions.value.find(i => i.value === v)
+  return found ? found.text : v
+}
+const getDataSourceText = (v) => {
+  if (!v) return '-'
+  const found = dataSourceOptions.value.find(i => i.value === v)
+  return found ? found.text : v
+}
 
 // ============ 基金基本数据 ============
 const fundData = reactive({
@@ -921,6 +955,18 @@ const handleFetchRealTimeData = async () => {
     fetchLoading.value = false
   }
 }
+
+// ============ 钩子函数 ============
+onMounted(() => {
+  // 加载数据字典
+  getFundTypeItem()
+  getOperationModeItem()
+  getTransactionTypeItem()
+  getPositionTypeItem()
+  getSectorTypeItem()
+  getDataSourceItem()
+  getTimePeriodItem()
+})
 </script>
 
 <style scoped>

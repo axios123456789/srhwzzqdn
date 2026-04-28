@@ -45,7 +45,7 @@
           <el-col :span="6">
             <el-form-item label="基金类型">
               <el-select v-model="query.fundType" multiple placeholder="请选择" style="width: 100%" clearable>
-                <el-option v-for="item in fundTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option v-for="item in fundTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -59,7 +59,7 @@
           <el-col :span="6">
             <el-form-item label="运作方式">
               <el-select v-model="query.operationMode" placeholder="请选择" style="width: 100%" clearable>
-                <el-option v-for="item in operationModeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option v-for="item in operationModeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -229,7 +229,7 @@
           <el-col :span="12">
             <el-form-item label="基金类型">
               <el-select v-model="fetchResult.fundType" style="width: 100%" clearable>
-                <el-option v-for="item in fundTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option v-for="item in fundTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -284,7 +284,7 @@
           <el-col :span="12">
             <el-form-item label="运作方式">
               <el-select v-model="fetchResult.operationMode" style="width: 100%" clearable>
-                <el-option v-for="item in operationModeOptions" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option v-for="item in operationModeOptions" :key="item.value" :label="item.text" :value="item.value" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -353,24 +353,68 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Coin, Search, Download, Refresh, Delete, Edit } from '@element-plus/icons-vue'
 import FundDetailDialog from './fundDetailDialog/fundDetailDialog.vue'
 import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
+import { GetKeyAndValueByType } from "@/api/sysDict"
 
-// ============ 选项常量 ============
-const fundTypeOptions = [
-  { label: '股票型', value: '股票型' },
-  { label: '债券型', value: '债券型' },
-  { label: '货币型', value: '货币型' },
-  { label: '混合型', value: '混合型' },
-  { label: '指数型', value: '指数型' }
-]
-const operationModeOptions = [
-  { label: '开放式', value: '开放式' },
-  { label: '封闭式', value: '封闭式' }
-]
+// ============ 数据字典选项 ============
+// 基金类型选项
+const fundTypeOptions = ref([])
+// 获取基金类型
+const getFundTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_type")
+  fundTypeOptions.value = result.data
+}
+
+// 运作方式选项
+const operationModeOptions = ref([])
+// 获取运作方式
+const getOperationModeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_run_way")
+  operationModeOptions.value = result.data
+}
+
+// 交易类型选项
+const transactionTypeOptions = ref([])
+// 获取交易类型
+const getTransactionTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_transaction_type")
+  transactionTypeOptions.value = result.data
+}
+
+// 持仓类型选项
+const positionTypeOptions = ref([])
+// 获取持仓类型
+const getPositionTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_position_type")
+  positionTypeOptions.value = result.data
+}
+
+// 行业分类选项
+const sectorTypeOptions = ref([])
+// 获取行业分类
+const getSectorTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_sector_type")
+  sectorTypeOptions.value = result.data
+}
+
+// 数据来源选项
+const dataSourceOptions = ref([])
+// 获取数据来源
+const getDataSourceItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_data_source")
+  dataSourceOptions.value = result.data
+}
+
+// 通用方法：根据值和映射表获取中文文本
+const getDisplayText = (value, mappingArray) => {
+  if (!value && value !== 0) return '-'
+  const foundItem = mappingArray.find(item => item.value === value)
+  return foundItem ? foundItem.text : value
+}
 
 const getFundTypeTagType = (type) => {
   const map = { '股票型': 'danger', '债券型': 'success', '货币型': 'warning', '混合型': 'info', '指数型': '' }
@@ -653,6 +697,17 @@ const openViewDialog = (item) => {
   currentViewFund.value = JSON.parse(JSON.stringify(item))
   viewDialogVisible.value = true
 }
+
+// ============ 钩子函数 ============
+onMounted(() => {
+  // 加载数据字典
+  getFundTypeItem()
+  getOperationModeItem()
+  getTransactionTypeItem()
+  getPositionTypeItem()
+  getSectorTypeItem()
+  getDataSourceItem()
+})
 </script>
 
 <style scoped>
