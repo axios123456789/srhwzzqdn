@@ -7773,3 +7773,27 @@ io.lettuce.core.RedisConnectionException: Connection closed prematurely
 2026-04-28 19:00:19 HikariPool-1 - Starting...
 2026-04-28 19:00:19 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5f5ad5de
 2026-04-28 19:00:19 HikariPool-1 - Start completed.
+2026-04-28 22:00:38 HikariPool-1 - Shutdown initiated...
+2026-04-28 22:00:38 HikariPool-1 - Shutdown completed.
+2026-04-29 08:54:34 Starting ManagerApplication using Java 17.0.17 with PID 20744 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-04-29 08:54:34 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-04-29 08:54:34 The following 1 profile is active: "dev"
+2026-04-29 08:54:35 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-04-29 08:54:35 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-04-29 08:54:35 Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+2026-04-29 08:54:35 Tomcat initialized with port(s): 8400 (http)
+2026-04-29 08:54:35 Initializing ProtocolHandler ["http-nio-8400"]
+2026-04-29 08:54:35 Starting service [Tomcat]
+2026-04-29 08:54:35 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-04-29 08:54:36 Initializing Spring embedded WebApplicationContext
+2026-04-29 08:54:36 Root WebApplicationContext: initialization completed in 1886 ms
+2026-04-29 08:54:37 Starting ProtocolHandler ["http-nio-8400"]
+2026-04-29 08:54:37 Tomcat started on port(s): 8400 (http) with context path ''
+2026-04-29 08:54:37 Started ManagerApplication in 4.632 seconds (process running for 6.731)
+2026-04-29 08:55:57 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-04-29 08:55:57 Initializing Servlet 'dispatcherServlet'
+2026-04-29 08:55:57 Completed initialization in 0 ms
+2026-04-29 08:56:04 HikariPool-1 - Starting...
+2026-04-29 08:56:04 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@46ce0c4a
+2026-04-29 08:56:04 HikariPool-1 - Start completed.
+2026-04-29 12:02:00 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m22s692ms499µs600ns).

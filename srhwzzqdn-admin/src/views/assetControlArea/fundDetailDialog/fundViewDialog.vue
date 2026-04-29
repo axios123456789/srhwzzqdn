@@ -170,19 +170,59 @@
           <span>净值走势</span>
         </div>
         <div class="card-body">
-          <el-table :data="props.fundData.navList" border stripe size="small" max-height="300px">
-            <el-table-column prop="navDate" label="净值日期" width="120" />
-            <el-table-column prop="unitNav" label="单位净值" width="120" align="right" />
-            <el-table-column prop="accumulatedNav" label="累计净值" width="120" align="right" />
-            <el-table-column prop="dailyChangeRate" label="日涨跌幅(%)" width="130" align="right">
-              <template #default="{ row }">
-                <span :class="row.dailyChangeRate >= 0 ? 'profit-text' : 'loss-text'">
-                  {{ row.dailyChangeRate >= 0 ? '+' : '' }}{{ row.dailyChangeRate }}%
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column prop="estimateNav" label="估值" width="120" align="right" />
-          </el-table>
+          <!-- 时间范围选择器 -->
+          <div class="time-range-selector">
+            <div class="time-range-tabs">
+              <div
+                v-for="option in timeRangeOptions"
+                :key="option.value"
+                :class="['time-range-tab', { active: activeTimeRange === option.value }]"
+                @click="handleTimeRangeChange(option.value)"
+              >
+                {{ option.label }}
+              </div>
+            </div>
+          </div>
+          
+          <!-- ECharts 图表 -->
+          <div ref="chartRef" class="nav-chart-container"></div>
+          
+          <!-- 净值数据表格 -->
+          <div class="nav-table-wrapper">
+            <el-table 
+              :data="getPaginatedNavData()" 
+              border 
+              stripe 
+              size="small" 
+              height="400px"
+              style="width: 100%"
+            >
+              <el-table-column prop="navDate" label="净值日期" width="120" />
+              <el-table-column prop="unitNav" label="单位净值" width="120" align="right" />
+              <el-table-column prop="accumulatedNav" label="累计净值" width="120" align="right" />
+              <el-table-column prop="dailyChangeRate" label="日涨跌幅(%)" width="130" align="right">
+                <template #default="{ row }">
+                  <span :class="row.dailyChangeRate >= 0 ? 'profit-text' : 'loss-text'">
+                    {{ row.dailyChangeRate >= 0 ? '+' : '' }}{{ row.dailyChangeRate }}%
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column prop="estimateNav" label="估值" width="120" align="right" />
+            </el-table>
+            
+            <!-- 分页组件 -->
+            <div class="nav-table-pagination">
+              <el-pagination
+                v-model:current-page="navTablePage"
+                v-model:page-size="navTablePageSize"
+                :page-sizes="[10, 20, 50, 100]"
+                :total="navTableTotal"
+                layout="total, sizes, prev, pager, next, jumper"
+                @current-change="handleNavTablePageChange"
+                @size-change="handleNavTableSizeChange"
+              />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -303,8 +343,9 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch, nextTick, onBeforeUnmount } from 'vue'
 import { Coin, Close, FullScreen, Aim, Document, Discount, Wallet, TrendCharts, List, Money, DataAnalysis, Grid } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
 
 const props = defineProps({
   visible: { type: Boolean, default: false },
@@ -314,10 +355,422 @@ const props = defineProps({
 const emit = defineEmits(['update:visible'])
 
 const isFullscreen = ref(false)
+const chartInstance = ref(null)
+const chartRef = ref(null)
+const activeTimeRange = ref('1month')
+
+// 分页相关状态
+const navTablePage = ref(1)
+const navTablePageSize = ref(10)
+const navTableTotal = ref(0)
+
+// 时间范围选项
+const timeRangeOptions = [
+  { label: '近1月', value: '1month' },
+  { label: '近3月', value: '3month' },
+  { label: '近6月', value: '6month' },
+  { label: '近1年', value: '1year' },
+  { label: '近3年', value: '3year' },
+  { label: '近5年', value: '5year' },
+  { label: '近10年', value: '10year' },
+  { label: '全部', value: 'all' }
+]
 
 const dialogVisible = computed({
   get() { return props.visible },
   set(val) { emit('update:visible', val) }
+})
+
+// 根据时间范围过滤数据
+const getFilteredNavData = () => {
+  if (!props.fundData.navList || props.fundData.navList.length === 0) {
+    return []
+  }
+
+  const now = new Date()
+  let startDate = new Date()
+
+  switch (activeTimeRange.value) {
+    case '1month':
+      startDate.setMonth(now.getMonth() - 1)
+      break
+    case '3month':
+      startDate.setMonth(now.getMonth() - 3)
+      break
+    case '6month':
+      startDate.setMonth(now.getMonth() - 6)
+      break
+    case '1year':
+      startDate.setFullYear(now.getFullYear() - 1)
+      break
+    case '3year':
+      startDate.setFullYear(now.getFullYear() - 3)
+      break
+    case '5year':
+      startDate.setFullYear(now.getFullYear() - 5)
+      break
+    case '10year':
+      startDate.setFullYear(now.getFullYear() - 10)
+      break
+    case 'all':
+      return props.fundData.navList
+    default:
+      startDate.setMonth(now.getMonth() - 1)
+  }
+
+  return props.fundData.navList.filter(item => {
+    const itemDate = new Date(item.navDate)
+    return itemDate >= startDate && itemDate <= now
+  })
+}
+
+// 获取分页后的净值数据
+const getPaginatedNavData = () => {
+  const filteredData = getFilteredNavData()
+  navTableTotal.value = filteredData.length
+  
+  const start = (navTablePage.value - 1) * navTablePageSize.value
+  const end = start + navTablePageSize.value
+  
+  return filteredData.slice(start, end)
+}
+
+// 处理分页变化
+const handleNavTablePageChange = (page) => {
+  navTablePage.value = page
+}
+
+// 处理每页条数变化
+const handleNavTableSizeChange = (size) => {
+  navTablePageSize.value = size
+  navTablePage.value = 1
+}
+
+// 初始化图表
+const initChart = () => {
+  if (!chartRef.value) return
+
+  if (chartInstance.value) {
+    chartInstance.value.dispose()
+  }
+
+  chartInstance.value = echarts.init(chartRef.value)
+
+  const filteredData = getFilteredNavData()
+  
+  // 准备图表数据
+  const dates = filteredData.map(item => item.navDate)
+  const unitNavs = filteredData.map(item => item.unitNav)
+  const accumulatedNavs = filteredData.map(item => item.accumulatedNav)
+  
+  // 计算业绩走势数据（第一天为0，后一天为前一天加涨跌幅）
+  const performanceData = []
+  if (filteredData.length > 0) {
+    performanceData.push(0) // 第一天为0
+    for (let i = 1; i < filteredData.length; i++) {
+      const prevNav = filteredData[i - 1].unitNav
+      const currNav = filteredData[i].unitNav
+      const changeRate = prevNav > 0 ? ((currNav - prevNav) / prevNav) * 100 : 0
+      performanceData.push(performanceData[i - 1] + changeRate)
+    }
+  }
+
+  const option = {
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(255, 255, 255, 0.98)',
+      borderColor: '#dcdfe6',
+      borderWidth: 1,
+      padding: [14, 18],
+      textStyle: {
+        color: '#303133',
+        fontSize: 14
+      },
+      axisPointer: {
+        type: 'cross',
+        crossStyle: {
+          color: '#999'
+        },
+        lineStyle: {
+          color: '#1e3c72',
+          width: 1,
+          type: 'dashed'
+        }
+      },
+      formatter: (params) => {
+        if (!params || params.length === 0) return ''
+        
+        let result = `<div style="font-weight: 600; margin-bottom: 10px; color: #303133; font-size: 14px; border-bottom: 1px solid #ebeef5; padding-bottom: 8px;">📅 ${params[0].axisValue}</div>`
+        params.forEach(param => {
+          if (param.value !== undefined && param.value !== null) {
+            let color = '#ff6b6b'
+            if (param.seriesName === '累计净值') {
+              color = '#4ecdc4'
+            } else if (param.seriesName === '业绩走势') {
+              color = '#ffa726'
+            }
+            
+            const valueStr = param.seriesName === '业绩走势' 
+              ? `${param.value >= 0 ? '+' : ''}${param.value.toFixed(2)}%`
+              : param.value.toFixed(4)
+            
+            result += `
+              <div style="display: flex; align-items: center; margin: 8px 0; padding: 4px 0;">
+                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: ${color}; margin-right: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></span>
+                <span style="color: #606266; font-size: 14px; font-weight: 500;">${param.seriesName}：</span>
+                <span style="color: ${color}; font-size: 15px; font-weight: 600; margin-left: 4px;">${valueStr}</span>
+              </div>
+            `
+          }
+        })
+        return result
+      }
+    },
+    legend: {
+      data: ['单位净值', '累计净值', '业绩走势'],
+      top: 10,
+      right: 20,
+      textStyle: {
+        color: '#606266',
+        fontSize: 13
+      },
+      itemWidth: 20,
+      itemHeight: 10,
+      itemGap: 20
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      top: 60,
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: dates,
+      axisLine: {
+        lineStyle: {
+          color: '#e8ecf1'
+        }
+      },
+      axisLabel: {
+        color: '#909399',
+        fontSize: 11,
+        rotate: 45
+      },
+      axisTick: {
+        show: false
+      }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: {
+        show: false
+      },
+      axisLabel: {
+        color: '#909399',
+        fontSize: 12,
+        formatter: (value) => value.toFixed(2)
+      },
+      splitLine: {
+        lineStyle: {
+          color: '#f0f2f5',
+          type: 'dashed'
+        }
+      },
+      axisTick: {
+        show: false
+      }
+    },
+    series: [
+      {
+        name: '单位净值',
+        type: 'line',
+        smooth: true,
+        symbol: 'circle',
+        symbolSize: 8,
+        showSymbol: true,
+        hoverAnimation: true,
+        lineStyle: {
+          width: 3,
+          color: '#ff6b6b',
+          shadowColor: 'rgba(255, 107, 107, 0.4)',
+          shadowBlur: 8,
+          shadowOffsetY: 3
+        },
+        itemStyle: {
+          color: '#ff6b6b',
+          borderWidth: 2,
+          borderColor: '#fff'
+        },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(255, 107, 107, 0.3)' },
+            { offset: 0.5, color: 'rgba(255, 107, 107, 0.15)' },
+            { offset: 1, color: 'rgba(255, 107, 107, 0.02)' }
+          ])
+        },
+        emphasis: {
+          focus: 'series',
+          itemStyle: {
+            color: '#ff6b6b',
+            borderWidth: 3,
+            borderColor: '#fff',
+            shadowBlur: 15,
+            shadowColor: 'rgba(255, 107, 107, 0.6)'
+          },
+          lineStyle: {
+            width: 4
+          }
+        },
+        data: unitNavs
+      },
+      {
+        name: '累计净值',
+        type: 'line',
+        smooth: true,
+        symbol: 'diamond',
+        symbolSize: 8,
+        showSymbol: true,
+        hoverAnimation: true,
+        lineStyle: {
+          width: 3,
+          color: '#4ecdc4',
+          type: 'dashed',
+          shadowColor: 'rgba(78, 205, 196, 0.4)',
+          shadowBlur: 8,
+          shadowOffsetY: 3
+        },
+        itemStyle: {
+          color: '#4ecdc4',
+          borderWidth: 2,
+          borderColor: '#fff'
+        },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(78, 205, 196, 0.25)' },
+            { offset: 0.5, color: 'rgba(78, 205, 196, 0.12)' },
+            { offset: 1, color: 'rgba(78, 205, 196, 0.02)' }
+          ])
+        },
+        emphasis: {
+          focus: 'series',
+          itemStyle: {
+            color: '#4ecdc4',
+            borderWidth: 3,
+            borderColor: '#fff',
+            shadowBlur: 15,
+            shadowColor: 'rgba(78, 205, 196, 0.6)'
+          },
+          lineStyle: {
+            width: 4
+          }
+        },
+        data: accumulatedNavs
+      },
+      {
+        name: '业绩走势',
+        type: 'line',
+        smooth: true,
+        symbol: 'triangle',
+        symbolSize: 8,
+        showSymbol: true,
+        hoverAnimation: true,
+        lineStyle: {
+          width: 3,
+          color: '#ffa726',
+          type: 'dotted',
+          shadowColor: 'rgba(255, 167, 38, 0.4)',
+          shadowBlur: 8,
+          shadowOffsetY: 3
+        },
+        itemStyle: {
+          color: '#ffa726',
+          borderWidth: 2,
+          borderColor: '#fff'
+        },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(255, 167, 38, 0.2)' },
+            { offset: 0.5, color: 'rgba(255, 167, 38, 0.1)' },
+            { offset: 1, color: 'rgba(255, 167, 38, 0.02)' }
+          ])
+        },
+        emphasis: {
+          focus: 'series',
+          itemStyle: {
+            color: '#ffa726',
+            borderWidth: 3,
+            borderColor: '#fff',
+            shadowBlur: 15,
+            shadowColor: 'rgba(255, 167, 38, 0.6)'
+          },
+          lineStyle: {
+            width: 4
+          }
+        },
+        data: performanceData
+      }
+    ]
+  }
+
+  chartInstance.value.setOption(option)
+}
+
+// 切换时间范围
+const handleTimeRangeChange = (range) => {
+  activeTimeRange.value = range
+  navTablePage.value = 1 // 重置分页
+  nextTick(() => {
+    initChart()
+  })
+}
+
+// 监听窗口大小变化
+const handleResize = () => {
+  if (chartInstance.value) {
+    chartInstance.value.resize()
+  }
+}
+
+// 监听数据变化
+watch(
+  () => props.fundData.navList,
+  () => {
+    nextTick(() => {
+      initChart()
+    })
+  },
+  { deep: true }
+)
+
+// 监听对话框显示状态
+watch(
+  () => props.visible,
+  (newVal) => {
+    if (newVal) {
+      nextTick(() => {
+        initChart()
+        window.addEventListener('resize', handleResize)
+      })
+    } else {
+      window.removeEventListener('resize', handleResize)
+      if (chartInstance.value) {
+        chartInstance.value.dispose()
+        chartInstance.value = null
+      }
+    }
+  }
+)
+
+// 组件卸载前清理
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+  if (chartInstance.value) {
+    chartInstance.value.dispose()
+    chartInstance.value = null
+  }
 })
 
 const getFundTypeTag = () => {
@@ -497,6 +950,70 @@ const getProfitClass = (value) => {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+/* ====== 时间范围选择器 ====== */
+.time-range-selector {
+  margin-bottom: 20px;
+}
+
+.time-range-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: #f5f7fa;
+  border-radius: 8px;
+  width: fit-content;
+}
+
+.time-range-tab {
+  padding: 8px 16px;
+  font-size: 13px;
+  color: #606266;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: none;
+  font-weight: 500;
+}
+
+.time-range-tab:hover {
+  color: #1e3c72;
+  background: rgba(30, 60, 114, 0.08);
+}
+
+.time-range-tab.active {
+  color: #fff;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  box-shadow: 0 2px 8px rgba(30, 60, 114, 0.3);
+}
+
+/* ====== 图表容器 ====== */
+.nav-chart-container {
+  width: 100%;
+  height: 400px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* ====== 净值表格包装器 ====== */
+.nav-table-wrapper {
+  margin-top: 16px;
+}
+
+/* ====== 净值表格分页 ====== */
+.nav-table-pagination {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  background: #fafbfc;
+  border-radius: 8px;
 }
 
 .info-item label {
