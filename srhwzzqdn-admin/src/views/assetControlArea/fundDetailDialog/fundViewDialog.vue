@@ -73,6 +73,58 @@
               <label>封闭期</label>
               <span class="value">{{ props.fundData.closedPeriod ? props.fundData.closedPeriod + ' 天' : '-' }}</span>
             </div>
+            <!-- 新增收益率字段 -->
+            <div class="info-item">
+              <label>近1月收益率</label>
+              <span class="value" :class="props.fundData.returnRate1Month >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.returnRate1Month ? props.fundData.returnRate1Month + '%' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>近3月收益率</label>
+              <span class="value" :class="props.fundData.returnRate3Month >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.returnRate3Month ? props.fundData.returnRate3Month + '%' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>近6月收益率</label>
+              <span class="value" :class="props.fundData.returnRate6Month >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.returnRate6Month ? props.fundData.returnRate6Month + '%' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>近1年收益率</label>
+              <span class="value" :class="props.fundData.returnRate1Year >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.returnRate1Year ? props.fundData.returnRate1Year + '%' : '-' }}</span>
+            </div>
+            <!-- 新增规模字段 -->
+            <div class="info-item">
+              <label>净资产规模</label>
+              <span class="value highlight">{{ props.fundData.netAssetScale ? props.fundData.netAssetScale + ' 亿' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>最新规模</label>
+              <span class="value highlight">{{ props.fundData.latestScale ? props.fundData.latestScale + ' 亿' : '-' }}</span>
+            </div>
+            <!-- 新增占比字段 -->
+            <div class="info-item">
+              <label>股票占比</label>
+              <span class="value">{{ props.fundData.stockRatio ? props.fundData.stockRatio + '%' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>债券占比</label>
+              <span class="value">{{ props.fundData.bondRatio ? props.fundData.bondRatio + '%' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>现金占比</label>
+              <span class="value">{{ props.fundData.cashRatio ? props.fundData.cashRatio + '%' : '-' }}</span>
+            </div>
+            <!-- 新增持有比例字段 -->
+            <div class="info-item">
+              <label>机构持有比例</label>
+              <span class="value">{{ props.fundData.institutionHoldRatio ? props.fundData.institutionHoldRatio + '%' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>个人持有比例</label>
+              <span class="value">{{ props.fundData.personalHoldRatio ? props.fundData.personalHoldRatio + '%' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>内部持有比例</label>
+              <span class="value">{{ props.fundData.internalHoldRatio ? props.fundData.internalHoldRatio + '%' : '-' }}</span>
+            </div>
           </div>
           <div class="info-full" v-if="props.fundData.fundCompanyDesc">
             <label>基金公司描述</label>
@@ -81,6 +133,10 @@
           <div class="info-full" v-if="props.fundData.managerDesc">
             <label>经理描述</label>
             <p class="desc-text">{{ props.fundData.managerDesc }}</p>
+          </div>
+          <div class="info-full" v-if="props.fundData.scaleHistory">
+            <label>规模历史</label>
+            <p class="desc-text">{{ props.fundData.scaleHistory }}</p>
           </div>
         </div>
       </div>

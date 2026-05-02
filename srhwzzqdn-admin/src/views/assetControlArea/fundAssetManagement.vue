@@ -518,6 +518,29 @@ const fundList = ref([
     fundManagerName: '张坤', managerAppointDate: '2012-09-28', managerDesc: '擅长价值投资',
     operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.15, redemptionRate: 0.5,
     managementFee: 1.5, custodianFee: 0.25, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回',
+    // 新增字段
+    returnRate1Month: 5.23, returnRate3Month: 12.45, returnRate6Month: 18.67, returnRate1Year: 32.15,
+    netAssetScale: 35.67, latestScale: 36.12, scaleHistory: '2024年初20亿，年末35亿，规模稳步增长',
+    stockRatio: 85.5, bondRatio: 5.2, cashRatio: 9.3,
+    institutionHoldRatio: 45.6, personalHoldRatio: 52.3, internalHoldRatio: 2.1,
+    // 基金经理分析
+    managerAnalysis: {
+      name: '张坤', starLevel: 5, workYears: 12, manageScale: 35.67,
+      education: '全国前三', personalHold: 1,
+      overallScore: 92.5, selectionScore: 95.2, returnScore: 93.8,
+      riskScore: 88.6, stabilityScore: 90.3, timingScore: 85.4,
+      positionConcentration: '高', turnoverRate: '低', abilityPathMatch: '极高',
+      scaleControlAbility: '高', focusLevel: '高',
+      managerDesc: '擅长价值投资，长期持有优质消费股',
+      positionConcentrationAnalysis: '持仓集中度较高，前十大重仓股占比超过70%，体现深度研究、集中投资风格',
+      turnoverRateAnalysis: '换手率较低，平均持股周期超过2年，属于典型的选股型选手',
+      abilityCircleAnalysis: '长期研究消费行业，能力圈与当前管理的消费主题基金高度匹配',
+      scaleControlAnalysis: '管理规模从20亿增长到35亿，业绩依然稳定，展现出优秀的大规模资金管理能力',
+      workBackground: '清华大学金融学硕士，曾获金牛奖、明星基金经理奖等多项荣誉',
+      productManageAnalysis: '仅管理2只基金，精力集中度高',
+      stabilityAnalysis: '任职超过8年，稳定性极佳',
+      personalHoldAnalysis: '本人持有超过100万份，显示对基金未来充满信心'
+    },
     navList: [
       { navDate: '2026-04-21', unitNav: 3.4521, accumulatedNav: 4.8732, dailyChangeRate: 1.23, estimateNav: 3.4680 },
       { navDate: '2026-04-18', unitNav: 3.4102, accumulatedNav: 4.8313, dailyChangeRate: -0.56, estimateNav: 3.3910 },
@@ -549,6 +572,29 @@ const fundList = ref([
     fundManagerName: '侯昊', managerAppointDate: '2015-05-27', managerDesc: '指数投资专家',
     operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.1, redemptionRate: 0.5,
     managementFee: 1.0, custodianFee: 0.2, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回',
+    // 新增字段
+    returnRate1Month: -2.15, returnRate3Month: 8.32, returnRate6Month: 15.67, returnRate1Year: 28.45,
+    netAssetScale: 98.76, latestScale: 99.23, scaleHistory: '规模稳定在100亿左右',
+    stockRatio: 95.2, bondRatio: 0, cashRatio: 4.8,
+    institutionHoldRatio: 62.3, personalHoldRatio: 35.6, internalHoldRatio: 2.1,
+    // 基金经理分析
+    managerAnalysis: {
+      name: '侯昊', starLevel: 4, workYears: 8, manageScale: 98.76,
+      education: '前十名校', personalHold: 0,
+      overallScore: 85.3, selectionScore: 80.5, returnScore: 88.2,
+      riskScore: 82.6, stabilityScore: 86.7, timingScore: 78.9,
+      positionConcentration: '极高', turnoverRate: '极低', abilityPathMatch: '高',
+      scaleControlAbility: '中', focusLevel: '中',
+      managerDesc: '指数投资专家，被动管理风格',
+      positionConcentrationAnalysis: '作为指数基金，持仓完全复制指数，集中度极高',
+      turnoverRateAnalysis: '换手率极低，仅在指数成分股调整时进行交易',
+      abilityCircleAnalysis: '专注于指数投资，能力圈与基金定位完全匹配',
+      scaleControlAnalysis: '管理规模接近100亿，对指数跟踪误差控制良好',
+      workBackground: '北京大学金融工程硕士，指数投资专家',
+      productManageAnalysis: '管理多只指数基金，精力相对分散',
+      stabilityAnalysis: '任职稳定，超过7年',
+      personalHoldAnalysis: '本人未持有，符合指数基金管理规范'
+    },
     navList: [
       { navDate: '2026-04-21', unitNav: 1.5623, accumulatedNav: 2.1345, dailyChangeRate: 2.15, estimateNav: 1.5780 },
       { navDate: '2026-04-18', unitNav: 1.5294, accumulatedNav: 2.1016, dailyChangeRate: -0.78, estimateNav: 1.5175 }
@@ -572,6 +618,29 @@ const fundList = ref([
     fundManagerName: '姜晓丽', managerAppointDate: '2013-11-20', managerDesc: '短债管理经验丰富',
     operationMode: '开放式', closedPeriod: 0, purchaseRate: 0, redemptionRate: 0,
     managementFee: 0.25, custodianFee: 0.08, salesServiceFee: 0.15, tradeRule: 'T+1确认',
+    // 新增字段
+    returnRate1Month: 0.25, returnRate3Month: 0.78, returnRate6Month: 1.56, returnRate1Year: 3.25,
+    netAssetScale: 156.42, latestScale: 157.89, scaleHistory: '规模持续增长，从100亿增至156亿',
+    stockRatio: 0, bondRatio: 92.5, cashRatio: 7.5,
+    institutionHoldRatio: 78.9, personalHoldRatio: 19.8, internalHoldRatio: 1.3,
+    // 基金经理分析
+    managerAnalysis: {
+      name: '姜晓丽', starLevel: 4, workYears: 10, manageScale: 156.42,
+      education: '985', personalHold: 1,
+      overallScore: 86.7, selectionScore: 82.3, returnScore: 85.6,
+      riskScore: 92.1, stabilityScore: 88.9, timingScore: 80.2,
+      positionConcentration: '低', turnoverRate: '中', abilityPathMatch: '高',
+      scaleControlAbility: '高', focusLevel: '高',
+      managerDesc: '短债管理经验丰富，风险控制能力强',
+      positionConcentrationAnalysis: '债券持仓分散，单一债券占比不超过5%，有效控制信用风险',
+      turnoverRateAnalysis: '换手率适中，根据利率变化调整持仓',
+      abilityCircleAnalysis: '固定收益研究背景，与短债基金定位匹配',
+      scaleControlAnalysis: '管理规模超过150亿，依然保持稳定的超额收益',
+      workBackground: '中国人民大学金融学博士，债券投资专家',
+      productManageAnalysis: '专注短债基金，精力集中',
+      stabilityAnalysis: '任职超过10年，稳定性优秀',
+      personalHoldAnalysis: '本人持有50万份，显示对策略的信心'
+    },
     navList: [
       { navDate: '2026-04-21', unitNav: 1.0823, accumulatedNav: 1.2845, dailyChangeRate: 0.02, estimateNav: 1.0825 }
     ],
