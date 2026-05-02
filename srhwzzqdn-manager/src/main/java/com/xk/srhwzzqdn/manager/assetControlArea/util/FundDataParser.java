@@ -389,8 +389,9 @@ public class FundDataParser {
         private List<Double> stockRatio;      // 股票占净比
         private List<Double> bondRatio;       // 债券占净比
         private List<Double> cashRatio;       // 现金占净比
-        private List<Double> otherRatio;      // 其他资产占比（基金、权证等）
+        private List<Double> otherRatio;      // 其他资产占比（权证等）
         private List<Double> fundRatio;       // 基金占比（ETF联接基金特有）
+        private List<Double> goldRatio;       // 黄金占比（黄金基金特有）
 
         public AssetAllocation() {
             this.series = new HashMap<>();
@@ -400,11 +401,12 @@ public class FundDataParser {
             this.cashRatio = new ArrayList<>();
             this.otherRatio = new ArrayList<>();
             this.fundRatio = new ArrayList<>();
+            this.goldRatio = new ArrayList<>();
         }
     }
 
     /**
-     * 解析资产配置数据（修复版：增加对其他资产和基金占比的解析）
+     * 解析资产配置数据（修复版：正确识别基金占比、其他资产占比等）
      */
     public static AssetAllocation parseAssetAllocation(String content) {
         AssetAllocation aa = new AssetAllocation();
@@ -424,8 +426,9 @@ public class FundDataParser {
                 }
             }
 
-            // 提取series中的各类资产数据
-            Pattern seriesP = Pattern.compile("\"name\":\"([^\"]+)\".*?\"data\":\\[([0-9.,]+)\\]");
+            // 提取series中的所有资产数据 - 改进正则表达式以正确匹配所有数据
+            // 匹配格式: {"name":"xxx","type":...,"data":[...]}
+            Pattern seriesP = Pattern.compile("\\{\"name\":\"([^\"]+)\",[^}]*\"data\":\\[([0-9.,]+)\\][^}]*\\}");
             Matcher seriesM = seriesP.matcher(jsonStr);
             while (seriesM.find()) {
                 String name = seriesM.group(1);
@@ -433,32 +436,43 @@ public class FundDataParser {
                 String[] dataArr = dataStr.split(",");
                 List<Double> dataList = new ArrayList<>();
                 for (String d : dataArr) {
-                    dataList.add(Double.parseDouble(d.trim()));
+                    if (d != null && !d.trim().isEmpty()) {
+                        dataList.add(Double.parseDouble(d.trim()));
+                    }
                 }
 
-                // 根据资产名称分类存储
-                if ("股票占净比".equals(name)) {
+                // 根据资产名称分类存储（支持多种可能的命名）
+                if (name.contains("股票") || name.equals("股票占净比")) {
                     aa.setStockRatio(dataList);
-                } else if ("债券占净比".equals(name)) {
+                } else if (name.contains("债券") || name.equals("债券占净比")) {
                     aa.setBondRatio(dataList);
-                } else if ("现金占净比".equals(name)) {
+                } else if (name.contains("现金") || name.equals("现金占净比")) {
                     aa.setCashRatio(dataList);
-                } else if ("其他资产占净比".equals(name)) {
+                } else if (name.contains("其他") || name.equals("其他资产占净比")) {
                     aa.setOtherRatio(dataList);
-                } else if ("基金占净比".equals(name)) {
+                } else if (name.contains("基金") || name.equals("基金占净比")) {
                     aa.setFundRatio(dataList);
+                } else if (name.contains("黄金") || name.equals("黄金占净比")) {
+                    aa.setGoldRatio(dataList);
                 }
                 aa.getSeries().put(name, dataList);
             }
 
-            // 提取净资产
+            // 提取净资产（专门处理，因为它的结构稍有不同）
             Pattern netP = Pattern.compile("\"name\":\"净资产\",\"type\":\"line\",\"data\":\\[([0-9.,]+)\\]");
             Matcher netM = netP.matcher(jsonStr);
             if (netM.find()) {
                 String[] netArr = netM.group(1).split(",");
                 for (String net : netArr) {
-                    aa.getNetAssets().add(Double.parseDouble(net.trim()));
+                    if (net != null && !net.trim().isEmpty()) {
+                        aa.getNetAssets().add(Double.parseDouble(net.trim()));
+                    }
                 }
+            }
+
+            // 调试：打印解析到的所有资产名称（用于验证）
+            if (!aa.getSeries().isEmpty()) {
+                System.out.println("  [调试] 解析到的资产类型: " + aa.getSeries().keySet());
             }
         }
         return aa;

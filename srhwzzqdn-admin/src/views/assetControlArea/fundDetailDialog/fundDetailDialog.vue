@@ -160,6 +160,84 @@
                 </el-form-item>
               </el-col>
             </el-row>
+            <!-- 新增收益率字段 -->
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="近1月收益率(%)">
+                  <el-input-number v-model="fundData.returnRate1Month" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="近3月收益率(%)">
+                  <el-input-number v-model="fundData.returnRate3Month" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="近6月收益率(%)">
+                  <el-input-number v-model="fundData.returnRate6Month" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="近1年收益率(%)">
+                  <el-input-number v-model="fundData.returnRate1Year" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="净资产规模(亿)">
+                  <el-input-number v-model="fundData.netAssetScale" :precision="2" :step="0.01" :min="0" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="最新规模(亿)">
+                  <el-input-number v-model="fundData.latestScale" :precision="2" :step="0.01" :min="0" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 新增占比字段 -->
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="股票占比(%)">
+                  <el-input-number v-model="fundData.stockRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="债券占比(%)">
+                  <el-input-number v-model="fundData.bondRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="现金占比(%)">
+                  <el-input-number v-model="fundData.cashRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 新增持有比例字段 -->
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="机构持有比例(%)">
+                  <el-input-number v-model="fundData.institutionHoldRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="个人持有比例(%)">
+                  <el-input-number v-model="fundData.personalHoldRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="内部持有比例(%)">
+                  <el-input-number v-model="fundData.internalHoldRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="规模历史">
+                  <el-input v-model="fundData.scaleHistory" type="textarea" :rows="3" placeholder="请输入规模历史记录" />
+                </el-form-item>
+              </el-col>
+            </el-row>
           </el-form>
         </div>
       </div>
@@ -199,6 +277,221 @@
           <div class="sub-pagination">
             <el-pagination background layout="total, sizes, prev, pager, next" :total="navFilterData.length" :page-size="navPage.limit" :current-page="navPage.page" :page-sizes="[10, 20, 50]" @size-change="(s) => { navPage.limit = s; navPage.page = 1 }" @current-change="(p) => navPage.page = p" size="small" />
           </div>
+        </div>
+      </div>
+
+      <!-- ====== 基金经理分析块 ====== -->
+      <div class="section-block">
+        <div class="section-title">
+          <el-icon><User /></el-icon>
+          <span>基金经理分析</span>
+        </div>
+        <div class="section-content">
+          <el-form label-width="140px" size="small">
+            <!-- 基本信息 -->
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="姓名">
+                  <el-input v-model="managerAnalysis.name" placeholder="请输入基金经理姓名" clearable />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="星级">
+                  <el-rate v-model="managerAnalysis.starLevel" :max="5" allow-half show-score />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="从业时间(年)">
+                  <el-input-number v-model="managerAnalysis.workYears" :precision="1" :step="0.5" :min="0" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="管理规模(亿)">
+                  <el-input-number v-model="managerAnalysis.manageScale" :precision="2" :step="0.01" :min="0" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="学历">
+                  <el-select v-model="managerAnalysis.education" placeholder="请选择" style="width: 100%" clearable>
+                    <el-option label="全国前三" value="全国前三" />
+                    <el-option label="前十名校" value="前十名校" />
+                    <el-option label="985" value="985" />
+                    <el-option label="211" value="211" />
+                    <el-option label="其他" value="其他" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="个人持有">
+                  <el-select v-model="managerAnalysis.personalHold" placeholder="请选择" style="width: 100%" clearable>
+                    <el-option label="是" :value="1" />
+                    <el-option label="否" :value="0" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 评分信息 -->
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="综合评分">
+                  <el-input-number v-model="managerAnalysis.overallScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="选证能力评分">
+                  <el-input-number v-model="managerAnalysis.selectionScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="收益率评分">
+                  <el-input-number v-model="managerAnalysis.returnScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="抗风险评分">
+                  <el-input-number v-model="managerAnalysis.riskScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="稳定性评分">
+                  <el-input-number v-model="managerAnalysis.stabilityScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="择时能力评分">
+                  <el-input-number v-model="managerAnalysis.timingScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 分析维度下拉框 -->
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="持仓集中度">
+                  <el-select v-model="managerAnalysis.positionConcentration" placeholder="请选择" style="width: 100%" clearable>
+                    <el-option label="极低" value="极低" />
+                    <el-option label="低" value="低" />
+                    <el-option label="中" value="中" />
+                    <el-option label="高" value="高" />
+                    <el-option label="极高" value="极高" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="换手率">
+                  <el-select v-model="managerAnalysis.turnoverRate" placeholder="请选择" style="width: 100%" clearable>
+                    <el-option label="极低" value="极低" />
+                    <el-option label="低" value="低" />
+                    <el-option label="中" value="中" />
+                    <el-option label="高" value="高" />
+                    <el-option label="极高" value="极高" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="能力路径匹配度">
+                  <el-select v-model="managerAnalysis.abilityPathMatch" placeholder="请选择" style="width: 100%" clearable>
+                    <el-option label="极低" value="极低" />
+                    <el-option label="低" value="低" />
+                    <el-option label="中" value="中" />
+                    <el-option label="高" value="高" />
+                    <el-option label="极高" value="极高" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="规模驾驭能力">
+                  <el-select v-model="managerAnalysis.scaleControlAbility" placeholder="请选择" style="width: 100%" clearable>
+                    <el-option label="极低" value="极低" />
+                    <el-option label="低" value="低" />
+                    <el-option label="中" value="中" />
+                    <el-option label="高" value="高" />
+                    <el-option label="极高" value="极高" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="本基金精力集中度">
+                  <el-select v-model="managerAnalysis.focusLevel" placeholder="请选择" style="width: 100%" clearable>
+                    <el-option label="极低" value="极低" />
+                    <el-option label="低" value="低" />
+                    <el-option label="中" value="中" />
+                    <el-option label="高" value="高" />
+                    <el-option label="极高" value="极高" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <!-- 文本域分析 -->
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="经理描述">
+                  <el-input v-model="managerAnalysis.managerDesc" type="textarea" :rows="3" placeholder="请输入基金经理描述" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="持仓集中度分析">
+                  <el-input v-model="managerAnalysis.positionConcentrationAnalysis" type="textarea" :rows="3" placeholder="指基金前十大重仓股占股票投资市值的比例。如果这个比例很高（比如超过60%-70%），说明基金经理喜欢集中投资，依靠深度研究的少量个股来获取收益，净值波动可能会更；如果比例较低，说明更倾向于分散投资，通过组合管理来控制风险。" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="换手率分析">
+                  <el-input v-model="managerAnalysis.turnoverRateAnalysis" type="textarea" :rows="3" placeholder="反映基金经理交易股票的频繁程度。低换手率通常意味着基金经理是选股型选手，倾向于长期持有；高换手率则可能偏向交易型选手，试图通过把握市场节奏来增厚收益。" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="能力圈与路径依赖分析">
+                  <el-input v-model="managerAnalysis.abilityCircleAnalysis" type="textarea" :rows="3" placeholder="关注他的行业研究背景是否与现在管理的基金相匹配。例如，一个长期研究消费的基金经理去管理一只科技主题基金，就需要审慎评估。" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="规模驾驭能力分析">
+                  <el-input v-model="managerAnalysis.scaleControlAnalysis" type="textarea" :rows="3" placeholder="留意基金规模是否在短期内急剧膨胀。许多优秀的策略在资金规模变大后可能会失效（即'规模是业绩的敌人'），需要观察基金经理是否有管理大规模资金的成功经验。" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="从业背景">
+                  <el-input v-model="managerAnalysis.workBackground" type="textarea" :rows="3" placeholder="他的学历专业、研究员时期的行业覆盖范围、获得过的权威奖项（如'金牛奖'）等都是重要参考。" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="产品管理情况分析">
+                  <el-input v-model="managerAnalysis.productManageAnalysis" type="textarea" :rows="3" placeholder="看他是否'超负荷'工作。如果一个人名下管了十几只不同类型（如全市场选股、行业主题、量化对冲）的基金，精力难免被分散。" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="稳定性分析">
+                  <el-input v-model="managerAnalysis.stabilityAnalysis" type="textarea" :rows="3" placeholder="如果他频繁跳槽，或者管理的基金频繁更换基金经理，这都是需要警惕的信号。" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="个人持有情况">
+                  <el-input v-model="managerAnalysis.personalHoldAnalysis" type="textarea" :rows="3" placeholder="基金经理本人是否也持有了自己管理的基金？这在基金的年报/半年报中有披露，是衡量信心的重要指标。" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
         </div>
       </div>
 
@@ -549,7 +842,7 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { Close, Check, Search, Refresh, Plus, FullScreen, Aim, Download } from '@element-plus/icons-vue'
+import { Close, Check, Search, Refresh, Plus, FullScreen, Aim, Download, User } from '@element-plus/icons-vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 import { GetKeyAndValueByType } from "@/api/sysDict"
 
@@ -659,7 +952,28 @@ const fundData = reactive({
   assetScale: 0, fundManager: '', fundCompanyDesc: '', fundCustodian: '',
   fundManagerName: '', managerAppointDate: '', managerDesc: '',
   operationMode: '', closedPeriod: 0, purchaseRate: 0, redemptionRate: 0,
-  managementFee: 0, custodianFee: 0, salesServiceFee: 0, tradeRule: ''
+  managementFee: 0, custodianFee: 0, salesServiceFee: 0, tradeRule: '',
+  // 新增收益率字段
+  returnRate1Month: 0, returnRate3Month: 0, returnRate6Month: 0, returnRate1Year: 0,
+  // 新增规模字段
+  netAssetScale: 0, latestScale: 0, scaleHistory: '',
+  // 新增占比字段
+  stockRatio: 0, bondRatio: 0, cashRatio: 0,
+  // 新增持有比例字段
+  institutionHoldRatio: 0, personalHoldRatio: 0, internalHoldRatio: 0
+})
+
+// ============ 基金经理分析数据 ============
+const managerAnalysis = reactive({
+  name: '', starLevel: 0, workYears: 0, manageScale: 0,
+  education: '', personalHold: null,
+  overallScore: 0, selectionScore: 0, returnScore: 0,
+  riskScore: 0, stabilityScore: 0, timingScore: 0,
+  positionConcentration: '', turnoverRate: '', abilityPathMatch: '',
+  scaleControlAbility: '', focusLevel: '',
+  managerDesc: '', positionConcentrationAnalysis: '', turnoverRateAnalysis: '',
+  abilityCircleAnalysis: '', scaleControlAnalysis: '', workBackground: '',
+  productManageAnalysis: '', stabilityAnalysis: '', personalHoldAnalysis: ''
 })
 
 // ============ 净值与估值 ============
@@ -882,8 +1196,33 @@ const initDialogData = () => {
     closedPeriod: row.closedPeriod || 0, purchaseRate: row.purchaseRate || 0,
     redemptionRate: row.redemptionRate || 0, managementFee: row.managementFee || 0,
     custodianFee: row.custodianFee || 0, salesServiceFee: row.salesServiceFee || 0,
-    tradeRule: row.tradeRule || ''
+    tradeRule: row.tradeRule || '',
+    // 新增字段初始化
+    returnRate1Month: row.returnRate1Month || 0, returnRate3Month: row.returnRate3Month || 0,
+    returnRate6Month: row.returnRate6Month || 0, returnRate1Year: row.returnRate1Year || 0,
+    netAssetScale: row.netAssetScale || 0, latestScale: row.latestScale || 0,
+    scaleHistory: row.scaleHistory || '',
+    stockRatio: row.stockRatio || 0, bondRatio: row.bondRatio || 0, cashRatio: row.cashRatio || 0,
+    institutionHoldRatio: row.institutionHoldRatio || 0, personalHoldRatio: row.personalHoldRatio || 0,
+    internalHoldRatio: row.internalHoldRatio || 0
   })
+
+  // 初始化基金经理分析数据
+  if (row.managerAnalysis) {
+    Object.assign(managerAnalysis, row.managerAnalysis)
+  } else {
+    Object.assign(managerAnalysis, {
+      name: row.fundManagerName || '', starLevel: 0, workYears: 0, manageScale: 0,
+      education: '', personalHold: null,
+      overallScore: 0, selectionScore: 0, returnScore: 0,
+      riskScore: 0, stabilityScore: 0, timingScore: 0,
+      positionConcentration: '', turnoverRate: '', abilityPathMatch: '',
+      scaleControlAbility: '', focusLevel: '',
+      managerDesc: '', positionConcentrationAnalysis: '', turnoverRateAnalysis: '',
+      abilityCircleAnalysis: '', scaleControlAnalysis: '', workBackground: '',
+      productManageAnalysis: '', stabilityAnalysis: '', personalHoldAnalysis: ''
+    })
+  }
 
   // 净值数据
   navData.value = row.navList ? JSON.parse(JSON.stringify(row.navList)) : []
@@ -922,6 +1261,7 @@ watch(() => props.visible, (val) => {
 const handleSave = () => {
   const savePayload = {
     ...JSON.parse(JSON.stringify(fundData)),
+    managerAnalysis: JSON.parse(JSON.stringify(managerAnalysis)),
     navList: JSON.parse(JSON.stringify(navData.value)),
     holdShares: shareData.holdShares, availableShares: shareData.availableShares,
     frozenShares: shareData.frozenShares, positionCost: shareData.positionCost,

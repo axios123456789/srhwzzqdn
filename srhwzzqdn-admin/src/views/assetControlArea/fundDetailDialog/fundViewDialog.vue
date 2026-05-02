@@ -226,6 +226,144 @@
         </div>
       </div>
 
+      <!-- 基金经理分析卡片 -->
+      <div class="info-card" v-if="props.fundData.managerAnalysis">
+        <div class="card-header">
+          <el-icon><User /></el-icon>
+          <span>基金经理分析</span>
+        </div>
+        <div class="card-body">
+          <!-- 基本信息 -->
+          <div class="info-grid">
+            <div class="info-item">
+              <label>姓名</label>
+              <span class="value">{{ props.fundData.managerAnalysis.name || '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>星级</label>
+              <span class="value">
+                <el-rate :model-value="props.fundData.managerAnalysis.starLevel" :max="5" disabled show-score />
+              </span>
+            </div>
+            <div class="info-item">
+              <label>从业时间</label>
+              <span class="value">{{ props.fundData.managerAnalysis.workYears ? props.fundData.managerAnalysis.workYears + ' 年' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>管理规模</label>
+              <span class="value highlight">{{ props.fundData.managerAnalysis.manageScale ? props.fundData.managerAnalysis.manageScale + ' 亿' : '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>学历</label>
+              <span class="value">{{ props.fundData.managerAnalysis.education || '-' }}</span>
+            </div>
+            <div class="info-item">
+              <label>个人持有</label>
+              <span class="value" :class="props.fundData.managerAnalysis.personalHold === 1 ? 'profit-text' : 'loss-text'">
+                {{ props.fundData.managerAnalysis.personalHold === 1 ? '是' : '否' }}
+              </span>
+            </div>
+          </div>
+          <!-- 评分信息 -->
+          <div class="score-grid">
+            <div class="score-item">
+              <div class="score-label">综合评分</div>
+              <div class="score-value">{{ props.fundData.managerAnalysis.overallScore || 0 }}</div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">选证能力</div>
+              <div class="score-value">{{ props.fundData.managerAnalysis.selectionScore || 0 }}</div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">收益率</div>
+              <div class="score-value">{{ props.fundData.managerAnalysis.returnScore || 0 }}</div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">抗风险</div>
+              <div class="score-value">{{ props.fundData.managerAnalysis.riskScore || 0 }}</div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">稳定性</div>
+              <div class="score-value">{{ props.fundData.managerAnalysis.stabilityScore || 0 }}</div>
+            </div>
+            <div class="score-item">
+              <div class="score-label">择时能力</div>
+              <div class="score-value">{{ props.fundData.managerAnalysis.timingScore || 0 }}</div>
+            </div>
+          </div>
+          <!-- 分析维度 -->
+          <div class="analysis-grid">
+            <div class="analysis-item">
+              <label>持仓集中度</label>
+              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.positionConcentration)" size="small">
+                {{ props.fundData.managerAnalysis.positionConcentration || '-' }}
+              </el-tag>
+            </div>
+            <div class="analysis-item">
+              <label>换手率</label>
+              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.turnoverRate)" size="small">
+                {{ props.fundData.managerAnalysis.turnoverRate || '-' }}
+              </el-tag>
+            </div>
+            <div class="analysis-item">
+              <label>能力路径匹配度</label>
+              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.abilityPathMatch)" size="small">
+                {{ props.fundData.managerAnalysis.abilityPathMatch || '-' }}
+              </el-tag>
+            </div>
+            <div class="analysis-item">
+              <label>规模驾驭能力</label>
+              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.scaleControlAbility)" size="small">
+                {{ props.fundData.managerAnalysis.scaleControlAbility || '-' }}
+              </el-tag>
+            </div>
+            <div class="analysis-item">
+              <label>本基金精力集中度</label>
+              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.focusLevel)" size="small">
+                {{ props.fundData.managerAnalysis.focusLevel || '-' }}
+              </el-tag>
+            </div>
+          </div>
+          <!-- 文本分析 -->
+          <div class="info-full" v-if="props.fundData.managerAnalysis.managerDesc">
+            <label>经理描述</label>
+            <p class="desc-text">{{ props.fundData.managerAnalysis.managerDesc }}</p>
+          </div>
+          <div class="info-full" v-if="props.fundData.managerAnalysis.positionConcentrationAnalysis">
+            <label>持仓集中度分析</label>
+            <p class="desc-text">{{ props.fundData.managerAnalysis.positionConcentrationAnalysis }}</p>
+          </div>
+          <div class="info-full" v-if="props.fundData.managerAnalysis.turnoverRateAnalysis">
+            <label>换手率分析</label>
+            <p class="desc-text">{{ props.fundData.managerAnalysis.turnoverRateAnalysis }}</p>
+          </div>
+          <div class="info-full" v-if="props.fundData.managerAnalysis.abilityCircleAnalysis">
+            <label>能力圈与路径依赖分析</label>
+            <p class="desc-text">{{ props.fundData.managerAnalysis.abilityCircleAnalysis }}</p>
+          </div>
+          <div class="info-full" v-if="props.fundData.managerAnalysis.scaleControlAnalysis">
+            <label>规模驾驭能力分析</label>
+            <p class="desc-text">{{ props.fundData.managerAnalysis.scaleControlAnalysis }}</p>
+          </div>
+          <div class="info-full" v-if="props.fundData.managerAnalysis.workBackground">
+            <label>从业背景</label>
+            <p class="desc-text">{{ props.fundData.managerAnalysis.workBackground }}</p>
+          </div>
+          <div class="info-full" v-if="props.fundData.managerAnalysis.productManageAnalysis">
+            <label>产品管理情况分析</label>
+            <p class="desc-text">{{ props.fundData.managerAnalysis.productManageAnalysis }}</p>
+          </div>
+          <div class="info-full" v-if="props.fundData.managerAnalysis.stabilityAnalysis">
+            <label>稳定性分析</label>
+            <p class="desc-text">{{ props.fundData.managerAnalysis.stabilityAnalysis }}</p>
+          </div>
+          <div class="info-full" v-if="props.fundData.managerAnalysis.personalHoldAnalysis">
+            <label>个人持有情况</label>
+            <p class="desc-text">{{ props.fundData.managerAnalysis.personalHoldAnalysis }}</p>
+          </div>
+        </div>
+      </div>
+
       <!-- 交易记录卡片 -->
       <div class="info-card" v-if="props.fundData.tradeList && props.fundData.tradeList.length > 0">
         <div class="card-header">
@@ -344,7 +482,7 @@
 
 <script setup>
 import { computed, ref, watch, nextTick, onBeforeUnmount } from 'vue'
-import { Coin, Close, FullScreen, Aim, Document, Discount, Wallet, TrendCharts, List, Money, DataAnalysis, Grid } from '@element-plus/icons-vue'
+import { Coin, Close, FullScreen, Aim, Document, Discount, Wallet, TrendCharts, List, Money, DataAnalysis, Grid, User } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 
 const props = defineProps({
@@ -798,6 +936,18 @@ const getProfitClass = (value) => {
   if (!value) return ''
   return value >= 0 ? 'profit-text' : 'loss-text'
 }
+
+// 分析维度标签类型映射
+const getAnalysisTagType = (value) => {
+  const typeMap = {
+    '极高': 'danger',
+    '高': 'warning',
+    '中': 'info',
+    '低': 'success',
+    '极低': ''
+  }
+  return typeMap[value] || 'info'
+}
 </script>
 
 <style scoped>
@@ -1127,6 +1277,70 @@ const getProfitClass = (value) => {
 .position-value.highlight {
   color: #1e3c72;
   font-size: 18px;
+}
+
+/* ====== 基金经理分析样式 ====== */
+.score-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.score-item {
+  text-align: center;
+  padding: 12px 8px;
+  background: linear-gradient(135deg, #e8f4f8 0%, #d1e8f0 100%);
+  border-radius: 8px;
+  border: 1px solid #b8dce8;
+  transition: all 0.3s ease;
+}
+
+.score-item:hover {
+  border-color: #1e3c72;
+  box-shadow: 0 2px 8px rgba(30, 60, 114, 0.15);
+  transform: translateY(-2px);
+}
+
+.score-label {
+  font-size: 12px;
+  color: #606266;
+  margin-bottom: 6px;
+}
+
+.score-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e3c72;
+}
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.analysis-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #fafbfc;
+  border-radius: 6px;
+  border: 1px solid #e8ecf1;
+  transition: all 0.3s ease;
+}
+
+.analysis-item:hover {
+  border-color: #1e3c72;
+  background: #f5f7fa;
+}
+
+.analysis-item label {
+  font-size: 13px;
+  color: #606266;
+  font-weight: 500;
 }
 
 /* ====== 涨跌颜色 ====== */

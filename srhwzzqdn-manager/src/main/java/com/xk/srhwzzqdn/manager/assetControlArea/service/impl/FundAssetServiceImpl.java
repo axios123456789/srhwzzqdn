@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 基金资产管理服务实现类
@@ -241,23 +242,49 @@ public class FundAssetServiceImpl implements FundAssetService {
                 System.out.println("  净资产规模: " + aa.getNetAssets() + " 亿元");
             }
 
-            // 最新一期的资产配置比例
+            // 获取最新一期索引
+            int lastIdx = -1;
             if (aa.getStockRatio() != null && !aa.getStockRatio().isEmpty()) {
-                System.out.printf("  最新股票占比: %.2f%%%n", aa.getStockRatio().get(aa.getStockRatio().size() - 1));
+                lastIdx = aa.getStockRatio().size() - 1;
+            } else if (aa.getBondRatio() != null && !aa.getBondRatio().isEmpty()) {
+                lastIdx = aa.getBondRatio().size() - 1;
+            } else if (aa.getCashRatio() != null && !aa.getCashRatio().isEmpty()) {
+                lastIdx = aa.getCashRatio().size() - 1;
+            } else if (aa.getFundRatio() != null && !aa.getFundRatio().isEmpty()) {
+                lastIdx = aa.getFundRatio().size() - 1;
             }
-            if (aa.getBondRatio() != null && !aa.getBondRatio().isEmpty()) {
-                System.out.printf("  最新债券占比: %.2f%%%n", aa.getBondRatio().get(aa.getBondRatio().size() - 1));
-            }
-            if (aa.getCashRatio() != null && !aa.getCashRatio().isEmpty()) {
-                System.out.printf("  最新现金占比: %.2f%%%n", aa.getCashRatio().get(aa.getCashRatio().size() - 1));
-            }
-            // 新增：其他资产占比
-            if (aa.getOtherRatio() != null && !aa.getOtherRatio().isEmpty()) {
-                System.out.printf("  最新其他资产占比: %.2f%%%n", aa.getOtherRatio().get(aa.getOtherRatio().size() - 1));
-            }
-            // 新增：基金占比（ETF联接基金特有）
-            if (aa.getFundRatio() != null && !aa.getFundRatio().isEmpty()) {
-                System.out.printf("  最新基金占比: %.2f%%%n", aa.getFundRatio().get(aa.getFundRatio().size() - 1));
+
+            if (lastIdx >= 0) {
+                // 输出所有非空的资产占比
+                if (aa.getStockRatio() != null && !aa.getStockRatio().isEmpty()) {
+                    System.out.printf("  最新股票占比: %.2f%%%n", aa.getStockRatio().get(Math.min(lastIdx, aa.getStockRatio().size() - 1)));
+                }
+                if (aa.getBondRatio() != null && !aa.getBondRatio().isEmpty()) {
+                    System.out.printf("  最新债券占比: %.2f%%%n", aa.getBondRatio().get(Math.min(lastIdx, aa.getBondRatio().size() - 1)));
+                }
+                if (aa.getCashRatio() != null && !aa.getCashRatio().isEmpty()) {
+                    System.out.printf("  最新现金占比: %.2f%%%n", aa.getCashRatio().get(Math.min(lastIdx, aa.getCashRatio().size() - 1)));
+                }
+                if (aa.getFundRatio() != null && !aa.getFundRatio().isEmpty()) {
+                    System.out.printf("  最新基金占比: %.2f%%%n", aa.getFundRatio().get(Math.min(lastIdx, aa.getFundRatio().size() - 1)));
+                }
+                if (aa.getGoldRatio() != null && !aa.getGoldRatio().isEmpty()) {
+                    System.out.printf("  最新黄金占比: %.2f%%%n", aa.getGoldRatio().get(Math.min(lastIdx, aa.getGoldRatio().size() - 1)));
+                }
+                if (aa.getOtherRatio() != null && !aa.getOtherRatio().isEmpty()) {
+                    System.out.printf("  最新其他资产占比: %.2f%%%n", aa.getOtherRatio().get(Math.min(lastIdx, aa.getOtherRatio().size() - 1)));
+                }
+            } else {
+                // 如果没有找到任何资产配置数据，尝试从series中打印所有
+                if (aa.getSeries() != null && !aa.getSeries().isEmpty()) {
+                    System.out.println("  资产配置明细:");
+                    for (Map.Entry<String, List<Double>> entry : aa.getSeries().entrySet()) {
+                        List<Double> values = entry.getValue();
+                        if (values != null && !values.isEmpty()) {
+                            System.out.printf("    %s: %.2f%%%n", entry.getKey(), values.get(values.size() - 1));
+                        }
+                    }
+                }
             }
         }
     }
