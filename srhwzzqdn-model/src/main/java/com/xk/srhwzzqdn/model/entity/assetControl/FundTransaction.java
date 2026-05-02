@@ -52,4 +52,6 @@ public class FundTransaction {
 
     @Schema(description = "更新人")
     private String updateBy;
+
+    private String owner;
 }

@@ -379,7 +379,7 @@ public class FundDataParser {
         return result;
     }
 
-    // ==================== 6. 资产配置解析 ====================
+    // ==================== 6. 资产配置解析（完善版：支持其他资产占比） ====================
 
     @Data
     public static class AssetAllocation {
@@ -389,6 +389,8 @@ public class FundDataParser {
         private List<Double> stockRatio;      // 股票占净比
         private List<Double> bondRatio;       // 债券占净比
         private List<Double> cashRatio;       // 现金占净比
+        private List<Double> otherRatio;      // 其他资产占比（基金、权证等）
+        private List<Double> fundRatio;       // 基金占比（ETF联接基金特有）
 
         public AssetAllocation() {
             this.series = new HashMap<>();
@@ -396,9 +398,14 @@ public class FundDataParser {
             this.stockRatio = new ArrayList<>();
             this.bondRatio = new ArrayList<>();
             this.cashRatio = new ArrayList<>();
+            this.otherRatio = new ArrayList<>();
+            this.fundRatio = new ArrayList<>();
         }
     }
 
+    /**
+     * 解析资产配置数据（修复版：增加对其他资产和基金占比的解析）
+     */
     public static AssetAllocation parseAssetAllocation(String content) {
         AssetAllocation aa = new AssetAllocation();
         Pattern p = Pattern.compile("Data_assetAllocation\\s*=\\s*(\\{[\\s\\S]*?\\});");
@@ -417,7 +424,7 @@ public class FundDataParser {
                 }
             }
 
-            // 提取series中的股票、债券、现金数据
+            // 提取series中的各类资产数据
             Pattern seriesP = Pattern.compile("\"name\":\"([^\"]+)\".*?\"data\":\\[([0-9.,]+)\\]");
             Matcher seriesM = seriesP.matcher(jsonStr);
             while (seriesM.find()) {
@@ -428,12 +435,18 @@ public class FundDataParser {
                 for (String d : dataArr) {
                     dataList.add(Double.parseDouble(d.trim()));
                 }
+
+                // 根据资产名称分类存储
                 if ("股票占净比".equals(name)) {
                     aa.setStockRatio(dataList);
                 } else if ("债券占净比".equals(name)) {
                     aa.setBondRatio(dataList);
                 } else if ("现金占净比".equals(name)) {
                     aa.setCashRatio(dataList);
+                } else if ("其他资产占净比".equals(name)) {
+                    aa.setOtherRatio(dataList);
+                } else if ("基金占净比".equals(name)) {
+                    aa.setFundRatio(dataList);
                 }
                 aa.getSeries().put(name, dataList);
             }
@@ -487,6 +500,33 @@ public class FundDataParser {
             managers.add(fm);
         }
         return managers;
+    }
+
+    /**
+     * 将从业时间格式 "12年又112天" 转换为小数年数 "12.3年"
+     *
+     * @param workTime 原始从业时间字符串，如 "12年又112天"
+     * @return 转换后的小数年数，如 "12.3年"，如果格式不匹配则返回原字符串
+     */
+    public static String convertWorkTimeToYears(String workTime) {
+        if (workTime == null || workTime.isEmpty()) {
+            return "未知";
+        }
+        // 匹配格式：数字年又数字天
+        Pattern pattern = Pattern.compile("(\\d+)年又(\\d+)天");
+        Matcher matcher = pattern.matcher(workTime);
+        if (matcher.find()) {
+            int years = Integer.parseInt(matcher.group(1));
+            int days = Integer.parseInt(matcher.group(2));
+            double totalYears = years + days / 365.0;
+            // 保留一位小数
+            return String.format("%.1f年", totalYears);
+        }
+        // 如果已经是小数格式，直接返回
+        if (workTime.contains("年") && !workTime.contains("又")) {
+            return workTime;
+        }
+        return workTime;
     }
 
     // ==================== 8. 业绩评价解析 ====================

@@ -226,8 +226,8 @@ public class FundAssetServiceImpl implements FundAssetService {
     }
 
     /**
-     * 打印资产配置信息
-     * 包括净资产规模、股票/债券/现金占比等
+     * 打印资产配置信息（完善版：支持其他资产和基金占比）
+     * 包括净资产规模、股票/债券/现金/其他/基金占比等
      *
      * @param fundData 基金数据对象
      */
@@ -251,11 +251,19 @@ public class FundAssetServiceImpl implements FundAssetService {
             if (aa.getCashRatio() != null && !aa.getCashRatio().isEmpty()) {
                 System.out.printf("  最新现金占比: %.2f%%%n", aa.getCashRatio().get(aa.getCashRatio().size() - 1));
             }
+            // 新增：其他资产占比
+            if (aa.getOtherRatio() != null && !aa.getOtherRatio().isEmpty()) {
+                System.out.printf("  最新其他资产占比: %.2f%%%n", aa.getOtherRatio().get(aa.getOtherRatio().size() - 1));
+            }
+            // 新增：基金占比（ETF联接基金特有）
+            if (aa.getFundRatio() != null && !aa.getFundRatio().isEmpty()) {
+                System.out.printf("  最新基金占比: %.2f%%%n", aa.getFundRatio().get(aa.getFundRatio().size() - 1));
+            }
         }
     }
 
     /**
-     * 打印基金经理信息
+     * 打印基金经理信息（修复版：格式化从业年限）
      * 包括姓名、星级、从业时间、管理规模等
      *
      * @param fundData 基金数据对象
@@ -267,7 +275,9 @@ public class FundAssetServiceImpl implements FundAssetService {
             for (FundDataParser.FundManager fm : managers) {
                 System.out.println("  姓名: " + fm.getName());                    // 基金经理姓名
                 System.out.println("  星级: " + fm.getStar() + "星");            // 基金经理星级评价（1-5星）
-                System.out.println("  从业时间: " + (fm.getWorkTime() != null ? fm.getWorkTime() : "未知"));
+                // 将 "12年又112天" 格式转换为 "12.3年" 格式
+                String formattedWorkTime = FundDataParser.convertWorkTimeToYears(fm.getWorkTime());
+                System.out.println("  从业时间: " + (formattedWorkTime != null ? formattedWorkTime : "未知"));
                 System.out.println("  管理规模: " + (fm.getFundSize() != null ? fm.getFundSize() : "未知"));
                 System.out.println("  ---");
             }
