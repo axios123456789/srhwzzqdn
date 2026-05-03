@@ -75,6 +75,49 @@ public class FundAsset {
     @Schema(description = "备注")
     private String remark;
 
+    // ==================== 新增字段 ====================
+
+    @Schema(description = "近1月收益率(%)")
+    private BigDecimal return1m;
+
+    @Schema(description = "近3月收益率(%)")
+    private BigDecimal return3m;
+
+    @Schema(description = "近6月收益率(%)")
+    private BigDecimal return6m;
+
+    @Schema(description = "近1年收益率(%)")
+    private BigDecimal return1y;
+
+    @Schema(description = "净资产规模（亿元）")
+    private String netAssets;
+
+    @Schema(description = "最新股票占比(%)")
+    private BigDecimal stockRatio;
+
+    @Schema(description = "最新债券占比(%)")
+    private BigDecimal bondRatio;
+
+    @Schema(description = "最新现金占比(%)")
+    private BigDecimal cashRatio;
+
+    @Schema(description = "最新规模（亿元）")
+    private BigDecimal latestScale;
+
+    @Schema(description = "规模历史（文本域，记录历史规模变化）")
+    private String scaleHistory;
+
+    @Schema(description = "机构持有比例(%)")
+    private BigDecimal institutionRatio;
+
+    @Schema(description = "个人持有比例(%)")
+    private BigDecimal individualRatio;
+
+    @Schema(description = "内部持有比例(%)")
+    private BigDecimal internalRatio;
+
+    // ==================== 原有审计字段 ====================
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Schema(description = "创建时间")
     private Date createTime;

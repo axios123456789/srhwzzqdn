@@ -90,11 +90,6 @@
               <label>近1年收益率</label>
               <span class="value" :class="props.fundData.returnRate1Year >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.returnRate1Year ? props.fundData.returnRate1Year + '%' : '-' }}</span>
             </div>
-            <!-- 新增规模字段 -->
-            <div class="info-item">
-              <label>净资产规模</label>
-              <span class="value highlight">{{ props.fundData.netAssetScale ? props.fundData.netAssetScale + ' 亿' : '-' }}</span>
-            </div>
             <div class="info-item">
               <label>最新规模</label>
               <span class="value highlight">{{ props.fundData.latestScale ? props.fundData.latestScale + ' 亿' : '-' }}</span>
@@ -125,6 +120,10 @@
               <label>内部持有比例</label>
               <span class="value">{{ props.fundData.internalHoldRatio ? props.fundData.internalHoldRatio + '%' : '-' }}</span>
             </div>
+          </div>
+          <div class="info-full" v-if="props.fundData.netAssetScale">
+            <label>净资产规模</label>
+            <p class="desc-text">{{ props.fundData.netAssetScale }}</p>
           </div>
           <div class="info-full" v-if="props.fundData.fundCompanyDesc">
             <label>基金公司描述</label>
@@ -317,6 +316,16 @@
               <label>个人持有</label>
               <span class="value" :class="props.fundData.managerAnalysis.personalHold === 1 ? 'profit-text' : 'loss-text'">
                 {{ props.fundData.managerAnalysis.personalHold === 1 ? '是' : '否' }}
+              </span>
+            </div>
+            <div class="info-item">
+              <label>获奖记录</label>
+              <span class="value">
+                <el-tag v-if="props.fundData.managerAnalysis.awards && props.fundData.managerAnalysis.awards !== '无'" 
+                  :type="getAwardTagType(props.fundData.managerAnalysis.awards)" size="small">
+                  {{ props.fundData.managerAnalysis.awards }}
+                </el-tag>
+                <span v-else>{{ props.fundData.managerAnalysis.awards || '-' }}</span>
               </span>
             </div>
           </div>
@@ -1003,6 +1012,19 @@ const getAnalysisTagType = (value) => {
     '极低': ''
   }
   return typeMap[value] || 'info'
+}
+
+// 获奖记录标签类型映射
+const getAwardTagType = (award) => {
+  const typeMap = {
+    '金牛奖': 'danger',
+    '金基金奖': 'warning',
+    '明星基金奖': 'success',
+    '晨星奖': 'info',
+    '英华奖': 'primary',
+    '其他': ''
+  }
+  return typeMap[award] || 'info'
 }
 </script>
 

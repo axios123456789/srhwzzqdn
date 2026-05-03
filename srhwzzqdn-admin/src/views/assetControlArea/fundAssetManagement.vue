@@ -526,7 +526,7 @@ const fundList = ref([
     // 基金经理分析
     managerAnalysis: {
       name: '张坤', starLevel: 5, workYears: 12, manageScale: 35.67,
-      education: '全国前三', personalHold: 1,
+      education: '全国前三', personalHold: 1, awards: '金牛奖',
       overallScore: 92.5, selectionScore: 95.2, returnScore: 93.8,
       riskScore: 88.6, stabilityScore: 90.3, timingScore: 85.4,
       positionConcentration: '高', turnoverRate: '低', abilityPathMatch: '极高',
@@ -580,7 +580,7 @@ const fundList = ref([
     // 基金经理分析
     managerAnalysis: {
       name: '侯昊', starLevel: 4, workYears: 8, manageScale: 98.76,
-      education: '前十名校', personalHold: 0,
+      education: '前十名校', personalHold: 0, awards: '无',
       overallScore: 85.3, selectionScore: 80.5, returnScore: 88.2,
       riskScore: 82.6, stabilityScore: 86.7, timingScore: 78.9,
       positionConcentration: '极高', turnoverRate: '极低', abilityPathMatch: '高',
@@ -626,7 +626,7 @@ const fundList = ref([
     // 基金经理分析
     managerAnalysis: {
       name: '姜晓丽', starLevel: 4, workYears: 10, manageScale: 156.42,
-      education: '985', personalHold: 1,
+      education: '985', personalHold: 1, awards: '明星基金奖',
       overallScore: 86.7, selectionScore: 82.3, returnScore: 85.6,
       riskScore: 92.1, stabilityScore: 88.9, timingScore: 80.2,
       positionConcentration: '低', turnoverRate: '中', abilityPathMatch: '高',

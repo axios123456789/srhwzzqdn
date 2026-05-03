@@ -185,13 +185,15 @@
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="净资产规模(亿)">
-                  <el-input-number v-model="fundData.netAssetScale" :precision="2" :step="0.01" :min="0" style="width: 100%" controls-position="right" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
                 <el-form-item label="最新规模(亿)">
                   <el-input-number v-model="fundData.latestScale" :precision="2" :step="0.01" :min="0" style="width: 100%" controls-position="right" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="24">
+                <el-form-item label="净资产规模">
+                  <el-input v-model="fundData.netAssetScale" type="textarea" :rows="3" placeholder="请输入净资产规模，例如：[1.0112, 4.4303, 5.9658, 21.6745] 亿元" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -315,11 +317,7 @@
               <el-col :span="8">
                 <el-form-item label="学历">
                   <el-select v-model="managerAnalysis.education" placeholder="请选择" style="width: 100%" clearable>
-                    <el-option label="全国前三" value="全国前三" />
-                    <el-option label="前十名校" value="前十名校" />
-                    <el-option label="985" value="985" />
-                    <el-option label="211" value="211" />
-                    <el-option label="其他" value="其他" />
+                    <el-option v-for="item in schoolTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -328,6 +326,15 @@
                   <el-select v-model="managerAnalysis.personalHold" placeholder="请选择" style="width: 100%" clearable>
                     <el-option label="是" :value="1" />
                     <el-option label="否" :value="0" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="16">
+              <el-col :span="8">
+                <el-form-item label="获奖记录">
+                  <el-select v-model="managerAnalysis.awards" placeholder="请选择" style="width: 100%" clearable>
+                    <el-option v-for="item in awardOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -372,33 +379,21 @@
               <el-col :span="8">
                 <el-form-item label="持仓集中度">
                   <el-select v-model="managerAnalysis.positionConcentration" placeholder="请选择" style="width: 100%" clearable>
-                    <el-option label="极低" value="极低" />
-                    <el-option label="低" value="低" />
-                    <el-option label="中" value="中" />
-                    <el-option label="高" value="高" />
-                    <el-option label="极高" value="极高" />
+                    <el-option v-for="item in levelOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="换手率">
                   <el-select v-model="managerAnalysis.turnoverRate" placeholder="请选择" style="width: 100%" clearable>
-                    <el-option label="极低" value="极低" />
-                    <el-option label="低" value="低" />
-                    <el-option label="中" value="中" />
-                    <el-option label="高" value="高" />
-                    <el-option label="极高" value="极高" />
+                    <el-option v-for="item in levelOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="能力路径匹配度">
                   <el-select v-model="managerAnalysis.abilityPathMatch" placeholder="请选择" style="width: 100%" clearable>
-                    <el-option label="极低" value="极低" />
-                    <el-option label="低" value="低" />
-                    <el-option label="中" value="中" />
-                    <el-option label="高" value="高" />
-                    <el-option label="极高" value="极高" />
+                    <el-option v-for="item in levelOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -407,22 +402,14 @@
               <el-col :span="8">
                 <el-form-item label="规模驾驭能力">
                   <el-select v-model="managerAnalysis.scaleControlAbility" placeholder="请选择" style="width: 100%" clearable>
-                    <el-option label="极低" value="极低" />
-                    <el-option label="低" value="低" />
-                    <el-option label="中" value="中" />
-                    <el-option label="高" value="高" />
-                    <el-option label="极高" value="极高" />
+                    <el-option v-for="item in levelOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="本基金精力集中度">
                   <el-select v-model="managerAnalysis.focusLevel" placeholder="请选择" style="width: 100%" clearable>
-                    <el-option label="极低" value="极低" />
-                    <el-option label="低" value="低" />
-                    <el-option label="中" value="中" />
-                    <el-option label="高" value="高" />
-                    <el-option label="极高" value="极高" />
+                    <el-option v-for="item in levelOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -905,6 +892,27 @@ const getDataSourceItem = async () => {
   dataSourceOptions.value = result.data
 }
 
+// 等级选项(极低/低/中/高/极高)
+const levelOptions = ref([])
+const getLevelItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_level")
+  levelOptions.value = result.data
+}
+
+// 学历选项(全国前三/前十名校/985/211/其他)
+const schoolTypeOptions = ref([])
+const getSchoolTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_school_type")
+  schoolTypeOptions.value = result.data
+}
+
+// 获奖记录选项(金牛奖/金基金奖/明星基金奖/晨星奖/英华奖/其他/无)
+const awardOptions = ref([])
+const getAwardItem = async () => {
+  const result = await GetKeyAndValueByType("t_fund_award")
+  awardOptions.value = result.data
+}
+
 // 其他选项（暂时保留硬编码，因为没有对应的字典类型）
 const dividendMethodOptions = [
   { label: '现金分红', value: '现金分红' },
@@ -966,7 +974,7 @@ const fundData = reactive({
 // ============ 基金经理分析数据 ============
 const managerAnalysis = reactive({
   name: '', starLevel: 0, workYears: 0, manageScale: 0,
-  education: '', personalHold: null,
+  education: '', personalHold: null, awards: '',
   overallScore: 0, selectionScore: 0, returnScore: 0,
   riskScore: 0, stabilityScore: 0, timingScore: 0,
   positionConcentration: '', turnoverRate: '', abilityPathMatch: '',
@@ -1306,6 +1314,10 @@ onMounted(() => {
   getSectorTypeItem()
   getDataSourceItem()
   getTimePeriodItem()
+  // 加载新增的数据字典
+  getLevelItem()
+  getSchoolTypeItem()
+  getAwardItem()
 })
 </script>
 
