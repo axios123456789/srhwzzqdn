@@ -239,16 +239,16 @@ public class BailianApiUtil {
 
             String content = message.getString("content");
 
-            // 打印 token 消耗
+            // 打印 token 消耗（仅当获取到时）
             JSONObject usage = output.getJSONObject("usage");
             if (usage != null) {
-                int inputTokens = usage.getInteger("input_tokens");
-                int outputTokens = usage.getInteger("output_tokens");
-                int totalTokens = usage.getInteger("total_tokens");
-                logger.info("Token 消耗统计 | 输入: {} tokens | 输出: {} tokens | 总计: {} tokens",
-                        inputTokens, outputTokens, totalTokens);
-            } else {
-                logger.warn("响应中未找到 usage 字段，无法统计 token 消耗");
+                Integer inputTokens = usage.getInteger("input_tokens");
+                Integer outputTokens = usage.getInteger("output_tokens");
+                Integer totalTokens = usage.getInteger("total_tokens");
+                if (inputTokens != null && outputTokens != null && totalTokens != null) {
+                    logger.info("Token 消耗统计 | 输入: {} tokens | 输出: {} tokens | 总计: {} tokens",
+                            inputTokens, outputTokens, totalTokens);
+                }
             }
 
             return content != null ? content : "";
