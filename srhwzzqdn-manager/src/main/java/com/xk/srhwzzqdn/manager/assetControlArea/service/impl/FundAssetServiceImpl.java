@@ -1,17 +1,24 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.service.impl;
 
+import com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController;
 import com.xk.srhwzzqdn.manager.assetControlArea.mapper.FundAssetMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.FundAssetService;
 import com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser;
 import com.xk.srhwzzqdn.manager.system.mapper.SysDictMapper;
+import com.xk.srhwzzqdn.manager.util.BailianApiUtil;
+import com.xk.srhwzzqdn.manager.util.DeepSeekApiUtil;
+import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -26,10 +33,16 @@ import java.util.Map;
  */
 @Service
 public class FundAssetServiceImpl implements FundAssetService {
+    private static final Logger logger = LoggerFactory.getLogger(FundAssetService.class);
 
     /** 基金资产数据访问层，用于数据库操作 */
     @Autowired
     private FundAssetMapper fundAssetMapper;
+
+    //@Autowired
+    //private DeepSeekApiUtil deepSeekApiUtil;
+    @Autowired
+    private BailianApiUtil bailianApiUtil;
 
     /** 系统字典数据访问层，用于获取配置信息（如接口URL） */
     @Autowired
@@ -66,6 +79,68 @@ public class FundAssetServiceImpl implements FundAssetService {
         } else {
             // 接口请求失败或返回内容为空时打印错误信息
             System.err.println("获取基金数据失败，fundCode: " + fundCode);
+        }
+    }
+
+    /**
+     * 获取基金基本数据，基金经理基本数据，关联持仓数据获取
+     * @param fundCode
+     */
+    @Override
+    public void getFundBaseDataByCode(String fundCode) {
+        // 1. 获取基金基本数据获取的url配置
+        // 从系统字典表查询配置的接口地址模板，例如: "https://fund.eastmoney.com/pingzhongdata/{fund_code}.js"
+        String fund_base_url = sysDictMapper.getConfigValueById("get_fund_base_data_url");
+        // 将URL模板中的占位符 {fund_code} 替换为实际的基金代码
+        String fund_url = fund_base_url.replace("{fund_code}", fundCode);
+        // 发送HTTP请求获取接口返回的JS文件内容
+        String fund_content = fetchFundData(fund_url);
+
+        if (fund_content != null) {
+            // 2. 解析完整基金数据
+            // 使用自定义解析工具类将JS格式的数据转换为Java对象
+            FundDataParser.FundData fundData = FundDataParser.parseAllFundData(fund_content);
+
+            // 3.创建基金基本对象
+            FundAsset fundAsset = new FundAsset();
+
+            //4.设置从天天基金接口获取到的基金基本数据
+            fundAsset.setFundCode(fundData.getFundCode());//基金代码
+            fundAsset.setFundName(fundData.getFundName());//基金名称
+            fundAsset.setPurchaseFeeRate(new BigDecimal(fundData.getCurrentRate()).setScale(2, java.math.RoundingMode.HALF_UP));//申购费率
+            fundAsset.setReturn1m(new BigDecimal(fundData.getReturn1Month()).setScale(2, java.math.RoundingMode.HALF_UP));//近一月收益率
+            fundAsset.setReturn3m(new BigDecimal(fundData.getReturn3Month()).setScale(2, java.math.RoundingMode.HALF_UP));//近三月收益率
+            fundAsset.setReturn6m(new BigDecimal(fundData.getReturn6Month()).setScale(2, java.math.RoundingMode.HALF_UP));//近六月收益率
+            fundAsset.setReturn1y(new BigDecimal(fundData.getReturn1Year()).setScale(2, java.math.RoundingMode.HALF_UP));//近一年收益率
+            fundAsset.setNetAssets(fundData.getAssetAllocation().getNetAssets().toString()+"（亿元）");
+            fundAsset.setStockRatio(new BigDecimal(fundData.getAssetAllocation().getStockRatio().get(Math.min(fundData.getAssetAllocation().getStockRatio().size() - 1, fundData.getAssetAllocation().getStockRatio().size() - 1))).setScale(2, java.math.RoundingMode.HALF_UP));//最新股票占比
+            fundAsset.setBondRatio(new BigDecimal(fundData.getAssetAllocation().getBondRatio().get(Math.min(fundData.getAssetAllocation().getBondRatio().size() - 1, fundData.getAssetAllocation().getBondRatio().size() - 1))).setScale(2, java.math.RoundingMode.HALF_UP));//最新债券占比
+            fundAsset.setCashRatio(new BigDecimal(fundData.getAssetAllocation().getCashRatio().get(Math.min(fundData.getAssetAllocation().getCashRatio().size() - 1, fundData.getAssetAllocation().getCashRatio().size() - 1))).setScale(2, java.math.RoundingMode.HALF_UP));//最新现金占比
+            fundAsset.setLatestScale(new BigDecimal(fundData.getFluctuationScale().getScale().get(fundData.getFluctuationScale().getScale().size() - 1)).setScale(2, java.math.RoundingMode.HALF_UP));//最新规模
+            fundAsset.setAssetScale(new BigDecimal(fundData.getFluctuationScale().getScale().get(fundData.getFluctuationScale().getScale().size() - 1)).setScale(2, java.math.RoundingMode.HALF_UP));//资产规模
+            //设置规模历史
+            StringBuilder historyScale = new StringBuilder();
+            historyScale.append("  历史规模: ");
+            for (int i = 0; i < fundData.getFluctuationScale().getCategories().size(); i++) {
+                historyScale.append(String.format("%n    %s: %.2f 亿元 (环比: %s)",
+                        fundData.getFluctuationScale().getCategories().get(i),
+                        fundData.getFluctuationScale().getScale().get(i),
+                        fundData.getFluctuationScale().getMom() != null && i < fundData.getFluctuationScale().getMom().size() ? fundData.getFluctuationScale().getMom().get(i) : "-"));
+            }
+            fundAsset.setScaleHistory(historyScale.toString());
+            //设置持有人结构
+            fundAsset.setInstitutionRatio(new BigDecimal(fundData.getHolderStructure().getInstitutionRatio().get(fundData.getHolderStructure().getInstitutionRatio().size() - 1)).setScale(2, java.math.RoundingMode.HALF_UP));// 机构投资者占比
+            fundAsset.setIndividualRatio(new BigDecimal(fundData.getHolderStructure().getIndividualRatio().get(fundData.getHolderStructure().getInstitutionRatio().size() - 1)).setScale(2, java.math.RoundingMode.HALF_UP));// 个人投资者占比
+            fundAsset.setInternalRatio(new BigDecimal(fundData.getHolderStructure().getInternalRatio().get(fundData.getHolderStructure().getInstitutionRatio().size() - 1)).setScale(2, java.math.RoundingMode.HALF_UP)); // 基金公司内部持有占比
+
+            //5.调用deepSeek Ai补充基金的其他信息
+            //测试
+            String bailian = bailianApiUtil.call("redis定义（15个字以内）");
+            System.out.println("获取到的基金基本信息"+fundAsset.toString());
+            System.out.println("ai调用结果："+bailian);
+        } else {
+            // 接口请求失败或返回内容为空时打印错误信息
+            logger.error("获取基金数据失败，fundCode: ", fundCode);
         }
     }
 

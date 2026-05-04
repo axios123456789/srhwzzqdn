@@ -19,7 +19,7 @@ public class FundAssetController {
     private static final Logger logger = LoggerFactory.getLogger(FundAssetController.class);
 
     /**
-     * 获取基金测试数据（控制台打印）
+     * 获取基金测试数据（控制台打印）（该仅测试接口数据是否正常返回，不参与业务）
      * @param fundCode
      * @return
      */
@@ -33,4 +33,22 @@ public class FundAssetController {
             return Result.build(null, 500, "获取基金基本数据失败！");
         }
     }
+
+    /**
+     * 获取基金基本数据，基金经理基本数据，关联持仓数据获取
+     * 前端基金资产管理 -> 首页 -> 数据获取按钮点击 -> 调用该接口
+     * @param fundCode
+     * @return
+     */
+    @RequestMapping("/getFundBaseDataByCode/{fundCode}")
+    public Result getFundBaseDataByCode(@PathVariable("fundCode") String fundCode) {
+        try {
+            fundAssetService.getFundBaseDataByCode(fundCode);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("获取基金基本数据失败", e);
+            return Result.build(null, 500, "获取基金基本数据失败！");
+        }
+    }
+
 }

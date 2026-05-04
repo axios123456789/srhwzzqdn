@@ -39,3 +39,20 @@ srhwzzqdn:
     accessKey: minioadmin
     secreKey: minioadmin
     bucketName: srhwzzqdn-bucket
+
+#ai模型调用接口配置
+#deepseek模型接口
+deepseek:
+  api:
+    key: sk-dcf297f177ef46e681bfaadd4084fb13
+    connect-timeout: 30000   # 连接超时（毫秒），默认30秒
+    read-timeout: 60000      # 读取超时（毫秒），默认60秒
+
+# 阿里云百炼配置
+ai:
+  bailian:
+    api-key: sk-67c15d9a6ef244bbba1dab7a62c9c650  # 替换为你在阿里云百炼创建的 API Key
+    model: qwen-plus    # 可选：qwen-turbo, qwen-plus, qwen-max, qwen-max-longcontext
+    endpoint: https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
+    connect-timeout: 30000
+    read-timeout: 60000
