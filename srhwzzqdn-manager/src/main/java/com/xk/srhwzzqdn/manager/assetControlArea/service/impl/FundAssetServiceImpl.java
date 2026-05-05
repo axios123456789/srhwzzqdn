@@ -1,13 +1,12 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.service.impl;
 
-import com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController;
 import com.xk.srhwzzqdn.manager.assetControlArea.mapper.FundAssetMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.FundAssetService;
 import com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser;
 import com.xk.srhwzzqdn.manager.system.mapper.SysDictMapper;
 import com.xk.srhwzzqdn.manager.util.BailianApiUtil;
-import com.xk.srhwzzqdn.manager.util.DeepSeekApiUtil;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
+import com.xk.srhwzzqdn.util.DateConvertUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -84,11 +83,19 @@ public class FundAssetServiceImpl implements FundAssetService {
 
     /**
      * 获取基金基本数据，基金经理基本数据，关联持仓数据获取
+     * 不做更新处理，只做一次性获取数据
      * @param fundCode
      */
     @Override
     public void getFundBaseDataByCode(String fundCode) {
-        // 1. 获取基金基本数据获取的url配置
+        //1.根据基金代码查询基金的数据是否已获取
+        int isExist = fundAssetMapper.isExistByCode(fundCode);
+        if (isExist > 0) {
+            //logger.error("基金数据已存在，请勿重复获取！");
+            return;
+        }
+
+        // 2. 获取基金基本数据获取的url配置
         // 从系统字典表查询配置的接口地址模板，例如: "https://fund.eastmoney.com/pingzhongdata/{fund_code}.js"
         String fund_base_url = sysDictMapper.getConfigValueById("get_fund_base_data_url");
         // 将URL模板中的占位符 {fund_code} 替换为实际的基金代码
@@ -96,15 +103,16 @@ public class FundAssetServiceImpl implements FundAssetService {
         // 发送HTTP请求获取接口返回的JS文件内容
         String fund_content = fetchFundData(fund_url);
 
+        // 3.创建基金基本对象
+        FundAsset fundAsset = new FundAsset();
+
+        //4.从天天基金接口解析数据到基金对象中
         if (fund_content != null) {
-            // 2. 解析完整基金数据
+            // 4.1. 解析完整基金数据
             // 使用自定义解析工具类将JS格式的数据转换为Java对象
             FundDataParser.FundData fundData = FundDataParser.parseAllFundData(fund_content);
 
-            // 3.创建基金基本对象
-            FundAsset fundAsset = new FundAsset();
-
-            //4.设置从天天基金接口获取到的基金基本数据
+            //4.2.设置从天天基金接口获取到的基金基本数据
             fundAsset.setFundCode(fundData.getFundCode());//基金代码
             fundAsset.setFundName(fundData.getFundName());//基金名称
             fundAsset.setPurchaseFeeRate(new BigDecimal(fundData.getCurrentRate()).setScale(2, java.math.RoundingMode.HALF_UP));//申购费率
@@ -132,16 +140,23 @@ public class FundAssetServiceImpl implements FundAssetService {
             fundAsset.setInstitutionRatio(new BigDecimal(fundData.getHolderStructure().getInstitutionRatio().get(fundData.getHolderStructure().getInstitutionRatio().size() - 1)).setScale(2, java.math.RoundingMode.HALF_UP));// 机构投资者占比
             fundAsset.setIndividualRatio(new BigDecimal(fundData.getHolderStructure().getIndividualRatio().get(fundData.getHolderStructure().getInstitutionRatio().size() - 1)).setScale(2, java.math.RoundingMode.HALF_UP));// 个人投资者占比
             fundAsset.setInternalRatio(new BigDecimal(fundData.getHolderStructure().getInternalRatio().get(fundData.getHolderStructure().getInstitutionRatio().size() - 1)).setScale(2, java.math.RoundingMode.HALF_UP)); // 基金公司内部持有占比
-
-            //5.调用deepSeek Ai补充基金的其他信息
-            //测试
-            String bailian = bailianApiUtil.call("redis定义（15个字以内）");
-            System.out.println("获取到的基金基本信息"+fundAsset.toString());
-            System.out.println("ai调用结果："+bailian);
+            //设置基金经理名称
+            fundAsset.setFundManager(fundData.getFundManagers().get(fundData.getFundManagers().size() - 1).getName());
+            //设置基金成立日期
+            fundAsset.setEstablishDate(fundData.getNetWorthTrend().get(0).getDate());
         } else {
             // 接口请求失败或返回内容为空时打印错误信息
             logger.error("获取基金数据失败，fundCode: ", fundCode);
         }
+
+        //5.调用deepSeek Ai或其他Ai模型补充基金的其他信息
+        fundAsset.setFundCompany(bailianApiUtil.call(fundAsset.getFundName() + "（"+ fundCode + "）" + "（仅输出基金管理人）")); //基金管理人
+        fundAsset.setFundCompanyDesc(bailianApiUtil.call(fundAsset.getFundCompany() + "仅针对该基金管理人实时准确简洁重点描述（输出一段不多于100个字的描述）")); //基金管理人描述
+        fundAsset.setCustodian(bailianApiUtil.call(fundAsset.getFundName() + "（仅输出基金托管者）"));//基金托管者
+        fundAsset.setManagerDesc(bailianApiUtil.call(fundAsset.getFundManager() + "仅针对该基金经理实时准确简洁重点描述（仅输出一段不多于300个字的描述）"));//基金经理描述
+        fundAsset.setTradeRule(bailianApiUtil.call(fundAsset.getFundName() + "仅输出基金交易规则（用简短的一段话）")); //交易规则
+        fundAsset.setCreateBy("system");
+        System.out.println("获取到的基金基本信息"+fundAsset.toString());
     }
 
     /**
