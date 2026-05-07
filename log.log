@@ -9341,3 +9341,193 @@ java.lang.NumberFormatException: Character 年 is neither a decimal digit number
 2026-05-07 18:44:47 阿里云百炼 AI 调用完成，耗时：4636 ms
 2026-05-07 18:45:40 HikariPool-1 - Shutdown initiated...
 2026-05-07 18:45:40 HikariPool-1 - Shutdown completed.
+2026-05-07 18:45:45 Starting ManagerApplication using Java 17.0.17 with PID 33596 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-07 18:45:45 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-07 18:45:45 The following 1 profile is active: "dev"
+2026-05-07 18:45:46 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-07 18:45:46 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-07 18:45:46 Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-05-07 18:45:46 Tomcat initialized with port(s): 8400 (http)
+2026-05-07 18:45:46 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-07 18:45:46 Starting service [Tomcat]
+2026-05-07 18:45:46 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-07 18:45:46 Initializing Spring embedded WebApplicationContext
+2026-05-07 18:45:46 Root WebApplicationContext: initialization completed in 1009 ms
+2026-05-07 18:45:47 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-07 18:45:47 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-07 18:45:47 Started ManagerApplication in 2.75 seconds (process running for 3.347)
+2026-05-07 18:45:55 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-07 18:45:55 Initializing Servlet 'dispatcherServlet'
+2026-05-07 18:45:55 Completed initialization in 2 ms
+2026-05-07 18:45:55 HikariPool-1 - Starting...
+2026-05-07 18:45:55 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@748b030e
+2026-05-07 18:45:55 HikariPool-1 - Start completed.
+2026-05-07 18:45:56 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-07 18:45:56 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-07 18:45:57 阿里云百炼 AI 调用完成，耗时：854 ms
+2026-05-07 18:45:57 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-07 18:45:57 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-07 18:45:59 阿里云百炼 AI 调用完成，耗时：1527 ms
+2026-05-07 18:45:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-07 18:45:59 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-07 18:46:00 阿里云百炼 AI 调用完成，耗时：887 ms
+2026-05-07 18:46:00 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-07 18:46:00 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-07 18:46:05 阿里云百炼 AI 调用完成，耗时：5168 ms
+2026-05-07 18:46:05 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-07 18:46:05 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-07 18:46:10 阿里云百炼 AI 调用完成，耗时：4774 ms
+2026-05-07 18:51:30 HikariPool-1 - Shutdown initiated...
+2026-05-07 18:51:30 HikariPool-1 - Shutdown completed.
+2026-05-07 19:34:23 Starting ManagerApplication using Java 17.0.17 with PID 19296 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-07 19:34:24 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-07 19:34:24 The following 1 profile is active: "dev"
+2026-05-07 19:34:24 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-07 19:34:24 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-07 19:34:24 Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2026-05-07 19:34:25 Tomcat initialized with port(s): 8400 (http)
+2026-05-07 19:34:25 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-07 19:34:25 Starting service [Tomcat]
+2026-05-07 19:34:25 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-07 19:34:25 Initializing Spring embedded WebApplicationContext
+2026-05-07 19:34:25 Root WebApplicationContext: initialization completed in 1292 ms
+2026-05-07 19:34:26 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-07 19:34:26 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-07 19:34:26 Started ManagerApplication in 3.302 seconds (process running for 5.161)
+2026-05-07 19:34:46 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-07 19:34:46 Initializing Servlet 'dispatcherServlet'
+2026-05-07 19:34:46 Completed initialization in 0 ms
+2026-05-07 19:34:54 HikariPool-1 - Starting...
+2026-05-07 19:34:54 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3c37276f
+2026-05-07 19:34:54 HikariPool-1 - Start completed.
+2026-05-07 20:23:51 HikariPool-1 - Shutdown initiated...
+2026-05-07 20:23:51 HikariPool-1 - Shutdown completed.
+2026-05-07 20:23:56 Starting ManagerApplication using Java 17.0.17 with PID 26080 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-07 20:23:56 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-07 20:23:56 The following 1 profile is active: "dev"
+2026-05-07 20:23:56 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-07 20:23:56 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-07 20:23:56 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-07 20:23:57 Tomcat initialized with port(s): 8400 (http)
+2026-05-07 20:23:57 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-07 20:23:57 Starting service [Tomcat]
+2026-05-07 20:23:57 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-07 20:23:57 Initializing Spring embedded WebApplicationContext
+2026-05-07 20:23:57 Root WebApplicationContext: initialization completed in 1018 ms
+2026-05-07 20:23:58 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-07 20:23:58 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-07 20:23:58 Started ManagerApplication in 2.776 seconds (process running for 3.383)
+2026-05-07 20:24:45 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-07 20:24:45 Initializing Servlet 'dispatcherServlet'
+2026-05-07 20:24:45 Completed initialization in 3 ms
+2026-05-07 20:24:46 HikariPool-1 - Starting...
+2026-05-07 20:24:46 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3aeae8fa
+2026-05-07 20:24:46 HikariPool-1 - Start completed.
+2026-05-07 20:26:06 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-07 20:26:06 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-07 20:26:07 阿里云百炼 AI 调用完成，耗时：833 ms
+2026-05-07 20:26:07 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-07 20:26:07 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-07 20:26:09 阿里云百炼 AI 调用完成，耗时：2103 ms
+2026-05-07 20:26:09 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-07 20:26:09 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-07 20:26:09 阿里云百炼 AI 调用完成，耗时：475 ms
+2026-05-07 20:26:09 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-07 20:26:09 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-07 20:26:14 阿里云百炼 AI 调用完成，耗时：5205 ms
+2026-05-07 20:26:14 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-07 20:26:14 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-07 20:26:19 阿里云百炼 AI 调用完成，耗时：4815 ms
+2026-05-07 20:26:19 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-07 20:26:19 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-07 20:26:26 阿里云百炼 AI 调用完成，耗时：7291 ms
+2026-05-07 20:32:44 HikariPool-1 - Shutdown initiated...
+2026-05-07 20:32:44 HikariPool-1 - Shutdown completed.
+2026-05-07 20:32:49 Starting ManagerApplication using Java 17.0.17 with PID 7020 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-07 20:32:49 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-07 20:32:49 The following 1 profile is active: "dev"
+2026-05-07 20:32:49 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-07 20:32:49 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-07 20:32:49 Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-05-07 20:32:50 Tomcat initialized with port(s): 8400 (http)
+2026-05-07 20:32:50 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-07 20:32:50 Starting service [Tomcat]
+2026-05-07 20:32:50 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-07 20:32:50 Initializing Spring embedded WebApplicationContext
+2026-05-07 20:32:50 Root WebApplicationContext: initialization completed in 978 ms
+2026-05-07 20:32:51 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-07 20:32:51 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-07 20:32:51 Started ManagerApplication in 2.677 seconds (process running for 3.181)
+2026-05-07 20:33:01 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-07 20:33:01 Initializing Servlet 'dispatcherServlet'
+2026-05-07 20:33:01 Completed initialization in 1 ms
+2026-05-07 20:33:02 HikariPool-1 - Starting...
+2026-05-07 20:33:02 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@11a59adb
+2026-05-07 20:33:02 HikariPool-1 - Start completed.
+2026-05-07 20:33:03 调用阿里云百炼 AI，model：qwen-plus-0112，prompt 长度：29 字符
+2026-05-07 20:33:03 请求阿里云百炼 API，请求体大小：228 bytes
+2026-05-07 20:33:04 阿里云百炼 AI 调用完成，耗时：840 ms
+2026-05-07 20:33:04 调用阿里云百炼 AI，model：qwen-plus-0112，prompt 长度：48 字符
+2026-05-07 20:33:04 请求阿里云百炼 API，请求体大小：293 bytes
+2026-05-07 20:33:06 阿里云百炼 AI 调用完成，耗时：2268 ms
+2026-05-07 20:33:06 调用阿里云百炼 AI，model：qwen-plus-0112，prompt 长度：21 字符
+2026-05-07 20:33:06 请求阿里云百炼 API，请求体大小：216 bytes
+2026-05-07 20:33:07 阿里云百炼 AI 调用完成，耗时：496 ms
+2026-05-07 20:33:07 调用阿里云百炼 AI，model：qwen-plus-0112，prompt 长度：39 字符
+2026-05-07 20:33:07 请求阿里云百炼 API，请求体大小：266 bytes
+2026-05-07 20:33:12 阿里云百炼 AI 调用完成，耗时：5124 ms
+2026-05-07 20:33:12 调用阿里云百炼 AI，model：qwen-plus-0112，prompt 长度：29 字符
+2026-05-07 20:33:12 请求阿里云百炼 API，请求体大小：240 bytes
+2026-05-07 20:33:16 阿里云百炼 AI 调用完成，耗时：4122 ms
+2026-05-07 20:33:16 调用阿里云百炼 AI，model：qwen-plus-0112，prompt 长度：52 字符
+2026-05-07 20:33:16 请求阿里云百炼 API，请求体大小：303 bytes
+2026-05-07 20:33:23 阿里云百炼 AI 调用完成，耗时：6933 ms
+2026-05-07 20:33:23 调用阿里云百炼 AI，model：qwen-plus-0112，prompt 长度：50 字符
+2026-05-07 20:33:23 请求阿里云百炼 API，请求体大小：297 bytes
+2026-05-07 20:33:30 阿里云百炼 AI 调用完成，耗时：7041 ms
+2026-05-07 20:35:54 HikariPool-1 - Shutdown initiated...
+2026-05-07 20:35:54 HikariPool-1 - Shutdown completed.
+2026-05-07 20:35:59 Starting ManagerApplication using Java 17.0.17 with PID 20076 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-07 20:35:59 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-07 20:35:59 The following 1 profile is active: "dev"
+2026-05-07 20:36:00 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-07 20:36:00 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-07 20:36:00 Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
+2026-05-07 20:36:00 Tomcat initialized with port(s): 8400 (http)
+2026-05-07 20:36:00 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-07 20:36:00 Starting service [Tomcat]
+2026-05-07 20:36:00 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-07 20:36:01 Initializing Spring embedded WebApplicationContext
+2026-05-07 20:36:01 Root WebApplicationContext: initialization completed in 1061 ms
+2026-05-07 20:36:02 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-07 20:36:02 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-07 20:36:02 Started ManagerApplication in 2.77 seconds (process running for 3.401)
+2026-05-07 20:37:42 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-07 20:37:42 Initializing Servlet 'dispatcherServlet'
+2026-05-07 20:37:42 Completed initialization in 2 ms
+2026-05-07 20:37:43 HikariPool-1 - Starting...
+2026-05-07 20:37:43 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@27cdc57b
+2026-05-07 20:37:43 HikariPool-1 - Start completed.
+2026-05-07 20:37:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-07 20:37:44 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-07 20:37:44 阿里云百炼 AI 调用完成，耗时：746 ms
+2026-05-07 20:37:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-07 20:37:44 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-07 20:37:46 阿里云百炼 AI 调用完成，耗时：2104 ms
+2026-05-07 20:37:46 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-07 20:37:46 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-07 20:37:47 阿里云百炼 AI 调用完成，耗时：467 ms
+2026-05-07 20:37:47 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-07 20:37:47 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-07 20:37:53 阿里云百炼 AI 调用完成，耗时：5672 ms
+2026-05-07 20:37:53 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-07 20:37:53 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-07 20:37:58 阿里云百炼 AI 调用完成，耗时：5111 ms
+2026-05-07 20:37:58 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-07 20:37:58 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-07 20:38:04 阿里云百炼 AI 调用完成，耗时：6470 ms
+2026-05-07 20:38:04 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-07 20:38:04 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-07 20:38:11 阿里云百炼 AI 调用完成，耗时：6407 ms
+2026-05-07 20:53:23 HikariPool-1 - Shutdown initiated...
+2026-05-07 20:53:23 HikariPool-1 - Shutdown completed.

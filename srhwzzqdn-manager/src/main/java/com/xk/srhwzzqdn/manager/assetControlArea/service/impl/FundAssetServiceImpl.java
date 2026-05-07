@@ -1,5 +1,6 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.service.impl;
 
+import com.xk.srhwzzqdn.manager.assetControlArea.mapper.AssetLedgerMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.mapper.FundAssetMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.FundAssetService;
 import com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser;
@@ -38,6 +39,10 @@ public class FundAssetServiceImpl implements FundAssetService {
     /** 基金资产数据访问层，用于数据库操作 */
     @Autowired
     private FundAssetMapper fundAssetMapper;
+
+    /** 资产台账数据访问层 */
+    @Autowired
+    private AssetLedgerMapper assetLedgerMapper;
 
     //@Autowired
     //private DeepSeekApiUtil deepSeekApiUtil;
@@ -210,8 +215,19 @@ public class FundAssetServiceImpl implements FundAssetService {
                 }
             }
         }
-        
+        fundManagerAnalysis.setManagerDesc(fundAsset.getManagerDesc()); //基金经理描述
+        fundManagerAnalysis.setConcentrationRateAnalyse(bailianApiUtil.call(fundAsset.getFundName()+"对这个基金的持仓集中度进行分析（输出一段300字以内的实时准确直击重点的简洁描述）"));
+        fundManagerAnalysis.setTurnoverRateAnalyse(bailianApiUtil.call(fundAsset.getFundName()+"针对这个基金的换手率进行分析（输出一段300字以内的实时准确直击重点的简洁描述）"));
+        fundManagerAnalysis.setCapabilityPathAnalysis(bailianApiUtil.call(fundAsset.getFundName()+"针对这个基金经理能力圈与路径依赖（即行业研究背景是否与现在管理的基金相匹配）进行分析（输出一段300字以内的实时准确直击重点的简洁描述）"));
+        fundManagerAnalysis.setScaleAbilityAnalysis(bailianApiUtil.call(fundAsset.getFundName()+"针对这个基金经理规模驾驭能力（是否有管理大规模资金的成功经验）进行分析（输出一段300字以内的实时准确直击重点的简洁描述）"));
+        fundManagerAnalysis.setProfessionalBackground(bailianApiUtil.call(fundAsset.getFundManager()+"针对这个基金经理的从业背景如学历、工作背景、获奖情况等进行分析（输出一段300字以内的实时准确直击重点的简洁描述）"));
+        fundManagerAnalysis.setProductManagementAnalysis(bailianApiUtil.call(fundAsset.getFundName()+"针对这个基金经理的产品管理情况进行分析（看他是否“超负荷”工作。如果一个人名下管了十几只不同类型（如全市场选股、行业主题、量化对冲）的基金，精力难免被分散）（输出一段300字以内的实时准确直击重点的简洁描述）"));
+        fundManagerAnalysis.setStabilityAnalysis(bailianApiUtil.call(fundAsset.getFundName()+"针对这个基金经理的稳定性情况【即如果他频繁跳槽，或者管理的基金频繁更换基金经理，这都是需要警惕的信号】进行分析（看这个基金经理是否能保持基金在某一个时间段内不跌停，或者不跌停的概率是多少）（输出一段300字以内的实时准确直击重点的简洁描述）"));
+        fundManagerAnalysis.setPersonalHolding(bailianApiUtil.call(fundAsset.getFundName()+"针对这个基金经理的个人持有情况进行分析即【基金经理本人是否也持有了自己管理的基金？】（输出一段300字以内的实时准确直击重点的简洁描述）"));
         System.out.println("获取到的基金经理分析数据为："+fundManagerAnalysis.toString());
+
+        //8.关联台账拿到持仓情况
+        //根据基金代码查询资产台账
     }
 
     /**
