@@ -6,6 +6,7 @@ import com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser;
 import com.xk.srhwzzqdn.manager.system.mapper.SysDictMapper;
 import com.xk.srhwzzqdn.manager.util.BailianApiUtil;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
+import com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis;
 import com.xk.srhwzzqdn.util.DateConvertUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -106,12 +107,12 @@ public class FundAssetServiceImpl implements FundAssetService {
         // 3.创建基金基本对象
         FundAsset fundAsset = new FundAsset();
 
+        // 3.1. 解析完整基金数据
+        // 使用自定义解析工具类将JS格式的数据转换为Java对象
+        FundDataParser.FundData fundData = FundDataParser.parseAllFundData(fund_content);
+
         //4.从天天基金接口解析数据到基金对象中
         if (fund_content != null) {
-            // 4.1. 解析完整基金数据
-            // 使用自定义解析工具类将JS格式的数据转换为Java对象
-            FundDataParser.FundData fundData = FundDataParser.parseAllFundData(fund_content);
-
             //4.2.设置从天天基金接口获取到的基金基本数据
             fundAsset.setFundCode(fundData.getFundCode());//基金代码
             fundAsset.setFundName(fundData.getFundName());//基金名称
@@ -157,6 +158,60 @@ public class FundAssetServiceImpl implements FundAssetService {
         fundAsset.setTradeRule(bailianApiUtil.call(fundAsset.getFundName() + "仅输出基金交易规则（用简短的一段话）")); //交易规则
         fundAsset.setCreateBy("system");
         System.out.println("获取到的基金基本信息"+fundAsset.toString());
+
+        //6.创建基金经理基本对象
+        FundManagerAnalysis fundManagerAnalysis = new FundManagerAnalysis();
+
+        //7.从天天基金接口获取数据到基金经理分析对象中
+        fundManagerAnalysis.setFundCode(fundCode); //基金代码
+        fundManagerAnalysis.setManagerName(fundData.getFundManagers().get(fundData.getFundManagers().size() - 1).getName()); //基金经理名称
+        fundManagerAnalysis.setStarRating(new BigDecimal(fundData.getFundManagers().get(fundData.getFundManagers().size() - 1).getStar())); //基金经理评分
+        
+        // 处理从业时间：去除"年"字后转换为BigDecimal
+        String workTimeStr = FundDataParser.convertWorkTimeToYears(fundData.getFundManagers().get(fundData.getFundManagers().size() - 1).getWorkTime());
+        workTimeStr = workTimeStr.replace("年", "");
+        fundManagerAnalysis.setWorkTime(new BigDecimal(workTimeStr));//基金经理从业时间
+        
+        // 处理基金规模：去除"亿元"等单位后转换为BigDecimal
+        String fundSizeStr = fundData.getFundManagers().get(fundData.getFundManagers().size() - 1).getFundSize();
+        fundSizeStr = fundSizeStr.replaceAll("[^0-9.-]", "");
+        if (!fundSizeStr.isEmpty()) {
+            fundManagerAnalysis.setManageScale(new BigDecimal(fundSizeStr));//基金规模
+        }
+        
+        //从性能评价数据中提取各项评分
+        FundDataParser.PerformanceEvaluation pe = fundData.getPerformanceEvaluation();
+        if (pe != null) {
+            // 设置综合评分（平均分）
+            if (pe.getAvgScore() > 0) {
+                fundManagerAnalysis.setTotalScore(new BigDecimal(pe.getAvgScore()).setScale(2, java.math.RoundingMode.HALF_UP));
+            }
+            
+            // 根据分类名称设置各项能力评分
+            if (pe.getCategories() != null && pe.getScores() != null && pe.getCategories().size() == pe.getScores().size()) {
+                for (int i = 0; i < pe.getCategories().size(); i++) {
+                    String category = pe.getCategories().get(i);
+                    BigDecimal score = new BigDecimal(pe.getScores().get(i)).setScale(2, java.math.RoundingMode.HALF_UP);
+                    
+                    // 根据分类名称匹配对应的评分字段（使用else-if确保每个字段只设置一次）
+                    if (category.contains("选证") || category.contains("选股")) {
+                        fundManagerAnalysis.setStockSelectScore(score);
+                    } else if (category.contains("收益") || category.contains("回报")) {
+                        fundManagerAnalysis.setReturnScore(score);
+                    } else if (category.contains("风险") || category.contains("抗风险")) {
+                        fundManagerAnalysis.setRiskControlScore(score);
+                    } else if (category.contains("稳定") || category.contains("波动")) {
+                        fundManagerAnalysis.setStabilityScore(score);
+                    } else if (category.contains("择时")) {
+                        fundManagerAnalysis.setTimingScore(score);
+                    }
+                    // else-if结构保证了即使有多个匹配的分类，每个字段也只会被设置一次
+                    // 后面的分类不会覆盖前面已设置的同类型字段
+                }
+            }
+        }
+        
+        System.out.println("获取到的基金经理分析数据为："+fundManagerAnalysis.toString());
     }
 
     /**
