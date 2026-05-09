@@ -6,9 +6,11 @@ import com.xk.srhwzzqdn.manager.assetControlArea.service.FundAssetService;
 import com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser;
 import com.xk.srhwzzqdn.manager.system.mapper.SysDictMapper;
 import com.xk.srhwzzqdn.manager.util.BailianApiUtil;
+import com.xk.srhwzzqdn.model.entity.assetControl.AssetLedger;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
+import com.xk.srhwzzqdn.model.entity.assetControl.FundHolding;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis;
-import com.xk.srhwzzqdn.util.DateConvertUtil;
+import com.xk.srhwzzqdn.util.AuthContextUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -18,8 +20,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -91,14 +95,16 @@ public class FundAssetServiceImpl implements FundAssetService {
      * 获取基金基本数据，基金经理基本数据，关联持仓数据获取
      * 不做更新处理，只做一次性获取数据
      * @param fundCode
+     * @return
      */
     @Override
-    public void getFundBaseDataByCode(String fundCode) {
+    @Transactional
+    public String getFundBaseDataByCode(String fundCode) {
         //1.根据基金代码查询基金的数据是否已获取
         int isExist = fundAssetMapper.isExistByCode(fundCode);
         if (isExist > 0) {
             //logger.error("基金数据已存在，请勿重复获取！");
-            return;
+            return "基金数据已存在，请勿重复获取！";
         }
 
         // 2. 获取基金基本数据获取的url配置
@@ -117,7 +123,7 @@ public class FundAssetServiceImpl implements FundAssetService {
         FundDataParser.FundData fundData = FundDataParser.parseAllFundData(fund_content);
 
         //4.从天天基金接口解析数据到基金对象中
-        if (fund_content != null) {
+        if (fundData.getFundCode() != null) {
             //4.2.设置从天天基金接口获取到的基金基本数据
             fundAsset.setFundCode(fundData.getFundCode());//基金代码
             fundAsset.setFundName(fundData.getFundName());//基金名称
@@ -153,6 +159,7 @@ public class FundAssetServiceImpl implements FundAssetService {
         } else {
             // 接口请求失败或返回内容为空时打印错误信息
             logger.error("获取基金数据失败，fundCode: ", fundCode);
+            return "无"+fundCode+"这个代码的基金！";
         }
 
         //5.调用deepSeek Ai或其他Ai模型补充基金的其他信息
@@ -162,7 +169,7 @@ public class FundAssetServiceImpl implements FundAssetService {
         fundAsset.setManagerDesc(bailianApiUtil.call(fundAsset.getFundManager() + "仅针对该基金经理实时准确简洁重点描述（仅输出一段不多于300个字的描述）"));//基金经理描述
         fundAsset.setTradeRule(bailianApiUtil.call(fundAsset.getFundName() + "仅输出基金交易规则（用简短的一段话）")); //交易规则
         fundAsset.setCreateBy("system");
-        System.out.println("获取到的基金基本信息"+fundAsset.toString());
+        //System.out.println("获取到的基金基本信息"+fundAsset.toString());
 
         //6.创建基金经理基本对象
         FundManagerAnalysis fundManagerAnalysis = new FundManagerAnalysis();
@@ -224,10 +231,31 @@ public class FundAssetServiceImpl implements FundAssetService {
         fundManagerAnalysis.setProductManagementAnalysis(bailianApiUtil.call(fundAsset.getFundName()+"针对这个基金经理的产品管理情况进行分析（看他是否“超负荷”工作。如果一个人名下管了十几只不同类型（如全市场选股、行业主题、量化对冲）的基金，精力难免被分散）（输出一段300字以内的实时准确直击重点的简洁描述）"));
         fundManagerAnalysis.setStabilityAnalysis(bailianApiUtil.call(fundAsset.getFundName()+"针对这个基金经理的稳定性情况【即如果他频繁跳槽，或者管理的基金频繁更换基金经理，这都是需要警惕的信号】进行分析（看这个基金经理是否能保持基金在某一个时间段内不跌停，或者不跌停的概率是多少）（输出一段300字以内的实时准确直击重点的简洁描述）"));
         fundManagerAnalysis.setPersonalHolding(bailianApiUtil.call(fundAsset.getFundName()+"针对这个基金经理的个人持有情况进行分析即【基金经理本人是否也持有了自己管理的基金？】（输出一段300字以内的实时准确直击重点的简洁描述）"));
-        System.out.println("获取到的基金经理分析数据为："+fundManagerAnalysis.toString());
+        //System.out.println("获取到的基金经理分析数据为："+fundManagerAnalysis.toString());
 
-        //8.关联台账拿到持仓情况
+        //8.基金基本数据入库
+        fundAssetMapper.addFundAsset(fundAsset);
+
+        //9.基金经理分析数据入库
+        fundAssetMapper.addFundManagerAnalysis(fundManagerAnalysis);
+
+        //10.关联台账拿到持仓情况
         //根据基金代码查询资产台账
+        AssetLedger assetLedger = assetLedgerMapper.getAssetLedgerByCode(fundCode, AuthContextUtil.get().getId());
+        if (assetLedger != null){
+            FundHolding fundHolding = new FundHolding();
+            fundHolding.setFundCode(fundCode);
+            fundHolding.setCostAmount(assetLedger.getInvestAmount());
+            fundHolding.setMarketValue(assetLedger.getAmount());
+            fundHolding.setProfitLoss(fundHolding.getMarketValue().subtract(fundHolding.getCostAmount()));
+            fundHolding.setProfitLossRate(fundHolding.getProfitLoss().divide(fundHolding.getCostAmount(), 4, RoundingMode.HALF_UP));
+            fundHolding.setCreateBy("system");
+            fundHolding.setOwner(assetLedger.getAssetOwner());
+
+            //11.持仓情况入库
+            fundAssetMapper.addFundHolding(fundHolding);
+        }
+        return "数据获取成功";
     }
 
     /**

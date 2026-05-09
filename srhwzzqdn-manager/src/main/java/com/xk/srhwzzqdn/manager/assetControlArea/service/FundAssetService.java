@@ -7,5 +7,5 @@ public interface FundAssetService {
     void getFundTestData(String fundCode);
 
     //获取基金基本数据，基金经理基本数据，关联持仓数据获取
-    void getFundBaseDataByCode(String fundCode) throws ParseException;
+    String getFundBaseDataByCode(String fundCode) throws ParseException;
 }

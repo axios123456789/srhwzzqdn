@@ -353,12 +353,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Coin, Search, Download, Refresh, Delete, Edit } from '@element-plus/icons-vue'
 import FundDetailDialog from './fundDetailDialog/fundDetailDialog.vue'
 import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
 import { GetKeyAndValueByType } from "@/api/sysDict"
+import { GetFundBaseDataByCode } from "@/api/fundAsset"
 
 // ============ 数据字典选项 ============
 // 基金类型选项
@@ -433,40 +434,88 @@ const fetchResult = reactive({
   managementFee: 0, custodianFee: 0, salesServiceFee: 0, tradeRule: ''
 })
 
-// 模拟基金数据获取（根据基金代码模拟接口返回）
-const mockFundDatabase = {
-  '460001': { fundName: '友邦华泰红利ETF', fundType: '指数型', establishDate: '2006-11-17', assetScale: 12.35, fundManager: '友邦华泰基金', fundCompanyDesc: '友邦华泰基金管理有限公司', fundCustodian: '中国工商银行', fundManagerName: '张娅', managerAppointDate: '2006-11-17', managerDesc: '具有多年指数基金管理经验', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.12, redemptionRate: 0.5, managementFee: 0.5, custodianFee: 0.1, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回' },
-  '110011': { fundName: '易方达中小盘混合', fundType: '混合型', establishDate: '2008-06-19', assetScale: 35.67, fundManager: '易方达基金', fundCompanyDesc: '易方达基金管理有限公司', fundCustodian: '中国工商银行', fundManagerName: '张坤', managerAppointDate: '2012-09-28', managerDesc: '擅长价值投资', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.15, redemptionRate: 0.5, managementFee: 1.5, custodianFee: 0.25, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回' },
-  '000001': { fundName: '华夏成长混合', fundType: '混合型', establishDate: '2004-12-30', assetScale: 8.92, fundManager: '华夏基金', fundCompanyDesc: '华夏基金管理有限公司', fundCustodian: '中国建设银行', fundManagerName: '巩怀志', managerAppointDate: '2017-01-06', managerDesc: '资深基金经理', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.15, redemptionRate: 0.5, managementFee: 1.5, custodianFee: 0.25, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回' },
-  '519697': { fundName: '交银优势行业混合', fundType: '混合型', establishDate: '2009-01-16', assetScale: 22.18, fundManager: '交银施罗德基金', fundCompanyDesc: '交银施罗德基金管理有限公司', fundCustodian: '中国建设银行', fundManagerName: '何帅', managerAppointDate: '2015-09-16', managerDesc: '擅长行业轮动', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.15, redemptionRate: 0.5, managementFee: 1.5, custodianFee: 0.25, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回' },
-  '003834': { fundName: '华夏能源革新股票', fundType: '股票型', establishDate: '2017-06-07', assetScale: 45.33, fundManager: '华夏基金', fundCompanyDesc: '华夏基金管理有限公司', fundCustodian: '中国建设银行', fundManagerName: '郑泽鸿', managerAppointDate: '2017-06-07', managerDesc: '新能源领域研究专家', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.15, redemptionRate: 0.5, managementFee: 1.5, custodianFee: 0.25, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回' },
-  '161725': { fundName: '招商中证白酒指数', fundType: '指数型', establishDate: '2015-05-27', assetScale: 98.76, fundManager: '招商基金', fundCompanyDesc: '招商基金管理有限公司', fundCustodian: '中国银行', fundManagerName: '侯昊', managerAppointDate: '2015-05-27', managerDesc: '指数投资专家', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.1, redemptionRate: 0.5, managementFee: 1.0, custodianFee: 0.2, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回' },
-  '511010': { fundName: '国泰上证5年期国债ETF', fundType: '债券型', establishDate: '2013-03-05', assetScale: 5.21, fundManager: '国泰基金', fundCompanyDesc: '国泰基金管理有限公司', fundCustodian: '中国银行', fundManagerName: '梁杏', managerAppointDate: '2013-03-05', managerDesc: '债券投资专家', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.08, redemptionRate: 0.1, managementFee: 0.3, custodianFee: 0.1, salesServiceFee: 0, tradeRule: 'T+1确认' },
-  '000198': { fundName: '天弘增利短债债券', fundType: '债券型', establishDate: '2013-11-20', assetScale: 156.42, fundManager: '天弘基金', fundCompanyDesc: '天弘基金管理有限公司', fundCustodian: '中国工商银行', fundManagerName: '姜晓丽', managerAppointDate: '2013-11-20', managerDesc: '短债管理经验丰富', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0, redemptionRate: 0, managementFee: 0.25, custodianFee: 0.08, salesServiceFee: 0.15, tradeRule: 'T+1确认' },
-  '004137': { fundName: '博时黄金ETF联接C', fundType: '指数型', establishDate: '2016-11-02', assetScale: 18.55, fundManager: '博时基金', fundCompanyDesc: '博时基金管理有限公司', fundCustodian: '中国银行', fundManagerName: '王祥', managerAppointDate: '2016-11-02', managerDesc: '黄金投资专家', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0, redemptionRate: 0, managementFee: 0.5, custodianFee: 0.1, salesServiceFee: 0.2, tradeRule: 'T+1确认' },
-  '501057': { fundName: '华夏科创50ETF联接', fundType: '指数型', establishDate: '2021-01-26', assetScale: 67.89, fundManager: '华夏基金', fundCompanyDesc: '华夏基金管理有限公司', fundCustodian: '中国建设银行', fundManagerName: '荣膺', managerAppointDate: '2021-01-26', managerDesc: '科创板研究专家', operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.12, redemptionRate: 0.5, managementFee: 0.5, custodianFee: 0.1, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回' }
+// 加载提示相关
+let loadingMessageInstance = null
+let secondStageTimer = null
+let startTime = null
+
+// 清理加载提示
+const clearLoadingMessage = () => {
+  if (loadingMessageInstance) {
+    loadingMessageInstance.close()
+    loadingMessageInstance = null
+  }
+  if (secondStageTimer) {
+    clearTimeout(secondStageTimer)
+    secondStageTimer = null
+  }
 }
+
+// 组件卸载时清理
+onUnmounted(() => {
+  clearLoadingMessage()
+})
 
 const fetchFundData = async () => {
   if (!fetchFundCode.value.trim()) {
     ElMessage.warning('请输入基金代码')
     return
   }
-  fetchLoading.value = true
-  // 模拟接口调用延迟
-  await new Promise(resolve => setTimeout(resolve, 800))
+  
   const code = fetchFundCode.value.trim()
-  const mockData = mockFundDatabase[code]
-  fetchLoading.value = false
-
-  if (!mockData) {
-    ElMessage.warning('没有找到该基金数据，请检查基金代码是否正确')
-    return
+  fetchLoading.value = true
+  startTime = Date.now()
+  
+  // 立即显示第一阶段提示
+  loadingMessageInstance = ElMessage({
+    message: '正在从数据源获取基金信息，请稍候...',
+    type: 'info',
+    duration: 0, // 不自动关闭
+    showClose: false
+  })
+  
+  // 设置10秒后的二阶段提示
+  secondStageTimer = setTimeout(() => {
+    if (loadingMessageInstance) {
+      loadingMessageInstance.close()
+      loadingMessageInstance = ElMessage({
+        message: '正在进行AI智能分析，补充基金详细信息，预计需要1-2分钟，请耐心等待...',
+        type: 'warning',
+        duration: 0, // 不自动关闭
+        showClose: false
+      })
+    }
+  }, 10000)
+  
+  try {
+    // 调用后端接口
+    const response = await GetFundBaseDataByCode(code)
+    
+    // 清理加载提示
+    clearLoadingMessage()
+    fetchLoading.value = false
+    
+    // 根据后端返回的状态码做提示
+    if (response.code === 200) {
+      // 数据获取成功
+      ElMessage.success('基金数据获取成功！')
+    } else if (response.code === 400) {
+      // 基金数据已存在
+      ElMessage.warning(response.message || '该基金数据已存在，请勿重复获取')
+    } else if (response.code === 404) {
+      // 基金代码不存在
+      ElMessage.error(response.message || '未找到该基金代码对应的数据')
+    } else {
+      // 其他错误情况
+      ElMessage.error(response.message || '获取基金数据失败')
+    }
+  } catch (error) {
+    // 清理加载提示
+    clearLoadingMessage()
+    fetchLoading.value = false
+    console.error('获取基金数据失败:', error)
+    ElMessage.error('获取基金数据失败，请稍后重试')
   }
-
-  // 填充获取结果
-  Object.assign(fetchResult, { ...mockData, fundCode: code })
-  fetchDialogVisible.value = true
 }
 
 const submitFetchResult = () => {

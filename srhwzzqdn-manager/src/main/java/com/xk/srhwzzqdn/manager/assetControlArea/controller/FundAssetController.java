@@ -43,8 +43,21 @@ public class FundAssetController {
     @RequestMapping("/getFundBaseDataByCode/{fundCode}")
     public Result getFundBaseDataByCode(@PathVariable("fundCode") String fundCode) {
         try {
-            fundAssetService.getFundBaseDataByCode(fundCode);
-            return Result.build(null, ResultCodeEnum.SUCCESS);
+            String fundData = fundAssetService.getFundBaseDataByCode(fundCode);
+            
+            // 判断返回的特殊消息
+            if (fundData != null) {
+                // 基金数据已存在的情况
+                if (fundData.contains("基金数据已存在")) {
+                    return Result.build(null, 400, "该基金数据已存在，请勿重复获取！");
+                }
+                // 基金代码不存在的情况
+                if (fundData.contains("无") && fundData.contains("这个代码的基金")) {
+                    return Result.build(null, 404, "未找到该基金代码对应的数据，请检查基金代码是否正确！");
+                }
+            }
+            
+            return Result.build(fundData, ResultCodeEnum.SUCCESS);
         } catch (Exception e) {
             logger.error("获取基金基本数据失败", e);
             return Result.build(null, 500, "获取基金基本数据失败！");

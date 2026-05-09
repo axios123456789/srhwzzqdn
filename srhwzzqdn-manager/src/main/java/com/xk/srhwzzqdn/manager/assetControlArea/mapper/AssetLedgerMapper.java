@@ -6,6 +6,7 @@ import com.xk.srhwzzqdn.model.vo.assetControl.AssetTypeSummaryVO;
 import com.xk.srhwzzqdn.model.vo.assetControl.AssetLedgerVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,4 +34,8 @@ public interface AssetLedgerMapper {
 
     //账单变动联动修改对应的资产台账
     void updateLedgerAmountByTransaction(Integer assetLedgerId, Integer transactionType, BigDecimal amount);
+
+    //根据基金代码查询资产台账
+    @Select("select * from t_asset_ledger where asset_code = #{param1} and asset_owner = #{param2}")
+    AssetLedger getAssetLedgerByCode(String fundCode, String id);
 }
