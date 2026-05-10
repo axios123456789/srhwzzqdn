@@ -173,4 +173,34 @@
                   #{owner}
         )
     </insert>
+
+    <!--  条件查询基金基本数据列表  -->
+    <select id="getFundBaseDataByCondition" resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundAsset">
+        select t.*
+          from t_fund_asset t
+        <where>
+            <if test="fundName != null and fundName != ''">
+                and t.fund_name like concat('%',#{fundName},'%')
+            </if>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code like concat('%',#{fundCode},'%')
+            </if>
+            <if test="fundType != null and fundType.size() > 0">
+                and t.fund_type in
+                <foreach collection="fundType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="assetScale != null">
+                and t.asset_scale >= #{assetScale}
+            </if>
+            <if test="operationMode != null">
+                and t.operation_mode = #{operationMode}
+            </if>
+            <if test="closedEndDays != null">
+                and t.closed_end_days >= #{closedEndDays}
+            </if>
+        </where>
+        order by t.update_time desc
+    </select>
 </mapper>

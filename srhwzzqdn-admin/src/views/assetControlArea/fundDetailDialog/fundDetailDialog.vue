@@ -79,7 +79,7 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="基金管理人">
-                  <el-input v-model="fundData.fundManager" placeholder="请输入基金管理人" clearable />
+                  <el-input v-model="fundData.fundCompany" placeholder="请输入基金管理人" clearable />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -91,19 +91,19 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="基金托管者">
-                  <el-input v-model="fundData.fundCustodian" placeholder="请输入基金托管者" clearable />
+                  <el-input v-model="fundData.custodian" placeholder="请输入基金托管者" clearable />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="基金经理">
-                  <el-input v-model="fundData.fundManagerName" placeholder="请输入基金经理" clearable />
+                  <el-input v-model="fundData.fundManager" placeholder="请输入基金经理" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="经理任职日期">
-                  <el-date-picker v-model="fundData.managerAppointDate" type="date" style="width: 100%" placeholder="选择日期" value-format="YYYY-MM-DD" :editable="false" />
+                  <el-date-picker v-model="fundData.managerStartDate" type="date" style="width: 100%" placeholder="选择日期" value-format="YYYY-MM-DD" :editable="false" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -122,36 +122,36 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="基金封闭期(天)">
-                  <el-input-number v-model="fundData.closedPeriod" :min="0" :step="1" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.closedEndDays" :min="0" :step="1" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="申购费率(%)">
-                  <el-input-number v-model="fundData.purchaseRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.purchaseFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="赎回费率(%)">
-                  <el-input-number v-model="fundData.redemptionRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.redeemFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="管理费(%)">
-                  <el-input-number v-model="fundData.managementFee" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.managementFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="托管费(%)">
-                  <el-input-number v-model="fundData.custodianFee" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.custodianFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="销售服务费(%)">
-                  <el-input-number v-model="fundData.salesServiceFee" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.salesServiceFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="16">
@@ -164,24 +164,24 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="近1月收益率(%)">
-                  <el-input-number v-model="fundData.returnRate1Month" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.return1m" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="近3月收益率(%)">
-                  <el-input-number v-model="fundData.returnRate3Month" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.return3m" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="近6月收益率(%)">
-                  <el-input-number v-model="fundData.returnRate6Month" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.return6m" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="近1年收益率(%)">
-                  <el-input-number v-model="fundData.returnRate1Year" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.return1y" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -193,7 +193,7 @@
             <el-row :gutter="16">
               <el-col :span="24">
                 <el-form-item label="净资产规模">
-                  <el-input v-model="fundData.netAssetScale" type="textarea" :rows="3" placeholder="请输入净资产规模，例如：[1.0112, 4.4303, 5.9658, 21.6745] 亿元" />
+                  <el-input v-model="fundData.netAssets" type="textarea" :rows="3" placeholder="请输入净资产规模，例如：[1.0112, 4.4303, 5.9658, 21.6745] 亿元" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -219,17 +219,17 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="机构持有比例(%)">
-                  <el-input-number v-model="fundData.institutionHoldRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.institutionRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="个人持有比例(%)">
-                  <el-input-number v-model="fundData.personalHoldRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.individualRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="内部持有比例(%)">
-                  <el-input-number v-model="fundData.internalHoldRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="fundData.internalRatio" :precision="2" :step="0.01" :min="0" :max="100" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -957,18 +957,18 @@ const getDataSourceText = (v) => {
 // ============ 基金基本数据 ============
 const fundData = reactive({
   id: null, fundName: '', fundCode: '', fundType: '', establishDate: '',
-  assetScale: 0, fundManager: '', fundCompanyDesc: '', fundCustodian: '',
-  fundManagerName: '', managerAppointDate: '', managerDesc: '',
-  operationMode: '', closedPeriod: 0, purchaseRate: 0, redemptionRate: 0,
-  managementFee: 0, custodianFee: 0, salesServiceFee: 0, tradeRule: '',
+  assetScale: 0, fundCompany: '', fundCompanyDesc: '', custodian: '',
+  fundManager: '', managerStartDate: '', managerDesc: '',
+  operationMode: '', closedEndDays: 0, purchaseFeeRate: 0, redeemFeeRate: 0,
+  managementFeeRate: 0, custodianFeeRate: 0, salesServiceFeeRate: 0, tradeRule: '',
   // 新增收益率字段
-  returnRate1Month: 0, returnRate3Month: 0, returnRate6Month: 0, returnRate1Year: 0,
+  return1m: 0, return3m: 0, return6m: 0, return1y: 0,
   // 新增规模字段
-  netAssetScale: 0, latestScale: 0, scaleHistory: '',
+  netAssets: '', latestScale: 0, scaleHistory: '',
   // 新增占比字段
   stockRatio: 0, bondRatio: 0, cashRatio: 0,
   // 新增持有比例字段
-  institutionHoldRatio: 0, personalHoldRatio: 0, internalHoldRatio: 0
+  institutionRatio: 0, individualRatio: 0, internalRatio: 0
 })
 
 // ============ 基金经理分析数据 ============
@@ -1197,22 +1197,22 @@ const initDialogData = () => {
   Object.assign(fundData, {
     id: row.id || null, fundName: row.fundName || '', fundCode: row.fundCode || '',
     fundType: row.fundType || '', establishDate: row.establishDate || '',
-    assetScale: row.assetScale || 0, fundManager: row.fundManager || '',
-    fundCompanyDesc: row.fundCompanyDesc || '', fundCustodian: row.fundCustodian || '',
-    fundManagerName: row.fundManagerName || '', managerAppointDate: row.managerAppointDate || '',
+    assetScale: row.assetScale || 0, fundCompany: row.fundCompany || '',
+    fundCompanyDesc: row.fundCompanyDesc || '', custodian: row.custodian || '',
+    fundManager: row.fundManager || '', managerStartDate: row.managerStartDate || '',
     managerDesc: row.managerDesc || '', operationMode: row.operationMode || '',
-    closedPeriod: row.closedPeriod || 0, purchaseRate: row.purchaseRate || 0,
-    redemptionRate: row.redemptionRate || 0, managementFee: row.managementFee || 0,
-    custodianFee: row.custodianFee || 0, salesServiceFee: row.salesServiceFee || 0,
+    closedEndDays: row.closedEndDays || 0, purchaseFeeRate: row.purchaseFeeRate || 0,
+    redeemFeeRate: row.redeemFeeRate || 0, managementFeeRate: row.managementFeeRate || 0,
+    custodianFeeRate: row.custodianFeeRate || 0, salesServiceFeeRate: row.salesServiceFeeRate || 0,
     tradeRule: row.tradeRule || '',
     // 新增字段初始化
-    returnRate1Month: row.returnRate1Month || 0, returnRate3Month: row.returnRate3Month || 0,
-    returnRate6Month: row.returnRate6Month || 0, returnRate1Year: row.returnRate1Year || 0,
-    netAssetScale: row.netAssetScale || 0, latestScale: row.latestScale || 0,
+    return1m: row.return1m || 0, return3m: row.return3m || 0,
+    return6m: row.return6m || 0, return1y: row.return1y || 0,
+    netAssets: row.netAssets || '', latestScale: row.latestScale || 0,
     scaleHistory: row.scaleHistory || '',
     stockRatio: row.stockRatio || 0, bondRatio: row.bondRatio || 0, cashRatio: row.cashRatio || 0,
-    institutionHoldRatio: row.institutionHoldRatio || 0, personalHoldRatio: row.personalHoldRatio || 0,
-    internalHoldRatio: row.internalHoldRatio || 0
+    institutionRatio: row.institutionRatio || 0, individualRatio: row.individualRatio || 0,
+    internalRatio: row.internalRatio || 0
   })
 
   // 初始化基金经理分析数据

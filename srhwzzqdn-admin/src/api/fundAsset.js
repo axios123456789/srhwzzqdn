@@ -1,0 +1,31 @@
+import request from "@/utils/request";
+
+const base_api = '/superBrain/assetControl/fundAsset' //基金资产管理基本路径
+
+/**
+ * 获取基金基本数据，基金经理基本数据，关联持仓数据获取
+ * @param fundCode 基金代码
+ * @returns 
+ */
+export const GetFundBaseDataByCode = (fundCode) => {
+  return request({
+    url: `${base_api}/getFundBaseDataByCode/${fundCode}`,
+    method: 'get',
+    timeout: 300000 // 设置5分钟超时，因为接口需要AI分析，耗时较长
+  })
+}
+
+/**
+ * 条件分页查询基金基本数据
+ * @param current 当前页
+ * @param limit 每页条数
+ * @param data 查询条件对象
+ * @returns
+ */
+export const GetFundBaseDataByConditionAndPage = (current, limit, data) => {
+  return request({
+    url: `${base_api}/getFundBaseDataByConditionAndPage/${current}/${limit}`,
+    method: 'post',
+    data: data
+  })
+}

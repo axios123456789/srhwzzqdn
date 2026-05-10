@@ -1,10 +1,13 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.mapper;
 
+import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundHolding;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface FundAssetMapper {
@@ -20,4 +23,7 @@ public interface FundAssetMapper {
 
     //持仓情况入库
     void addFundHolding(FundHolding fundHolding);
+
+    //条件查询基金基本数据列表
+    List<FundAsset> getFundBaseDataByCondition(FundBaseDateDto fundBaseDateDto);
 }

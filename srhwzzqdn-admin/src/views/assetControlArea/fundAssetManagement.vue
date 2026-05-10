@@ -51,7 +51,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="资产规模(亿)">
-              <el-input-number v-model="query.assetScaleGt" :precision="2" :step="1" :min="0" style="width: 100%" controls-position="right" placeholder="大于" />
+              <el-input-number v-model="query.assetScale" :precision="2" :step="1" :min="0" style="width: 100%" controls-position="right" placeholder="大于" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -65,7 +65,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="封闭期(天)">
-              <el-input-number v-model="query.closedPeriodGt" :min="0" :step="1" style="width: 100%" controls-position="right" placeholder="大于" />
+              <el-input-number v-model="query.closedEndDays" :min="0" :step="1" style="width: 100%" controls-position="right" placeholder="大于" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -96,10 +96,10 @@
 
     <!-- 卡片列表区（独立滚动块） -->
     <div class="card-list-section">
-      <div class="card-scroll-wrapper">
+      <div class="card-scroll-wrapper" v-loading="loading">
         <div class="card-grid">
           <div
-            v-for="item in pageData"
+            v-for="item in fundList"
             :key="item.id"
             class="fund-card"
             :class="{ 'card-selected': selectedIds.includes(item.id) }"
@@ -110,7 +110,7 @@
             <div class="card-header">
               <div class="card-title-row">
                 <span class="card-fund-name clickable" @click="openViewDialog(item)">{{ item.fundName }}</span>
-                <el-tag :type="getFundTypeTagType(item.fundType)" size="small">{{ item.fundType || '未知' }}</el-tag>
+                <el-tag :type="getFundTypeTagType(getDisplayText(item.fundType, fundTypeOptions))" size="small">{{ getDisplayText(item.fundType, fundTypeOptions) || '未知' }}</el-tag>
               </div>
               <div class="card-code">{{ item.fundCode }}</div>
             </div>
@@ -126,47 +126,47 @@
                 </div>
                 <div class="info-cell">
                   <span class="info-label">基金管理人</span>
-                  <span class="info-value">{{ item.fundManager || '-' }}</span>
+                  <span class="info-value">{{ item.fundCompany || '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">基金托管者</span>
-                  <span class="info-value">{{ item.fundCustodian || '-' }}</span>
+                  <span class="info-value">{{ item.custodian || '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">基金经理</span>
-                  <span class="info-value">{{ item.fundManagerName || '-' }}</span>
+                  <span class="info-value">{{ item.fundManager || '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">任职日期</span>
-                  <span class="info-value">{{ item.managerAppointDate || '-' }}</span>
+                  <span class="info-value">{{ item.managerStartDate || '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">运作方式</span>
-                  <span class="info-value">{{ item.operationMode || '-' }}</span>
+                  <span class="info-value">{{ getDisplayText(item.operationMode, operationModeOptions) }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">封闭期</span>
-                  <span class="info-value">{{ item.closedPeriod ? item.closedPeriod + '天' : '-' }}</span>
+                  <span class="info-value">{{ item.closedEndDays ? item.closedEndDays + '天' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">申购费率</span>
-                  <span class="info-value">{{ item.purchaseRate ? item.purchaseRate + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.purchaseFeeRate ? item.purchaseFeeRate + '%' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">赎回费率</span>
-                  <span class="info-value">{{ item.redemptionRate ? item.redemptionRate + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.redeemFeeRate ? item.redeemFeeRate + '%' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">管理费</span>
-                  <span class="info-value">{{ item.managementFee ? item.managementFee + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.managementFeeRate ? item.managementFeeRate + '%' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">托管费</span>
-                  <span class="info-value">{{ item.custodianFee ? item.custodianFee + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.custodianFeeRate ? item.custodianFeeRate + '%' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">销售服务费</span>
-                  <span class="info-value">{{ item.salesServiceFee ? item.salesServiceFee + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.salesServiceFeeRate ? item.salesServiceFeeRate + '%' : '-' }}</span>
                 </div>
               </div>
             </div>
@@ -184,17 +184,17 @@
         </div>
 
         <!-- 空状态 -->
-        <div v-if="filterData.length === 0" class="empty-state">
+        <div v-if="fundList.length === 0 && !loading" class="empty-state">
           <el-empty description="暂无基金数据，请通过数据获取添加基金" />
         </div>
       </div>
 
       <!-- 分页区 -->
-      <div class="pagination-section" v-if="filterData.length > 0">
+      <div class="pagination-section" v-if="total > 0">
         <el-pagination
           background
           layout="total, sizes, prev, pager, next"
-          :total="filterData.length"
+          :total="total"
           :page-size="pageParams.limit"
           :current-page="pageParams.page"
           :page-sizes="[10, 20, 50, 100]"
@@ -247,7 +247,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="基金管理人">
-              <el-input v-model="fetchResult.fundManager" clearable />
+              <el-input v-model="fetchResult.fundCompany" clearable />
             </el-form-item>
           </el-col>
         </el-row>
@@ -259,19 +259,19 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="基金托管者">
-              <el-input v-model="fetchResult.fundCustodian" clearable />
+              <el-input v-model="fetchResult.custodian" clearable />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="16">
           <el-col :span="12">
             <el-form-item label="基金经理">
-              <el-input v-model="fetchResult.fundManagerName" clearable />
+              <el-input v-model="fetchResult.fundManager" clearable />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="经理任职日期">
-              <el-date-picker v-model="fetchResult.managerAppointDate" type="date" style="width: 100%" value-format="YYYY-MM-DD" :editable="false" />
+              <el-date-picker v-model="fetchResult.managerStartDate" type="date" style="width: 100%" value-format="YYYY-MM-DD" :editable="false" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -292,34 +292,34 @@
         <el-row :gutter="16">
           <el-col :span="8">
             <el-form-item label="基金封闭期(天)">
-              <el-input-number v-model="fetchResult.closedPeriod" :min="0" style="width: 100%" controls-position="right" />
+              <el-input-number v-model="fetchResult.closedEndDays" :min="0" style="width: 100%" controls-position="right" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="申购费率(%)">
-              <el-input-number v-model="fetchResult.purchaseRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+              <el-input-number v-model="fetchResult.purchaseFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="赎回费率(%)">
-              <el-input-number v-model="fetchResult.redemptionRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+              <el-input-number v-model="fetchResult.redeemFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="16">
           <el-col :span="8">
             <el-form-item label="管理费(%)">
-              <el-input-number v-model="fetchResult.managementFee" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+              <el-input-number v-model="fetchResult.managementFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="托管费(%)">
-              <el-input-number v-model="fetchResult.custodianFee" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+              <el-input-number v-model="fetchResult.custodianFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="销售服务费(%)">
-              <el-input-number v-model="fetchResult.salesServiceFee" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
+              <el-input-number v-model="fetchResult.salesServiceFeeRate" :precision="4" :step="0.001" :min="0" style="width: 100%" controls-position="right" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -359,7 +359,7 @@ import { Coin, Search, Download, Refresh, Delete, Edit } from '@element-plus/ico
 import FundDetailDialog from './fundDetailDialog/fundDetailDialog.vue'
 import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetFundBaseDataByCode } from "@/api/fundAsset"
+import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage } from "@/api/fundAsset"
 
 // ============ 数据字典选项 ============
 // 基金类型选项
@@ -427,11 +427,25 @@ const fetchFundCode = ref('')
 const fetchLoading = ref(false)
 const fetchDialogVisible = ref(false)
 const fetchResult = reactive({
-  fundName: '', fundCode: '', fundType: '', establishDate: '',
-  assetScale: 0, fundManager: '', fundCompanyDesc: '', fundCustodian: '',
-  fundManagerName: '', managerAppointDate: '', managerDesc: '',
-  operationMode: '', closedPeriod: 0, purchaseRate: 0, redemptionRate: 0,
-  managementFee: 0, custodianFee: 0, salesServiceFee: 0, tradeRule: ''
+  fundName: '',
+  fundCode: '',
+  fundType: null,
+  establishDate: '',
+  assetScale: 0,
+  fundCompany: '',
+  fundCompanyDesc: '',
+  custodian: '',
+  fundManager: '',
+  managerStartDate: '',
+  managerDesc: '',
+  operationMode: null,
+  closedEndDays: 0,
+  purchaseFeeRate: 0,
+  redeemFeeRate: 0,
+  managementFeeRate: 0,
+  custodianFeeRate: 0,
+  salesServiceFeeRate: 0,
+  tradeRule: ''
 })
 
 // 加载提示相关
@@ -497,7 +511,8 @@ const fetchFundData = async () => {
     
     // 根据后端返回的状态码做提示
     if (response.code === 200) {
-      // 数据获取成功
+      // 数据获取成功，重新加载数据
+      fetchData()
       ElMessage.success('基金数据获取成功！')
     } else if (response.code === 400) {
       // 基金数据已存在
@@ -534,205 +549,83 @@ const submitFetchResult = () => {
 
 // ============ 查询条件 ============
 const query = reactive({
-  fundName: '', fundCode: '', fundType: [],
-  assetScaleGt: null, operationMode: '', closedPeriodGt: null
-})
-
-// 实际用于筛选的条件(只有点击搜索按钮时才更新)
-const activeQuery = reactive({
-  fundName: '', fundCode: '', fundType: [],
-  assetScaleGt: null, operationMode: '', closedPeriodGt: null
+  fundName: '',
+  fundCode: '',
+  fundType: [],
+  assetScale: null,
+  operationMode: null,
+  closedEndDays: null
 })
 
 const resetQuery = () => {
-  // 清空输入框的条件
   Object.assign(query, {
-    fundName: '', fundCode: '', fundType: [],
-    assetScaleGt: null, operationMode: '', closedPeriodGt: null
-  })
-  // 同时清空实际筛选条件
-  Object.assign(activeQuery, {
-    fundName: '', fundCode: '', fundType: [],
-    assetScaleGt: null, operationMode: '', closedPeriodGt: null
+    fundName: '',
+    fundCode: '',
+    fundType: [],
+    assetScale: null,
+    operationMode: null,
+    closedEndDays: null
   })
   pageParams.page = 1
+  fetchData()
 }
 
-// ============ 基金列表数据（造数据） ============
-const fundList = ref([
-  {
-    id: 1, fundName: '易方达中小盘混合', fundCode: '110011', fundType: '混合型',
-    establishDate: '2008-06-19', assetScale: 35.67, fundManager: '易方达基金',
-    fundCompanyDesc: '易方达基金管理有限公司', fundCustodian: '中国工商银行',
-    fundManagerName: '张坤', managerAppointDate: '2012-09-28', managerDesc: '擅长价值投资',
-    operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.15, redemptionRate: 0.5,
-    managementFee: 1.5, custodianFee: 0.25, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回',
-    // 新增字段
-    returnRate1Month: 5.23, returnRate3Month: 12.45, returnRate6Month: 18.67, returnRate1Year: 32.15,
-    netAssetScale: 35.67, latestScale: 36.12, scaleHistory: '2024年初20亿，年末35亿，规模稳步增长',
-    stockRatio: 85.5, bondRatio: 5.2, cashRatio: 9.3,
-    institutionHoldRatio: 45.6, personalHoldRatio: 52.3, internalHoldRatio: 2.1,
-    // 基金经理分析
-    managerAnalysis: {
-      name: '张坤', starLevel: 5, workYears: 12, manageScale: 35.67,
-      education: '全国前三', personalHold: 1, awards: '金牛奖',
-      overallScore: 92.5, selectionScore: 95.2, returnScore: 93.8,
-      riskScore: 88.6, stabilityScore: 90.3, timingScore: 85.4,
-      positionConcentration: '高', turnoverRate: '低', abilityPathMatch: '极高',
-      scaleControlAbility: '高', focusLevel: '高',
-      managerDesc: '擅长价值投资，长期持有优质消费股',
-      positionConcentrationAnalysis: '持仓集中度较高，前十大重仓股占比超过70%，体现深度研究、集中投资风格',
-      turnoverRateAnalysis: '换手率较低，平均持股周期超过2年，属于典型的选股型选手',
-      abilityCircleAnalysis: '长期研究消费行业，能力圈与当前管理的消费主题基金高度匹配',
-      scaleControlAnalysis: '管理规模从20亿增长到35亿，业绩依然稳定，展现出优秀的大规模资金管理能力',
-      workBackground: '清华大学金融学硕士，曾获金牛奖、明星基金经理奖等多项荣誉',
-      productManageAnalysis: '仅管理2只基金，精力集中度高',
-      stabilityAnalysis: '任职超过8年，稳定性极佳',
-      personalHoldAnalysis: '本人持有超过100万份，显示对基金未来充满信心'
-    },
-    navList: [
-      { navDate: '2026-04-21', unitNav: 3.4521, accumulatedNav: 4.8732, dailyChangeRate: 1.23, estimateNav: 3.4680 },
-      { navDate: '2026-04-18', unitNav: 3.4102, accumulatedNav: 4.8313, dailyChangeRate: -0.56, estimateNav: 3.3910 },
-      { navDate: '2026-04-17', unitNav: 3.4294, accumulatedNav: 4.8505, dailyChangeRate: 0.89, estimateNav: 3.4400 },
-      { navDate: '2026-04-16', unitNav: 3.3992, accumulatedNav: 4.8203, dailyChangeRate: -1.12, estimateNav: 3.3610 },
-      { navDate: '2026-04-15', unitNav: 3.4377, accumulatedNav: 4.8588, dailyChangeRate: 0.34, estimateNav: 3.4490 }
-    ],
-    holdShares: 5000, availableShares: 5000, frozenShares: 0, positionCost: 15000, positionValue: 17260.5,
-    tradeList: [
-      { tradeDate: '2025-01-15', tradeType: '申购', tradeShares: 2000, tradeAmount: 6000, tradeNav: 3.0, tradeFee: 9, confirmDate: '2025-01-16' },
-      { tradeDate: '2025-06-20', tradeType: '申购', tradeShares: 3000, tradeAmount: 9000, tradeNav: 3.0, tradeFee: 13.5, confirmDate: '2025-06-21' }
-    ],
-    dividendList: [
-      { dividendDate: '2025-12-15', arrivalDate: '2025-12-18', dividendMethod: '现金分红', dividendAmount: 250 }
-    ],
-    riskList: [
-      { timePeriod: '近1年', maxDrawdown: 18.5, drawdownRecoveryDays: 120, annualizedReturn: 12.3, sharpeRatio: 0.85, volatility: 22.1 },
-      { timePeriod: '近3年', maxDrawdown: 32.1, drawdownRecoveryDays: 245, annualizedReturn: 15.6, sharpeRatio: 0.92, volatility: 24.8 }
-    ],
-    holdingList: [
-      { holdingId: 'H001', fundCode: '110011', holdingDate: '2026-03-31', holdingType: '股票', holdingCode: '600519', holdingName: '贵州茅台', holdingQuantity: 1200, holdingValue: 2184000, navRatio: 9.52, industryClass: '半导体', dataSource: '天天基金' },
-      { holdingId: 'H002', fundCode: '110011', holdingDate: '2026-03-31', holdingType: '股票', holdingCode: '000858', holdingName: '五粮液', holdingQuantity: 3500, holdingValue: 525000, navRatio: 2.29, industryClass: '通信装备', dataSource: '天天基金' }
-    ]
-  },
-  {
-    id: 2, fundName: '招商中证白酒指数', fundCode: '161725', fundType: '指数型',
-    establishDate: '2015-05-27', assetScale: 98.76, fundManager: '招商基金',
-    fundCompanyDesc: '招商基金管理有限公司', fundCustodian: '中国银行',
-    fundManagerName: '侯昊', managerAppointDate: '2015-05-27', managerDesc: '指数投资专家',
-    operationMode: '开放式', closedPeriod: 0, purchaseRate: 0.1, redemptionRate: 0.5,
-    managementFee: 1.0, custodianFee: 0.2, salesServiceFee: 0, tradeRule: 'T+1确认，T+2可赎回',
-    // 新增字段
-    returnRate1Month: -2.15, returnRate3Month: 8.32, returnRate6Month: 15.67, returnRate1Year: 28.45,
-    netAssetScale: 98.76, latestScale: 99.23, scaleHistory: '规模稳定在100亿左右',
-    stockRatio: 95.2, bondRatio: 0, cashRatio: 4.8,
-    institutionHoldRatio: 62.3, personalHoldRatio: 35.6, internalHoldRatio: 2.1,
-    // 基金经理分析
-    managerAnalysis: {
-      name: '侯昊', starLevel: 4, workYears: 8, manageScale: 98.76,
-      education: '前十名校', personalHold: 0, awards: '无',
-      overallScore: 85.3, selectionScore: 80.5, returnScore: 88.2,
-      riskScore: 82.6, stabilityScore: 86.7, timingScore: 78.9,
-      positionConcentration: '极高', turnoverRate: '极低', abilityPathMatch: '高',
-      scaleControlAbility: '中', focusLevel: '中',
-      managerDesc: '指数投资专家，被动管理风格',
-      positionConcentrationAnalysis: '作为指数基金，持仓完全复制指数，集中度极高',
-      turnoverRateAnalysis: '换手率极低，仅在指数成分股调整时进行交易',
-      abilityCircleAnalysis: '专注于指数投资，能力圈与基金定位完全匹配',
-      scaleControlAnalysis: '管理规模接近100亿，对指数跟踪误差控制良好',
-      workBackground: '北京大学金融工程硕士，指数投资专家',
-      productManageAnalysis: '管理多只指数基金，精力相对分散',
-      stabilityAnalysis: '任职稳定，超过7年',
-      personalHoldAnalysis: '本人未持有，符合指数基金管理规范'
-    },
-    navList: [
-      { navDate: '2026-04-21', unitNav: 1.5623, accumulatedNav: 2.1345, dailyChangeRate: 2.15, estimateNav: 1.5780 },
-      { navDate: '2026-04-18', unitNav: 1.5294, accumulatedNav: 2.1016, dailyChangeRate: -0.78, estimateNav: 1.5175 }
-    ],
-    holdShares: 10000, availableShares: 10000, frozenShares: 0, positionCost: 14000, positionValue: 15623,
-    tradeList: [
-      { tradeDate: '2024-12-01', tradeType: '申购', tradeShares: 10000, tradeAmount: 14000, tradeNav: 1.4, tradeFee: 14, confirmDate: '2024-12-02' }
-    ],
-    dividendList: [],
-    riskList: [
-      { timePeriod: '近1年', maxDrawdown: 25.3, drawdownRecoveryDays: 180, annualizedReturn: 8.7, sharpeRatio: 0.62, volatility: 28.5 }
-    ],
-    holdingList: [
-      { holdingId: 'H003', fundCode: '161725', holdingDate: '2026-03-31', holdingType: '股票', holdingCode: '600519', holdingName: '贵州茅台', holdingQuantity: 800, holdingValue: 1456000, navRatio: 9.32, industryClass: '半导体', dataSource: '支付宝' }
-    ]
-  },
-  {
-    id: 3, fundName: '天弘增利短债债券', fundCode: '000198', fundType: '债券型',
-    establishDate: '2013-11-20', assetScale: 156.42, fundManager: '天弘基金',
-    fundCompanyDesc: '天弘基金管理有限公司', fundCustodian: '中国工商银行',
-    fundManagerName: '姜晓丽', managerAppointDate: '2013-11-20', managerDesc: '短债管理经验丰富',
-    operationMode: '开放式', closedPeriod: 0, purchaseRate: 0, redemptionRate: 0,
-    managementFee: 0.25, custodianFee: 0.08, salesServiceFee: 0.15, tradeRule: 'T+1确认',
-    // 新增字段
-    returnRate1Month: 0.25, returnRate3Month: 0.78, returnRate6Month: 1.56, returnRate1Year: 3.25,
-    netAssetScale: 156.42, latestScale: 157.89, scaleHistory: '规模持续增长，从100亿增至156亿',
-    stockRatio: 0, bondRatio: 92.5, cashRatio: 7.5,
-    institutionHoldRatio: 78.9, personalHoldRatio: 19.8, internalHoldRatio: 1.3,
-    // 基金经理分析
-    managerAnalysis: {
-      name: '姜晓丽', starLevel: 4, workYears: 10, manageScale: 156.42,
-      education: '985', personalHold: 1, awards: '明星基金奖',
-      overallScore: 86.7, selectionScore: 82.3, returnScore: 85.6,
-      riskScore: 92.1, stabilityScore: 88.9, timingScore: 80.2,
-      positionConcentration: '低', turnoverRate: '中', abilityPathMatch: '高',
-      scaleControlAbility: '高', focusLevel: '高',
-      managerDesc: '短债管理经验丰富，风险控制能力强',
-      positionConcentrationAnalysis: '债券持仓分散，单一债券占比不超过5%，有效控制信用风险',
-      turnoverRateAnalysis: '换手率适中，根据利率变化调整持仓',
-      abilityCircleAnalysis: '固定收益研究背景，与短债基金定位匹配',
-      scaleControlAnalysis: '管理规模超过150亿，依然保持稳定的超额收益',
-      workBackground: '中国人民大学金融学博士，债券投资专家',
-      productManageAnalysis: '专注短债基金，精力集中',
-      stabilityAnalysis: '任职超过10年，稳定性优秀',
-      personalHoldAnalysis: '本人持有50万份，显示对策略的信心'
-    },
-    navList: [
-      { navDate: '2026-04-21', unitNav: 1.0823, accumulatedNav: 1.2845, dailyChangeRate: 0.02, estimateNav: 1.0825 }
-    ],
-    holdShares: 20000, availableShares: 20000, frozenShares: 0, positionCost: 20000, positionValue: 21646,
-    tradeList: [
-      { tradeDate: '2025-03-10', tradeType: '申购', tradeShares: 20000, tradeAmount: 20000, tradeNav: 1.0, tradeFee: 0, confirmDate: '2025-03-11' }
-    ],
-    dividendList: [],
-    riskList: [
-      { timePeriod: '近1年', maxDrawdown: 0.5, drawdownRecoveryDays: 15, annualizedReturn: 3.2, sharpeRatio: 1.85, volatility: 1.2 }
-    ],
-    holdingList: []
-  }
-])
+// ============ 基金列表数据 ============
+const fundList = ref([])
+const total = ref(0)
+const loading = ref(false)
 
-// ============ 筛选 & 分页 ============
+// ============ 分页参数 ============
 const pageParams = reactive({ page: 1, limit: 10 })
 
-const filterData = computed(() => {
-  return fundList.value.filter(item => {
-    if (activeQuery.fundName && !item.fundName.includes(activeQuery.fundName)) return false
-    if (activeQuery.fundCode && !item.fundCode.includes(activeQuery.fundCode)) return false
-    if (activeQuery.fundType.length > 0 && !activeQuery.fundType.includes(item.fundType)) return false
-    if (activeQuery.assetScaleGt && item.assetScale < activeQuery.assetScaleGt) return false
-    if (activeQuery.operationMode && item.operationMode !== activeQuery.operationMode) return false
-    if (activeQuery.closedPeriodGt && item.closedPeriod < activeQuery.closedPeriodGt) return false
-    return true
-  })
-})
+// ============ 获取数据 ============
+const fetchData = async () => {
+  loading.value = true
+  try {
+    // 构造查询参数，只传递有值的字段
+    const queryParams = {}
+    if (query.fundName) queryParams.fundName = query.fundName
+    if (query.fundCode) queryParams.fundCode = query.fundCode
+    if (query.fundType && query.fundType.length > 0) queryParams.fundType = query.fundType
+    if (query.assetScale) queryParams.assetScale = query.assetScale
+    if (query.operationMode) queryParams.operationMode = query.operationMode
+    if (query.closedEndDays) queryParams.closedEndDays = query.closedEndDays
 
-const pageData = computed(() => {
-  const s = (pageParams.page - 1) * pageParams.limit
-  return filterData.value.slice(s, s + pageParams.limit)
-})
+    const response = await GetFundBaseDataByConditionAndPage(
+      pageParams.page,
+      pageParams.limit,
+      queryParams
+    )
 
-const handleSearch = () => {
-  // 点击搜索按钮时,将查询条件应用到实际筛选条件
-  Object.assign(activeQuery, JSON.parse(JSON.stringify(query)))
-  pageParams.page = 1
+    if (response.code === 200) {
+      fundList.value = response.data.list
+      total.value = response.data.total
+    } else {
+      ElMessage.error(response.message || '获取基金数据失败')
+    }
+  } catch (error) {
+    console.error('获取基金数据失败:', error)
+    ElMessage.error('获取基金数据失败，请稍后重试')
+  } finally {
+    loading.value = false
+  }
 }
 
-const handleSizeChange = (size) => { pageParams.limit = size; pageParams.page = 1 }
-const handleCurrentChange = (page) => { pageParams.page = page }
+const handleSearch = () => {
+  pageParams.page = 1
+  fetchData()
+}
+
+const handleSizeChange = (size) => {
+  pageParams.limit = size
+  pageParams.page = 1
+  fetchData()
+}
+
+const handleCurrentChange = (page) => {
+  pageParams.page = page
+  fetchData()
+}
 
 // ============ 选择 & 批量删除 ============
 const selectedIds = ref([])
@@ -750,8 +643,9 @@ const batchDelete = async () => {
     await ElMessageBox.confirm(`确定要删除选中的 ${selectedIds.value.length} 条基金数据吗？`, '批量删除确认', {
       confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
     })
-    fundList.value = fundList.value.filter(item => !selectedIds.value.includes(item.id))
+    // TODO: 调用后端删除接口
     selectedIds.value = []
+    fetchData()
     ElMessage.success('批量删除成功')
   } catch (e) { /* cancel */ }
 }
@@ -762,8 +656,9 @@ const deleteFund = async (item) => {
     await ElMessageBox.confirm(`确定要删除基金【${item.fundName}】吗？`, '删除确认', {
       confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
     })
-    fundList.value = fundList.value.filter(i => i.id !== item.id)
+    // TODO: 调用后端删除接口
     selectedIds.value = selectedIds.value.filter(i => i !== item.id)
+    fetchData()
     ElMessage.success('删除成功')
   } catch (e) { /* cancel */ }
 }
@@ -776,10 +671,18 @@ const handleExport = () => {
   }
   // 简单CSV导出
   const headers = ['基金名称', '基金代码', '基金类型', '成立日期', '资产规模(亿)', '基金管理人', '基金托管者', '基金经理', '运作方式', '申购费率(%)', '赎回费率(%)', '管理费(%)', '托管费(%)']
-  const keys = ['fundName', 'fundCode', 'fundType', 'establishDate', 'assetScale', 'fundManager', 'fundCustodian', 'fundManagerName', 'operationMode', 'purchaseRate', 'redemptionRate', 'managementFee', 'custodianFee']
+  const keys = ['fundName', 'fundCode', 'fundType', 'establishDate', 'assetScale', 'fundCompany', 'custodian', 'fundManager', 'operationMode', 'purchaseFeeRate', 'redeemFeeRate', 'managementFeeRate', 'custodianFeeRate']
   let csv = '\uFEFF' + headers.join(',') + '\n'
   fundList.value.forEach(item => {
-    csv += keys.map(k => `"${item[k] != null ? item[k] : ''}"`).join(',') + '\n'
+    csv += keys.map(k => {
+      // 对于数字类型的字段，需要转换为中文
+      if (k === 'fundType') {
+        return `"${getDisplayText(item[k], fundTypeOptions)}"`
+      } else if (k === 'operationMode') {
+        return `"${getDisplayText(item[k], operationModeOptions)}"`
+      }
+      return `"${item[k] != null ? item[k] : ''}"`
+    }).join(',') + '\n'
   })
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
@@ -800,10 +703,8 @@ const openDetailDialog = (item) => {
 }
 
 const handleDetailSave = (saveData) => {
-  const idx = fundList.value.findIndex(i => i.id === saveData.id)
-  if (idx >= 0) {
-    fundList.value[idx] = { ...saveData }
-  }
+  // TODO: 调用后端更新接口
+  fetchData()
   detailDialogVisible.value = false
 }
 
@@ -825,6 +726,8 @@ onMounted(() => {
   getPositionTypeItem()
   getSectorTypeItem()
   getDataSourceItem()
+  // 加载基金数据
+  fetchData()
 })
 </script>
 

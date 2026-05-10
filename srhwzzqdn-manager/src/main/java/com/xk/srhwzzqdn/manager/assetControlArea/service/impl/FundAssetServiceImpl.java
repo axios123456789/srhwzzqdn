@@ -1,11 +1,14 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.manager.assetControlArea.mapper.AssetLedgerMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.mapper.FundAssetMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.FundAssetService;
 import com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser;
 import com.xk.srhwzzqdn.manager.system.mapper.SysDictMapper;
 import com.xk.srhwzzqdn.manager.util.BailianApiUtil;
+import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.entity.assetControl.AssetLedger;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundHolding;
@@ -256,6 +259,28 @@ public class FundAssetServiceImpl implements FundAssetService {
             fundAssetMapper.addFundHolding(fundHolding);
         }
         return "数据获取成功";
+    }
+
+    /**
+     * 条件分页查询基金基本数据
+     * @param current
+     * @param limit
+     * @param fundBaseDateDto
+     * @return
+     */
+    @Override
+    public PageInfo<FundAsset> getFundBaseDataByConditionAndPage(Integer current, Integer limit, FundBaseDateDto fundBaseDateDto) {
+        //1.开启分页
+        PageHelper.startPage(current, limit);
+
+        //2.条件查询基金基本数据列表
+        List<FundAsset> fundAssets = fundAssetMapper.getFundBaseDataByCondition(fundBaseDateDto);
+
+        //3.创建分页对象
+        PageInfo<FundAsset> fundAssetPageInfo = new PageInfo<>(fundAssets);
+
+        //4.返回分页对象
+        return fundAssetPageInfo;
     }
 
     /**

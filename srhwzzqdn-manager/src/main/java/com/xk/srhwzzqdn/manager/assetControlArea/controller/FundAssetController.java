@@ -1,14 +1,15 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.FundAssetService;
+import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
+import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
 import com.xk.srhwzzqdn.model.vo.common.Result;
 import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/superBrain/assetControl/fundAsset")
@@ -64,4 +65,18 @@ public class FundAssetController {
         }
     }
 
+    /**
+     * 条件分页查询基金基本数据
+     * @param current
+     * @param limit
+     * @param fundBaseDateDto
+     * @return
+     */
+    @PostMapping("/getFundBaseDataByConditionAndPage/{current}/{limit}")
+    public Result getFundBaseDataByConditionAndPage(@PathVariable("current") Integer current,
+                                                    @PathVariable("limit") Integer limit,
+                                                    @RequestBody FundBaseDateDto fundBaseDateDto){
+        PageInfo<FundAsset> fundAssetPageInfo = fundAssetService.getFundBaseDataByConditionAndPage(current, limit, fundBaseDateDto);
+        return Result.build(fundAssetPageInfo, ResultCodeEnum.SUCCESS);
+    }
 }

@@ -51,19 +51,19 @@
             </div>
             <div class="info-item">
               <label>基金管理人</label>
-              <span class="value">{{ props.fundData.fundManager || '-' }}</span>
+              <span class="value">{{ props.fundData.fundCompany || '-' }}</span>
             </div>
             <div class="info-item">
               <label>基金托管者</label>
-              <span class="value">{{ props.fundData.fundCustodian || '-' }}</span>
+              <span class="value">{{ props.fundData.custodian || '-' }}</span>
             </div>
             <div class="info-item">
               <label>基金经理</label>
-              <span class="value">{{ props.fundData.fundManagerName || '-' }}</span>
+              <span class="value">{{ props.fundData.fundManager || '-' }}</span>
             </div>
             <div class="info-item">
               <label>任职日期</label>
-              <span class="value">{{ props.fundData.managerAppointDate || '-' }}</span>
+              <span class="value">{{ props.fundData.managerStartDate || '-' }}</span>
             </div>
             <div class="info-item">
               <label>运作方式</label>
@@ -71,24 +71,24 @@
             </div>
             <div class="info-item">
               <label>封闭期</label>
-              <span class="value">{{ props.fundData.closedPeriod ? props.fundData.closedPeriod + ' 天' : '-' }}</span>
+              <span class="value">{{ props.fundData.closedEndDays ? props.fundData.closedEndDays + ' 天' : '-' }}</span>
             </div>
             <!-- 新增收益率字段 -->
             <div class="info-item">
               <label>近1月收益率</label>
-              <span class="value" :class="props.fundData.returnRate1Month >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.returnRate1Month ? props.fundData.returnRate1Month + '%' : '-' }}</span>
+              <span class="value" :class="props.fundData.return1m >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return1m ? props.fundData.return1m + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>近3月收益率</label>
-              <span class="value" :class="props.fundData.returnRate3Month >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.returnRate3Month ? props.fundData.returnRate3Month + '%' : '-' }}</span>
+              <span class="value" :class="props.fundData.return3m >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return3m ? props.fundData.return3m + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>近6月收益率</label>
-              <span class="value" :class="props.fundData.returnRate6Month >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.returnRate6Month ? props.fundData.returnRate6Month + '%' : '-' }}</span>
+              <span class="value" :class="props.fundData.return6m >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return6m ? props.fundData.return6m + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>近1年收益率</label>
-              <span class="value" :class="props.fundData.returnRate1Year >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.returnRate1Year ? props.fundData.returnRate1Year + '%' : '-' }}</span>
+              <span class="value" :class="props.fundData.return1y >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return1y ? props.fundData.return1y + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>最新规模</label>
@@ -110,20 +110,20 @@
             <!-- 新增持有比例字段 -->
             <div class="info-item">
               <label>机构持有比例</label>
-              <span class="value">{{ props.fundData.institutionHoldRatio ? props.fundData.institutionHoldRatio + '%' : '-' }}</span>
+              <span class="value">{{ props.fundData.institutionRatio ? props.fundData.institutionRatio + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>个人持有比例</label>
-              <span class="value">{{ props.fundData.personalHoldRatio ? props.fundData.personalHoldRatio + '%' : '-' }}</span>
+              <span class="value">{{ props.fundData.individualRatio ? props.fundData.individualRatio + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>内部持有比例</label>
-              <span class="value">{{ props.fundData.internalHoldRatio ? props.fundData.internalHoldRatio + '%' : '-' }}</span>
+              <span class="value">{{ props.fundData.internalRatio ? props.fundData.internalRatio + '%' : '-' }}</span>
             </div>
           </div>
-          <div class="info-full" v-if="props.fundData.netAssetScale">
+          <div class="info-full" v-if="props.fundData.netAssets">
             <label>净资产规模</label>
-            <p class="desc-text">{{ props.fundData.netAssetScale }}</p>
+            <p class="desc-text">{{ props.fundData.netAssets }}</p>
           </div>
           <div class="info-full" v-if="props.fundData.fundCompanyDesc">
             <label>基金公司描述</label>
@@ -150,23 +150,23 @@
           <div class="fee-grid">
             <div class="fee-item">
               <div class="fee-label">申购费率</div>
-              <div class="fee-value">{{ props.fundData.purchaseRate ? props.fundData.purchaseRate + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.purchaseFeeRate ? props.fundData.purchaseFeeRate + '%' : '0%' }}</div>
             </div>
             <div class="fee-item">
               <div class="fee-label">赎回费率</div>
-              <div class="fee-value">{{ props.fundData.redemptionRate ? props.fundData.redemptionRate + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.redeemFeeRate ? props.fundData.redeemFeeRate + '%' : '0%' }}</div>
             </div>
             <div class="fee-item">
               <div class="fee-label">管理费</div>
-              <div class="fee-value">{{ props.fundData.managementFee ? props.fundData.managementFee + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.managementFeeRate ? props.fundData.managementFeeRate + '%' : '0%' }}</div>
             </div>
             <div class="fee-item">
               <div class="fee-label">托管费</div>
-              <div class="fee-value">{{ props.fundData.custodianFee ? props.fundData.custodianFee + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.custodianFeeRate ? props.fundData.custodianFeeRate + '%' : '0%' }}</div>
             </div>
             <div class="fee-item">
               <div class="fee-label">销售服务费</div>
-              <div class="fee-value">{{ props.fundData.salesServiceFee ? props.fundData.salesServiceFee + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.salesServiceFeeRate ? props.fundData.salesServiceFeeRate + '%' : '0%' }}</div>
             </div>
           </div>
           <div class="info-full" v-if="props.fundData.tradeRule">
