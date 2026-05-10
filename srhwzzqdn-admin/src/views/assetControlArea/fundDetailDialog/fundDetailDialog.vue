@@ -957,18 +957,18 @@ const getDataSourceText = (v) => {
 // ============ 基金基本数据 ============
 const fundData = reactive({
   id: null, fundName: '', fundCode: '', fundType: '', establishDate: '',
-  assetScale: 0, fundCompany: '', fundCompanyDesc: '', custodian: '',
+  assetScale: null, fundCompany: '', fundCompanyDesc: '', custodian: '',
   fundManager: '', managerStartDate: '', managerDesc: '',
-  operationMode: '', closedEndDays: 0, purchaseFeeRate: 0, redeemFeeRate: 0,
-  managementFeeRate: 0, custodianFeeRate: 0, salesServiceFeeRate: 0, tradeRule: '',
+  operationMode: '', closedEndDays: null, purchaseFeeRate: null, redeemFeeRate: null,
+  managementFeeRate: null, custodianFeeRate: null, salesServiceFeeRate: null, tradeRule: '',
   // 新增收益率字段
-  return1m: 0, return3m: 0, return6m: 0, return1y: 0,
+  return1m: null, return3m: null, return6m: null, return1y: null,
   // 新增规模字段
-  netAssets: '', latestScale: 0, scaleHistory: '',
+  netAssets: '', latestScale: null, scaleHistory: '',
   // 新增占比字段
-  stockRatio: 0, bondRatio: 0, cashRatio: 0,
+  stockRatio: null, bondRatio: null, cashRatio: null,
   // 新增持有比例字段
-  institutionRatio: 0, individualRatio: 0, internalRatio: 0
+  institutionRatio: null, individualRatio: null, internalRatio: null
 })
 
 // ============ 基金经理分析数据 ============
@@ -1197,22 +1197,22 @@ const initDialogData = () => {
   Object.assign(fundData, {
     id: row.id || null, fundName: row.fundName || '', fundCode: row.fundCode || '',
     fundType: row.fundType || '', establishDate: row.establishDate || '',
-    assetScale: row.assetScale || 0, fundCompany: row.fundCompany || '',
+    assetScale: row.assetScale || null, fundCompany: row.fundCompany || '',
     fundCompanyDesc: row.fundCompanyDesc || '', custodian: row.custodian || '',
     fundManager: row.fundManager || '', managerStartDate: row.managerStartDate || '',
     managerDesc: row.managerDesc || '', operationMode: row.operationMode || '',
-    closedEndDays: row.closedEndDays || 0, purchaseFeeRate: row.purchaseFeeRate || 0,
-    redeemFeeRate: row.redeemFeeRate || 0, managementFeeRate: row.managementFeeRate || 0,
-    custodianFeeRate: row.custodianFeeRate || 0, salesServiceFeeRate: row.salesServiceFeeRate || 0,
+    closedEndDays: row.closedEndDays || null, purchaseFeeRate: row.purchaseFeeRate || null,
+    redeemFeeRate: row.redeemFeeRate || null, managementFeeRate: row.managementFeeRate || null,
+    custodianFeeRate: row.custodianFeeRate || null, salesServiceFeeRate: row.salesServiceFeeRate || null,
     tradeRule: row.tradeRule || '',
     // 新增字段初始化
-    return1m: row.return1m || 0, return3m: row.return3m || 0,
-    return6m: row.return6m || 0, return1y: row.return1y || 0,
-    netAssets: row.netAssets || '', latestScale: row.latestScale || 0,
+    return1m: row.return1m || null, return3m: row.return3m || null,
+    return6m: row.return6m || null, return1y: row.return1y || null,
+    netAssets: row.netAssets || '', latestScale: row.latestScale || null,
     scaleHistory: row.scaleHistory || '',
-    stockRatio: row.stockRatio || 0, bondRatio: row.bondRatio || 0, cashRatio: row.cashRatio || 0,
-    institutionRatio: row.institutionRatio || 0, individualRatio: row.individualRatio || 0,
-    internalRatio: row.internalRatio || 0
+    stockRatio: row.stockRatio || null, bondRatio: row.bondRatio || null, cashRatio: row.cashRatio || null,
+    institutionRatio: row.institutionRatio || null, individualRatio: row.individualRatio || null,
+    internalRatio: row.internalRatio || null
   })
 
   // 初始化基金经理分析数据

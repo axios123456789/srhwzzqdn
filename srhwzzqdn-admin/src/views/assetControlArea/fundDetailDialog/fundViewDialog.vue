@@ -150,23 +150,23 @@
           <div class="fee-grid">
             <div class="fee-item">
               <div class="fee-label">申购费率</div>
-              <div class="fee-value">{{ props.fundData.purchaseFeeRate ? props.fundData.purchaseFeeRate + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.purchaseFeeRate !== null && props.fundData.purchaseFeeRate !== undefined ? props.fundData.purchaseFeeRate + '%' : '-' }}</div>
             </div>
             <div class="fee-item">
               <div class="fee-label">赎回费率</div>
-              <div class="fee-value">{{ props.fundData.redeemFeeRate ? props.fundData.redeemFeeRate + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.redeemFeeRate !== null && props.fundData.redeemFeeRate !== undefined ? props.fundData.redeemFeeRate + '%' : '-' }}</div>
             </div>
             <div class="fee-item">
               <div class="fee-label">管理费</div>
-              <div class="fee-value">{{ props.fundData.managementFeeRate ? props.fundData.managementFeeRate + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.managementFeeRate !== null && props.fundData.managementFeeRate !== undefined ? props.fundData.managementFeeRate + '%' : '-' }}</div>
             </div>
             <div class="fee-item">
               <div class="fee-label">托管费</div>
-              <div class="fee-value">{{ props.fundData.custodianFeeRate ? props.fundData.custodianFeeRate + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.custodianFeeRate !== null && props.fundData.custodianFeeRate !== undefined ? props.fundData.custodianFeeRate + '%' : '-' }}</div>
             </div>
             <div class="fee-item">
               <div class="fee-label">销售服务费</div>
-              <div class="fee-value">{{ props.fundData.salesServiceFeeRate ? props.fundData.salesServiceFeeRate + '%' : '0%' }}</div>
+              <div class="fee-value">{{ props.fundData.salesServiceFeeRate !== null && props.fundData.salesServiceFeeRate !== undefined ? props.fundData.salesServiceFeeRate + '%' : '-' }}</div>
             </div>
           </div>
           <div class="info-full" v-if="props.fundData.tradeRule">
