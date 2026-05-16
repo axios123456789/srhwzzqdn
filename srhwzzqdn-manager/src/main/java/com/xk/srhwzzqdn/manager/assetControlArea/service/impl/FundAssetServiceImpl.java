@@ -9,10 +9,8 @@ import com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser;
 import com.xk.srhwzzqdn.manager.system.mapper.SysDictMapper;
 import com.xk.srhwzzqdn.manager.util.BailianApiUtil;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
-import com.xk.srhwzzqdn.model.entity.assetControl.AssetLedger;
-import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
-import com.xk.srhwzzqdn.model.entity.assetControl.FundHolding;
-import com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis;
+import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
+import com.xk.srhwzzqdn.model.entity.assetControl.*;
 import com.xk.srhwzzqdn.util.AuthContextUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -281,6 +279,38 @@ public class FundAssetServiceImpl implements FundAssetService {
 
         //4.返回分页对象
         return fundAssetPageInfo;
+    }
+
+    /**
+     * 条件分页查询基金净值数据
+     * @param current
+     * @param limit
+     * @param fundComm
+     * @return
+     */
+    @Override
+    public PageInfo<FundNav> getFundNavByConditionAndPage(Integer current, Integer limit, FundComm fundComm) {
+        //1.开启分页
+        PageHelper.startPage(current, limit);
+
+        //2.条件查询基金净值数据列表
+        List<FundNav> fundNavigations = fundAssetMapper.getFundNavByCondition(fundComm);
+
+        //3.创建分页对象
+        PageInfo<FundNav> fundNavPageInfo = new PageInfo<>(fundNavigations);
+
+        //4.返回分页对象
+        return fundNavPageInfo;
+    }
+
+    /**
+     * 根据基金代码获取基金经理分析数据
+     * @param fundCode
+     * @return
+     */
+    @Override
+    public FundManagerAnalysis getFundManagerAnalysisByCode(String fundCode) {
+        return fundAssetMapper.getFundManagerAnalysisByCode(fundCode);
     }
 
     /**

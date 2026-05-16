@@ -29,3 +29,31 @@ export const GetFundBaseDataByConditionAndPage = (current, limit, data) => {
     data: data
   })
 }
+
+/**
+ * 条件分页查询基金净值数据
+ * @param current 当前页
+ * @param limit 每页条数
+ * @param params 查询参数 { fundCode, beginTime, endTime }
+ * @returns
+ */
+export const GetFundNavByConditionAndPage = (current, limit, params) => {
+  return request({
+    url: `${base_api}/getFundNavByConditionAndPage/${current}/${limit}`,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 根据基金代码获取基金经理分析数据
+ * @param fundCode 基金代码
+ * @returns
+ */
+export const GetFundManagerAnalysisByCode = (fundCode) => {
+  return request({
+    url: `${base_api}/getFundManagerAnalysisByCode`,
+    method: 'get',
+    params: { fundCode }
+  })
+}

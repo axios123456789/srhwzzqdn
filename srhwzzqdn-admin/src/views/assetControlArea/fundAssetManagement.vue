@@ -359,7 +359,7 @@ import { Coin, Search, Download, Refresh, Delete, Edit } from '@element-plus/ico
 import FundDetailDialog from './fundDetailDialog/fundDetailDialog.vue'
 import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage } from "@/api/fundAsset"
+import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage, GetFundNavByConditionAndPage } from "@/api/fundAsset"
 
 // ============ 数据字典选项 ============
 // 基金类型选项

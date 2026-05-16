@@ -1,9 +1,11 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.mapper;
 
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
+import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundHolding;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis;
+import com.xk.srhwzzqdn.model.entity.assetControl.FundNav;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -26,4 +28,10 @@ public interface FundAssetMapper {
 
     //条件查询基金基本数据列表
     List<FundAsset> getFundBaseDataByCondition(FundBaseDateDto fundBaseDateDto);
+
+    //条件查询基金净值数据列表
+    List<FundNav> getFundNavByCondition(FundComm fundComm);
+
+    //根据基金代码获取基金经理分析数据
+    FundManagerAnalysis getFundManagerAnalysisByCode(String fundCode);
 }

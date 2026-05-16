@@ -203,4 +203,30 @@
         </where>
         order by t.update_time desc
     </select>
+
+    <!--  条件查询基金净值列表  -->
+    <select id="getFundNavByCondition" resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundNav">
+        select *
+          from t_fund_nav t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.nav_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.nav_date &lt;= #{endTime}
+            </if>
+        </where>
+        order by t.nav_date desc
+    </select>
+
+    <!--  根据基金代码查询基金经理分析数据  -->
+    <select id="getFundManagerAnalysisByCode"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis">
+        select *
+          from t_fund_manager_analysis t
+        where t.fund_code = #{param1}
+    </select>
 </mapper>

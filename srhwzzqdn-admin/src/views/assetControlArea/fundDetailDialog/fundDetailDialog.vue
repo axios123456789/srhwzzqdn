@@ -253,13 +253,26 @@
         <div class="section-content">
           <!-- 查询与操作 -->
           <div class="sub-section-toolbar">
-            <el-date-picker v-model="navQuery.timeRange" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="YYYY-MM-DD" :editable="false" :unlink-panels="true" size="small" style="width: 280px; margin-right: 12px;" clearable />
+            <el-date-picker 
+              v-model="navQuery.timeRange" 
+              type="daterange" 
+              range-separator="至" 
+              start-placeholder="开始日期" 
+              end-placeholder="结束日期" 
+              value-format="YYYY-MM-DD" 
+              :editable="false" 
+              :unlink-panels="true" 
+              size="small" 
+              style="width: 280px; margin-right: 12px;" 
+              clearable 
+              @change="handleNavTimeRangeChange"
+            />
             <el-button type="primary" size="small" @click="queryNavData" :icon="Search">查询</el-button>
             <el-button size="small" @click="resetNavQuery" :icon="Refresh">重置</el-button>
             <div style="flex:1"></div>
             <el-button type="success" size="small" @click="addNavRow" :icon="Plus">新增</el-button>
           </div>
-          <el-table :data="navPageData" border stripe size="small" max-height="320px">
+          <el-table :data="navPageData" border stripe size="small" max-height="320px" v-loading="navTableLoading">
             <el-table-column prop="navDate" label="净值日期" width="120" />
             <el-table-column prop="unitNav" label="单位净值" width="110" align="right" />
             <el-table-column prop="accumulatedNav" label="累计净值" width="110" align="right" />
@@ -277,7 +290,17 @@
             </el-table-column>
           </el-table>
           <div class="sub-pagination">
-            <el-pagination background layout="total, sizes, prev, pager, next" :total="navFilterData.length" :page-size="navPage.limit" :current-page="navPage.page" :page-sizes="[10, 20, 50]" @size-change="(s) => { navPage.limit = s; navPage.page = 1 }" @current-change="(p) => navPage.page = p" size="small" />
+            <el-pagination 
+              background 
+              layout="total, sizes, prev, pager, next" 
+              :total="navTableTotal" 
+              :page-size="navPage.limit" 
+              :current-page="navPage.page" 
+              :page-sizes="[10, 20, 50]" 
+              @size-change="(s) => { navPage.limit = s; navPage.page = 1; fetchNavData() }" 
+              @current-change="(p) => { navPage.page = p; fetchNavData() }" 
+              size="small" 
+            />
           </div>
         </div>
       </div>
@@ -832,6 +855,7 @@ import { ElMessage } from 'element-plus'
 import { Close, Check, Search, Refresh, Plus, FullScreen, Aim, Download, User } from '@element-plus/icons-vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 import { GetKeyAndValueByType } from "@/api/sysDict"
+import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode } from "@/api/fundAsset"
 
 // 在需要全屏的组件中使用 Hook
 const { isFullscreen, initFullscreen, toggleFullscreen } = useFullscreenDialog()
@@ -988,6 +1012,120 @@ const managerAnalysis = reactive({
 const navData = ref([])
 const navQuery = reactive({ timeRange: null })
 const navPage = reactive({ page: 1, limit: 10 })
+const navTableLoading = ref(false)
+const navTableTotal = ref(0)
+
+// 净值查询参数
+const navQueryParams = reactive({
+  fundCode: '',
+  beginTime: '',
+  endTime: ''
+})
+
+// 获取净值数据的方法
+const fetchNavData = async () => {
+  if (!navQueryParams.fundCode) {
+    return
+  }
+  
+  navTableLoading.value = true
+  try {
+    const result = await GetFundNavByConditionAndPage(
+      navPage.page,
+      navPage.limit,
+      {
+        fundCode: navQueryParams.fundCode,
+        beginTime: navQueryParams.beginTime || null,
+        endTime: navQueryParams.endTime || null
+      }
+    )
+    
+    if (result.code === 200) {
+      navData.value = result.data.list || []
+      navTableTotal.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || '获取净值数据失败')
+    }
+  } catch (error) {
+    console.error('获取净值数据失败:', error)
+    ElMessage.error('获取净值数据失败')
+  } finally {
+    navTableLoading.value = false
+  }
+}
+
+// 获取基金经理分析数据的方法
+const fetchManagerAnalysisData = async () => {
+  const fundCode = props.fundRowData?.fundCode
+  if (!fundCode) {
+    return
+  }
+  
+  try {
+    const result = await GetFundManagerAnalysisByCode(fundCode)
+    
+    if (result.code === 200 && result.data) {
+      // 后端字段映射到前端字段（后端为空时前端也为空，不设置默认值）
+      const backendData = result.data
+      Object.assign(managerAnalysis, {
+        name: backendData.managerName,
+        starLevel: backendData.starRating,
+        workYears: backendData.workTime,
+        manageScale: backendData.manageScale,
+        education: backendData.education,
+        personalHold: backendData.isManagerHolding,
+        awards: backendData.awardRecords,
+        overallScore: backendData.totalScore,
+        selectionScore: backendData.stockSelectScore,
+        returnScore: backendData.returnScore,
+        riskScore: backendData.riskControlScore,
+        stabilityScore: backendData.stabilityScore,
+        timingScore: backendData.timingScore,
+        positionConcentration: backendData.holdingsConcentration,
+        turnoverRate: backendData.turnoverRate,
+        abilityPathMatch: backendData.backgroundMatch,
+        scaleControlAbility: backendData.scaleCapability,
+        focusLevel: backendData.focusOnThisFund,
+        managerDesc: backendData.managerDesc,
+        positionConcentrationAnalysis: backendData.concentrationRateAnalyse,
+        turnoverRateAnalysis: backendData.turnoverRateAnalyse,
+        abilityCircleAnalysis: backendData.capabilityPathAnalysis,
+        scaleControlAnalysis: backendData.scaleAbilityAnalysis,
+        workBackground: backendData.professionalBackground,
+        productManageAnalysis: backendData.productManagementAnalysis,
+        stabilityAnalysis: backendData.stabilityAnalysis,
+        personalHoldAnalysis: backendData.personalHolding
+      })
+    } else {
+      // 如果没有数据，使用默认值
+      Object.assign(managerAnalysis, {
+        name: props.fundRowData?.fundManagerName || '', starLevel: 0, workYears: 0, manageScale: 0,
+        education: '', personalHold: null,
+        overallScore: 0, selectionScore: 0, returnScore: 0,
+        riskScore: 0, stabilityScore: 0, timingScore: 0,
+        positionConcentration: '', turnoverRate: '', abilityPathMatch: '',
+        scaleControlAbility: '', focusLevel: '',
+        managerDesc: '', positionConcentrationAnalysis: '', turnoverRateAnalysis: '',
+        abilityCircleAnalysis: '', scaleControlAnalysis: '', workBackground: '',
+        productManageAnalysis: '', stabilityAnalysis: '', personalHoldAnalysis: ''
+      })
+    }
+  } catch (error) {
+    console.error('获取基金经理分析数据失败:', error)
+    // 失败时使用默认值
+    Object.assign(managerAnalysis, {
+      name: props.fundRowData?.fundManagerName || '', starLevel: 0, workYears: 0, manageScale: 0,
+      education: '', personalHold: null,
+      overallScore: 0, selectionScore: 0, returnScore: 0,
+      riskScore: 0, stabilityScore: 0, timingScore: 0,
+      positionConcentration: '', turnoverRate: '', abilityPathMatch: '',
+      scaleControlAbility: '', focusLevel: '',
+      managerDesc: '', positionConcentrationAnalysis: '', turnoverRateAnalysis: '',
+      abilityCircleAnalysis: '', scaleControlAnalysis: '', workBackground: '',
+      productManageAnalysis: '', stabilityAnalysis: '', personalHoldAnalysis: ''
+    })
+  }
+}
 
 const navFilterData = computed(() => {
   let list = [...navData.value]
@@ -1002,8 +1140,30 @@ const navPageData = computed(() => {
   const s = (navPage.page - 1) * navPage.limit
   return navFilterData.value.slice(s, s + navPage.limit)
 })
-const queryNavData = () => { navPage.page = 1 }
-const resetNavQuery = () => { navQuery.timeRange = null; navPage.page = 1 }
+
+// 时间范围变化处理
+const handleNavTimeRangeChange = (val) => {
+  if (val && val.length === 2) {
+    navQueryParams.beginTime = val[0]
+    navQueryParams.endTime = val[1]
+  } else {
+    navQueryParams.beginTime = ''
+    navQueryParams.endTime = ''
+  }
+}
+
+const queryNavData = () => { 
+  navPage.page = 1
+  fetchNavData() 
+}
+
+const resetNavQuery = () => { 
+  navQuery.timeRange = null
+  navQueryParams.beginTime = ''
+  navQueryParams.endTime = ''
+  navPage.page = 1
+  fetchNavData()
+}
 
 // ============ 份额与持仓 ============
 const shareData = reactive({
@@ -1215,26 +1375,18 @@ const initDialogData = () => {
     internalRatio: row.internalRatio || null
   })
 
-  // 初始化基金经理分析数据
-  if (row.managerAnalysis) {
-    Object.assign(managerAnalysis, row.managerAnalysis)
-  } else {
-    Object.assign(managerAnalysis, {
-      name: row.fundManagerName || '', starLevel: 0, workYears: 0, manageScale: 0,
-      education: '', personalHold: null,
-      overallScore: 0, selectionScore: 0, returnScore: 0,
-      riskScore: 0, stabilityScore: 0, timingScore: 0,
-      positionConcentration: '', turnoverRate: '', abilityPathMatch: '',
-      scaleControlAbility: '', focusLevel: '',
-      managerDesc: '', positionConcentrationAnalysis: '', turnoverRateAnalysis: '',
-      abilityCircleAnalysis: '', scaleControlAnalysis: '', workBackground: '',
-      productManageAnalysis: '', stabilityAnalysis: '', personalHoldAnalysis: ''
-    })
-  }
+  // 初始化基金经理分析数据 - 改为从后端接口获取
+  fetchManagerAnalysisData()
 
-  // 净值数据
-  navData.value = row.navList ? JSON.parse(JSON.stringify(row.navList)) : []
-  navQuery.timeRange = null; navPage.page = 1; navPage.limit = 10
+  // 净值数据 - 改为从后端接口获取
+  navQueryParams.fundCode = row.fundCode || ''
+  navQueryParams.beginTime = ''
+  navQueryParams.endTime = ''
+  navQuery.timeRange = null
+  navPage.page = 1
+  navPage.limit = 10
+  // 自动调用接口获取净值数据
+  fetchNavData()
 
   // 份额数据
   Object.assign(shareData, {

@@ -3,7 +3,10 @@ package com.xk.srhwzzqdn.manager.assetControlArea.controller;
 import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.FundAssetService;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
+import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
+import com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis;
+import com.xk.srhwzzqdn.model.entity.assetControl.FundNav;
 import com.xk.srhwzzqdn.model.vo.common.Result;
 import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
 import org.slf4j.Logger;
@@ -79,4 +82,36 @@ public class FundAssetController {
         PageInfo<FundAsset> fundAssetPageInfo = fundAssetService.getFundBaseDataByConditionAndPage(current, limit, fundBaseDateDto);
         return Result.build(fundAssetPageInfo, ResultCodeEnum.SUCCESS);
     }
+
+    /**
+     * 条件分页查询基金净值数据
+     * @param current
+     * @param limit
+     * @param fundComm
+     * @return
+     */
+    @GetMapping("/getFundNavByConditionAndPage/{current}/{limit}")
+    public Result getFundNavByConditionAndPage(@PathVariable("current") Integer current,
+                                               @PathVariable("limit") Integer limit,
+                                               FundComm fundComm){
+        PageInfo<FundNav> fundNavPageInfo = fundAssetService.getFundNavByConditionAndPage(current, limit, fundComm);
+        return Result.build(fundNavPageInfo, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 根据基金代码获取基金经理分析数据
+     * @param fundCode
+     * @return
+     */
+    @GetMapping("/getFundManagerAnalysisByCode")
+    public Result getFundManagerAnalysisByCode(String fundCode) {
+        try {
+            FundManagerAnalysis fundManagerAnalysis = fundAssetService.getFundManagerAnalysisByCode(fundCode);
+            return Result.build(fundManagerAnalysis, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("获取基金经理分析数据失败", e);
+            return Result.build(null, 500, "获取基金经理分析数据失败！");
+        }
+    }
+
 }

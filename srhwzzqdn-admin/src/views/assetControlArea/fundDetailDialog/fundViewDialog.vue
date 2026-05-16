@@ -247,7 +247,8 @@
             <el-table 
               :data="getPaginatedNavData()" 
               border 
-              stripe 
+              stripe
+              v-loading="navTableLoading" 
               size="small" 
               height="400px"
               style="width: 100%"
@@ -282,7 +283,7 @@
       </div>
 
       <!-- 基金经理分析卡片 -->
-      <div class="info-card" v-if="props.fundData.managerAnalysis">
+      <div class="info-card" v-if="managerAnalysisData">
         <div class="card-header">
           <el-icon><User /></el-icon>
           <span>基金经理分析</span>
@@ -292,40 +293,40 @@
           <div class="info-grid">
             <div class="info-item">
               <label>姓名</label>
-              <span class="value">{{ props.fundData.managerAnalysis.name || '-' }}</span>
+              <span class="value">{{ managerAnalysisData.name || '-' }}</span>
             </div>
             <div class="info-item">
               <label>星级</label>
               <span class="value">
-                <el-rate :model-value="props.fundData.managerAnalysis.starLevel" :max="5" disabled show-score />
+                <el-rate :model-value="managerAnalysisData.starLevel" :max="5" disabled show-score />
               </span>
             </div>
             <div class="info-item">
               <label>从业时间</label>
-              <span class="value">{{ props.fundData.managerAnalysis.workYears ? props.fundData.managerAnalysis.workYears + ' 年' : '-' }}</span>
+              <span class="value">{{ managerAnalysisData.workYears ? managerAnalysisData.workYears + ' 年' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>管理规模</label>
-              <span class="value highlight">{{ props.fundData.managerAnalysis.manageScale ? props.fundData.managerAnalysis.manageScale + ' 亿' : '-' }}</span>
+              <span class="value highlight">{{ managerAnalysisData.manageScale ? managerAnalysisData.manageScale + ' 亿' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>学历</label>
-              <span class="value">{{ props.fundData.managerAnalysis.education || '-' }}</span>
+              <span class="value">{{ managerAnalysisData.education || '-' }}</span>
             </div>
             <div class="info-item">
               <label>个人持有</label>
-              <span class="value" :class="props.fundData.managerAnalysis.personalHold === 1 ? 'profit-text' : 'loss-text'">
-                {{ props.fundData.managerAnalysis.personalHold === 1 ? '是' : '否' }}
+              <span class="value" :class="managerAnalysisData.personalHold === 1 ? 'profit-text' : 'loss-text'">
+                {{ managerAnalysisData.personalHold === 1 ? '是' : '否' }}
               </span>
             </div>
             <div class="info-item">
               <label>获奖记录</label>
               <span class="value">
-                <el-tag v-if="props.fundData.managerAnalysis.awards && props.fundData.managerAnalysis.awards !== '无'" 
-                  :type="getAwardTagType(props.fundData.managerAnalysis.awards)" size="small">
-                  {{ props.fundData.managerAnalysis.awards }}
+                <el-tag v-if="managerAnalysisData.awards && managerAnalysisData.awards !== '无'"
+                  :type="getAwardTagType(managerAnalysisData.awards)" size="small">
+                  {{ managerAnalysisData.awards }}
                 </el-tag>
-                <span v-else>{{ props.fundData.managerAnalysis.awards || '-' }}</span>
+                <span v-else>{{ managerAnalysisData.awards || '-' }}</span>
               </span>
             </div>
           </div>
@@ -333,98 +334,98 @@
           <div class="score-grid">
             <div class="score-item">
               <div class="score-label">综合评分</div>
-              <div class="score-value">{{ props.fundData.managerAnalysis.overallScore || 0 }}</div>
+              <div class="score-value">{{ managerAnalysisData.overallScore || 0 }}</div>
             </div>
             <div class="score-item">
               <div class="score-label">选证能力</div>
-              <div class="score-value">{{ props.fundData.managerAnalysis.selectionScore || 0 }}</div>
+              <div class="score-value">{{ managerAnalysisData.selectionScore || 0 }}</div>
             </div>
             <div class="score-item">
               <div class="score-label">收益率</div>
-              <div class="score-value">{{ props.fundData.managerAnalysis.returnScore || 0 }}</div>
+              <div class="score-value">{{ managerAnalysisData.returnScore || 0 }}</div>
             </div>
             <div class="score-item">
               <div class="score-label">抗风险</div>
-              <div class="score-value">{{ props.fundData.managerAnalysis.riskScore || 0 }}</div>
+              <div class="score-value">{{ managerAnalysisData.riskScore || 0 }}</div>
             </div>
             <div class="score-item">
               <div class="score-label">稳定性</div>
-              <div class="score-value">{{ props.fundData.managerAnalysis.stabilityScore || 0 }}</div>
+              <div class="score-value">{{ managerAnalysisData.stabilityScore || 0 }}</div>
             </div>
             <div class="score-item">
               <div class="score-label">择时能力</div>
-              <div class="score-value">{{ props.fundData.managerAnalysis.timingScore || 0 }}</div>
+              <div class="score-value">{{ managerAnalysisData.timingScore || 0 }}</div>
             </div>
           </div>
           <!-- 分析维度 -->
           <div class="analysis-grid">
             <div class="analysis-item">
               <label>持仓集中度</label>
-              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.positionConcentration)" size="small">
-                {{ props.fundData.managerAnalysis.positionConcentration || '-' }}
+              <el-tag :type="getAnalysisTagType(managerAnalysisData.positionConcentration)" size="small">
+                {{ managerAnalysisData.positionConcentration || '-' }}
               </el-tag>
             </div>
             <div class="analysis-item">
               <label>换手率</label>
-              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.turnoverRate)" size="small">
-                {{ props.fundData.managerAnalysis.turnoverRate || '-' }}
+              <el-tag :type="getAnalysisTagType(managerAnalysisData.turnoverRate)" size="small">
+                {{ managerAnalysisData.turnoverRate || '-' }}
               </el-tag>
             </div>
             <div class="analysis-item">
               <label>能力路径匹配度</label>
-              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.abilityPathMatch)" size="small">
-                {{ props.fundData.managerAnalysis.abilityPathMatch || '-' }}
+              <el-tag :type="getAnalysisTagType(managerAnalysisData.abilityPathMatch)" size="small">
+                {{ managerAnalysisData.abilityPathMatch || '-' }}
               </el-tag>
             </div>
             <div class="analysis-item">
               <label>规模驾驭能力</label>
-              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.scaleControlAbility)" size="small">
-                {{ props.fundData.managerAnalysis.scaleControlAbility || '-' }}
+              <el-tag :type="getAnalysisTagType(managerAnalysisData.scaleControlAbility)" size="small">
+                {{ managerAnalysisData.scaleControlAbility || '-' }}
               </el-tag>
             </div>
             <div class="analysis-item">
               <label>本基金精力集中度</label>
-              <el-tag :type="getAnalysisTagType(props.fundData.managerAnalysis.focusLevel)" size="small">
-                {{ props.fundData.managerAnalysis.focusLevel || '-' }}
+              <el-tag :type="getAnalysisTagType(managerAnalysisData.focusLevel)" size="small">
+                {{ managerAnalysisData.focusLevel || '-' }}
               </el-tag>
             </div>
           </div>
           <!-- 文本分析 -->
-          <div class="info-full" v-if="props.fundData.managerAnalysis.managerDesc">
+          <div class="info-full" v-if="managerAnalysisData.managerDesc">
             <label>经理描述</label>
-            <p class="desc-text">{{ props.fundData.managerAnalysis.managerDesc }}</p>
+            <p class="desc-text">{{ managerAnalysisData.managerDesc }}</p>
           </div>
-          <div class="info-full" v-if="props.fundData.managerAnalysis.positionConcentrationAnalysis">
+          <div class="info-full" v-if="managerAnalysisData.positionConcentrationAnalysis">
             <label>持仓集中度分析</label>
-            <p class="desc-text">{{ props.fundData.managerAnalysis.positionConcentrationAnalysis }}</p>
+            <p class="desc-text">{{ managerAnalysisData.positionConcentrationAnalysis }}</p>
           </div>
-          <div class="info-full" v-if="props.fundData.managerAnalysis.turnoverRateAnalysis">
+          <div class="info-full" v-if="managerAnalysisData.turnoverRateAnalysis">
             <label>换手率分析</label>
-            <p class="desc-text">{{ props.fundData.managerAnalysis.turnoverRateAnalysis }}</p>
+            <p class="desc-text">{{ managerAnalysisData.turnoverRateAnalysis }}</p>
           </div>
-          <div class="info-full" v-if="props.fundData.managerAnalysis.abilityCircleAnalysis">
+          <div class="info-full" v-if="managerAnalysisData.abilityCircleAnalysis">
             <label>能力圈与路径依赖分析</label>
-            <p class="desc-text">{{ props.fundData.managerAnalysis.abilityCircleAnalysis }}</p>
+            <p class="desc-text">{{ managerAnalysisData.abilityCircleAnalysis }}</p>
           </div>
-          <div class="info-full" v-if="props.fundData.managerAnalysis.scaleControlAnalysis">
+          <div class="info-full" v-if="managerAnalysisData.scaleControlAnalysis">
             <label>规模驾驭能力分析</label>
-            <p class="desc-text">{{ props.fundData.managerAnalysis.scaleControlAnalysis }}</p>
+            <p class="desc-text">{{ managerAnalysisData.scaleControlAnalysis }}</p>
           </div>
-          <div class="info-full" v-if="props.fundData.managerAnalysis.workBackground">
+          <div class="info-full" v-if="managerAnalysisData.workBackground">
             <label>从业背景</label>
-            <p class="desc-text">{{ props.fundData.managerAnalysis.workBackground }}</p>
+            <p class="desc-text">{{ managerAnalysisData.workBackground }}</p>
           </div>
-          <div class="info-full" v-if="props.fundData.managerAnalysis.productManageAnalysis">
+          <div class="info-full" v-if="managerAnalysisData.productManageAnalysis">
             <label>产品管理情况分析</label>
-            <p class="desc-text">{{ props.fundData.managerAnalysis.productManageAnalysis }}</p>
+            <p class="desc-text">{{ managerAnalysisData.productManageAnalysis }}</p>
           </div>
-          <div class="info-full" v-if="props.fundData.managerAnalysis.stabilityAnalysis">
+          <div class="info-full" v-if="managerAnalysisData.stabilityAnalysis">
             <label>稳定性分析</label>
-            <p class="desc-text">{{ props.fundData.managerAnalysis.stabilityAnalysis }}</p>
+            <p class="desc-text">{{ managerAnalysisData.stabilityAnalysis }}</p>
           </div>
-          <div class="info-full" v-if="props.fundData.managerAnalysis.personalHoldAnalysis">
+          <div class="info-full" v-if="managerAnalysisData.personalHoldAnalysis">
             <label>个人持有情况</label>
-            <p class="desc-text">{{ props.fundData.managerAnalysis.personalHoldAnalysis }}</p>
+            <p class="desc-text">{{ managerAnalysisData.personalHoldAnalysis }}</p>
           </div>
         </div>
       </div>
@@ -546,9 +547,11 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, nextTick, onBeforeUnmount } from 'vue'
+import { computed, ref, watch, nextTick, onBeforeUnmount, reactive } from 'vue'
 import { Coin, Close, FullScreen, Aim, Document, Discount, Wallet, TrendCharts, List, Money, DataAnalysis, Grid, User } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
+import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode } from "@/api/fundAsset"
+import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   visible: { type: Boolean, default: false },
@@ -566,6 +569,47 @@ const activeTimeRange = ref('1month')
 const navTablePage = ref(1)
 const navTablePageSize = ref(10)
 const navTableTotal = ref(0)
+const navTableLoading = ref(false)
+const navDataList = ref([])
+
+// 净值查询参数
+const navQueryParams = reactive({
+  fundCode: '',
+  beginTime: '',
+  endTime: ''
+})
+
+// 获取净值数据的方法
+const fetchNavData = async () => {
+  if (!navQueryParams.fundCode) {
+    return
+  }
+  
+  navTableLoading.value = true
+  try {
+    const result = await GetFundNavByConditionAndPage(
+      navTablePage.value,
+      navTablePageSize.value,
+      {
+        fundCode: navQueryParams.fundCode,
+        beginTime: navQueryParams.beginTime || null,
+        endTime: navQueryParams.endTime || null
+      }
+    )
+    
+    if (result.code === 200) {
+      navDataList.value = result.data.list || []
+      navTableTotal.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || '获取净值数据失败')
+    }
+  } catch (error) {
+    console.error('获取净值数据失败:', error)
+    ElMessage.error('获取净值数据失败')
+  } finally {
+    navTableLoading.value = false
+  }
+}
 
 // 时间范围选项
 const timeRangeOptions = [
@@ -627,26 +671,22 @@ const getFilteredNavData = () => {
   })
 }
 
-// 获取分页后的净值数据
+// 获取分页后的净值数据 - 改为直接返回从后端获取的数据
 const getPaginatedNavData = () => {
-  const filteredData = getFilteredNavData()
-  navTableTotal.value = filteredData.length
-  
-  const start = (navTablePage.value - 1) * navTablePageSize.value
-  const end = start + navTablePageSize.value
-  
-  return filteredData.slice(start, end)
+  return navDataList.value
 }
 
 // 处理分页变化
 const handleNavTablePageChange = (page) => {
   navTablePage.value = page
+  fetchNavData()
 }
 
 // 处理每页条数变化
 const handleNavTableSizeChange = (size) => {
   navTablePageSize.value = size
   navTablePage.value = 1
+  fetchNavData()
 }
 
 // 初始化图表
@@ -975,6 +1015,81 @@ onBeforeUnmount(() => {
     chartInstance.value = null
   }
 })
+
+// 监听对话框打开，自动加载净值数据
+watch(() => props.visible, (newVal) => {
+  if (newVal && props.fundData?.fundCode) {
+    // 设置基金代码
+    navQueryParams.fundCode = props.fundData.fundCode
+    
+    // 重置时间范围（初始为空）
+    navQueryParams.beginTime = ''
+    navQueryParams.endTime = ''
+    
+    // 重置分页
+    navTablePage.value = 1
+    
+    // 自动获取净值数据
+    fetchNavData()
+    
+    // 自动获取基金经理分析数据
+    fetchManagerAnalysisData()
+  }
+})
+
+// 基金经理分析数据
+const managerAnalysisData = ref(null)
+
+// 获取基金经理分析数据的方法
+const fetchManagerAnalysisData = async () => {
+  const fundCode = props.fundData?.fundCode
+  if (!fundCode) {
+    return
+  }
+  
+  try {
+    const result = await GetFundManagerAnalysisByCode(fundCode)
+    
+    if (result.code === 200 && result.data) {
+      // 后端字段映射到前端字段（后端为空时前端也为空，不设置默认值）
+      const backendData = result.data
+      managerAnalysisData.value = {
+        name: backendData.managerName,
+        starLevel: backendData.starRating,
+        workYears: backendData.workTime,
+        manageScale: backendData.manageScale,
+        education: backendData.education,
+        personalHold: backendData.isManagerHolding,
+        awards: backendData.awardRecords,
+        overallScore: backendData.totalScore,
+        selectionScore: backendData.stockSelectScore,
+        returnScore: backendData.returnScore,
+        riskScore: backendData.riskControlScore,
+        stabilityScore: backendData.stabilityScore,
+        timingScore: backendData.timingScore,
+        positionConcentration: backendData.holdingsConcentration,
+        turnoverRate: backendData.turnoverRate,
+        abilityPathMatch: backendData.backgroundMatch,
+        scaleControlAbility: backendData.scaleCapability,
+        focusLevel: backendData.focusOnThisFund,
+        managerDesc: backendData.managerDesc,
+        positionConcentrationAnalysis: backendData.concentrationRateAnalyse,
+        turnoverRateAnalysis: backendData.turnoverRateAnalyse,
+        abilityCircleAnalysis: backendData.capabilityPathAnalysis,
+        scaleControlAnalysis: backendData.scaleAbilityAnalysis,
+        workBackground: backendData.professionalBackground,
+        productManageAnalysis: backendData.productManagementAnalysis,
+        stabilityAnalysis: backendData.stabilityAnalysis,
+        personalHoldAnalysis: backendData.personalHolding
+      }
+    } else {
+      managerAnalysisData.value = null
+    }
+  } catch (error) {
+    console.error('获取基金经理分析数据失败:', error)
+    managerAnalysisData.value = null
+  }
+}
 
 const getFundTypeTag = () => {
   const typeMap = {
