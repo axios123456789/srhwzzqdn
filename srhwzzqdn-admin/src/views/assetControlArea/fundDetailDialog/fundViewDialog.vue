@@ -177,7 +177,7 @@
       </div>
 
       <!-- 持仓信息卡片 -->
-      <div class="info-card">
+      <div class="info-card" v-if="holdingData">
         <div class="card-header">
           <el-icon><Wallet /></el-icon>
           <span>持仓信息</span>
@@ -186,32 +186,32 @@
           <div class="position-grid">
             <div class="position-item">
               <div class="position-label">持有份额</div>
-              <div class="position-value">{{ formatNumber(props.fundData.holdShares) }}</div>
+              <div class="position-value">{{ formatNumber(holdingData.holdShares) }}</div>
             </div>
             <div class="position-item">
               <div class="position-label">可用份额</div>
-              <div class="position-value">{{ formatNumber(props.fundData.availableShares) }}</div>
+              <div class="position-value">{{ formatNumber(holdingData.availableShares) }}</div>
             </div>
             <div class="position-item">
               <div class="position-label">冻结份额</div>
-              <div class="position-value">{{ formatNumber(props.fundData.frozenShares) }}</div>
+              <div class="position-value">{{ formatNumber(holdingData.frozenShares) }}</div>
             </div>
             <div class="position-item">
               <div class="position-label">持仓成本</div>
-              <div class="position-value highlight">{{ formatCurrency(props.fundData.positionCost) }}</div>
+              <div class="position-value highlight">{{ formatCurrency(holdingData.positionCost) }}</div>
             </div>
             <div class="position-item">
               <div class="position-label">持仓市值</div>
-              <div class="position-value highlight">{{ formatCurrency(props.fundData.positionValue) }}</div>
+              <div class="position-value highlight">{{ formatCurrency(holdingData.positionValue) }}</div>
             </div>
             <div class="position-item">
               <div class="position-label">持仓盈亏</div>
-              <div class="position-value" :class="getProfitClass(props.fundData.positionProfit)">{{ formatCurrency(props.fundData.positionProfit) }}</div>
+              <div class="position-value" :class="getProfitClass(holdingData.positionProfit)">{{ formatCurrency(holdingData.positionProfit) }}</div>
             </div>
             <div class="position-item">
               <div class="position-label">收益率</div>
-              <div class="position-value" :class="getProfitClass(props.fundData.positionProfitRate)">
-                {{ props.fundData.positionProfitRate ? props.fundData.positionProfitRate.toFixed(2) + '%' : '0%' }}
+              <div class="position-value" :class="getProfitClass(holdingData.positionProfitRate)">
+                {{ holdingData.positionProfitRate ? holdingData.positionProfitRate.toFixed(2) + '%' : '0%' }}
               </div>
             </div>
           </div>
@@ -431,17 +431,19 @@
       </div>
 
       <!-- 交易记录卡片 -->
-      <div class="info-card" v-if="props.fundData.tradeList && props.fundData.tradeList.length > 0">
+      <div class="info-card" v-if="tradeData && tradeData.length > 0">
         <div class="card-header">
           <el-icon><List /></el-icon>
           <span>交易记录</span>
         </div>
         <div class="card-body">
-          <el-table :data="props.fundData.tradeList" border stripe size="small" max-height="300px">
+          <el-table :data="tradeData" border stripe size="small" max-height="300px" v-loading="tradeTableLoading">
             <el-table-column prop="tradeDate" label="交易日期" width="120" />
             <el-table-column prop="tradeType" label="交易类型" width="100">
               <template #default="{ row }">
-                <el-tag :type="row.tradeType === '申购' ? 'success' : 'danger'" size="small">{{ row.tradeType }}</el-tag>
+                <el-tag :type="row.tradeType === 1 ? 'success' : 'danger'" size="small">
+                  {{ row.tradeType === 1 ? '申购' : row.tradeType === 2 ? '赎回' : row.tradeType === 3 ? '分红再投' : '转换' }}
+                </el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="tradeShares" label="交易份额" width="120" align="right" />
@@ -454,30 +456,109 @@
             </el-table-column>
             <el-table-column prop="confirmDate" label="确认日期" width="120" />
           </el-table>
+          
+          <!-- 分页组件 -->
+          <div class="nav-table-pagination" v-if="tradeTableTotal > 0">
+            <el-pagination
+              v-model:current-page="tradeTablePage"
+              v-model:page-size="tradeTablePageSize"
+              :page-sizes="[10, 20, 50, 100]"
+              :total="tradeTableTotal"
+              layout="total, sizes, prev, pager, next, jumper"
+              @current-change="fetchTradeData"
+              @size-change="fetchTradeData"
+            />
+          </div>
         </div>
       </div>
 
       <!-- 分红记录卡片 -->
-      <div class="info-card" v-if="props.fundData.dividendList && props.fundData.dividendList.length > 0">
+      <div class="info-card" v-if="dividendData && dividendData.length > 0">
         <div class="card-header">
           <el-icon><Money /></el-icon>
           <span>分红记录</span>
         </div>
         <div class="card-body">
-          <el-table :data="props.fundData.dividendList" border stripe size="small" max-height="300px">
+          <el-table :data="dividendData" border stripe size="small" max-height="300px" v-loading="dividendTableLoading">
             <el-table-column prop="dividendDate" label="分红时间" width="150" />
             <el-table-column prop="arrivalDate" label="到账时间" width="150" />
-            <el-table-column prop="dividendMethod" label="分红方式" width="120">
+            <el-table-column prop="dividendType" label="分红方式" width="120">
               <template #default="{ row }">
-                <el-tag type="warning" size="small">{{ row.dividendMethod }}</el-tag>
+                <el-tag type="warning" size="small">{{ row.dividendType === 1 ? '现金分红' : '红利再投' }}</el-tag>
               </template>
             </el-table-column>
+            <el-table-column prop="dividendRule" label="分红规则" width="120" />
             <el-table-column prop="dividendAmount" label="分红金额" width="150" align="right">
               <template #default="{ row }">
                 <span class="profit-text">¥{{ row.dividendAmount }}</span>
               </template>
             </el-table-column>
           </el-table>
+          
+          <!-- 分页组件 -->
+          <div class="nav-table-pagination" v-if="dividendTableTotal > 0">
+            <el-pagination
+              v-model:current-page="dividendTablePage"
+              v-model:page-size="dividendTablePageSize"
+              :page-sizes="[10, 20, 50, 100]"
+              :total="dividendTableTotal"
+              layout="total, sizes, prev, pager, next, jumper"
+              @current-change="fetchDividendData"
+              @size-change="fetchDividendData"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- 持仓数据卡片 -->
+      <div class="info-card" v-if="portfolioData && portfolioData.length > 0">
+        <div class="card-header">
+          <el-icon><Grid /></el-icon>
+          <span>持仓数据</span>
+        </div>
+        <div class="card-body">
+          <el-table :data="portfolioData" border stripe size="small" max-height="300px" v-loading="portfolioTableLoading">
+            <el-table-column prop="portfolioDate" label="持仓日期" width="120" />
+            <el-table-column prop="positionType" label="持仓类型" width="100">
+              <template #default="{ row }">
+                <el-tag :type="getPositionTypeTagType(row.positionType)" size="small">
+                  {{ getPositionTypeText(row.positionType) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="positionCode" label="持仓代码" width="120" />
+            <el-table-column prop="positionName" label="持仓名称" min-width="160" show-overflow-tooltip />
+            <el-table-column prop="positionQuantity" label="持仓数量" width="120" align="right" />
+            <el-table-column prop="positionMarketValue" label="持仓市值" width="120" align="right" />
+            <el-table-column prop="netRatio" label="占净值比例(%)" width="130" align="right" />
+            <el-table-column prop="industryType" label="行业分类" width="110">
+              <template #default="{ row }">
+                <el-tag :type="getIndustryTypeTagType(row.industryType)" size="small">
+                  {{ getIndustryTypeText(row.industryType) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="dataSource" label="数据来源" width="100">
+              <template #default="{ row }">
+                <el-tag :type="getDataSourceTagType(row.dataSource)" size="small">
+                  {{ getDataSourceText(row.dataSource) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+          </el-table>
+          
+          <!-- 分页组件 -->
+          <div class="nav-table-pagination" v-if="portfolioTableTotal > 0">
+            <el-pagination
+              v-model:current-page="portfolioTablePage"
+              v-model:page-size="portfolioTablePageSize"
+              :page-sizes="[10, 20, 50, 100]"
+              :total="portfolioTableTotal"
+              layout="total, sizes, prev, pager, next, jumper"
+              @current-change="fetchPortfolioData"
+              @size-change="fetchPortfolioData"
+            />
+          </div>
         </div>
       </div>
 
@@ -550,7 +631,7 @@
 import { computed, ref, watch, nextTick, onBeforeUnmount, reactive } from 'vue'
 import { Coin, Close, FullScreen, Aim, Document, Discount, Wallet, TrendCharts, List, Money, DataAnalysis, Grid, User } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode } from "@/api/fundAsset"
+import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage } from "@/api/fundAsset"
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({
@@ -1034,11 +1115,110 @@ watch(() => props.visible, (newVal) => {
     
     // 自动获取基金经理分析数据
     fetchManagerAnalysisData()
+    
+    // 自动获取基金持仓数据
+    fetchHoldingData()
+    
+    // 自动获取交易数据
+    fetchTradeData()
+    
+    // 自动获取分红数据
+    fetchDividendData()
+    
+    // 自动获取风险收益数据
+    fetchRiskPerformanceData()
+    
+    // 自动获取持仓数据
+    portfolioQueryParams.fundCode = props.fundData.fundCode
+    portfolioQueryParams.beginTime = ''
+    portfolioQueryParams.endTime = ''
+    portfolioTablePage.value = 1
+    fetchPortfolioData()
   }
 })
 
 // 基金经理分析数据
 const managerAnalysisData = ref(null)
+
+// 基金持仓数据
+const holdingData = ref(null)
+
+// 持仓数据
+const portfolioData = ref([])
+const portfolioTableLoading = ref(false)
+const portfolioTableTotal = ref(0)
+const portfolioTablePage = ref(1)
+const portfolioTablePageSize = ref(10)
+
+// 持仓数据查询参数
+const portfolioQueryParams = reactive({
+  fundCode: '',
+  beginTime: '',
+  endTime: ''
+})
+
+// 获取持仓数据的方法
+const fetchPortfolioData = async () => {
+  if (!portfolioQueryParams.fundCode) {
+    return
+  }
+  
+  portfolioTableLoading.value = true
+  try {
+    const result = await GetFundPortfolioByConditionAndPage(
+      portfolioTablePage.value,
+      portfolioTablePageSize.value,
+      {
+        fundCode: portfolioQueryParams.fundCode,
+        beginTime: portfolioQueryParams.beginTime || null,
+        endTime: portfolioQueryParams.endTime || null
+      }
+    )
+    
+    if (result.code === 200) {
+      portfolioData.value = result.data.list || []
+      portfolioTableTotal.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || '获取持仓数据失败')
+    }
+  } catch (error) {
+    console.error('获取持仓数据失败:', error)
+    ElMessage.error('获取持仓数据失败')
+  } finally {
+    portfolioTableLoading.value = false
+  }
+}
+
+// 交易数据
+const tradeData = ref([])
+const tradeTableLoading = ref(false)
+const tradeTableTotal = ref(0)
+const tradeTablePage = ref(1)
+const tradeTablePageSize = ref(10)
+
+// 交易数据查询参数
+const tradeQueryParams = reactive({
+  fundCode: '',
+  beginTime: '',
+  endTime: ''
+})
+
+// 分红数据
+const dividendData = ref([])
+const dividendTableLoading = ref(false)
+const dividendTableTotal = ref(0)
+const dividendTablePage = ref(1)
+const dividendTablePageSize = ref(10)
+
+// 分红数据查询参数
+const dividendQueryParams = reactive({
+  fundCode: '',
+  beginTime: '',
+  endTime: ''
+})
+
+// 风险收益数据
+const riskPerformanceData = ref([])
 
 // 获取基金经理分析数据的方法
 const fetchManagerAnalysisData = async () => {
@@ -1091,6 +1271,124 @@ const fetchManagerAnalysisData = async () => {
   }
 }
 
+// 获取基金持仓数据的方法
+const fetchHoldingData = async () => {
+  const fundCode = props.fundData?.fundCode
+  if (!fundCode) {
+    return
+  }
+  
+  try {
+    const result = await GetFundHoldingByCode(fundCode)
+    
+    if (result.code === 200 && result.data) {
+      // 后端字段映射到前端字段（后端为空时前端也为空，不设置默认值）
+      const backendData = result.data
+      holdingData.value = {
+        holdShares: backendData.holdShares,
+        availableShares: backendData.availableShares,
+        frozenShares: backendData.frozenShares,
+        positionCost: backendData.costAmount,
+        positionValue: backendData.marketValue,
+        positionProfit: backendData.profitLoss,
+        positionProfitRate: backendData.profitLossRate
+      }
+    } else {
+      holdingData.value = null
+    }
+  } catch (error) {
+    console.error('获取基金持仓数据失败:', error)
+    holdingData.value = null
+  }
+}
+
+// 获取交易数据的方法
+const fetchTradeData = async () => {
+  const fundCode = props.fundData?.fundCode
+  if (!fundCode) {
+    return
+  }
+  
+  tradeTableLoading.value = true
+  try {
+    const result = await GetFundTransactionByConditionAndPage(
+      tradeTablePage.value,
+      tradeTablePageSize.value,
+      {
+        fundCode: fundCode,
+        beginTime: tradeQueryParams.beginTime || null,
+        endTime: tradeQueryParams.endTime || null
+      }
+    )
+    
+    if (result.code === 200) {
+      tradeData.value = result.data.list || []
+      tradeTableTotal.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || '获取交易数据失败')
+    }
+  } catch (error) {
+    console.error('获取交易数据失败:', error)
+    ElMessage.error('获取交易数据失败')
+  } finally {
+    tradeTableLoading.value = false
+  }
+}
+
+// 获取分红数据的方法
+const fetchDividendData = async () => {
+  const fundCode = props.fundData?.fundCode
+  if (!fundCode) {
+    return
+  }
+  
+  dividendTableLoading.value = true
+  try {
+    const result = await GetFundDividendByConditionAndPage(
+      dividendTablePage.value,
+      dividendTablePageSize.value,
+      {
+        fundCode: fundCode,
+        beginTime: dividendQueryParams.beginTime || null,
+        endTime: dividendQueryParams.endTime || null
+      }
+    )
+    
+    if (result.code === 200) {
+      dividendData.value = result.data.list || []
+      dividendTableTotal.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || '获取分红数据失败')
+    }
+  } catch (error) {
+    console.error('获取分红数据失败:', error)
+    ElMessage.error('获取分红数据失败')
+  } finally {
+    dividendTableLoading.value = false
+  }
+}
+
+// 获取风险收益数据的方法
+const fetchRiskPerformanceData = async () => {
+  const fundCode = props.fundData?.fundCode
+  if (!fundCode) {
+    return
+  }
+  
+  try {
+    const result = await GetFundRiskPerformanceByCode(fundCode)
+    
+    if (result.code === 200) {
+      riskPerformanceData.value = result.data || []
+    } else {
+      ElMessage.error(result.message || '获取风险收益数据失败')
+    }
+  } catch (error) {
+    console.error('获取风险收益数据失败:', error)
+    ElMessage.error('获取风险收益数据失败')
+  }
+}
+
 const getFundTypeTag = () => {
   const typeMap = {
     '股票型': 'danger',
@@ -1140,6 +1438,42 @@ const getAwardTagType = (award) => {
     '其他': ''
   }
   return typeMap[award] || 'info'
+}
+
+// 持仓类型显示方法
+const getPositionTypeText = (v) => {
+  const map = { 1: '股票', 2: '债券', 3: '基金', 4: '现金' }
+  return map[v] || '-'
+}
+
+// 持仓类型标签颜色
+const getPositionTypeTagType = (v) => {
+  const map = { 1: 'danger', 2: 'success', 3: 'warning', 4: 'info' }
+  return map[v] || 'info'
+}
+
+// 行业分类显示方法
+const getIndustryTypeText = (v) => {
+  const map = { 1: '通信装备', 2: '电池', 3: '半导体' }
+  return map[v] || '-'
+}
+
+// 行业分类标签颜色
+const getIndustryTypeTagType = (v) => {
+  const map = { 1: 'danger', 2: 'success', 3: 'warning' }
+  return map[v] || 'info'
+}
+
+// 数据来源显示方法
+const getDataSourceText = (v) => {
+  const map = { 1: '支付宝', 2: '天天基金' }
+  return map[v] || '-'
+}
+
+// 数据来源标签颜色
+const getDataSourceTagType = (v) => {
+  const map = { 1: 'primary', 2: 'success' }
+  return map[v] || 'info'
 }
 </script>
 

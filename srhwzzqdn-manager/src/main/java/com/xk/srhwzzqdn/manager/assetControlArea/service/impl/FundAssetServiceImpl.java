@@ -249,7 +249,7 @@ public class FundAssetServiceImpl implements FundAssetService {
             fundHolding.setCostAmount(assetLedger.getInvestAmount());
             fundHolding.setMarketValue(assetLedger.getAmount());
             fundHolding.setProfitLoss(fundHolding.getMarketValue().subtract(fundHolding.getCostAmount()));
-            fundHolding.setProfitLossRate(fundHolding.getProfitLoss().divide(fundHolding.getCostAmount(), 4, RoundingMode.HALF_UP));
+            fundHolding.setProfitLossRate(fundHolding.getProfitLoss().divide(fundHolding.getCostAmount(), 4, RoundingMode.HALF_UP).multiply(new BigDecimal("100")));
             fundHolding.setCreateBy("system");
             fundHolding.setOwner(assetLedger.getAssetOwner());
 
@@ -311,6 +311,89 @@ public class FundAssetServiceImpl implements FundAssetService {
     @Override
     public FundManagerAnalysis getFundManagerAnalysisByCode(String fundCode) {
         return fundAssetMapper.getFundManagerAnalysisByCode(fundCode);
+    }
+
+    /**
+     * 根据基金代码获取基金持仓数据
+     * @param fundCode
+     * @return
+     */
+    @Override
+    public FundHolding getFundHoldingByCode(String fundCode) {
+        return fundAssetMapper.getFundHoldingByCode(fundCode);
+    }
+
+    /**
+     * 条件分页查询基金交易与流水数据
+     * @param current
+     * @param limit
+     * @param fundComm
+     * @return
+     */
+    @Override
+    public PageInfo<FundTransaction> getFundTransactionByConditionAndPage(Integer current, Integer limit, FundComm fundComm) {
+        //1.开启分页
+        PageHelper.startPage(current, limit);
+
+        //2.条件查询基金交易与流水数据列表
+        List<FundTransaction> fundTransactions = fundAssetMapper.getFundTransactionByCondition(fundComm);
+
+        //3.创建分页对象
+        PageInfo<FundTransaction> fundTransactionPageInfo = new PageInfo<>(fundTransactions);
+
+        return fundTransactionPageInfo;
+    }
+
+    /**
+     * 条件分页查询查询基金分红数据
+     * @param current
+     * @param limit
+     * @param fundComm
+     * @return
+     */
+    @Override
+    public PageInfo<FundDividend> getFundDividendByConditionAndPage(Integer current, Integer limit, FundComm fundComm) {
+        //1.开启分页
+        PageHelper.startPage(current, limit);
+
+        //2.条件查询基金分红数据列表
+        List<FundDividend> fundDividends = fundAssetMapper.getFundDividendByCondition(fundComm);
+
+        //3.创建分页对象
+        PageInfo<FundDividend> fundDividendPageInfo = new PageInfo<>(fundDividends);
+
+        return fundDividendPageInfo;
+    }
+
+    /**
+     * 根据基金代码获取基金风险收益数据
+     * @param fundCode
+     * @return
+     */
+    @Override
+    public List<FundRiskPerformance> getFundRiskPerformance(String fundCode) {
+        return fundAssetMapper.getFundRiskPerformance(fundCode);
+    }
+
+    /**
+     * 条件分页获取基金持仓信息
+     * @param current
+     * @param limit
+     * @param fundComm
+     * @return
+     */
+    @Override
+    public PageInfo<FundPortfolio> getFundPortfolioByConditionAndPage(Integer current, Integer limit, FundComm fundComm) {
+        //1.开启分页
+        PageHelper.startPage(current, limit);
+
+        //2.条件查询基金持仓数据列表
+        List<FundPortfolio> fundPortfolios = fundAssetMapper.getFundPortfolioByCondition(fundComm);
+
+        //3.创建分页对象
+        PageInfo<FundPortfolio> fundPortfolioPageInfo = new PageInfo<>(fundPortfolios);
+
+        return fundPortfolioPageInfo;
     }
 
     /**

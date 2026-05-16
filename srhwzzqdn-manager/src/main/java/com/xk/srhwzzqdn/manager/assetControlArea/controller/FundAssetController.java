@@ -4,15 +4,15 @@ import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.FundAssetService;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
-import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
-import com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis;
-import com.xk.srhwzzqdn.model.entity.assetControl.FundNav;
+import com.xk.srhwzzqdn.model.entity.assetControl.*;
 import com.xk.srhwzzqdn.model.vo.common.Result;
 import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/superBrain/assetControl/fundAsset")
@@ -112,6 +112,78 @@ public class FundAssetController {
             logger.error("获取基金经理分析数据失败", e);
             return Result.build(null, 500, "获取基金经理分析数据失败！");
         }
+    }
+
+    /**
+     * 根据基金代码获取基金持仓数据
+     * @param fundCode
+     * @return
+     */
+    @GetMapping("/getFundHoldingByCode")
+    public Result getFundHoldingByCode(String fundCode) {
+        try {
+            FundHolding fundHolding = fundAssetService.getFundHoldingByCode(fundCode);
+            return Result.build(fundHolding, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("获取基金持仓数据失败", e);
+            return Result.build(null, 500, "获取基金持仓数据失败！");
+        }
+    }
+
+    /**
+     * 条件分页查询基金交易与流水数据
+     * @param current
+     * @param limit
+     * @param fundComm
+     * @return
+     */
+    @GetMapping("/getFundTransactionByConditionAndPage/{current}/{limit}")
+    public Result getFundTransactionByConditionAndPage(@PathVariable("current") Integer current,
+                                                      @PathVariable("limit") Integer limit,
+                                                      FundComm fundComm) {
+        PageInfo<FundTransaction> fundTransactionPageInfo = fundAssetService.getFundTransactionByConditionAndPage(current, limit, fundComm);
+        return Result.build(fundTransactionPageInfo, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 条件分页查询查询基金分红数据
+     * @param current
+     * @param limit
+     * @param fundComm
+     * @return
+     */
+    @GetMapping("/getFundDividendByConditionAndPage/{current}/{limit}")
+    public Result getFundDividendByConditionAndPage(@PathVariable("current") Integer current,
+                                                   @PathVariable("limit") Integer limit,
+                                                   FundComm fundComm) {
+        PageInfo<FundDividend> fundDividendPageInfo = fundAssetService.getFundDividendByConditionAndPage(current, limit, fundComm);
+        return Result.build(fundDividendPageInfo, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 根据基金代码获取基金风险收益数据
+     * @param fundCode
+     * @return
+     */
+    @GetMapping("/getFundRiskPerformanceByCode")
+    public Result getFundRiskPerformance(String fundCode) {
+        List<FundRiskPerformance> fundRiskPerformanceList = fundAssetService.getFundRiskPerformance(fundCode);
+        return Result.build(fundRiskPerformanceList, ResultCodeEnum.SUCCESS);
+    }
+
+    /**
+     * 条件分页获取基金持仓信息
+     * @param current
+     * @param limit
+     * @param fundComm
+     * @return
+     */
+    @GetMapping("/getFundPortfolioByConditionAndPage/{current}/{limit}")
+    public Result getFundPortfolioByConditionAndPage(@PathVariable("current") Integer current,
+                                                    @PathVariable("limit") Integer limit,
+                                                    FundComm fundComm) {
+        PageInfo<FundPortfolio> fundPortfolioPageInfo = fundAssetService.getFundPortfolioByConditionAndPage(current, limit, fundComm);
+        return Result.build(fundPortfolioPageInfo, ResultCodeEnum.SUCCESS);
     }
 
 }

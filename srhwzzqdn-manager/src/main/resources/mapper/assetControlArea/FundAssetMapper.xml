@@ -229,4 +229,75 @@
           from t_fund_manager_analysis t
         where t.fund_code = #{param1}
     </select>
+
+    <!--    根据基金代码获取基金持仓数据  -->
+    <select id="getFundHoldingByCode" resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundHolding">
+        select *
+          from t_fund_holding t
+        where t.fund_code = #{param1}
+    </select>
+
+    <!--  条件查询基金交易列表  -->
+    <select id="getFundTransactionByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundTransaction">
+        select *
+          from t_fund_transaction t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.trade_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.trade_date &lt;= #{endTime}
+            </if>
+        </where>
+        order by t.trade_date desc
+    </select>
+
+    <!--  条件查询基金分红列表  -->
+    <select id="getFundDividendByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundDividend">
+        select *
+          from t_fund_dividend t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.dividend_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.dividend_date &lt;= #{endTime}
+            </if>
+        </where>
+        order by t.dividend_date desc
+    </select>
+
+    <!--  根据基金代码获取基金风险收益数据  -->
+    <select id="getFundRiskPerformance"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundRiskPerformance">
+        select *
+          from t_fund_risk_performance t
+        where t.fund_code = #{param1}
+    </select>
+
+    <!--  条件查询基金持仓数据列表  -->
+    <select id="getFundPortfolioByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundPortfolio">
+        select *
+          from t_fund_portfolio t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.portfolio_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.portfolio_date &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
 </mapper>

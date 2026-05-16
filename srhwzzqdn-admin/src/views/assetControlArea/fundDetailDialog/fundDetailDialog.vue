@@ -265,7 +265,6 @@
               size="small" 
               style="width: 280px; margin-right: 12px;" 
               clearable 
-              @change="handleNavTimeRangeChange"
             />
             <el-button type="primary" size="small" @click="queryNavData" :icon="Search">查询</el-button>
             <el-button size="small" @click="resetNavQuery" :icon="Refresh">重置</el-button>
@@ -672,23 +671,33 @@
             <div style="flex:1"></div>
             <el-button type="success" size="small" @click="addHoldingRow" :icon="Plus">新增</el-button>
           </div>
-          <el-table :data="holdingPageData" border stripe size="small" max-height="320px">
-            <el-table-column prop="holdingId" label="持仓ID" width="80" />
-            <el-table-column prop="fundCode" label="基金代码" width="100" />
-            <el-table-column prop="holdingDate" label="持仓日期" width="110" />
-            <el-table-column prop="holdingType" label="持仓类型" width="90">
-              <template #default="{ row }">{{ getHoldingTypeText(row.holdingType) }}</template>
+          <el-table :data="holdingData" border stripe size="small" max-height="320px" v-loading="holdingTableLoading">
+            <el-table-column prop="portfolioDate" label="持仓日期" width="120" />
+            <el-table-column prop="positionType" label="持仓类型" width="100">
+              <template #default="{ row }">
+                <el-tag :type="getPositionTypeTagType(row.positionType)" size="small">
+                  {{ getPositionTypeText(row.positionType) }}
+                </el-tag>
+              </template>
             </el-table-column>
-            <el-table-column prop="holdingCode" label="持仓代码" width="100" />
-            <el-table-column prop="holdingName" label="持仓名称" min-width="140" show-overflow-tooltip />
-            <el-table-column prop="holdingQuantity" label="持仓数量" width="100" align="right" />
-            <el-table-column prop="holdingValue" label="持仓市值" width="110" align="right" />
-            <el-table-column prop="navRatio" label="占净值比例(%)" width="120" align="right" />
-            <el-table-column prop="industryClass" label="行业分类" width="100">
-              <template #default="{ row }">{{ getIndustryClassText(row.industryClass) }}</template>
+            <el-table-column prop="positionCode" label="持仓代码" width="120" />
+            <el-table-column prop="positionName" label="持仓名称" min-width="160" show-overflow-tooltip />
+            <el-table-column prop="positionQuantity" label="持仓数量" width="120" align="right" />
+            <el-table-column prop="positionMarketValue" label="持仓市值" width="120" align="right" />
+            <el-table-column prop="netRatio" label="占净值比例(%)" width="130" align="right" />
+            <el-table-column prop="industryType" label="行业分类" width="110">
+              <template #default="{ row }">
+                <el-tag :type="getIndustryTypeTagType(row.industryType)" size="small">
+                  {{ getIndustryTypeText(row.industryType) }}
+                </el-tag>
+              </template>
             </el-table-column>
-            <el-table-column prop="dataSource" label="数据来源" width="90">
-              <template #default="{ row }">{{ getDataSourceText(row.dataSource) }}</template>
+            <el-table-column prop="dataSource" label="数据来源" width="100">
+              <template #default="{ row }">
+                <el-tag :type="getDataSourceTagType(row.dataSource)" size="small">
+                  {{ getDataSourceText(row.dataSource) }}
+                </el-tag>
+              </template>
             </el-table-column>
             <el-table-column label="操作" width="140" fixed="right">
               <template #default="{ $index }">
@@ -698,7 +707,17 @@
             </el-table-column>
           </el-table>
           <div class="sub-pagination">
-            <el-pagination background layout="total, sizes, prev, pager, next" :total="holdingFilterData.length" :page-size="holdingPage.limit" :current-page="holdingPage.page" :page-sizes="[10, 20, 50]" @size-change="(s) => { holdingPage.limit = s; holdingPage.page = 1 }" @current-change="(p) => holdingPage.page = p" size="small" />
+            <el-pagination 
+              background 
+              layout="total, sizes, prev, pager, next" 
+              :total="holdingTableTotal" 
+              :page-size="holdingPage.limit" 
+              :current-page="holdingPage.page" 
+              :page-sizes="[10, 20, 50]" 
+              @size-change="(s) => { holdingPage.limit = s; holdingPage.page = 1; fetchPortfolioData() }" 
+              @current-change="(p) => { holdingPage.page = p; fetchPortfolioData() }" 
+              size="small" 
+            />
           </div>
         </div>
       </div>
@@ -855,7 +874,7 @@ import { ElMessage } from 'element-plus'
 import { Close, Check, Search, Refresh, Plus, FullScreen, Aim, Download, User } from '@element-plus/icons-vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode } from "@/api/fundAsset"
+import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage } from "@/api/fundAsset"
 
 // 在需要全屏的组件中使用 Hook
 const { isFullscreen, initFullscreen, toggleFullscreen } = useFullscreenDialog()
@@ -976,6 +995,36 @@ const getDataSourceText = (v) => {
   if (!v) return '-'
   const found = dataSourceOptions.value.find(i => i.value === v)
   return found ? found.text : v
+}
+
+// 持仓类型显示方法
+const getPositionTypeText = (v) => {
+  const map = { 1: '股票', 2: '债券', 3: '基金', 4: '现金' }
+  return map[v] || '-'
+}
+
+// 持仓类型标签颜色
+const getPositionTypeTagType = (v) => {
+  const map = { 1: 'danger', 2: 'success', 3: 'warning', 4: 'info' }
+  return map[v] || 'info'
+}
+
+// 行业分类显示方法
+const getIndustryTypeText = (v) => {
+  const map = { 1: '通信装备', 2: '电池', 3: '半导体' }
+  return map[v] || '-'
+}
+
+// 行业分类标签颜色
+const getIndustryTypeTagType = (v) => {
+  const map = { 1: 'danger', 2: 'success', 3: 'warning' }
+  return map[v] || 'info'
+}
+
+// 数据来源标签颜色
+const getDataSourceTagType = (v) => {
+  const map = { 1: 'primary', 2: 'success' }
+  return map[v] || 'info'
 }
 
 // ============ 基金基本数据 ============
@@ -1127,6 +1176,34 @@ const fetchManagerAnalysisData = async () => {
   }
 }
 
+// 获取基金持仓数据的方法
+const fetchHoldingData = async () => {
+  const fundCode = props.fundRowData?.fundCode
+  if (!fundCode) {
+    return
+  }
+  
+  try {
+    const result = await GetFundHoldingByCode(fundCode)
+    
+    if (result.code === 200 && result.data) {
+      // 后端字段映射到前端字段（后端为空时前端也为空，不设置默认值）
+      const backendData = result.data
+      Object.assign(shareData, {
+        holdShares: backendData.holdShares,
+        availableShares: backendData.availableShares,
+        frozenShares: backendData.frozenShares,
+        positionCost: backendData.costAmount,
+        positionValue: backendData.marketValue,
+        positionProfit: backendData.profitLoss,
+        positionProfitRate: backendData.profitLossRate
+      })
+    }
+  } catch (error) {
+    console.error('获取基金持仓数据失败:', error)
+  }
+}
+
 const navFilterData = computed(() => {
   let list = [...navData.value]
   if (navQuery.timeRange && navQuery.timeRange.length === 2) {
@@ -1142,17 +1219,15 @@ const navPageData = computed(() => {
 })
 
 // 时间范围变化处理
-const handleNavTimeRangeChange = (val) => {
-  if (val && val.length === 2) {
-    navQueryParams.beginTime = val[0]
-    navQueryParams.endTime = val[1]
+const queryNavData = () => { 
+  // 从时间选择器中获取时间值
+  if (navQuery.timeRange && navQuery.timeRange.length === 2) {
+    navQueryParams.beginTime = navQuery.timeRange[0]
+    navQueryParams.endTime = navQuery.timeRange[1]
   } else {
     navQueryParams.beginTime = ''
     navQueryParams.endTime = ''
   }
-}
-
-const queryNavData = () => { 
   navPage.page = 1
   fetchNavData() 
 }
@@ -1203,8 +1278,70 @@ const tradePageData = computed(() => {
   const s = (tradePage.page - 1) * tradePage.limit
   return tradeFilterData.value.slice(s, s + tradePage.limit)
 })
-const queryTradeData = () => { tradePage.page = 1 }
-const resetTradeQuery = () => { tradeQuery.timeRange = null; tradePage.page = 1 }
+
+// 交易数据查询参数
+const tradeQueryParams = reactive({
+  fundCode: '',
+  beginTime: '',
+  endTime: ''
+})
+
+// 交易数据加载状态和总数
+const tradeTableLoading = ref(false)
+const tradeTableTotal = ref(0)
+
+// 获取交易数据的方法
+const fetchTradeData = async () => {
+  if (!tradeQueryParams.fundCode) {
+    return
+  }
+  
+  tradeTableLoading.value = true
+  try {
+    const result = await GetFundTransactionByConditionAndPage(
+      tradePage.page,
+      tradePage.limit,
+      {
+        fundCode: tradeQueryParams.fundCode,
+        beginTime: tradeQueryParams.beginTime || null,
+        endTime: tradeQueryParams.endTime || null
+      }
+    )
+    
+    if (result.code === 200) {
+      tradeData.value = result.data.list || []
+      tradeTableTotal.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || '获取交易数据失败')
+    }
+  } catch (error) {
+    console.error('获取交易数据失败:', error)
+    ElMessage.error('获取交易数据失败')
+  } finally {
+    tradeTableLoading.value = false
+  }
+}
+
+const queryTradeData = () => { 
+  // 从时间选择器中获取时间值
+  if (tradeQuery.timeRange && tradeQuery.timeRange.length === 2) {
+    tradeQueryParams.beginTime = tradeQuery.timeRange[0]
+    tradeQueryParams.endTime = tradeQuery.timeRange[1]
+  } else {
+    tradeQueryParams.beginTime = ''
+    tradeQueryParams.endTime = ''
+  }
+  tradePage.page = 1
+  fetchTradeData()
+}
+
+const resetTradeQuery = () => { 
+  tradeQuery.timeRange = null
+  tradeQueryParams.beginTime = ''
+  tradeQueryParams.endTime = ''
+  tradePage.page = 1
+  fetchTradeData()
+}
 
 // ============ 分红信息 ============
 const dividendData = ref([])
@@ -1224,11 +1361,94 @@ const dividendPageData = computed(() => {
   const s = (dividendPage.page - 1) * dividendPage.limit
   return dividendFilterData.value.slice(s, s + dividendPage.limit)
 })
-const queryDividendData = () => { dividendPage.page = 1 }
-const resetDividendQuery = () => { dividendQuery.timeRange = null; dividendPage.page = 1 }
+
+// 分红数据查询参数
+const dividendQueryParams = reactive({
+  fundCode: '',
+  beginTime: '',
+  endTime: ''
+})
+
+// 分红数据加载状态和总数
+const dividendTableLoading = ref(false)
+const dividendTableTotal = ref(0)
+
+// 获取分红数据的方法
+const fetchDividendData = async () => {
+  if (!dividendQueryParams.fundCode) {
+    return
+  }
+  
+  dividendTableLoading.value = true
+  try {
+    const result = await GetFundDividendByConditionAndPage(
+      dividendPage.page,
+      dividendPage.limit,
+      {
+        fundCode: dividendQueryParams.fundCode,
+        beginTime: dividendQueryParams.beginTime || null,
+        endTime: dividendQueryParams.endTime || null
+      }
+    )
+    
+    if (result.code === 200) {
+      dividendData.value = result.data.list || []
+      dividendTableTotal.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || '获取分红数据失败')
+    }
+  } catch (error) {
+    console.error('获取分红数据失败:', error)
+    ElMessage.error('获取分红数据失败')
+  } finally {
+    dividendTableLoading.value = false
+  }
+}
+
+const queryDividendData = () => { 
+  // 从时间选择器中获取时间值
+  if (dividendQuery.timeRange && dividendQuery.timeRange.length === 2) {
+    dividendQueryParams.beginTime = dividendQuery.timeRange[0]
+    dividendQueryParams.endTime = dividendQuery.timeRange[1]
+  } else {
+    dividendQueryParams.beginTime = ''
+    dividendQueryParams.endTime = ''
+  }
+  dividendPage.page = 1
+  fetchDividendData()
+}
+
+const resetDividendQuery = () => { 
+  dividendQuery.timeRange = null
+  dividendQueryParams.beginTime = ''
+  dividendQueryParams.endTime = ''
+  dividendPage.page = 1
+  fetchDividendData()
+}
 
 // ============ 风险与绩效 ============
 const riskData = ref([])
+
+// 获取风险收益数据的方法
+const fetchRiskPerformanceData = async () => {
+  const fundCode = fundData.fundCode
+  if (!fundCode) {
+    return
+  }
+  
+  try {
+    const result = await GetFundRiskPerformanceByCode(fundCode)
+    
+    if (result.code === 200) {
+      riskData.value = result.data || []
+    } else {
+      ElMessage.error(result.message || '获取风险收益数据失败')
+    }
+  } catch (error) {
+    console.error('获取风险收益数据失败:', error)
+    ElMessage.error('获取风险收益数据失败')
+  }
+}
 
 // ============ 持仓信息 ============
 const holdingData = ref([])
@@ -1248,8 +1468,70 @@ const holdingPageData = computed(() => {
   const s = (holdingPage.page - 1) * holdingPage.limit
   return holdingFilterData.value.slice(s, s + holdingPage.limit)
 })
-const queryHoldingData = () => { holdingPage.page = 1 }
-const resetHoldingQuery = () => { holdingQuery.timeRange = null; holdingPage.page = 1 }
+
+// 持仓数据查询参数
+const holdingQueryParams = reactive({
+  fundCode: '',
+  beginTime: '',
+  endTime: ''
+})
+
+// 持仓数据加载状态和总数
+const holdingTableLoading = ref(false)
+const holdingTableTotal = ref(0)
+
+// 获取持仓数据的方法
+const fetchPortfolioData = async () => {
+  if (!holdingQueryParams.fundCode) {
+    return
+  }
+  
+  holdingTableLoading.value = true
+  try {
+    const result = await GetFundPortfolioByConditionAndPage(
+      holdingPage.page,
+      holdingPage.limit,
+      {
+        fundCode: holdingQueryParams.fundCode,
+        beginTime: holdingQueryParams.beginTime || null,
+        endTime: holdingQueryParams.endTime || null
+      }
+    )
+    
+    if (result.code === 200) {
+      holdingData.value = result.data.list || []
+      holdingTableTotal.value = result.data.total || 0
+    } else {
+      ElMessage.error(result.message || '获取持仓数据失败')
+    }
+  } catch (error) {
+    console.error('获取持仓数据失败:', error)
+    ElMessage.error('获取持仓数据失败')
+  } finally {
+    holdingTableLoading.value = false
+  }
+}
+
+const queryHoldingData = () => { 
+  // 从时间选择器中获取时间值
+  if (holdingQuery.timeRange && holdingQuery.timeRange.length === 2) {
+    holdingQueryParams.beginTime = holdingQuery.timeRange[0]
+    holdingQueryParams.endTime = holdingQuery.timeRange[1]
+  } else {
+    holdingQueryParams.beginTime = ''
+    holdingQueryParams.endTime = ''
+  }
+  holdingPage.page = 1
+  fetchPortfolioData()
+}
+
+const resetHoldingQuery = () => { 
+  holdingQuery.timeRange = null
+  holdingQueryParams.beginTime = ''
+  holdingQueryParams.endTime = ''
+  holdingPage.page = 1
+  fetchPortfolioData()
+}
 
 // ============ 子表格行编辑对话框 ============
 const subDialogVisible = ref(false)
@@ -1388,29 +1670,42 @@ const initDialogData = () => {
   // 自动调用接口获取净值数据
   fetchNavData()
 
-  // 份额数据
-  Object.assign(shareData, {
-    holdShares: row.holdShares || 0, availableShares: row.availableShares || 0,
-    frozenShares: row.frozenShares || 0, positionCost: row.positionCost || 0,
-    positionValue: row.positionValue || 0,
-    positionProfit: row.positionProfit || 0,
-    positionProfitRate: row.positionProfitRate || 0
-  })
+  // 份额数据 - 改为从后端接口获取
+  fetchHoldingData()
 
-  // 交易数据
-  tradeData.value = row.tradeList ? JSON.parse(JSON.stringify(row.tradeList)) : []
-  tradeQuery.timeRange = null; tradePage.page = 1; tradePage.limit = 5
+  // 交易数据 - 改为从后端接口获取
+  tradeQueryParams.fundCode = row.fundCode || ''
+  tradeQueryParams.beginTime = ''
+  tradeQueryParams.endTime = ''
+  tradeQuery.timeRange = null
+  tradePage.page = 1
+  tradePage.limit = 5
+  // 自动调用接口获取交易数据
+  fetchTradeData()
 
-  // 分红数据
-  dividendData.value = row.dividendList ? JSON.parse(JSON.stringify(row.dividendList)) : []
-  dividendQuery.timeRange = null; dividendPage.page = 1; dividendPage.limit = 5
+  // 分红数据 - 改为从后端接口获取
+  dividendQueryParams.fundCode = row.fundCode || ''
+  dividendQueryParams.beginTime = ''
+  dividendQueryParams.endTime = ''
+  dividendQuery.timeRange = null
+  dividendPage.page = 1
+  dividendPage.limit = 5
+  // 自动调用接口获取分红数据
+  fetchDividendData()
 
-  // 风险指标
-  riskData.value = row.riskList ? JSON.parse(JSON.stringify(row.riskList)) : []
+  // 风险指标 - 改为从后端接口获取
+  // 自动调用接口获取风险收益数据
+  fetchRiskPerformanceData()
 
-  // 持仓数据
-  holdingData.value = row.holdingList ? JSON.parse(JSON.stringify(row.holdingList)) : []
-  holdingQuery.timeRange = null; holdingPage.page = 1; holdingPage.limit = 10
+  // 持仓数据 - 改为从后端接口获取
+  holdingQueryParams.fundCode = row.fundCode || ''
+  holdingQueryParams.beginTime = ''
+  holdingQueryParams.endTime = ''
+  holdingQuery.timeRange = null
+  holdingPage.page = 1
+  holdingPage.limit = 10
+  // 自动调用接口获取持仓数据
+  fetchPortfolioData()
 }
 
 watch(() => props.visible, (val) => {

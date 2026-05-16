@@ -3,11 +3,10 @@ package com.xk.srhwzzqdn.manager.assetControlArea.service;
 import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
-import com.xk.srhwzzqdn.model.entity.assetControl.FundAsset;
-import com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis;
-import com.xk.srhwzzqdn.model.entity.assetControl.FundNav;
+import com.xk.srhwzzqdn.model.entity.assetControl.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 public interface FundAssetService {
     //获取基金测试数据
@@ -24,4 +23,19 @@ public interface FundAssetService {
 
     //根据基金代码获取基金经理分析数据
     FundManagerAnalysis getFundManagerAnalysisByCode(String fundCode);
+
+    //根据基金代码获取基金持仓数据
+    FundHolding getFundHoldingByCode(String fundCode);
+
+    //条件分页查询基金交易与流水数据
+    PageInfo<FundTransaction> getFundTransactionByConditionAndPage(Integer current, Integer limit, FundComm fundComm);
+
+    //条件分页查询基金分红数据
+    PageInfo<FundDividend> getFundDividendByConditionAndPage(Integer current, Integer limit, FundComm fundComm);
+
+    //根据基金代码获取基金风险收益数据
+    List<FundRiskPerformance> getFundRiskPerformance(String fundCode);
+
+    //条件分页获取基金持仓信息
+    PageInfo<FundPortfolio> getFundPortfolioByConditionAndPage(Integer current, Integer limit, FundComm fundComm);
 }

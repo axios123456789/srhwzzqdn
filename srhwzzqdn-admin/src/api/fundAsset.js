@@ -57,3 +57,74 @@ export const GetFundManagerAnalysisByCode = (fundCode) => {
     params: { fundCode }
   })
 }
+
+/**
+ * 根据基金代码获取基金持仓数据
+ * @param fundCode 基金代码
+ * @returns
+ */
+export const GetFundHoldingByCode = (fundCode) => {
+  return request({
+    url: `${base_api}/getFundHoldingByCode`,
+    method: 'get',
+    params: { fundCode }
+  })
+}
+
+/**
+ * 条件分页查询基金交易与流水数据
+ * @param current 当前页
+ * @param limit 每页条数
+ * @param params 查询参数 { fundCode, beginTime, endTime }
+ * @returns
+ */
+export const GetFundTransactionByConditionAndPage = (current, limit, params) => {
+  return request({
+    url: `${base_api}/getFundTransactionByConditionAndPage/${current}/${limit}`,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 条件分页查询基金分红数据
+ * @param current 当前页
+ * @param limit 每页条数
+ * @param params 查询参数 { fundCode, beginTime, endTime }
+ * @returns
+ */
+export const GetFundDividendByConditionAndPage = (current, limit, params) => {
+  return request({
+    url: `${base_api}/getFundDividendByConditionAndPage/${current}/${limit}`,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
+ * 根据基金代码获取基金风险收益数据
+ * @param fundCode 基金代码
+ * @returns
+ */
+export const GetFundRiskPerformanceByCode = (fundCode) => {
+  return request({
+    url: `${base_api}/getFundRiskPerformanceByCode`,
+    method: 'get',
+    params: { fundCode }
+  })
+}
+
+/**
+ * 条件分页查询基金持仓数据
+ * @param current 当前页
+ * @param limit 每页条数
+ * @param params 查询参数 { fundCode, beginTime, endTime }
+ * @returns
+ */
+export const GetFundPortfolioByConditionAndPage = (current, limit, params) => {
+  return request({
+    url: `${base_api}/getFundPortfolioByConditionAndPage/${current}/${limit}`,
+    method: 'get',
+    params: params
+  })
+}
