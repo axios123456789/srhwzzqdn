@@ -167,3 +167,41 @@ export const UpdateFundHolding = (data) => {
     data: data
   })
 }
+
+/**
+ * 添加基金净值数据
+ * @param data 基金净值数据对象
+ * @returns
+ */
+export const AddFundNav = (data) => {
+  return request({
+    url: `${base_api}/addFundNav`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 更新基金净值数据
+ * @param data 基金净值数据对象
+ * @returns
+ */
+export const UpdateFundNav = (data) => {
+  return request({
+    url: `${base_api}/updateFundNav`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 删除基金净值数据
+ * @param id 净值数据ID
+ * @returns
+ */
+export const DeleteFundNav = (id) => {
+  return request({
+    url: `${base_api}/deleteFundNav/${id}`,
+    method: 'delete'
+  })
+}

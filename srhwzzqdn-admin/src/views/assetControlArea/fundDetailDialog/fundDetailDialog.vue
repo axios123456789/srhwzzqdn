@@ -280,11 +280,11 @@
                 <span :class="row.dailyChangeRate >= 0 ? 'text-red' : 'text-green'">{{ row.dailyChangeRate }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="estimateNav" label="估值" width="110" align="right" />
+            <el-table-column prop="valuation" label="估值" width="110" align="right" />
             <el-table-column label="操作" width="140" fixed="right">
-              <template #default="{ $index }">
-                <el-button text size="small" @click="editNavRow($index)">修改</el-button>
-                <el-button text size="small" type="danger" @click="deleteNavRow($index)">删除</el-button>
+              <template #default="{ row }">
+                <el-button text size="small" @click="editNavRow(row)">修改</el-button>
+                <el-button text size="small" type="danger" @click="deleteNavRow(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -748,7 +748,7 @@
             <el-input-number v-model="subFormData.dailyChangeRate" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
           </el-form-item>
           <el-form-item label="估值">
-            <el-input-number v-model="subFormData.estimateNav" :precision="4" :step="0.0001" style="width: 100%" controls-position="right" />
+            <el-input-number v-model="subFormData.valuation" :precision="4" :step="0.0001" style="width: 100%" controls-position="right" />
           </el-form-item>
         </template>
         <!-- 交易编辑 -->
@@ -874,7 +874,7 @@ import { ElMessage } from 'element-plus'
 import { Close, Check, Search, Refresh, Plus, FullScreen, Aim, Download, User } from '@element-plus/icons-vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage } from "@/api/fundAsset"
+import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage, AddFundNav, UpdateFundNav, DeleteFundNav } from "@/api/fundAsset"
 
 // 在需要全屏的组件中使用 Hook
 const { isFullscreen, initFullscreen, toggleFullscreen } = useFullscreenDialog()
@@ -1519,40 +1519,104 @@ const openSubDialog = (type, index, data) => {
   subDialogVisible.value = true
 }
 
-const confirmSubDialog = () => {
+const confirmSubDialog = async () => {
   const type = subDialogType.value
   const idx = subEditIndex.value
   const data = JSON.parse(JSON.stringify(subFormData))
+
   if (type === 'nav') {
-    if (idx >= 0) Object.assign(navData.value[idx], data)
-    else navData.value.push(data)
+    data.fundCode = fundData.fundCode
+    console.log('净值数据:', data)
+    console.log('是否修改:', idx >= 0, '索引:', idx)
+    try {
+      if (idx >= 0) {
+        console.log('更新净值，ID:', data.id)
+        const result = await UpdateFundNav(data)
+        if (result.code === 200) {
+          ElMessage.success('修改成功')
+          // 重新查询数据
+          await fetchNavData()
+        } else {
+          ElMessage.error(result.message || '修改失败')
+          return
+        }
+      } else {
+        console.log('新增净值')
+        const result = await AddFundNav(data)
+        if (result.code === 200) {
+          ElMessage.success('新增成功')
+          // 重新查询数据
+          await fetchNavData()
+        } else {
+          ElMessage.error(result.message || '新增失败')
+          return
+        }
+      }
+    } catch (error) {
+      console.error('净值操作失败:', error)
+      ElMessage.error('操作失败')
+      return
+    }
   } else if (type === 'trade') {
     if (idx >= 0) Object.assign(tradeData.value[idx], data)
     else tradeData.value.push(data)
+    ElMessage.success(idx >= 0 ? '修改成功' : '新增成功')
   } else if (type === 'dividend') {
     if (idx >= 0) Object.assign(dividendData.value[idx], data)
     else dividendData.value.push(data)
+    ElMessage.success(idx >= 0 ? '修改成功' : '新增成功')
   } else if (type === 'risk') {
     if (idx >= 0) Object.assign(riskData.value[idx], data)
     else riskData.value.push(data)
+    ElMessage.success(idx >= 0 ? '修改成功' : '新增成功')
   } else if (type === 'holding') {
     if (idx >= 0) Object.assign(holdingData.value[idx], data)
     else holdingData.value.push(data)
+    ElMessage.success(idx >= 0 ? '修改成功' : '新增成功')
   }
+
   subDialogVisible.value = false
-  ElMessage.success(idx >= 0 ? '修改成功' : '新增成功')
 }
 
 // ============ 净值 CRUD ============
-const addNavRow = () => openSubDialog('nav', -1, { navDate: '', unitNav: 0, accumulatedNav: 0, dailyChangeRate: 0, estimateNav: 0 })
-const editNavRow = (idx) => {
-  const realIdx = (navPage.page - 1) * navPage.limit + idx
-  openSubDialog('nav', realIdx, navData.value[realIdx])
+const addNavRow = () => openSubDialog('nav', -1, { navDate: '', unitNav: 0, accumulatedNav: 0, dailyChangeRate: 0, valuation: 0 })
+const editNavRow = (row) => {
+  const idx = navData.value.findIndex(item => item.id === row.id)
+  openSubDialog('nav', idx >= 0 ? idx : -1, { ...row })
 }
-const deleteNavRow = (idx) => {
-  const realIdx = (navPage.page - 1) * navPage.limit + idx
-  navData.value.splice(realIdx, 1)
-  ElMessage.success('删除成功')
+const deleteNavRow = async (row) => {
+  console.log('删除净值数据:', row)
+  console.log('row.id:', row.id, '类型:', typeof row.id)
+  
+  if (row.id) {
+    try {
+      console.log('调用删除接口，ID:', row.id)
+      const result = await DeleteFundNav(row.id)
+      console.log('删除接口返回:', result)
+      
+      if (result.code === 200) {
+        const idx = navData.value.findIndex(item => item.id === row.id)
+        if (idx >= 0) {
+          navData.value.splice(idx, 1)
+        }
+        ElMessage.success('删除成功')
+        // 重新查询数据
+        await fetchNavData()
+      } else {
+        ElMessage.error(result.message || '删除失败')
+      }
+    } catch (error) {
+      console.error('删除净值失败:', error)
+      ElMessage.error('删除失败')
+    }
+  } else {
+    console.log('无ID，直接从数组删除')
+    const idx = navData.value.findIndex(item => item === row)
+    if (idx >= 0) {
+      navData.value.splice(idx, 1)
+    }
+    ElMessage.success('删除成功')
+  }
 }
 
 // ============ 交易 CRUD ============
