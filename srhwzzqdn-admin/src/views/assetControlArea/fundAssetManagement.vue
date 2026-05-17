@@ -88,7 +88,7 @@
         <el-icon><Delete /></el-icon>
         批量删除
       </el-button>
-      <el-button type="info" size="small" @click="handleExport" class="action-btn-export">
+      <el-button type="info" size="small" @click="showExportDialog" class="action-btn-export">
         <el-icon><Download /></el-icon>
         一键导出
       </el-button>
@@ -118,27 +118,27 @@
               <div class="card-info-grid">
                 <div class="info-cell">
                   <span class="info-label">成立日期</span>
-                  <span class="info-value">{{ item.establishDate || '-' }}</span>
+                  <span class="info-value">{{ item.establishDate ?? '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">资产规模</span>
-                  <span class="info-value">{{ item.assetScale ? item.assetScale + '亿' : '-' }}</span>
+                  <span class="info-value">{{ item.assetScale != null ? item.assetScale + '亿' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">基金管理人</span>
-                  <span class="info-value">{{ item.fundCompany || '-' }}</span>
+                  <span class="info-value">{{ item.fundCompany ?? '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">基金托管者</span>
-                  <span class="info-value">{{ item.custodian || '-' }}</span>
+                  <span class="info-value">{{ item.custodian ?? '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">基金经理</span>
-                  <span class="info-value">{{ item.fundManager || '-' }}</span>
+                  <span class="info-value">{{ item.fundManager ?? '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">任职日期</span>
-                  <span class="info-value">{{ item.managerStartDate || '-' }}</span>
+                  <span class="info-value">{{ item.managerStartDate ?? '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">运作方式</span>
@@ -146,27 +146,27 @@
                 </div>
                 <div class="info-cell">
                   <span class="info-label">封闭期</span>
-                  <span class="info-value">{{ item.closedEndDays ? item.closedEndDays + '天' : '-' }}</span>
+                  <span class="info-value">{{ item.closedEndDays != null ? item.closedEndDays + '天' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">申购费率</span>
-                  <span class="info-value">{{ item.purchaseFeeRate ? item.purchaseFeeRate + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.purchaseFeeRate != null ? item.purchaseFeeRate + '%' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">赎回费率</span>
-                  <span class="info-value">{{ item.redeemFeeRate ? item.redeemFeeRate + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.redeemFeeRate != null ? item.redeemFeeRate + '%' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">管理费</span>
-                  <span class="info-value">{{ item.managementFeeRate ? item.managementFeeRate + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.managementFeeRate != null ? item.managementFeeRate + '%' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">托管费</span>
-                  <span class="info-value">{{ item.custodianFeeRate ? item.custodianFeeRate + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.custodianFeeRate != null ? item.custodianFeeRate + '%' : '-' }}</span>
                 </div>
                 <div class="info-cell">
                   <span class="info-label">销售服务费</span>
-                  <span class="info-value">{{ item.salesServiceFeeRate ? item.salesServiceFeeRate + '%' : '-' }}</span>
+                  <span class="info-value">{{ item.salesServiceFeeRate != null ? item.salesServiceFeeRate + '%' : '-' }}</span>
                 </div>
               </div>
             </div>
@@ -349,6 +349,20 @@
       v-model:visible="viewDialogVisible"
       :fund-data="currentViewFund"
     />
+
+    <!-- 导出对话框 -->
+    <ExportDialog
+        v-model="exportDialogVisible"
+        v-model:export-scope="exportScope"
+        v-model:export-file-name="exportFileName"
+        v-model:selected-columns="selectedColumns"
+        :available-columns="exportColumns"
+        :export-loading="exportLoading"
+        :current-count="fundList.length"
+        :total-count="total"
+        @confirm="handleExport"
+        @closed="resetExport"
+    />
   </div>
 </template>
 
@@ -360,6 +374,8 @@ import FundDetailDialog from './fundDetailDialog/fundDetailDialog.vue'
 import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage, GetFundNavByConditionAndPage } from "@/api/fundAsset"
+import { useExport } from "@/components/Export/hooks/useExport"
+import ExportDialog from '@/components/Export/ExportDialog.vue'
 
 // ============ 数据字典选项 ============
 // 基金类型选项
@@ -664,33 +680,83 @@ const deleteFund = async (item) => {
 }
 
 // ============ 一键导出 ============
-const handleExport = () => {
-  if (fundList.value.length === 0) {
-    ElMessage.warning('暂无数据可导出')
-    return
+// 导出列配置
+const exportColumns = [
+  { key: 'fundName', label: '基金名称', width: 25 },
+  { key: 'fundCode', label: '基金代码', width: 15 },
+  { key: 'fundType', label: '基金类型', width: 12 },
+  { key: 'establishDate', label: '成立日期', width: 15 },
+  { key: 'assetScale', label: '资产规模(亿)', width: 15 },
+  { key: 'fundCompany', label: '基金管理人', width: 20 },
+  { key: 'custodian', label: '基金托管者', width: 20 },
+  { key: 'fundManager', label: '基金经理', width: 15 },
+  { key: 'managerStartDate', label: '任职日期', width: 15 },
+  { key: 'operationMode', label: '运作方式', width: 12 },
+  { key: 'closedEndDays', label: '封闭期(天)', width: 12 },
+  { key: 'purchaseFeeRate', label: '申购费率(%)', width: 12 },
+  { key: 'redeemFeeRate', label: '赎回费率(%)', width: 12 },
+  { key: 'managementFeeRate', label: '管理费(%)', width: 12 },
+  { key: 'custodianFeeRate', label: '托管费(%)', width: 12 },
+  { key: 'salesServiceFeeRate', label: '销售服务费(%)', width: 15 }
+]
+
+// 数据格式化函数
+const fundAssetDataFormatter = (item, key, value) => {
+  switch (key) {
+    case 'fundType':
+      return getDisplayText(value, fundTypeOptions.value)
+    case 'operationMode':
+      return getDisplayText(value, operationModeOptions.value)
+    default:
+      return value
   }
-  // 简单CSV导出
-  const headers = ['基金名称', '基金代码', '基金类型', '成立日期', '资产规模(亿)', '基金管理人', '基金托管者', '基金经理', '运作方式', '申购费率(%)', '赎回费率(%)', '管理费(%)', '托管费(%)']
-  const keys = ['fundName', 'fundCode', 'fundType', 'establishDate', 'assetScale', 'fundCompany', 'custodian', 'fundManager', 'operationMode', 'purchaseFeeRate', 'redeemFeeRate', 'managementFeeRate', 'custodianFeeRate']
-  let csv = '\uFEFF' + headers.join(',') + '\n'
-  fundList.value.forEach(item => {
-    csv += keys.map(k => {
-      // 对于数字类型的字段，需要转换为中文
-      if (k === 'fundType') {
-        return `"${getDisplayText(item[k], fundTypeOptions)}"`
-      } else if (k === 'operationMode') {
-        return `"${getDisplayText(item[k], operationModeOptions)}"`
-      }
-      return `"${item[k] != null ? item[k] : ''}"`
-    }).join(',') + '\n'
-  })
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(blob)
-  link.download = '基金资产数据.csv'
-  link.click()
-  URL.revokeObjectURL(link.href)
-  ElMessage.success('导出成功')
+}
+
+// 获取全部数据的函数
+const fetchAllFundAssetData = async () => {
+  // 构造查询参数，只传递有值的字段
+  const queryParams = {}
+  if (query.fundName) queryParams.fundName = query.fundName
+  if (query.fundCode) queryParams.fundCode = query.fundCode
+  if (query.fundType && query.fundType.length > 0) queryParams.fundType = query.fundType
+  if (query.assetScale) queryParams.assetScale = query.assetScale
+  if (query.operationMode) queryParams.operationMode = query.operationMode
+  if (query.closedEndDays) queryParams.closedEndDays = query.closedEndDays
+
+  const response = await GetFundBaseDataByConditionAndPage(
+    1,
+    1000000,
+    queryParams
+  )
+
+  if (response.code === 200) {
+    return response.data.list || []
+  } else {
+    return []
+  }
+}
+
+// 使用导出Hook
+const {
+  exportDialogVisible,
+  exportScope,
+  exportFileName,
+  exportLoading,
+  selectedColumns,
+  showExportDialog: showExportDialogMethod,
+  handleExport,
+  resetExport
+} = useExport({
+  availableColumns: exportColumns,
+  fetchAllData: fetchAllFundAssetData,
+  dataFormatter: fundAssetDataFormatter,
+  defaultFileName: '基金资产数据',
+  sheetName: '基金资产数据'
+})
+
+// 包装显示导出对话框的方法
+const showExportDialog = () => {
+  showExportDialogMethod(fundList.value, total.value)
 }
 
 // ============ 数据维护模态窗口 ============
@@ -698,12 +764,13 @@ const detailDialogVisible = ref(false)
 const currentFundRow = ref({})
 
 const openDetailDialog = (item) => {
-  currentFundRow.value = JSON.parse(JSON.stringify(item))
+  // 直接传递原始数据，后端返回什么就传递什么（包括0值）
+  currentFundRow.value = item
   detailDialogVisible.value = true
 }
 
 const handleDetailSave = (saveData) => {
-  // TODO: 调用后端更新接口
+  // 保存成功后刷新列表
   fetchData()
   detailDialogVisible.value = false
 }

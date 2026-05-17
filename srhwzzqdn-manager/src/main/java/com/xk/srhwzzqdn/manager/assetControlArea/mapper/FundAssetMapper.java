@@ -46,4 +46,13 @@ public interface FundAssetMapper {
 
     //条件查询基金持仓数据列表
     List<FundPortfolio> getFundPortfolioByCondition(FundComm fundComm);
+
+    //更新基金基本数据
+    void updateFundBaseAsset(FundAsset fundAsset);
+
+    //更新基金经理分析数据
+    void updateFundManagerAnalysis(FundManagerAnalysis fundManagerAnalysis);
+
+    //更新持仓情况数据
+    void updateFundHolding(FundHolding fundHolding);
 }

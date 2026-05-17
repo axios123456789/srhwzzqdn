@@ -174,6 +174,96 @@
         )
     </insert>
 
+    <!--  更新基金基本数据  -->
+    <update id="updateFundBaseAsset">
+        update t_fund_asset
+           set  fund_name = #{fundName},
+                fund_type = #{fundType},
+                establish_date = #{establishDate},
+                asset_scale = #{assetScale},
+                fund_company = #{fundCompany},
+                fund_company_desc = #{fundCompanyDesc},
+                custodian = #{custodian},
+                fund_manager = #{fundManager},
+                manager_start_date = #{managerStartDate},
+                manager_desc = #{managerDesc},
+                operation_mode = #{operationMode},
+                closed_end_days = #{closedEndDays},
+                purchase_fee_rate = #{purchaseFeeRate},
+                redeem_fee_rate = #{redeemFeeRate},
+                management_fee_rate = #{managementFeeRate},
+                custodian_fee_rate = #{custodianFeeRate},
+                sales_service_fee_rate = #{salesServiceFeeRate},
+                trade_rule = #{tradeRule},
+                remark = #{remark},
+                update_time = now(),
+                update_by = #{updateBy},
+                return_1m = #{return1m},
+                return_3m = #{return3m},
+                return_6m = #{return6m},
+                return_1y = #{return1y},
+                net_assets = #{netAssets},
+                stock_ratio = #{stockRatio},
+                bond_ratio = #{bondRatio},
+                cash_ratio = #{cashRatio},
+                latest_scale = #{latestScale},
+                scale_history = #{scaleHistory},
+                institution_ratio = #{institutionRatio},
+                individual_ratio = #{individualRatio},
+                internal_ratio = #{internalRatio}
+        where id = #{id}
+    </update>
+
+    <!--  更新基金经理分析数据  -->
+    <update id="updateFundManagerAnalysis">
+        update t_fund_manager_analysis
+           set  manager_name = #{managerName},
+                star_rating = #{starRating},
+                work_time = #{workTime},
+                manage_scale = #{manageScale},
+                total_score = #{totalScore},
+                stock_select_score = #{stockSelectScore},
+                return_score = #{returnScore},
+                risk_control_score = #{riskControlScore},
+                stability_score = #{stabilityScore},
+                timing_score = #{timingScore},
+                manager_desc = #{managerDesc},
+                concentration_rate_analyse = #{concentrationRateAnalyse},
+                turnover_rate_analyse = #{turnoverRateAnalyse},
+                capability_path_analysis = #{capabilityPathAnalysis},
+                scale_ability_analysis = #{scaleAbilityAnalysis},
+                professional_background = #{professionalBackground},
+                product_management_analysis = #{productManagementAnalysis},
+                stability_analysis = #{stabilityAnalysis},
+                personal_holding = #{personalHolding},
+                holdings_concentration = #{holdingsConcentration},
+                turnover_rate = #{turnoverRate},
+                background_match = #{backgroundMatch},
+                scale_capability = #{scaleCapability},
+                education = #{education},
+                focus_on_this_fund = #{focusOnThisFund},
+                is_manager_holding = #{isManagerHolding},
+                award_records = #{awardRecords},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  更新基金持仓数据  -->
+    <update id="updateFundHolding">
+        update t_fund_holding
+           set  hold_shares = #{holdShares},
+                available_shares = #{availableShares},
+                frozen_shares = #{frozenShares},
+                cost_amount = #{costAmount},
+                market_value = #{marketValue},
+                profit_loss = #{profitLoss},
+                profit_loss_rate = #{profitLossRate},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
     <!--  条件查询基金基本数据列表  -->
     <select id="getFundBaseDataByCondition" resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundAsset">
         select t.*

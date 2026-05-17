@@ -397,6 +397,36 @@ public class FundAssetServiceImpl implements FundAssetService {
     }
 
     /**
+     * 更新基金资产信息
+     * @param fundAsset
+     */
+    @Override
+    public void updateFundBaseAsset(FundAsset fundAsset) {
+        fundAsset.setUpdateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.updateFundBaseAsset(fundAsset);
+    }
+
+    /**
+     * 更新基金经理分析信息
+     * @param fundManagerAnalysis
+     */
+    @Override
+    public void updateFundManagerAnalysis(FundManagerAnalysis fundManagerAnalysis) {
+        fundManagerAnalysis.setUpdateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.updateFundManagerAnalysis(fundManagerAnalysis);
+    }
+
+    /**
+     * 更新基金持仓信息
+     * @param fundHolding
+     */
+    @Override
+    public void updateFundHolding(FundHolding fundHolding) {
+        fundHolding.setUpdateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.updateFundHolding(fundHolding);
+    }
+
+    /**
      * 打印基金数据到控制台
      * 按模块分类输出解析结果，便于查看和调试
      *

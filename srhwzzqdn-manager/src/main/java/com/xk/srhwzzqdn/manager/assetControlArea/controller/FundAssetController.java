@@ -186,4 +186,52 @@ public class FundAssetController {
         return Result.build(fundPortfolioPageInfo, ResultCodeEnum.SUCCESS);
     }
 
+    /**
+     * 更新基金基本数据
+     * @param fundAsset
+     * @return
+     */
+    @PostMapping("/updateFundBaseAsset")
+    public Result updateFundBaseAsset(@RequestBody FundAsset fundAsset) {
+        try {
+            fundAssetService.updateFundBaseAsset(fundAsset);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("更新基金基本数据失败", e);
+            return Result.build(null, 500, "更新基金基本数据失败！");
+        }
+    }
+
+    /**
+     * 更新基金经理分析数据
+     * @param fundManagerAnalysis
+     * @return
+     */
+    @PostMapping("/updateFundManagerAnalysis")
+    public Result updateFundManagerAnalysis(@RequestBody FundManagerAnalysis fundManagerAnalysis) {
+        try {
+            fundAssetService.updateFundManagerAnalysis(fundManagerAnalysis);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("更新基金经理分析数据失败", e);
+            return Result.build(null, 500, "更新基金经理分析数据失败！");
+        }
+    }
+
+    /**
+     * 更新基金持仓数据
+     * @param fundHolding
+     * @return
+     */
+    @PostMapping("/updateFundHolding")
+    public Result updateFundHolding(@RequestBody FundHolding fundHolding) {
+        try {
+            fundAssetService.updateFundHolding(fundHolding);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("更新基金持仓数据失败", e);
+            return Result.build(null, 500, "更新基金持仓数据失败！");
+        }
+    }
+
 }

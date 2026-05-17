@@ -128,3 +128,42 @@ export const GetFundPortfolioByConditionAndPage = (current, limit, params) => {
     params: params
   })
 }
+
+/**
+ * 更新基金基本数据
+ * @param data 基金基本数据对象
+ * @returns
+ */
+export const UpdateFundBaseAsset = (data) => {
+  return request({
+    url: `${base_api}/updateFundBaseAsset`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 更新基金经理分析数据
+ * @param data 基金经理分析数据对象
+ * @returns
+ */
+export const UpdateFundManagerAnalysis = (data) => {
+  return request({
+    url: `${base_api}/updateFundManagerAnalysis`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 更新基金持仓数据
+ * @param data 基金持仓数据对象
+ * @returns
+ */
+export const UpdateFundHolding = (data) => {
+  return request({
+    url: `${base_api}/updateFundHolding`,
+    method: 'post',
+    data: data
+  })
+}

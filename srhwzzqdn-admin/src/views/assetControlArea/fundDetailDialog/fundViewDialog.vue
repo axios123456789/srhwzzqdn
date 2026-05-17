@@ -47,7 +47,7 @@
             </div>
             <div class="info-item">
               <label>资产规模</label>
-              <span class="value highlight">{{ props.fundData.assetScale ? props.fundData.assetScale + ' 亿' : '-' }}</span>
+              <span class="value highlight">{{ props.fundData.assetScale != null ? props.fundData.assetScale + ' 亿' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>基金管理人</label>
@@ -71,54 +71,54 @@
             </div>
             <div class="info-item">
               <label>封闭期</label>
-              <span class="value">{{ props.fundData.closedEndDays ? props.fundData.closedEndDays + ' 天' : '-' }}</span>
+              <span class="value">{{ props.fundData.closedEndDays != null ? props.fundData.closedEndDays + ' 天' : '-' }}</span>
             </div>
             <!-- 新增收益率字段 -->
             <div class="info-item">
               <label>近1月收益率</label>
-              <span class="value" :class="props.fundData.return1m >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return1m ? props.fundData.return1m + '%' : '-' }}</span>
+              <span class="value" :class="props.fundData.return1m >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return1m != null ? props.fundData.return1m + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>近3月收益率</label>
-              <span class="value" :class="props.fundData.return3m >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return3m ? props.fundData.return3m + '%' : '-' }}</span>
+              <span class="value" :class="props.fundData.return3m >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return3m != null ? props.fundData.return3m + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>近6月收益率</label>
-              <span class="value" :class="props.fundData.return6m >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return6m ? props.fundData.return6m + '%' : '-' }}</span>
+              <span class="value" :class="props.fundData.return6m >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return6m != null ? props.fundData.return6m + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>近1年收益率</label>
-              <span class="value" :class="props.fundData.return1y >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return1y ? props.fundData.return1y + '%' : '-' }}</span>
+              <span class="value" :class="props.fundData.return1y >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.return1y != null ? props.fundData.return1y + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>最新规模</label>
-              <span class="value highlight">{{ props.fundData.latestScale ? props.fundData.latestScale + ' 亿' : '-' }}</span>
+              <span class="value highlight">{{ props.fundData.latestScale != null ? props.fundData.latestScale + ' 亿' : '-' }}</span>
             </div>
             <!-- 新增占比字段 -->
             <div class="info-item">
               <label>股票占比</label>
-              <span class="value">{{ props.fundData.stockRatio ? props.fundData.stockRatio + '%' : '-' }}</span>
+              <span class="value">{{ props.fundData.stockRatio != null ? props.fundData.stockRatio + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>债券占比</label>
-              <span class="value">{{ props.fundData.bondRatio ? props.fundData.bondRatio + '%' : '-' }}</span>
+              <span class="value">{{ props.fundData.bondRatio != null ? props.fundData.bondRatio + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>现金占比</label>
-              <span class="value">{{ props.fundData.cashRatio ? props.fundData.cashRatio + '%' : '-' }}</span>
+              <span class="value">{{ props.fundData.cashRatio != null ? props.fundData.cashRatio + '%' : '-' }}</span>
             </div>
             <!-- 新增持有比例字段 -->
             <div class="info-item">
               <label>机构持有比例</label>
-              <span class="value">{{ props.fundData.institutionRatio ? props.fundData.institutionRatio + '%' : '-' }}</span>
+              <span class="value">{{ props.fundData.institutionRatio != null ? props.fundData.institutionRatio + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>个人持有比例</label>
-              <span class="value">{{ props.fundData.individualRatio ? props.fundData.individualRatio + '%' : '-' }}</span>
+              <span class="value">{{ props.fundData.individualRatio != null ? props.fundData.individualRatio + '%' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>内部持有比例</label>
-              <span class="value">{{ props.fundData.internalRatio ? props.fundData.internalRatio + '%' : '-' }}</span>
+              <span class="value">{{ props.fundData.internalRatio != null ? props.fundData.internalRatio + '%' : '-' }}</span>
             </div>
           </div>
           <div class="info-full" v-if="props.fundData.netAssets">
@@ -303,11 +303,11 @@
             </div>
             <div class="info-item">
               <label>从业时间</label>
-              <span class="value">{{ managerAnalysisData.workYears ? managerAnalysisData.workYears + ' 年' : '-' }}</span>
+              <span class="value">{{ managerAnalysisData.workYears != null ? managerAnalysisData.workYears + ' 年' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>管理规模</label>
-              <span class="value highlight">{{ managerAnalysisData.manageScale ? managerAnalysisData.manageScale + ' 亿' : '-' }}</span>
+              <span class="value highlight">{{ managerAnalysisData.manageScale != null ? managerAnalysisData.manageScale + ' 亿' : '-' }}</span>
             </div>
             <div class="info-item">
               <label>学历</label>

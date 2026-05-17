@@ -1114,10 +1114,10 @@ const fetchManagerAnalysisData = async () => {
     const result = await GetFundManagerAnalysisByCode(fundCode)
     
     if (result.code === 200 && result.data) {
-      // 后端字段映射到前端字段（后端为空时前端也为空，不设置默认值）
+      // 后端字段映射到前端字段，后端返回什么就填入什么（包括0）
       const backendData = result.data
       Object.assign(managerAnalysis, {
-        name: backendData.managerName,
+        name: backendData.managerName ?? '',
         starLevel: backendData.starRating,
         workYears: backendData.workTime,
         manageScale: backendData.manageScale,
@@ -1135,44 +1135,21 @@ const fetchManagerAnalysisData = async () => {
         abilityPathMatch: backendData.backgroundMatch,
         scaleControlAbility: backendData.scaleCapability,
         focusLevel: backendData.focusOnThisFund,
-        managerDesc: backendData.managerDesc,
-        positionConcentrationAnalysis: backendData.concentrationRateAnalyse,
-        turnoverRateAnalysis: backendData.turnoverRateAnalyse,
-        abilityCircleAnalysis: backendData.capabilityPathAnalysis,
-        scaleControlAnalysis: backendData.scaleAbilityAnalysis,
-        workBackground: backendData.professionalBackground,
-        productManageAnalysis: backendData.productManagementAnalysis,
-        stabilityAnalysis: backendData.stabilityAnalysis,
-        personalHoldAnalysis: backendData.personalHolding
-      })
-    } else {
-      // 如果没有数据，使用默认值
-      Object.assign(managerAnalysis, {
-        name: props.fundRowData?.fundManagerName || '', starLevel: 0, workYears: 0, manageScale: 0,
-        education: '', personalHold: null,
-        overallScore: 0, selectionScore: 0, returnScore: 0,
-        riskScore: 0, stabilityScore: 0, timingScore: 0,
-        positionConcentration: '', turnoverRate: '', abilityPathMatch: '',
-        scaleControlAbility: '', focusLevel: '',
-        managerDesc: '', positionConcentrationAnalysis: '', turnoverRateAnalysis: '',
-        abilityCircleAnalysis: '', scaleControlAnalysis: '', workBackground: '',
-        productManageAnalysis: '', stabilityAnalysis: '', personalHoldAnalysis: ''
+        managerDesc: backendData.managerDesc ?? '',
+        positionConcentrationAnalysis: backendData.concentrationRateAnalyse ?? '',
+        turnoverRateAnalysis: backendData.turnoverRateAnalyse ?? '',
+        abilityCircleAnalysis: backendData.capabilityPathAnalysis ?? '',
+        scaleControlAnalysis: backendData.scaleAbilityAnalysis ?? '',
+        workBackground: backendData.professionalBackground ?? '',
+        productManageAnalysis: backendData.productManagementAnalysis ?? '',
+        stabilityAnalysis: backendData.stabilityAnalysis ?? '',
+        personalHoldAnalysis: backendData.personalHolding ?? ''
       })
     }
+    // 如果没有数据或获取失败，保持managerAnalysis的初始状态
   } catch (error) {
     console.error('获取基金经理分析数据失败:', error)
-    // 失败时使用默认值
-    Object.assign(managerAnalysis, {
-      name: props.fundRowData?.fundManagerName || '', starLevel: 0, workYears: 0, manageScale: 0,
-      education: '', personalHold: null,
-      overallScore: 0, selectionScore: 0, returnScore: 0,
-      riskScore: 0, stabilityScore: 0, timingScore: 0,
-      positionConcentration: '', turnoverRate: '', abilityPathMatch: '',
-      scaleControlAbility: '', focusLevel: '',
-      managerDesc: '', positionConcentrationAnalysis: '', turnoverRateAnalysis: '',
-      abilityCircleAnalysis: '', scaleControlAnalysis: '', workBackground: '',
-      productManageAnalysis: '', stabilityAnalysis: '', personalHoldAnalysis: ''
-    })
+    // 失败时保持初始状态
   }
 }
 
@@ -1636,25 +1613,42 @@ const deleteHoldingRow = (idx) => {
 // ============ 初始化数据 ============
 const initDialogData = () => {
   const row = props.fundRowData
+  // 直接赋值，后端返回什么就填入什么（包括0）
   Object.assign(fundData, {
-    id: row.id || null, fundName: row.fundName || '', fundCode: row.fundCode || '',
-    fundType: row.fundType || '', establishDate: row.establishDate || '',
-    assetScale: row.assetScale || null, fundCompany: row.fundCompany || '',
-    fundCompanyDesc: row.fundCompanyDesc || '', custodian: row.custodian || '',
-    fundManager: row.fundManager || '', managerStartDate: row.managerStartDate || '',
-    managerDesc: row.managerDesc || '', operationMode: row.operationMode || '',
-    closedEndDays: row.closedEndDays || null, purchaseFeeRate: row.purchaseFeeRate || null,
-    redeemFeeRate: row.redeemFeeRate || null, managementFeeRate: row.managementFeeRate || null,
-    custodianFeeRate: row.custodianFeeRate || null, salesServiceFeeRate: row.salesServiceFeeRate || null,
-    tradeRule: row.tradeRule || '',
+    id: row.id,
+    fundName: row.fundName ?? '',
+    fundCode: row.fundCode ?? '',
+    fundType: row.fundType,
+    establishDate: row.establishDate ?? '',
+    assetScale: row.assetScale,
+    fundCompany: row.fundCompany ?? '',
+    fundCompanyDesc: row.fundCompanyDesc ?? '',
+    custodian: row.custodian ?? '',
+    fundManager: row.fundManager ?? '',
+    managerStartDate: row.managerStartDate ?? '',
+    managerDesc: row.managerDesc ?? '',
+    operationMode: row.operationMode,
+    closedEndDays: row.closedEndDays,
+    purchaseFeeRate: row.purchaseFeeRate,
+    redeemFeeRate: row.redeemFeeRate,
+    managementFeeRate: row.managementFeeRate,
+    custodianFeeRate: row.custodianFeeRate,
+    salesServiceFeeRate: row.salesServiceFeeRate,
+    tradeRule: row.tradeRule ?? '',
     // 新增字段初始化
-    return1m: row.return1m || null, return3m: row.return3m || null,
-    return6m: row.return6m || null, return1y: row.return1y || null,
-    netAssets: row.netAssets || '', latestScale: row.latestScale || null,
-    scaleHistory: row.scaleHistory || '',
-    stockRatio: row.stockRatio || null, bondRatio: row.bondRatio || null, cashRatio: row.cashRatio || null,
-    institutionRatio: row.institutionRatio || null, individualRatio: row.individualRatio || null,
-    internalRatio: row.internalRatio || null
+    return1m: row.return1m,
+    return3m: row.return3m,
+    return6m: row.return6m,
+    return1y: row.return1y,
+    netAssets: row.netAssets ?? '',
+    latestScale: row.latestScale,
+    scaleHistory: row.scaleHistory ?? '',
+    stockRatio: row.stockRatio,
+    bondRatio: row.bondRatio,
+    cashRatio: row.cashRatio,
+    institutionRatio: row.institutionRatio,
+    individualRatio: row.individualRatio,
+    internalRatio: row.internalRatio
   })
 
   // 初始化基金经理分析数据 - 改为从后端接口获取

@@ -38,4 +38,13 @@ public interface FundAssetService {
 
     //条件分页获取基金持仓信息
     PageInfo<FundPortfolio> getFundPortfolioByConditionAndPage(Integer current, Integer limit, FundComm fundComm);
+
+    //更新基金资产数据
+    void updateFundBaseAsset(FundAsset fundAsset);
+
+    //更新基金经理分析数据
+    void updateFundManagerAnalysis(FundManagerAnalysis fundManagerAnalysis);
+
+    //更新基金持仓数据
+    void updateFundHolding(FundHolding fundHolding);
 }
