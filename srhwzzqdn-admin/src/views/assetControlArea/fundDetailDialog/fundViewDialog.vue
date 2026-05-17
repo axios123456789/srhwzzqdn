@@ -18,7 +18,7 @@
             <el-icon :size="18"><Coin /></el-icon>
           </div>
           <span class="view-header-title">基金详情查看 - {{ props.fundData.fundName || '未知基金' }}</span>
-          <el-tag :type="getFundTypeTag()" size="small" effect="dark" style="margin-left: 10px;">{{ props.fundData.fundType || '未知' }}</el-tag>
+          <el-tag :type="getFundTypeTag()" size="small" effect="dark" style="margin-left: 10px;">{{ getDisplayText(props.fundData.fundType, fundTypeOptions) || '未知' }}</el-tag>
           <el-tag type="info" size="small" effect="dark" style="margin-left: 6px;">{{ props.fundData.fundCode }}</el-tag>
         </div>
         <div class="view-header-right">
@@ -67,7 +67,7 @@
             </div>
             <div class="info-item">
               <label>运作方式</label>
-              <span class="value">{{ props.fundData.operationMode || '-' }}</span>
+              <span class="value">{{ getDisplayText(props.fundData.operationMode, operationModeOptions) }}</span>
             </div>
             <div class="info-item">
               <label>封闭期</label>
@@ -311,7 +311,7 @@
             </div>
             <div class="info-item">
               <label>学历</label>
-              <span class="value">{{ managerAnalysisData.education || '-' }}</span>
+              <span class="value">{{ getDisplayText(managerAnalysisData.education, educationOptions) }}</span>
             </div>
             <div class="info-item">
               <label>个人持有</label>
@@ -322,11 +322,11 @@
             <div class="info-item">
               <label>获奖记录</label>
               <span class="value">
-                <el-tag v-if="managerAnalysisData.awards && managerAnalysisData.awards !== '无'"
-                  :type="getAwardTagType(managerAnalysisData.awards)" size="small">
-                  {{ managerAnalysisData.awards }}
+                <el-tag v-if="managerAnalysisData.awards && getDisplayText(managerAnalysisData.awards, awardOptions) !== '-'"
+                  :type="getAwardTagType(getDisplayText(managerAnalysisData.awards, awardOptions))" size="small">
+                  {{ getDisplayText(managerAnalysisData.awards, awardOptions) }}
                 </el-tag>
-                <span v-else>{{ managerAnalysisData.awards || '-' }}</span>
+                <span v-else>{{ getDisplayText(managerAnalysisData.awards, awardOptions) }}</span>
               </span>
             </div>
           </div>
@@ -361,32 +361,32 @@
           <div class="analysis-grid">
             <div class="analysis-item">
               <label>持仓集中度</label>
-              <el-tag :type="getAnalysisTagType(managerAnalysisData.positionConcentration)" size="small">
-                {{ managerAnalysisData.positionConcentration || '-' }}
+              <el-tag :type="getAnalysisTagType(getDisplayText(managerAnalysisData.positionConcentration, levelOptions))" size="small">
+                {{ getDisplayText(managerAnalysisData.positionConcentration, levelOptions) }}
               </el-tag>
             </div>
             <div class="analysis-item">
               <label>换手率</label>
-              <el-tag :type="getAnalysisTagType(managerAnalysisData.turnoverRate)" size="small">
-                {{ managerAnalysisData.turnoverRate || '-' }}
+              <el-tag :type="getAnalysisTagType(getDisplayText(managerAnalysisData.turnoverRate, levelOptions))" size="small">
+                {{ getDisplayText(managerAnalysisData.turnoverRate, levelOptions) }}
               </el-tag>
             </div>
             <div class="analysis-item">
               <label>能力路径匹配度</label>
-              <el-tag :type="getAnalysisTagType(managerAnalysisData.abilityPathMatch)" size="small">
-                {{ managerAnalysisData.abilityPathMatch || '-' }}
+              <el-tag :type="getAnalysisTagType(getDisplayText(managerAnalysisData.abilityPathMatch, levelOptions))" size="small">
+                {{ getDisplayText(managerAnalysisData.abilityPathMatch, levelOptions) }}
               </el-tag>
             </div>
             <div class="analysis-item">
               <label>规模驾驭能力</label>
-              <el-tag :type="getAnalysisTagType(managerAnalysisData.scaleControlAbility)" size="small">
-                {{ managerAnalysisData.scaleControlAbility || '-' }}
+              <el-tag :type="getAnalysisTagType(getDisplayText(managerAnalysisData.scaleControlAbility, levelOptions))" size="small">
+                {{ getDisplayText(managerAnalysisData.scaleControlAbility, levelOptions) }}
               </el-tag>
             </div>
             <div class="analysis-item">
               <label>本基金精力集中度</label>
-              <el-tag :type="getAnalysisTagType(managerAnalysisData.focusLevel)" size="small">
-                {{ managerAnalysisData.focusLevel || '-' }}
+              <el-tag :type="getAnalysisTagType(getDisplayText(managerAnalysisData.focusLevel, levelOptions))" size="small">
+                {{ getDisplayText(managerAnalysisData.focusLevel, levelOptions) }}
               </el-tag>
             </div>
           </div>
@@ -442,7 +442,7 @@
             <el-table-column prop="tradeType" label="交易类型" width="100">
               <template #default="{ row }">
                 <el-tag :type="row.tradeType === 1 ? 'success' : 'danger'" size="small">
-                  {{ row.tradeType === 1 ? '申购' : row.tradeType === 2 ? '赎回' : row.tradeType === 3 ? '分红再投' : '转换' }}
+                  {{ getDisplayText(row.tradeType, transactionTypeOptions) }}
                 </el-tag>
               </template>
             </el-table-column>
@@ -601,7 +601,7 @@
             <el-table-column prop="holdingDate" label="持仓日期" width="110" />
             <el-table-column prop="holdingType" label="持仓类型" width="100">
               <template #default="{ row }">
-                <el-tag size="small">{{ row.holdingType }}</el-tag>
+                <el-tag size="small">{{ getDisplayText(row.holdingType, positionTypeOptions) }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column prop="holdingCode" label="持仓代码" width="100" />
@@ -613,8 +613,16 @@
             <el-table-column prop="navRatio" label="占净值比例(%)" width="130" align="right">
               <template #default="{ row }">{{ row.navRatio }}%</template>
             </el-table-column>
-            <el-table-column prop="industryClass" label="行业分类" width="100" />
-            <el-table-column prop="dataSource" label="数据来源" width="100" />
+            <el-table-column prop="industryClass" label="行业分类" width="100">
+              <template #default="{ row }">
+                {{ getDisplayText(row.industryClass, sectorTypeOptions) }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="dataSource" label="数据来源" width="100">
+              <template #default="{ row }">
+                {{ getDisplayText(row.dataSource, dataSourceOptions) }}
+              </template>
+            </el-table-column>
           </el-table>
         </div>
       </div>
@@ -628,10 +636,11 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, nextTick, onBeforeUnmount, reactive } from 'vue'
+import { computed, ref, watch, nextTick, onBeforeUnmount, reactive, onMounted } from 'vue'
 import { Coin, Close, FullScreen, Aim, Document, Discount, Wallet, TrendCharts, List, Money, DataAnalysis, Grid, User } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage } from "@/api/fundAsset"
+import { GetKeyAndValueByType } from "@/api/sysDict"
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({
@@ -640,6 +649,81 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:visible'])
+
+// ============ 数据字典选项 ============
+// 基金类型选项
+const fundTypeOptions = ref([])
+// 运作方式选项
+const operationModeOptions = ref([])
+// 交易类型选项
+const transactionTypeOptions = ref([])
+// 持仓类型选项
+const positionTypeOptions = ref([])
+// 行业分类选项
+const sectorTypeOptions = ref([])
+// 数据来源选项
+const dataSourceOptions = ref([])
+// 学历选项
+const educationOptions = ref([])
+// 获奖记录选项
+const awardOptions = ref([])
+// 等级选项（持仓集中度、换手率等）
+const levelOptions = ref([])
+
+// 获取数据字典
+const getDictOptions = async () => {
+  try {
+    // 基金类型
+    const fundTypeResult = await GetKeyAndValueByType("t_fund_type")
+    fundTypeOptions.value = fundTypeResult.data || []
+    
+    // 运作方式
+    const operationModeResult = await GetKeyAndValueByType("t_fund_run_way")
+    operationModeOptions.value = operationModeResult.data || []
+    
+    // 交易类型
+    const transactionTypeResult = await GetKeyAndValueByType("t_fund_transaction_type")
+    transactionTypeOptions.value = transactionTypeResult.data || []
+    
+    // 持仓类型
+    const positionTypeResult = await GetKeyAndValueByType("t_fund_position_type")
+    positionTypeOptions.value = positionTypeResult.data || []
+    
+    // 行业分类
+    const sectorTypeResult = await GetKeyAndValueByType("t_fund_sector_type")
+    sectorTypeOptions.value = sectorTypeResult.data || []
+    
+    // 数据来源
+    const dataSourceResult = await GetKeyAndValueByType("t_fund_data_source")
+    dataSourceOptions.value = dataSourceResult.data || []
+    
+    // 学历
+    const educationResult = await GetKeyAndValueByType("t_fund_school_type")
+    educationOptions.value = educationResult.data || []
+    
+    // 获奖记录
+    const awardResult = await GetKeyAndValueByType("t_fund_award")
+    awardOptions.value = awardResult.data || []
+    
+    // 等级（持仓集中度、换手率等）
+    const levelResult = await GetKeyAndValueByType("t_fund_level")
+    levelOptions.value = levelResult.data || []
+  } catch (error) {
+    console.error('获取数据字典失败:', error)
+  }
+}
+
+// 通用方法：根据值和映射表获取中文文本
+const getDisplayText = (value, mappingArray) => {
+  if (!value && value !== 0) return '-'
+  const foundItem = mappingArray.find(item => item.value === value)
+  return foundItem ? foundItem.text : value
+}
+
+// 组件挂载时获取数据字典
+onMounted(() => {
+  getDictOptions()
+})
 
 const isFullscreen = ref(false)
 const chartInstance = ref(null)

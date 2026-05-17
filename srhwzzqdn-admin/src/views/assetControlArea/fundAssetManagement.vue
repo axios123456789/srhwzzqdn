@@ -373,7 +373,7 @@ import { Coin, Search, Download, Refresh, Delete, Edit } from '@element-plus/ico
 import FundDetailDialog from './fundDetailDialog/fundDetailDialog.vue'
 import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage, GetFundNavByConditionAndPage } from "@/api/fundAsset"
+import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage, GetFundNavByConditionAndPage, UpdateFundBaseAsset, UpdateFundManagerAnalysis, UpdateFundHolding } from "@/api/fundAsset"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
 
@@ -769,10 +769,32 @@ const openDetailDialog = (item) => {
   detailDialogVisible.value = true
 }
 
-const handleDetailSave = (saveData) => {
-  // 保存成功后刷新列表
-  fetchData()
-  detailDialogVisible.value = false
+const handleDetailSave = async (saveData) => {
+  try {
+    // 分别调用后端接口更新数据
+    // 1. 更新基金基本数据
+    if (saveData.fundAsset) {
+      await UpdateFundBaseAsset(saveData.fundAsset)
+    }
+    
+    // 2. 更新基金经理分析数据
+    if (saveData.managerAnalysis) {
+      await UpdateFundManagerAnalysis(saveData.managerAnalysis)
+    }
+    
+    // 3. 更新基金持仓数据（份额信息）
+    if (saveData.fundHolding) {
+      await UpdateFundHolding(saveData.fundHolding)
+    }
+    
+    // 保存成功后刷新列表
+    fetchData()
+    detailDialogVisible.value = false
+    ElMessage.success('保存成功')
+  } catch (error) {
+    console.error('保存失败:', error)
+    ElMessage.error('保存失败，请稍后重试')
+  }
 }
 
 // ============ 基金详情查看模态窗口 ============

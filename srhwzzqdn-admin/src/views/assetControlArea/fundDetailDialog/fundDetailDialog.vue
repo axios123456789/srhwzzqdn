@@ -316,17 +316,17 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="姓名">
-                  <el-input v-model="managerAnalysis.name" placeholder="请输入基金经理姓名" clearable />
+                  <el-input v-model="managerAnalysis.managerName" placeholder="请输入基金经理姓名" clearable />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="星级">
-                  <el-rate v-model="managerAnalysis.starLevel" :max="5" allow-half show-score />
+                  <el-rate v-model="managerAnalysis.starRating" :max="5" allow-half show-score />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="从业时间(年)">
-                  <el-input-number v-model="managerAnalysis.workYears" :precision="1" :step="0.5" :min="0" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="managerAnalysis.workTime" :precision="1" :step="0.5" :min="0" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -345,7 +345,7 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="个人持有">
-                  <el-select v-model="managerAnalysis.personalHold" placeholder="请选择" style="width: 100%" clearable>
+                  <el-select v-model="managerAnalysis.isManagerHolding" placeholder="请选择" style="width: 100%" clearable>
                     <el-option label="是" :value="1" />
                     <el-option label="否" :value="0" />
                   </el-select>
@@ -355,7 +355,7 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="获奖记录">
-                  <el-select v-model="managerAnalysis.awards" placeholder="请选择" style="width: 100%" clearable>
+                  <el-select v-model="managerAnalysis.awardRecords" placeholder="请选择" style="width: 100%" clearable>
                     <el-option v-for="item in awardOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
@@ -365,12 +365,12 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="综合评分">
-                  <el-input-number v-model="managerAnalysis.overallScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="managerAnalysis.totalScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="选证能力评分">
-                  <el-input-number v-model="managerAnalysis.selectionScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="managerAnalysis.stockSelectScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -382,7 +382,7 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="抗风险评分">
-                  <el-input-number v-model="managerAnalysis.riskScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="managerAnalysis.riskControlScore" :precision="2" :step="0.1" :min="0" :max="100" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -400,7 +400,7 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="持仓集中度">
-                  <el-select v-model="managerAnalysis.positionConcentration" placeholder="请选择" style="width: 100%" clearable>
+                  <el-select v-model="managerAnalysis.holdingsConcentration" placeholder="请选择" style="width: 100%" clearable>
                     <el-option v-for="item in levelOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
@@ -414,7 +414,7 @@
               </el-col>
               <el-col :span="8">
                 <el-form-item label="能力路径匹配度">
-                  <el-select v-model="managerAnalysis.abilityPathMatch" placeholder="请选择" style="width: 100%" clearable>
+                  <el-select v-model="managerAnalysis.backgroundMatch" placeholder="请选择" style="width: 100%" clearable>
                     <el-option v-for="item in levelOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
@@ -423,14 +423,14 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="规模驾驭能力">
-                  <el-select v-model="managerAnalysis.scaleControlAbility" placeholder="请选择" style="width: 100%" clearable>
+                  <el-select v-model="managerAnalysis.scaleCapability" placeholder="请选择" style="width: 100%" clearable>
                     <el-option v-for="item in levelOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="本基金精力集中度">
-                  <el-select v-model="managerAnalysis.focusLevel" placeholder="请选择" style="width: 100%" clearable>
+                  <el-select v-model="managerAnalysis.focusOnThisFund" placeholder="请选择" style="width: 100%" clearable>
                     <el-option v-for="item in levelOptions" :key="item.value" :label="item.text" :value="item.value" />
                   </el-select>
                 </el-form-item>
@@ -447,42 +447,42 @@
             <el-row :gutter="16">
               <el-col :span="24">
                 <el-form-item label="持仓集中度分析">
-                  <el-input v-model="managerAnalysis.positionConcentrationAnalysis" type="textarea" :rows="3" placeholder="指基金前十大重仓股占股票投资市值的比例。如果这个比例很高（比如超过60%-70%），说明基金经理喜欢集中投资，依靠深度研究的少量个股来获取收益，净值波动可能会更；如果比例较低，说明更倾向于分散投资，通过组合管理来控制风险。" />
+                  <el-input v-model="managerAnalysis.concentrationRateAnalyse" type="textarea" :rows="3" placeholder="指基金前十大重仓股占股票投资市值的比例。如果这个比例很高（比如超过60%-70%），说明基金经理喜欢集中投资，依靠深度研究的少量个股来获取收益，净值波动可能会更；如果比例较低，说明更倾向于分散投资，通过组合管理来控制风险。" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="24">
                 <el-form-item label="换手率分析">
-                  <el-input v-model="managerAnalysis.turnoverRateAnalysis" type="textarea" :rows="3" placeholder="反映基金经理交易股票的频繁程度。低换手率通常意味着基金经理是选股型选手，倾向于长期持有；高换手率则可能偏向交易型选手，试图通过把握市场节奏来增厚收益。" />
+                  <el-input v-model="managerAnalysis.turnoverRateAnalyse" type="textarea" :rows="3" placeholder="反映基金经理交易股票的频繁程度。低换手率通常意味着基金经理是选股型选手，倾向于长期持有；高换手率则可能偏向交易型选手，试图通过把握市场节奏来增厚收益。" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="24">
                 <el-form-item label="能力圈与路径依赖分析">
-                  <el-input v-model="managerAnalysis.abilityCircleAnalysis" type="textarea" :rows="3" placeholder="关注他的行业研究背景是否与现在管理的基金相匹配。例如，一个长期研究消费的基金经理去管理一只科技主题基金，就需要审慎评估。" />
+                  <el-input v-model="managerAnalysis.capabilityPathAnalysis" type="textarea" :rows="3" placeholder="关注他的行业研究背景是否与现在管理的基金相匹配。例如，一个长期研究消费的基金经理去管理一只科技主题基金，就需要审慎评估。" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="24">
                 <el-form-item label="规模驾驭能力分析">
-                  <el-input v-model="managerAnalysis.scaleControlAnalysis" type="textarea" :rows="3" placeholder="留意基金规模是否在短期内急剧膨胀。许多优秀的策略在资金规模变大后可能会失效（即'规模是业绩的敌人'），需要观察基金经理是否有管理大规模资金的成功经验。" />
+                  <el-input v-model="managerAnalysis.scaleAbilityAnalysis" type="textarea" :rows="3" placeholder="留意基金规模是否在短期内急剧膨胀。许多优秀的策略在资金规模变大后可能会失效（即'规模是业绩的敌人'），需要观察基金经理是否有管理大规模资金的成功经验。" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="24">
                 <el-form-item label="从业背景">
-                  <el-input v-model="managerAnalysis.workBackground" type="textarea" :rows="3" placeholder="他的学历专业、研究员时期的行业覆盖范围、获得过的权威奖项（如'金牛奖'）等都是重要参考。" />
+                  <el-input v-model="managerAnalysis.professionalBackground" type="textarea" :rows="3" placeholder="他的学历专业、研究员时期的行业覆盖范围、获得过的权威奖项（如'金牛奖'）等都是重要参考。" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="24">
                 <el-form-item label="产品管理情况分析">
-                  <el-input v-model="managerAnalysis.productManageAnalysis" type="textarea" :rows="3" placeholder="看他是否'超负荷'工作。如果一个人名下管了十几只不同类型（如全市场选股、行业主题、量化对冲）的基金，精力难免被分散。" />
+                  <el-input v-model="managerAnalysis.productManagementAnalysis" type="textarea" :rows="3" placeholder="看他是否'超负荷'工作。如果一个人名下管了十几只不同类型（如全市场选股、行业主题、量化对冲）的基金，精力难免被分散。" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -496,7 +496,7 @@
             <el-row :gutter="16">
               <el-col :span="24">
                 <el-form-item label="个人持有情况">
-                  <el-input v-model="managerAnalysis.personalHoldAnalysis" type="textarea" :rows="3" placeholder="基金经理本人是否也持有了自己管理的基金？这在基金的年报/半年报中有披露，是衡量信心的重要指标。" />
+                  <el-input v-model="managerAnalysis.personalHolding" type="textarea" :rows="3" placeholder="基金经理本人是否也持有了自己管理的基金？这在基金的年报/半年报中有披露，是衡量信心的重要指标。" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -532,24 +532,24 @@
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="持仓成本">
-                  <el-input-number v-model="shareData.positionCost" :precision="2" :step="100" :min="0" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="shareData.costAmount" :precision="2" :step="100" :min="0" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="持仓市值">
-                  <el-input-number v-model="shareData.positionValue" :precision="2" :step="100" :min="0" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="shareData.marketValue" :precision="2" :step="100" :min="0" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="持仓盈亏">
-                  <el-input-number v-model="shareData.positionProfit" :precision="2" :step="100" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="shareData.profitLoss" :precision="2" :step="100" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="8">
                 <el-form-item label="持仓收益率(%)">
-                  <el-input-number v-model="shareData.positionProfitRate" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+                  <el-input-number v-model="shareData.profitLossRate" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
             </el-row>
@@ -1045,16 +1045,37 @@ const fundData = reactive({
 })
 
 // ============ 基金经理分析数据 ============
+// 直接使用后端字段名，不做任何映射
 const managerAnalysis = reactive({
-  name: '', starLevel: 0, workYears: 0, manageScale: 0,
-  education: '', personalHold: null, awards: '',
-  overallScore: 0, selectionScore: 0, returnScore: 0,
-  riskScore: 0, stabilityScore: 0, timingScore: 0,
-  positionConcentration: '', turnoverRate: '', abilityPathMatch: '',
-  scaleControlAbility: '', focusLevel: '',
-  managerDesc: '', positionConcentrationAnalysis: '', turnoverRateAnalysis: '',
-  abilityCircleAnalysis: '', scaleControlAnalysis: '', workBackground: '',
-  productManageAnalysis: '', stabilityAnalysis: '', personalHoldAnalysis: ''
+  id: null,
+  fundCode: '',
+  managerName: '',
+  starRating: null,
+  workTime: null,
+  manageScale: null,
+  totalScore: null,
+  stockSelectScore: null,
+  returnScore: null,
+  riskControlScore: null,
+  stabilityScore: null,
+  timingScore: null,
+  managerDesc: '',
+  concentrationRateAnalyse: '',
+  turnoverRateAnalyse: '',
+  capabilityPathAnalysis: '',
+  scaleAbilityAnalysis: '',
+  professionalBackground: '',
+  productManagementAnalysis: '',
+  stabilityAnalysis: '',
+  personalHolding: '',
+  holdingsConcentration: null,
+  turnoverRate: null,
+  backgroundMatch: null,
+  scaleCapability: null,
+  education: null,
+  focusOnThisFund: null,
+  isManagerHolding: null,
+  awardRecords: null
 })
 
 // ============ 净值与估值 ============
@@ -1114,37 +1135,8 @@ const fetchManagerAnalysisData = async () => {
     const result = await GetFundManagerAnalysisByCode(fundCode)
     
     if (result.code === 200 && result.data) {
-      // 后端字段映射到前端字段，后端返回什么就填入什么（包括0）
-      const backendData = result.data
-      Object.assign(managerAnalysis, {
-        name: backendData.managerName ?? '',
-        starLevel: backendData.starRating,
-        workYears: backendData.workTime,
-        manageScale: backendData.manageScale,
-        education: backendData.education,
-        personalHold: backendData.isManagerHolding,
-        awards: backendData.awardRecords,
-        overallScore: backendData.totalScore,
-        selectionScore: backendData.stockSelectScore,
-        returnScore: backendData.returnScore,
-        riskScore: backendData.riskControlScore,
-        stabilityScore: backendData.stabilityScore,
-        timingScore: backendData.timingScore,
-        positionConcentration: backendData.holdingsConcentration,
-        turnoverRate: backendData.turnoverRate,
-        abilityPathMatch: backendData.backgroundMatch,
-        scaleControlAbility: backendData.scaleCapability,
-        focusLevel: backendData.focusOnThisFund,
-        managerDesc: backendData.managerDesc ?? '',
-        positionConcentrationAnalysis: backendData.concentrationRateAnalyse ?? '',
-        turnoverRateAnalysis: backendData.turnoverRateAnalyse ?? '',
-        abilityCircleAnalysis: backendData.capabilityPathAnalysis ?? '',
-        scaleControlAnalysis: backendData.scaleAbilityAnalysis ?? '',
-        workBackground: backendData.professionalBackground ?? '',
-        productManageAnalysis: backendData.productManagementAnalysis ?? '',
-        stabilityAnalysis: backendData.stabilityAnalysis ?? '',
-        personalHoldAnalysis: backendData.personalHolding ?? ''
-      })
+      // 直接使用后端返回的数据，不做任何字段映射
+      Object.assign(managerAnalysis, result.data)
     }
     // 如果没有数据或获取失败，保持managerAnalysis的初始状态
   } catch (error) {
@@ -1164,17 +1156,8 @@ const fetchHoldingData = async () => {
     const result = await GetFundHoldingByCode(fundCode)
     
     if (result.code === 200 && result.data) {
-      // 后端字段映射到前端字段（后端为空时前端也为空，不设置默认值）
-      const backendData = result.data
-      Object.assign(shareData, {
-        holdShares: backendData.holdShares,
-        availableShares: backendData.availableShares,
-        frozenShares: backendData.frozenShares,
-        positionCost: backendData.costAmount,
-        positionValue: backendData.marketValue,
-        positionProfit: backendData.profitLoss,
-        positionProfitRate: backendData.profitLossRate
-      })
+      // 直接使用后端返回的数据，不做任何字段映射
+      Object.assign(shareData, result.data)
     }
   } catch (error) {
     console.error('获取基金持仓数据失败:', error)
@@ -1218,20 +1201,26 @@ const resetNavQuery = () => {
 }
 
 // ============ 份额与持仓 ============
+// 直接使用后端字段名，不做任何映射
 const shareData = reactive({
-  holdShares: 0, availableShares: 0, frozenShares: 0,
-  positionCost: 0, positionValue: 0,
-  positionProfit: 0,
-  positionProfitRate: 0
+  id: null,
+  fundCode: '',
+  holdShares: null,
+  availableShares: null,
+  frozenShares: null,
+  costAmount: null,
+  marketValue: null,
+  profitLoss: null,
+  profitLossRate: null
 })
 
 // 监听持仓成本和市值变化,自动计算盈亏和收益率
 watch(
-  () => [shareData.positionCost, shareData.positionValue],
+  () => [shareData.costAmount, shareData.marketValue],
   () => {
-    shareData.positionProfit = shareData.positionValue - shareData.positionCost
-    shareData.positionProfitRate = shareData.positionCost > 0 
-      ? ((shareData.positionValue - shareData.positionCost) / shareData.positionCost * 100) 
+    shareData.profitLoss = shareData.marketValue - shareData.costAmount
+    shareData.profitLossRate = shareData.costAmount > 0 
+      ? ((shareData.marketValue - shareData.costAmount) / shareData.costAmount * 100) 
       : 0
   },
   { immediate: true }
@@ -1708,21 +1697,22 @@ watch(() => props.visible, (val) => {
 
 // ============ 保存 & 关闭 ============
 const handleSave = () => {
+  // 直接使用后端字段，不做任何映射
   const savePayload = {
-    ...JSON.parse(JSON.stringify(fundData)),
+    // 基金基本数据
+    fundAsset: JSON.parse(JSON.stringify(fundData)),
+    // 基金经理分析数据
     managerAnalysis: JSON.parse(JSON.stringify(managerAnalysis)),
+    // 基金持仓数据（份额信息）
+    fundHolding: JSON.parse(JSON.stringify(shareData)),
+    // 其他数据保持不变
     navList: JSON.parse(JSON.stringify(navData.value)),
-    holdShares: shareData.holdShares, availableShares: shareData.availableShares,
-    frozenShares: shareData.frozenShares, positionCost: shareData.positionCost,
-    positionValue: shareData.positionValue, positionProfit: shareData.positionProfit,
-    positionProfitRate: shareData.positionProfitRate,
     tradeList: JSON.parse(JSON.stringify(tradeData.value)),
     dividendList: JSON.parse(JSON.stringify(dividendData.value)),
     riskList: JSON.parse(JSON.stringify(riskData.value)),
     holdingList: JSON.parse(JSON.stringify(holdingData.value))
   }
   emit('save', savePayload)
-  ElMessage.success('保存成功')
 }
 
 const handleClose = () => {
