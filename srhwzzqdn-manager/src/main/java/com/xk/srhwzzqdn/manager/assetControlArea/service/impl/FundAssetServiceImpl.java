@@ -427,6 +427,33 @@ public class FundAssetServiceImpl implements FundAssetService {
     }
 
     /**
+     * 添加基金净值数据
+     * @param fundNav
+     */
+    @Override
+    public void addFundNav(FundNav fundNav) {
+        fundAssetMapper.addFundNav(fundNav);
+    }
+
+    /**
+     * 更新基金净值数据
+     * @param fundNav
+     */
+    @Override
+    public void updateFundNav(FundNav fundNav) {
+        fundAssetMapper.updateFundNav(fundNav);
+    }
+
+    /**
+     * 根据id删除基金净值数据
+     * @param id
+     */
+    @Override
+    public void deleteFundNav(Long id) {
+        fundAssetMapper.deleteFundNav(id);
+    }
+
+    /**
      * 打印基金数据到控制台
      * 按模块分类输出解析结果，便于查看和调试
      *

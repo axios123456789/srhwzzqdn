@@ -7,6 +7,7 @@ import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
 import com.xk.srhwzzqdn.model.vo.common.Result;
 import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
+import org.apache.ibatis.annotations.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,6 +232,54 @@ public class FundAssetController {
         } catch (Exception e) {
             logger.error("更新基金持仓数据失败", e);
             return Result.build(null, 500, "更新基金持仓数据失败！");
+        }
+    }
+
+    /**
+     * 添加基金净值数据
+     * @param fundNav
+     * @return
+     */
+    @PostMapping("/addFundNav")
+    public Result addFundNav(@RequestBody FundNav fundNav) {
+        try {
+            fundAssetService.addFundNav(fundNav);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("添加基金净值数据失败", e);
+            return Result.build(null, 500, "添加基金净值数据失败！");
+        }
+    }
+
+    /**
+     * 更新基金净值数据
+     * @param fundNav
+     * @return
+     */
+    @PostMapping("/updateFundNav")
+    public Result updateFundNav(@RequestBody FundNav fundNav) {
+        try {
+            fundAssetService.updateFundNav(fundNav);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("更新基金净值数据失败", e);
+            return Result.build(null, 500, "更新基金净值数据失败！");
+        }
+    }
+
+    /**
+     * 根据id删除基金净值数据
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/deleteFundNav/{id}")
+    public Result deleteFundNav(@PathVariable("id") Long id) {
+        try {
+            fundAssetService.deleteFundNav(id);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("删除基金净值数据失败", e);
+            return Result.build(null, 500, "删除基金净值数据失败！");
         }
     }
 

@@ -47,4 +47,13 @@ public interface FundAssetService {
 
     //更新基金持仓数据
     void updateFundHolding(FundHolding fundHolding);
+
+    //添加基金净值数据
+    void addFundNav(FundNav fundNav);
+
+    //更新基金净值数据
+    void updateFundNav(FundNav fundNav);
+
+    //根据id删除基金净值数据
+    void deleteFundNav(Long id);
 }

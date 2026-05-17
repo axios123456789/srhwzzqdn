@@ -3,6 +3,7 @@ package com.xk.srhwzzqdn.manager.assetControlArea.mapper;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -55,4 +56,14 @@ public interface FundAssetMapper {
 
     //更新持仓情况数据
     void updateFundHolding(FundHolding fundHolding);
+
+    //添加基金净值数据
+    void addFundNav(FundNav fundNav);
+
+    //更新基金净值数据
+    void updateFundNav(FundNav fundNav);
+
+    //根据id删除基金净值数据
+    @Delete("delete from t_fund_nav where id = #{param1}")
+    void deleteFundNav(Long id);
 }
