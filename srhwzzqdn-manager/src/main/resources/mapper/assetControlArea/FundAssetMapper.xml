@@ -358,6 +358,7 @@
         select *
           from t_fund_holding t
         where t.fund_code = #{param1}
+          and t.owner = #{param2}
     </select>
 
     <!--  条件查询基金交易列表  -->
@@ -374,6 +375,9 @@
             </if>
             <if test="endTime != null and endTime != ''">
                 and t.trade_date &lt;= #{endTime}
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
             </if>
         </where>
         order by t.trade_date desc
@@ -423,4 +427,171 @@
             </if>
         </where>
     </select>
+
+    <!--  添加基金交易数据  -->
+    <insert id="addFundTransaction">
+        insert into t_fund_transaction (
+            fund_code,
+            trade_date,
+            trade_type,
+            trade_shares,
+            trade_amount,
+            trade_nav,
+            trade_fee,
+            confirm_date,
+            create_time,
+            create_by,
+            owner
+        ) values (
+                  #{fundCode},
+                  #{tradeDate},
+                  #{tradeType},
+                  #{tradeShares},
+                  #{tradeAmount},
+                  #{tradeNav},
+                  #{tradeFee},
+                  #{confirmDate},
+                  now(),
+                  #{createBy},
+                  #{owner}
+        )
+    </insert>
+
+    <!--  更新基金交易数据  -->
+    <update id="updateFundTransaction">
+        update t_fund_transaction
+           set  trade_date = #{tradeDate},
+                trade_type = #{tradeType},
+                trade_shares = #{tradeShares},
+                trade_amount = #{tradeAmount},
+                trade_nav = #{tradeNav},
+                trade_fee = #{tradeFee},
+                confirm_date = #{confirmDate},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  添加基金分红数据  -->
+    <insert id="addFundDividend">
+        insert into t_fund_dividend (
+            fund_code,
+            dividend_date,
+            arrival_date,
+            dividend_type,
+            dividend_rule,
+            dividend_amount,
+            create_time,
+            create_by
+        ) values (
+                  #{fundCode},
+                  #{dividendDate},
+                  #{arrivalDate},
+                  #{dividendType},
+                  #{dividendRule},
+                  #{dividendAmount},
+                  now(),
+                  #{createBy}
+        )
+    </insert>
+
+    <!--  更新基金分红数据  -->
+    <update id="updateFundDividend">
+        update t_fund_dividend
+           set  dividend_date = #{dividendDate},
+                arrival_date = #{arrivalDate},
+                dividend_type = #{dividendType},
+                dividend_rule = #{dividendRule},
+                dividend_amount = #{dividendAmount},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  添加基金风险绩效数据  -->
+    <insert id="addFundRiskPerformance">
+        insert into t_fund_risk_performance (
+            fund_code,
+            period_type,
+            max_draw_down,
+            recovery_days,
+            annual_return,
+            sharpe_ratio,
+            volatility,
+            create_time,
+            create_by
+        ) values (
+                  #{fundCode},
+                  #{periodType},
+                  #{maxDrawDown},
+                  #{recoveryDays},
+                  #{annualReturn},
+                  #{sharpeRatio},
+                  #{volatility},
+                  now(),
+                  #{createBy}
+        )
+    </insert>
+
+    <!--  更新基金风险绩效数据  -->
+    <update id="updateFundRiskPerformance">
+        update t_fund_risk_performance
+           set  period_type = #{periodType},
+                max_draw_down = #{maxDrawDown},
+                recovery_days = #{recoveryDays},
+                annual_return = #{annualReturn},
+                sharpe_ratio = #{sharpeRatio},
+                volatility = #{volatility},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  添加基金持仓信息数据  -->
+    <insert id="addFundPortfolio">
+        insert into t_fund_portfolio (
+            fund_code,
+            portfolio_date,
+            position_type,
+            position_code,
+            position_name,
+            position_quantity,
+            position_market_value,
+            net_ratio,
+            industry_type,
+            data_source,
+            create_time,
+            create_by
+        ) values (
+                  #{fundCode},
+                  #{portfolioDate},
+                  #{positionType},
+                  #{positionCode},
+                  #{positionName},
+                  #{positionQuantity},
+                  #{positionMarketValue},
+                  #{netRatio},
+                  #{industryType},
+                  #{dataSource},
+                  now(),
+                  #{createBy}
+        )
+    </insert>
+
+    <!--  更新基金持仓信息数据  -->
+    <update id="updateFundPortfolio">
+        update t_fund_portfolio
+           set  portfolio_date = #{portfolioDate},
+                position_type = #{positionType},
+                position_code = #{positionCode},
+                position_name = #{positionName},
+                position_quantity = #{positionQuantity},
+                position_market_value = #{positionMarketValue},
+                net_ratio = #{netRatio},
+                industry_type = #{industryType},
+                data_source = #{dataSource},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
 </mapper>

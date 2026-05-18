@@ -320,7 +320,7 @@ public class FundAssetServiceImpl implements FundAssetService {
      */
     @Override
     public FundHolding getFundHoldingByCode(String fundCode) {
-        return fundAssetMapper.getFundHoldingByCode(fundCode);
+        return fundAssetMapper.getFundHoldingByCode(fundCode, AuthContextUtil.get().getId());
     }
 
     /**
@@ -332,6 +332,7 @@ public class FundAssetServiceImpl implements FundAssetService {
      */
     @Override
     public PageInfo<FundTransaction> getFundTransactionByConditionAndPage(Integer current, Integer limit, FundComm fundComm) {
+        fundComm.setOwner(AuthContextUtil.get().getId());
         //1.开启分页
         PageHelper.startPage(current, limit);
 
@@ -451,6 +452,123 @@ public class FundAssetServiceImpl implements FundAssetService {
     @Override
     public void deleteFundNav(Long id) {
         fundAssetMapper.deleteFundNav(id);
+    }
+
+    /**
+     * 添加基金交易数据
+     * @param fundTransaction
+     */
+    @Override
+    public void addFundTransaction(FundTransaction fundTransaction) {
+        fundTransaction.setCreateBy(AuthContextUtil.get().getUserName());
+        fundTransaction.setOwner(AuthContextUtil.get().getId());
+        fundAssetMapper.addFundTransaction(fundTransaction);
+    }
+
+    /**
+     * 更新基金交易数据
+     * @param fundTransaction
+     */
+    @Override
+    public void updateFundTransaction(FundTransaction fundTransaction) {
+        fundTransaction.setUpdateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.updateFundTransaction(fundTransaction);
+    }
+
+    /**
+     * 根据id删除基金交易数据
+     * @param id
+     */
+    @Override
+    public void deleteFundTransaction(Long id) {
+        fundAssetMapper.deleteFundTransaction(id);
+    }
+
+    /**
+     * 添加基金分红数据
+     * @param fundDividend
+     */
+    @Override
+    public void addFundDividend(FundDividend fundDividend) {
+        fundDividend.setCreateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.addFundDividend(fundDividend);
+    }
+
+    /**
+     * 更新基金分红数据
+     * @param fundDividend
+     */
+    @Override
+    public void updateFundDividend(FundDividend fundDividend) {
+        fundDividend.setUpdateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.updateFundDividend(fundDividend);
+    }
+
+    /**
+     * 根据id删除基金分红数据
+     * @param id
+     */
+    @Override
+    public void deleteFundDividend(Long id) {
+        fundAssetMapper.deleteFundDividend(id);
+    }
+
+    /**
+     * 添加基金风险绩效数据
+     * @param fundRiskPerformance
+     */
+    @Override
+    public void addFundRiskPerformance(FundRiskPerformance fundRiskPerformance) {
+        fundRiskPerformance.setCreateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.addFundRiskPerformance(fundRiskPerformance);
+    }
+
+    /**
+     * 更新基金风险绩效数据
+     * @param fundRiskPerformance
+     */
+    @Override
+    public void updateFundRiskPerformance(FundRiskPerformance fundRiskPerformance) {
+        fundRiskPerformance.setUpdateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.updateFundRiskPerformance(fundRiskPerformance);
+    }
+
+    /**
+     * 根据id删除基金风险绩效数据
+     * @param id
+     */
+    @Override
+    public void deleteFundRiskPerformance(Long id) {
+        fundAssetMapper.deleteFundRiskPerformance(id);
+    }
+
+    /**
+     * 添加基金持仓信息数据
+     * @param fundPortfolio
+     */
+    @Override
+    public void addFundPortfolio(FundPortfolio fundPortfolio) {
+        fundPortfolio.setCreateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.addFundPortfolio(fundPortfolio);
+    }
+
+    /**
+     * 更新基金持仓信息数据
+     * @param fundPortfolio
+     */
+    @Override
+    public void updateFundPortfolio(FundPortfolio fundPortfolio) {
+        fundPortfolio.setUpdateBy(AuthContextUtil.get().getUserName());
+        fundAssetMapper.updateFundPortfolio(fundPortfolio);
+    }
+
+    /**
+     * 根据id删除基金持仓信息数据
+     * @param id
+     */
+    @Override
+    public void deleteFundPortfolio(Long id) {
+        fundAssetMapper.deleteFundPortfolio(id);
     }
 
     /**

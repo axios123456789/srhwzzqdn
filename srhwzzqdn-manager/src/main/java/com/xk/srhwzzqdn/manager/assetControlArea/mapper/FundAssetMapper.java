@@ -34,7 +34,7 @@ public interface FundAssetMapper {
     FundManagerAnalysis getFundManagerAnalysisByCode(String fundCode);
 
     //根据基金代码获取持仓情况数据
-    FundHolding getFundHoldingByCode(String fundCode);
+    FundHolding getFundHoldingByCode(String fundCode, String owner);
 
     //条件查询基金交易数据列表
     List<FundTransaction> getFundTransactionByCondition(FundComm fundComm);
@@ -66,4 +66,44 @@ public interface FundAssetMapper {
     //根据id删除基金净值数据
     @Delete("delete from t_fund_nav where id = #{param1}")
     void deleteFundNav(Long id);
+
+    //添加基金交易数据
+    void addFundTransaction(FundTransaction fundTransaction);
+
+    //更新基金交易数据
+    void updateFundTransaction(FundTransaction fundTransaction);
+
+    //根据id删除基金交易数据
+    @Delete("delete from t_fund_transaction where id = #{param1}")
+    void deleteFundTransaction(Long id);
+
+    //添加基金分红数据
+    void addFundDividend(FundDividend fundDividend);
+
+    //更新基金分红数据
+    void updateFundDividend(FundDividend fundDividend);
+
+    //根据id删除基金分红数据
+    @Delete("delete from t_fund_dividend where id = #{param1}")
+    void deleteFundDividend(Long id);
+
+    //添加基金风险绩效数据
+    void addFundRiskPerformance(FundRiskPerformance fundRiskPerformance);
+
+    //更新基金风险绩效数据
+    void updateFundRiskPerformance(FundRiskPerformance fundRiskPerformance);
+
+    //根据id删除基金风险绩效数据
+    @Delete("delete from t_fund_risk_performance where id = #{param1}")
+    void deleteFundRiskPerformance(Long id);
+
+    //添加基金持仓信息数据
+    void addFundPortfolio(FundPortfolio fundPortfolio);
+
+    //更新基金持仓信息数据
+    void updateFundPortfolio(FundPortfolio fundPortfolio);
+
+    //根据id删除基金持仓信息数据
+    @Delete("delete from t_fund_portfolio where id = #{param1}")
+    void deleteFundPortfolio(Long id);
 }

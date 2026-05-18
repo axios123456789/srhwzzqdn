@@ -205,3 +205,155 @@ export const DeleteFundNav = (id) => {
     method: 'delete'
   })
 }
+
+/**
+ * 添加基金交易数据
+ * @param data 基金交易数据对象
+ * @returns
+ */
+export const AddFundTransaction = (data) => {
+  return request({
+    url: `${base_api}/addFundTransaction`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 更新基金交易数据
+ * @param data 基金交易数据对象
+ * @returns
+ */
+export const UpdateFundTransaction = (data) => {
+  return request({
+    url: `${base_api}/updateFundTransaction`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 删除基金交易数据
+ * @param id 交易数据ID
+ * @returns
+ */
+export const DeleteFundTransaction = (id) => {
+  return request({
+    url: `${base_api}/deleteFundTransaction/${id}`,
+    method: 'delete'
+  })
+}
+
+/**
+ * 添加基金分红数据
+ * @param data 基金分红数据对象
+ * @returns
+ */
+export const AddFundDividend = (data) => {
+  return request({
+    url: `${base_api}/addFundDividend`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 更新基金分红数据
+ * @param data 基金分红数据对象
+ * @returns
+ */
+export const UpdateFundDividend = (data) => {
+  return request({
+    url: `${base_api}/updateFundDividend`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 删除基金分红数据
+ * @param id 分红数据ID
+ * @returns
+ */
+export const DeleteFundDividend = (id) => {
+  return request({
+    url: `${base_api}/deleteFundDividend/${id}`,
+    method: 'delete'
+  })
+}
+
+/**
+ * 添加基金风险绩效数据
+ * @param data 基金风险绩效数据对象
+ * @returns
+ */
+export const AddFundRiskPerformance = (data) => {
+  return request({
+    url: `${base_api}/addFundRiskPerformance`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 更新基金风险绩效数据
+ * @param data 基金风险绩效数据对象
+ * @returns
+ */
+export const UpdateFundRiskPerformance = (data) => {
+  return request({
+    url: `${base_api}/updateFundRiskPerformance`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 删除基金风险绩效数据
+ * @param id 风险绩效数据ID
+ * @returns
+ */
+export const DeleteFundRiskPerformance = (id) => {
+  return request({
+    url: `${base_api}/deleteFundRiskPerformance/${id}`,
+    method: 'delete'
+  })
+}
+
+/**
+ * 添加基金持仓信息数据
+ * @param data 基金持仓信息数据对象
+ * @returns
+ */
+export const AddFundPortfolio = (data) => {
+  return request({
+    url: `${base_api}/addFundPortfolio`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 更新基金持仓信息数据
+ * @param data 基金持仓信息数据对象
+ * @returns
+ */
+export const UpdateFundPortfolio = (data) => {
+  return request({
+    url: `${base_api}/updateFundPortfolio`,
+    method: 'post',
+    data: data
+  })
+}
+
+/**
+ * 删除基金持仓信息数据
+ * @param id 持仓信息数据ID
+ * @returns
+ */
+export const DeleteFundPortfolio = (id) => {
+  return request({
+    url: `${base_api}/deleteFundPortfolio/${id}`,
+    method: 'delete'
+  })
+}

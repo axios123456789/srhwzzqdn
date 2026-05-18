@@ -9,4 +9,5 @@ public class FundComm {
     private String fundCode;
     private String beginTime;
     private String endTime;
+    private String owner;
 }

@@ -582,9 +582,9 @@
             <el-table-column prop="tradeFee" label="交易费用" width="100" align="right" />
             <el-table-column prop="confirmDate" label="确认日期" width="120" />
             <el-table-column label="操作" width="140" fixed="right">
-              <template #default="{ $index }">
-                <el-button text size="small" @click="editTradeRow($index)">修改</el-button>
-                <el-button text size="small" type="danger" @click="deleteTradeRow($index)">删除</el-button>
+              <template #default="{ row }">
+                <el-button text size="small" @click="editTradeRow(row)">修改</el-button>
+                <el-button text size="small" type="danger" @click="deleteTradeRow(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -611,14 +611,15 @@
           <el-table :data="dividendPageData" border stripe size="small" max-height="280px">
             <el-table-column prop="dividendDate" label="分红时间" width="120" />
             <el-table-column prop="arrivalDate" label="到账时间" width="120" />
-            <el-table-column prop="dividendMethod" label="分红方式" width="100">
-              <template #default="{ row }">{{ getDividendMethodText(row.dividendMethod) }}</template>
+            <el-table-column prop="dividendType" label="分红方式" width="100">
+              <template #default="{ row }">{{ getDividendTypeText(row.dividendType) }}</template>
             </el-table-column>
+            <el-table-column prop="dividendRule" label="分红规则" width="120" />
             <el-table-column prop="dividendAmount" label="分红金额" width="120" align="right" />
             <el-table-column label="操作" width="140" fixed="right">
-              <template #default="{ $index }">
-                <el-button text size="small" @click="editDividendRow($index)">修改</el-button>
-                <el-button text size="small" type="danger" @click="deleteDividendRow($index)">删除</el-button>
+              <template #default="{ row }">
+                <el-button text size="small" @click="editDividendRow(row)">修改</el-button>
+                <el-button text size="small" type="danger" @click="deleteDividendRow(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -639,18 +640,18 @@
             <el-button type="success" size="small" @click="addRiskRow" :icon="Plus">新增</el-button>
           </div>
           <el-table :data="riskData" border stripe size="small" max-height="280px">
-            <el-table-column prop="timePeriod" label="时间标识" width="100">
-              <template #default="{ row }">{{ getTimePeriodText(row.timePeriod) }}</template>
+            <el-table-column prop="periodType" label="时间标识" width="100">
+              <template #default="{ row }">{{ getPeriodTypeText(row.periodType) }}</template>
             </el-table-column>
-            <el-table-column prop="maxDrawdown" label="最大回撤(%)" width="120" align="right" />
-            <el-table-column prop="drawdownRecoveryDays" label="回撤修复天数" width="120" align="right" />
-            <el-table-column prop="annualizedReturn" label="年化收益率(%)" width="130" align="right" />
+            <el-table-column prop="maxDrawDown" label="最大回撤(%)" width="120" align="right" />
+            <el-table-column prop="recoveryDays" label="回撤修复天数" width="120" align="right" />
+            <el-table-column prop="annualReturn" label="年化收益率(%)" width="130" align="right" />
             <el-table-column prop="sharpeRatio" label="夏普比率" width="100" align="right" />
             <el-table-column prop="volatility" label="波动率(%)" width="100" align="right" />
             <el-table-column label="操作" width="140" fixed="right">
-              <template #default="{ $index }">
-                <el-button text size="small" @click="editRiskRow($index)">修改</el-button>
-                <el-button text size="small" type="danger" @click="deleteRiskRow($index)">删除</el-button>
+              <template #default="{ row }">
+                <el-button text size="small" @click="editRiskRow(row)">修改</el-button>
+                <el-button text size="small" type="danger" @click="deleteRiskRow(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -700,9 +701,9 @@
               </template>
             </el-table-column>
             <el-table-column label="操作" width="140" fixed="right">
-              <template #default="{ $index }">
-                <el-button text size="small" @click="editHoldingRow($index)">修改</el-button>
-                <el-button text size="small" type="danger" @click="deleteHoldingRow($index)">删除</el-button>
+              <template #default="{ row }">
+                <el-button text size="small" @click="editHoldingRow(row)">修改</el-button>
+                <el-button text size="small" type="danger" @click="deleteHoldingRow(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -786,9 +787,13 @@
             <el-date-picker v-model="subFormData.arrivalDate" type="date" style="width: 100%" placeholder="选择日期" value-format="YYYY-MM-DD" :editable="false" />
           </el-form-item>
           <el-form-item label="分红方式">
-            <el-select v-model="subFormData.dividendMethod" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in dividendMethodOptions" :key="item.value" :label="item.label" :value="item.value" />
+            <el-select v-model="subFormData.dividendType" style="width: 100%" placeholder="请选择">
+              <el-option label="现金分红" :value="1" />
+              <el-option label="红利再投" :value="2" />
             </el-select>
+          </el-form-item>
+          <el-form-item label="分红规则">
+            <el-input v-model="subFormData.dividendRule" placeholder="请输入分红规则，如：10派0.01" clearable />
           </el-form-item>
           <el-form-item label="分红金额">
             <el-input-number v-model="subFormData.dividendAmount" :precision="2" :step="10" :min="0" style="width: 100%" controls-position="right" />
@@ -797,18 +802,20 @@
         <!-- 风险指标编辑 -->
         <template v-if="subDialogType === 'risk'">
           <el-form-item label="时间标识">
-            <el-select v-model="subFormData.timePeriod" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in timePeriodOptions" :key="item.value" :label="item.text" :value="item.value" />
+            <el-select v-model="subFormData.periodType" style="width: 100%" placeholder="请选择">
+              <el-option label="近1年" :value="1" />
+              <el-option label="近3年" :value="2" />
+              <el-option label="近5年" :value="3" />
             </el-select>
           </el-form-item>
           <el-form-item label="最大回撤(%)">
-            <el-input-number v-model="subFormData.maxDrawdown" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+            <el-input-number v-model="subFormData.maxDrawDown" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
           </el-form-item>
           <el-form-item label="回撤修复天数">
-            <el-input-number v-model="subFormData.drawdownRecoveryDays" :min="0" :step="1" style="width: 100%" controls-position="right" />
+            <el-input-number v-model="subFormData.recoveryDays" :min="0" :step="1" style="width: 100%" controls-position="right" />
           </el-form-item>
           <el-form-item label="年化收益率(%)">
-            <el-input-number v-model="subFormData.annualizedReturn" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
+            <el-input-number v-model="subFormData.annualReturn" :precision="2" :step="0.01" style="width: 100%" controls-position="right" />
           </el-form-item>
           <el-form-item label="夏普比率">
             <el-input-number v-model="subFormData.sharpeRatio" :precision="4" :step="0.01" style="width: 100%" controls-position="right" />
@@ -819,43 +826,43 @@
         </template>
         <!-- 持仓编辑 -->
         <template v-if="subDialogType === 'holding'">
-          <el-form-item label="持仓ID">
-            <el-input v-model="subFormData.holdingId" placeholder="自动生成" disabled />
-          </el-form-item>
-          <el-form-item label="基金代码">
-            <el-input v-model="subFormData.fundCode" disabled />
-          </el-form-item>
           <el-form-item label="持仓日期">
-            <el-date-picker v-model="subFormData.holdingDate" type="date" style="width: 100%" placeholder="选择日期" value-format="YYYY-MM-DD" :editable="false" />
+            <el-date-picker v-model="subFormData.portfolioDate" type="date" style="width: 100%" placeholder="选择日期" value-format="YYYY-MM-DD" :editable="false" />
           </el-form-item>
           <el-form-item label="持仓类型">
-            <el-select v-model="subFormData.holdingType" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in holdingTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
+            <el-select v-model="subFormData.positionType" style="width: 100%" placeholder="请选择">
+              <el-option label="股票" :value="1" />
+              <el-option label="债券" :value="2" />
+              <el-option label="基金" :value="3" />
+              <el-option label="现金" :value="4" />
             </el-select>
           </el-form-item>
           <el-form-item label="持仓代码">
-            <el-input v-model="subFormData.holdingCode" placeholder="请输入持仓代码" clearable />
+            <el-input v-model="subFormData.positionCode" placeholder="请输入持仓代码" clearable />
           </el-form-item>
           <el-form-item label="持仓名称">
-            <el-input v-model="subFormData.holdingName" placeholder="请输入持仓名称" clearable />
+            <el-input v-model="subFormData.positionName" placeholder="请输入持仓名称" clearable />
           </el-form-item>
           <el-form-item label="持仓数量">
-            <el-input-number v-model="subFormData.holdingQuantity" :precision="2" :step="100" :min="0" style="width: 100%" controls-position="right" />
+            <el-input-number v-model="subFormData.positionQuantity" :precision="2" :step="100" :min="0" style="width: 100%" controls-position="right" />
           </el-form-item>
           <el-form-item label="持仓市值">
-            <el-input-number v-model="subFormData.holdingValue" :precision="2" :step="100" :min="0" style="width: 100%" controls-position="right" />
+            <el-input-number v-model="subFormData.positionMarketValue" :precision="2" :step="100" :min="0" style="width: 100%" controls-position="right" />
           </el-form-item>
           <el-form-item label="占净值比例(%)">
-            <el-input-number v-model="subFormData.navRatio" :precision="2" :step="0.01" :min="0" style="width: 100%" controls-position="right" />
+            <el-input-number v-model="subFormData.netRatio" :precision="2" :step="0.01" :min="0" style="width: 100%" controls-position="right" />
           </el-form-item>
           <el-form-item label="行业分类">
-            <el-select v-model="subFormData.industryClass" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in industryClassOptions" :key="item.value" :label="item.text" :value="item.value" />
+            <el-select v-model="subFormData.industryType" style="width: 100%" placeholder="请选择">
+              <el-option label="通信装备" :value="1" />
+              <el-option label="电池" :value="2" />
+              <el-option label="半导体" :value="3" />
             </el-select>
           </el-form-item>
           <el-form-item label="数据来源">
             <el-select v-model="subFormData.dataSource" style="width: 100%" placeholder="请选择">
-              <el-option v-for="item in dataSourceOptions" :key="item.value" :label="item.text" :value="item.value" />
+              <el-option label="支付宝" :value="1" />
+              <el-option label="天天基金" :value="2" />
             </el-select>
           </el-form-item>
         </template>
@@ -874,7 +881,7 @@ import { ElMessage } from 'element-plus'
 import { Close, Check, Search, Refresh, Plus, FullScreen, Aim, Download, User } from '@element-plus/icons-vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage, AddFundNav, UpdateFundNav, DeleteFundNav } from "@/api/fundAsset"
+import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage, AddFundNav, UpdateFundNav, DeleteFundNav, AddFundTransaction, UpdateFundTransaction, DeleteFundTransaction, AddFundDividend, UpdateFundDividend, DeleteFundDividend, AddFundRiskPerformance, UpdateFundRiskPerformance, DeleteFundRiskPerformance, AddFundPortfolio, UpdateFundPortfolio, DeleteFundPortfolio } from "@/api/fundAsset"
 
 // 在需要全屏的组件中使用 Hook
 const { isFullscreen, initFullscreen, toggleFullscreen } = useFullscreenDialog()
@@ -975,12 +982,19 @@ const getTradeTypeText = (v) => {
   const found = tradeTypeOptions.value.find(i => i.value === v)
   return found ? found.text : v
 }
-const getDividendMethodText = (v) => (dividendMethodOptions.find(i => i.value === v) || {}).label || v || '-'
-const getTimePeriodText = (v) => {
-  if (!v) return '-'
-  const found = timePeriodOptions.value.find(i => i.value === v)
-  return found ? found.text : v
+
+// 分红类型文本映射
+const getDividendTypeText = (v) => {
+  const map = { 1: '现金分红', 2: '红利再投' }
+  return map[v] || '-'
 }
+
+// 时间标识文本映射
+const getPeriodTypeText = (v) => {
+  const map = { 1: '近1年', 2: '近3年', 3: '近5年' }
+  return map[v] || '-'
+}
+
 const getHoldingTypeText = (v) => {
   if (!v) return '-'
   const found = holdingTypeOptions.value.find(i => i.value === v)
@@ -1558,21 +1572,137 @@ const confirmSubDialog = async () => {
       return
     }
   } else if (type === 'trade') {
-    if (idx >= 0) Object.assign(tradeData.value[idx], data)
-    else tradeData.value.push(data)
-    ElMessage.success(idx >= 0 ? '修改成功' : '新增成功')
+    data.fundCode = fundData.fundCode
+    console.log('交易数据:', data)
+    console.log('是否修改:', idx >= 0, '索引:', idx)
+    try {
+      if (idx >= 0) {
+        console.log('更新交易，ID:', data.id)
+        const result = await UpdateFundTransaction(data)
+        if (result.code === 200) {
+          ElMessage.success('修改成功')
+          // 重新查询数据
+          await fetchTradeData()
+        } else {
+          ElMessage.error(result.message || '修改失败')
+          return
+        }
+      } else {
+        console.log('新增交易')
+        const result = await AddFundTransaction(data)
+        if (result.code === 200) {
+          ElMessage.success('新增成功')
+          // 重新查询数据
+          await fetchTradeData()
+        } else {
+          ElMessage.error(result.message || '新增失败')
+          return
+        }
+      }
+    } catch (error) {
+      console.error('交易操作失败:', error)
+      ElMessage.error('操作失败')
+      return
+    }
   } else if (type === 'dividend') {
-    if (idx >= 0) Object.assign(dividendData.value[idx], data)
-    else dividendData.value.push(data)
-    ElMessage.success(idx >= 0 ? '修改成功' : '新增成功')
+    data.fundCode = fundData.fundCode
+    console.log('分红数据:', data)
+    console.log('是否修改:', idx >= 0, '索引:', idx)
+    try {
+      if (idx >= 0) {
+        console.log('更新分红，ID:', data.id)
+        const result = await UpdateFundDividend(data)
+        if (result.code === 200) {
+          ElMessage.success('修改成功')
+          // 重新查询数据
+          await fetchDividendData()
+        } else {
+          ElMessage.error(result.message || '修改失败')
+          return
+        }
+      } else {
+        console.log('新增分红')
+        const result = await AddFundDividend(data)
+        if (result.code === 200) {
+          ElMessage.success('新增成功')
+          // 重新查询数据
+          await fetchDividendData()
+        } else {
+          ElMessage.error(result.message || '新增失败')
+          return
+        }
+      }
+    } catch (error) {
+      console.error('分红操作失败:', error)
+      ElMessage.error('操作失败')
+      return
+    }
   } else if (type === 'risk') {
-    if (idx >= 0) Object.assign(riskData.value[idx], data)
-    else riskData.value.push(data)
-    ElMessage.success(idx >= 0 ? '修改成功' : '新增成功')
+    data.fundCode = fundData.fundCode
+    console.log('风险绩效数据:', data)
+    console.log('是否修改:', idx >= 0, '索引:', idx)
+    try {
+      if (idx >= 0) {
+        console.log('更新风险绩效，ID:', data.id)
+        const result = await UpdateFundRiskPerformance(data)
+        if (result.code === 200) {
+          ElMessage.success('修改成功')
+          // 重新查询数据
+          await fetchRiskPerformanceData()
+        } else {
+          ElMessage.error(result.message || '修改失败')
+          return
+        }
+      } else {
+        console.log('新增风险绩效')
+        const result = await AddFundRiskPerformance(data)
+        if (result.code === 200) {
+          ElMessage.success('新增成功')
+          // 重新查询数据
+          await fetchRiskPerformanceData()
+        } else {
+          ElMessage.error(result.message || '新增失败')
+          return
+        }
+      }
+    } catch (error) {
+      console.error('风险绩效操作失败:', error)
+      ElMessage.error('操作失败')
+      return
+    }
   } else if (type === 'holding') {
-    if (idx >= 0) Object.assign(holdingData.value[idx], data)
-    else holdingData.value.push(data)
-    ElMessage.success(idx >= 0 ? '修改成功' : '新增成功')
+    data.fundCode = fundData.fundCode
+    console.log('持仓信息数据:', data)
+    console.log('是否修改:', idx >= 0, '索引:', idx)
+    try {
+      if (idx >= 0) {
+        console.log('更新持仓信息，ID:', data.id)
+        const result = await UpdateFundPortfolio(data)
+        if (result.code === 200) {
+          ElMessage.success('修改成功')
+          // 重新查询数据
+          await fetchPortfolioData()
+        } else {
+          ElMessage.error(result.message || '修改失败')
+          return
+        }
+      } else {
+        console.log('新增持仓信息')
+        const result = await AddFundPortfolio(data)
+        if (result.code === 200) {
+          ElMessage.success('新增成功')
+          // 重新查询数据
+          await fetchPortfolioData()
+        } else {
+          ElMessage.error(result.message || '新增失败')
+          return
+        }
+      }
+    } catch (error) {
+      console.error('持仓信息操作失败:', error)
+      ElMessage.error('操作失败')
+      return
+    }
   }
 
   subDialogVisible.value = false
@@ -1620,47 +1750,167 @@ const deleteNavRow = async (row) => {
 }
 
 // ============ 交易 CRUD ============
-const addTradeRow = () => openSubDialog('trade', -1, { tradeDate: '', tradeType: '申购', tradeShares: 0, tradeAmount: 0, tradeNav: 0, tradeFee: 0, confirmDate: '' })
-const editTradeRow = (idx) => {
-  const realIdx = (tradePage.page - 1) * tradePage.limit + idx
-  openSubDialog('trade', realIdx, tradeData.value[realIdx])
+const addTradeRow = () => openSubDialog('trade', -1, { tradeDate: '', tradeType: 1, tradeShares: 0, tradeAmount: 0, tradeNav: 0, tradeFee: 0, confirmDate: '' })
+const editTradeRow = (row) => {
+  const idx = tradeData.value.findIndex(item => item.id === row.id)
+  openSubDialog('trade', idx >= 0 ? idx : -1, { ...row })
 }
-const deleteTradeRow = (idx) => {
-  const realIdx = (tradePage.page - 1) * tradePage.limit + idx
-  tradeData.value.splice(realIdx, 1)
-  ElMessage.success('删除成功')
+const deleteTradeRow = async (row) => {
+  console.log('删除交易数据:', row)
+  console.log('row.id:', row.id, '类型:', typeof row.id)
+
+  if (row.id) {
+    try {
+      console.log('调用删除接口，ID:', row.id)
+      const result = await DeleteFundTransaction(row.id)
+      console.log('删除接口返回:', result)
+
+      if (result.code === 200) {
+        const idx = tradeData.value.findIndex(item => item.id === row.id)
+        if (idx >= 0) {
+          tradeData.value.splice(idx, 1)
+        }
+        ElMessage.success('删除成功')
+        // 重新查询数据
+        await fetchTradeData()
+      } else {
+        ElMessage.error(result.message || '删除失败')
+      }
+    } catch (error) {
+      console.error('删除交易失败:', error)
+      ElMessage.error('删除失败')
+    }
+  } else {
+    console.log('无ID，直接从数组删除')
+    const idx = tradeData.value.findIndex(item => item === row)
+    if (idx >= 0) {
+      tradeData.value.splice(idx, 1)
+    }
+    ElMessage.success('删除成功')
+  }
 }
 
 // ============ 分红 CRUD ============
-const addDividendRow = () => openSubDialog('dividend', -1, { dividendDate: '', arrivalDate: '', dividendMethod: '现金分红', dividendAmount: 0 })
-const editDividendRow = (idx) => {
-  const realIdx = (dividendPage.page - 1) * dividendPage.limit + idx
-  openSubDialog('dividend', realIdx, dividendData.value[realIdx])
+const addDividendRow = () => openSubDialog('dividend', -1, { dividendDate: '', arrivalDate: '', dividendType: 1, dividendRule: '', dividendAmount: 0 })
+const editDividendRow = (row) => {
+  const idx = dividendData.value.findIndex(item => item.id === row.id)
+  openSubDialog('dividend', idx >= 0 ? idx : -1, { ...row })
 }
-const deleteDividendRow = (idx) => {
-  const realIdx = (dividendPage.page - 1) * dividendPage.limit + idx
-  dividendData.value.splice(realIdx, 1)
-  ElMessage.success('删除成功')
+const deleteDividendRow = async (row) => {
+  console.log('删除分红数据:', row)
+  console.log('row.id:', row.id, '类型:', typeof row.id)
+
+  if (row.id) {
+    try {
+      console.log('调用删除接口，ID:', row.id)
+      const result = await DeleteFundDividend(row.id)
+      console.log('删除接口返回:', result)
+
+      if (result.code === 200) {
+        const idx = dividendData.value.findIndex(item => item.id === row.id)
+        if (idx >= 0) {
+          dividendData.value.splice(idx, 1)
+        }
+        ElMessage.success('删除成功')
+        // 重新查询数据
+        await fetchDividendData()
+      } else {
+        ElMessage.error(result.message || '删除失败')
+      }
+    } catch (error) {
+      console.error('删除分红失败:', error)
+      ElMessage.error('删除失败')
+    }
+  } else {
+    console.log('无ID，直接从数组删除')
+    const idx = dividendData.value.findIndex(item => item === row)
+    if (idx >= 0) {
+      dividendData.value.splice(idx, 1)
+    }
+    ElMessage.success('删除成功')
+  }
 }
 
 // ============ 风险指标 CRUD ============
-const addRiskRow = () => openSubDialog('risk', -1, { timePeriod: '近1年', maxDrawdown: 0, drawdownRecoveryDays: 0, annualizedReturn: 0, sharpeRatio: 0, volatility: 0 })
-const editRiskRow = (idx) => openSubDialog('risk', idx, riskData.value[idx])
-const deleteRiskRow = (idx) => {
-  riskData.value.splice(idx, 1)
-  ElMessage.success('删除成功')
+const addRiskRow = () => openSubDialog('risk', -1, { periodType: 1, maxDrawDown: 0, recoveryDays: 0, annualReturn: 0, sharpeRatio: 0, volatility: 0 })
+const editRiskRow = (row) => {
+  const idx = riskData.value.findIndex(item => item.id === row.id)
+  openSubDialog('risk', idx >= 0 ? idx : -1, { ...row })
+}
+const deleteRiskRow = async (row) => {
+  console.log('删除风险绩效数据:', row)
+  console.log('row.id:', row.id, '类型:', typeof row.id)
+
+  if (row.id) {
+    try {
+      console.log('调用删除接口，ID:', row.id)
+      const result = await DeleteFundRiskPerformance(row.id)
+      console.log('删除接口返回:', result)
+
+      if (result.code === 200) {
+        const idx = riskData.value.findIndex(item => item.id === row.id)
+        if (idx >= 0) {
+          riskData.value.splice(idx, 1)
+        }
+        ElMessage.success('删除成功')
+        // 重新查询数据
+        await fetchRiskPerformanceData()
+      } else {
+        ElMessage.error(result.message || '删除失败')
+      }
+    } catch (error) {
+      console.error('删除风险绩效失败:', error)
+      ElMessage.error('删除失败')
+    }
+  } else {
+    console.log('无ID，直接从数组删除')
+    const idx = riskData.value.findIndex(item => item === row)
+    if (idx >= 0) {
+      riskData.value.splice(idx, 1)
+    }
+    ElMessage.success('删除成功')
+  }
 }
 
 // ============ 持仓 CRUD ============
-const addHoldingRow = () => openSubDialog('holding', -1, { holdingId: 'H' + Date.now(), fundCode: fundData.fundCode, holdingDate: '', holdingType: '股票', holdingCode: '', holdingName: '', holdingQuantity: 0, holdingValue: 0, navRatio: 0, industryClass: '半导体', dataSource: '天天基金' })
-const editHoldingRow = (idx) => {
-  const realIdx = (holdingPage.page - 1) * holdingPage.limit + idx
-  openSubDialog('holding', realIdx, holdingData.value[realIdx])
+const addHoldingRow = () => openSubDialog('holding', -1, { portfolioDate: '', positionType: 1, positionCode: '', positionName: '', positionQuantity: 0, positionMarketValue: 0, netRatio: 0, industryType: 1, dataSource: 1 })
+const editHoldingRow = (row) => {
+  const idx = holdingData.value.findIndex(item => item.id === row.id)
+  openSubDialog('holding', idx >= 0 ? idx : -1, { ...row })
 }
-const deleteHoldingRow = (idx) => {
-  const realIdx = (holdingPage.page - 1) * holdingPage.limit + idx
-  holdingData.value.splice(realIdx, 1)
-  ElMessage.success('删除成功')
+const deleteHoldingRow = async (row) => {
+  console.log('删除持仓信息数据:', row)
+  console.log('row.id:', row.id, '类型:', typeof row.id)
+
+  if (row.id) {
+    try {
+      console.log('调用删除接口，ID:', row.id)
+      const result = await DeleteFundPortfolio(row.id)
+      console.log('删除接口返回:', result)
+
+      if (result.code === 200) {
+        const idx = holdingData.value.findIndex(item => item.id === row.id)
+        if (idx >= 0) {
+          holdingData.value.splice(idx, 1)
+        }
+        ElMessage.success('删除成功')
+        // 重新查询数据
+        await fetchPortfolioData()
+      } else {
+        ElMessage.error(result.message || '删除失败')
+      }
+    } catch (error) {
+      console.error('删除持仓信息失败:', error)
+      ElMessage.error('删除失败')
+    }
+  } else {
+    console.log('无ID，直接从数组删除')
+    const idx = holdingData.value.findIndex(item => item === row)
+    if (idx >= 0) {
+      holdingData.value.splice(idx, 1)
+    }
+    ElMessage.success('删除成功')
+  }
 }
 
 // ============ 初始化数据 ============

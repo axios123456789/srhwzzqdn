@@ -283,4 +283,196 @@ public class FundAssetController {
         }
     }
 
+    /**
+     * 添加基金交易数据
+     * @param fundTransaction
+     * @return
+     */
+    @PostMapping("/addFundTransaction")
+    public Result addFundTransaction(@RequestBody FundTransaction fundTransaction) {
+        try {
+            fundAssetService.addFundTransaction(fundTransaction);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("添加基金交易数据失败", e);
+            return Result.build(null, 500, "添加基金交易数据失败！");
+        }
+    }
+
+    /**
+     * 更新基金交易数据
+     * @param fundTransaction
+     * @return
+     */
+    @PostMapping("/updateFundTransaction")
+    public Result updateFundTransaction(@RequestBody FundTransaction fundTransaction) {
+        try {
+            fundAssetService.updateFundTransaction(fundTransaction);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("更新基金交易数据失败", e);
+            return Result.build(null, 500, "更新基金交易数据失败！");
+        }
+    }
+
+    /**
+     * 根据id删除基金交易数据
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/deleteFundTransaction/{id}")
+    public Result deleteFundTransaction(@PathVariable("id") Long id) {
+        try {
+            fundAssetService.deleteFundTransaction(id);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("删除基金交易数据失败", e);
+            return Result.build(null, 500, "删除基金交易数据失败！");
+        }
+    }
+
+    /**
+     * 添加基金分红数据
+     * @param fundDividend
+     * @return
+     */
+    @PostMapping("/addFundDividend")
+    public Result addFundDividend(@RequestBody FundDividend fundDividend) {
+        try {
+            fundAssetService.addFundDividend(fundDividend);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("添加基金分红数据失败", e);
+            return Result.build(null, 500, "添加基金分红数据失败！");
+        }
+    }
+
+    /**
+     * 更新基金分红数据
+     * @param fundDividend
+     * @return
+     */
+    @PostMapping("/updateFundDividend")
+    public Result updateFundDividend(@RequestBody FundDividend fundDividend) {
+        try {
+            fundAssetService.updateFundDividend(fundDividend);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("更新基金分红数据失败", e);
+            return Result.build(null, 500, "更新基金分红数据失败！");
+        }
+    }
+
+    /**
+     * 根据id删除基金分红数据
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/deleteFundDividend/{id}")
+    public Result deleteFundDividend(@PathVariable("id") Long id) {
+        try {
+            fundAssetService.deleteFundDividend(id);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("删除基金分红数据失败", e);
+            return Result.build(null, 500, "删除基金分红数据失败！");
+        }
+    }
+
+    /**
+     * 添加基金风险绩效数据
+     * @param fundRiskPerformance
+     * @return
+     */
+    @PostMapping("/addFundRiskPerformance")
+    public Result addFundRiskPerformance(@RequestBody FundRiskPerformance fundRiskPerformance) {
+        try {
+            fundAssetService.addFundRiskPerformance(fundRiskPerformance);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("添加基金风险绩效数据失败", e);
+            return Result.build(null, 500, "添加基金风险绩效数据失败！");
+        }
+    }
+
+    /**
+     * 更新基金风险绩效数据
+     * @param fundRiskPerformance
+     * @return
+     */
+    @PostMapping("/updateFundRiskPerformance")
+    public Result updateFundRiskPerformance(@RequestBody FundRiskPerformance fundRiskPerformance) {
+        try {
+            fundAssetService.updateFundRiskPerformance(fundRiskPerformance);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("更新基金风险绩效数据失败", e);
+            return Result.build(null, 500, "更新基金风险绩效数据失败！");
+        }
+    }
+
+    /**
+     * 根据id删除基金风险绩效数据
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/deleteFundRiskPerformance/{id}")
+    public Result deleteFundRiskPerformance(@PathVariable("id") Long id) {
+        try {
+            fundAssetService.deleteFundRiskPerformance(id);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("删除基金风险绩效数据失败", e);
+            return Result.build(null, 500, "删除基金风险绩效数据失败！");
+        }
+    }
+
+    /**
+     * 添加基金持仓信息数据
+     * @param fundPortfolio
+     * @return
+     */
+    @PostMapping("/addFundPortfolio")
+    public Result addFundPortfolio(@RequestBody FundPortfolio fundPortfolio) {
+        try {
+            fundAssetService.addFundPortfolio(fundPortfolio);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("添加基金持仓信息数据失败", e);
+            return Result.build(null, 500, "添加基金持仓信息数据失败！");
+        }
+    }
+
+    /**
+     * 更新基金持仓信息数据
+     * @param fundPortfolio
+     * @return
+     */
+    @PostMapping("/updateFundPortfolio")
+    public Result updateFundPortfolio(@RequestBody FundPortfolio fundPortfolio) {
+        try {
+            fundAssetService.updateFundPortfolio(fundPortfolio);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("更新基金持仓信息数据失败", e);
+            return Result.build(null, 500, "更新基金持仓信息数据失败！");
+        }
+    }
+
+    /**
+     * 根据id删除基金持仓信息数据
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/deleteFundPortfolio/{id}")
+    public Result deleteFundPortfolio(@PathVariable("id") Long id) {
+        try {
+            fundAssetService.deleteFundPortfolio(id);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("删除基金持仓信息数据失败", e);
+            return Result.build(null, 500, "删除基金持仓信息数据失败！");
+        }
+    }
+
 }

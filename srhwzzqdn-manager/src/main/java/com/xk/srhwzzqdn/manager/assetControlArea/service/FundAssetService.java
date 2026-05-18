@@ -56,4 +56,40 @@ public interface FundAssetService {
 
     //根据id删除基金净值数据
     void deleteFundNav(Long id);
+
+    //添加基金交易数据
+    void addFundTransaction(FundTransaction fundTransaction);
+
+    //更新基金交易数据
+    void updateFundTransaction(FundTransaction fundTransaction);
+
+    //根据id删除基金交易数据
+    void deleteFundTransaction(Long id);
+
+    //添加基金分红数据
+    void addFundDividend(FundDividend fundDividend);
+
+    //更新基金分红数据
+    void updateFundDividend(FundDividend fundDividend);
+
+    //根据id删除基金分红数据
+    void deleteFundDividend(Long id);
+
+    //添加基金风险绩效数据
+    void addFundRiskPerformance(FundRiskPerformance fundRiskPerformance);
+
+    //更新基金风险绩效数据
+    void updateFundRiskPerformance(FundRiskPerformance fundRiskPerformance);
+
+    //根据id删除基金风险绩效数据
+    void deleteFundRiskPerformance(Long id);
+
+    //添加基金持仓信息数据
+    void addFundPortfolio(FundPortfolio fundPortfolio);
+
+    //更新基金持仓信息数据
+    void updateFundPortfolio(FundPortfolio fundPortfolio);
+
+    //根据id删除基金持仓信息数据
+    void deleteFundPortfolio(Long id);
 }

@@ -177,12 +177,12 @@
       </div>
 
       <!-- 持仓信息卡片 -->
-      <div class="info-card" v-if="holdingData">
+      <div class="info-card">
         <div class="card-header">
           <el-icon><Wallet /></el-icon>
           <span>持仓信息</span>
         </div>
-        <div class="card-body">
+        <div class="card-body" v-if="holdingData">
           <div class="position-grid">
             <div class="position-item">
               <div class="position-label">持有份额</div>
@@ -216,10 +216,13 @@
             </div>
           </div>
         </div>
+        <div class="card-body" v-else>
+          <el-empty description="暂无持仓信息数据" :image-size="100" />
+        </div>
       </div>
 
       <!-- 净值走势卡片 -->
-      <div class="info-card" v-if="props.fundData.navList && props.fundData.navList.length > 0">
+      <div class="info-card">
         <div class="card-header">
           <el-icon><TrendCharts /></el-icon>
           <span>净值走势</span>
@@ -263,7 +266,7 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column prop="estimateNav" label="估值" width="120" align="right" />
+              <el-table-column prop="valuation" label="估值" width="120" align="right" />
             </el-table>
             
             <!-- 分页组件 -->
@@ -283,12 +286,12 @@
       </div>
 
       <!-- 基金经理分析卡片 -->
-      <div class="info-card" v-if="managerAnalysisData">
+      <div class="info-card">
         <div class="card-header">
           <el-icon><User /></el-icon>
           <span>基金经理分析</span>
         </div>
-        <div class="card-body">
+        <div class="card-body" v-if="managerAnalysisData">
           <!-- 基本信息 -->
           <div class="info-grid">
             <div class="info-item">
@@ -428,10 +431,13 @@
             <p class="desc-text">{{ managerAnalysisData.personalHoldAnalysis }}</p>
           </div>
         </div>
+        <div class="card-body" v-else>
+          <el-empty description="暂无基金经理分析数据" :image-size="100" />
+        </div>
       </div>
 
       <!-- 交易记录卡片 -->
-      <div class="info-card" v-if="tradeData && tradeData.length > 0">
+      <div class="info-card">
         <div class="card-header">
           <el-icon><List /></el-icon>
           <span>交易记录</span>
@@ -473,7 +479,7 @@
       </div>
 
       <!-- 分红记录卡片 -->
-      <div class="info-card" v-if="dividendData && dividendData.length > 0">
+      <div class="info-card">
         <div class="card-header">
           <el-icon><Money /></el-icon>
           <span>分红记录</span>
@@ -510,11 +516,11 @@
         </div>
       </div>
 
-      <!-- 持仓数据卡片 -->
-      <div class="info-card" v-if="portfolioData && portfolioData.length > 0">
+      <!-- 持仓明细卡片 -->
+      <div class="info-card">
         <div class="card-header">
           <el-icon><Grid /></el-icon>
-          <span>持仓数据</span>
+          <span>持仓明细</span>
         </div>
         <div class="card-body">
           <el-table :data="portfolioData" border stripe size="small" max-height="300px" v-loading="portfolioTableLoading">
@@ -563,24 +569,28 @@
       </div>
 
       <!-- 风险指标卡片 -->
-      <div class="info-card" v-if="props.fundData.riskList && props.fundData.riskList.length > 0">
+      <div class="info-card">
         <div class="card-header">
           <el-icon><DataAnalysis /></el-icon>
           <span>风险指标</span>
         </div>
         <div class="card-body">
-          <el-table :data="props.fundData.riskList" border stripe size="small" max-height="300px">
-            <el-table-column prop="timePeriod" label="时间周期" width="120" />
-            <el-table-column prop="maxDrawdown" label="最大回撤(%)" width="130" align="right">
+          <el-table :data="riskPerformanceData" border stripe size="small" max-height="300px">
+            <el-table-column prop="periodType" label="时间周期" width="120">
               <template #default="{ row }">
-                <span class="loss-text">{{ row.maxDrawdown }}%</span>
+                {{ getPeriodTypeText(row.periodType) }}
               </template>
             </el-table-column>
-            <el-table-column prop="drawdownRecoveryDays" label="回撤修复天数" width="130" align="right" />
-            <el-table-column prop="annualizedReturn" label="年化收益率(%)" width="140" align="right">
+            <el-table-column prop="maxDrawDown" label="最大回撤(%)" width="130" align="right">
               <template #default="{ row }">
-                <span :class="row.annualizedReturn >= 0 ? 'profit-text' : 'loss-text'">
-                  {{ row.annualizedReturn >= 0 ? '+' : '' }}{{ row.annualizedReturn }}%
+                <span class="loss-text">{{ row.maxDrawDown }}%</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="recoveryDays" label="回撤修复天数" width="130" align="right" />
+            <el-table-column prop="annualReturn" label="年化收益率(%)" width="140" align="right">
+              <template #default="{ row }">
+                <span :class="row.annualReturn >= 0 ? 'profit-text' : 'loss-text'">
+                  {{ row.annualReturn >= 0 ? '+' : '' }}{{ row.annualReturn }}%
                 </span>
               </template>
             </el-table-column>
@@ -590,42 +600,6 @@
         </div>
       </div>
 
-      <!-- 持仓明细卡片 -->
-      <div class="info-card" v-if="props.fundData.holdingList && props.fundData.holdingList.length > 0">
-        <div class="card-header">
-          <el-icon><Grid /></el-icon>
-          <span>持仓明细</span>
-        </div>
-        <div class="card-body">
-          <el-table :data="props.fundData.holdingList" border stripe size="small" max-height="300px">
-            <el-table-column prop="holdingDate" label="持仓日期" width="110" />
-            <el-table-column prop="holdingType" label="持仓类型" width="100">
-              <template #default="{ row }">
-                <el-tag size="small">{{ getDisplayText(row.holdingType, positionTypeOptions) }}</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column prop="holdingCode" label="持仓代码" width="100" />
-            <el-table-column prop="holdingName" label="持仓名称" min-width="150" show-overflow-tooltip />
-            <el-table-column prop="holdingQuantity" label="持仓数量" width="120" align="right" />
-            <el-table-column prop="holdingValue" label="持仓市值" width="130" align="right">
-              <template #default="{ row }">¥{{ formatNumber(row.holdingValue) }}</template>
-            </el-table-column>
-            <el-table-column prop="navRatio" label="占净值比例(%)" width="130" align="right">
-              <template #default="{ row }">{{ row.navRatio }}%</template>
-            </el-table-column>
-            <el-table-column prop="industryClass" label="行业分类" width="100">
-              <template #default="{ row }">
-                {{ getDisplayText(row.industryClass, sectorTypeOptions) }}
-              </template>
-            </el-table-column>
-            <el-table-column prop="dataSource" label="数据来源" width="100">
-              <template #default="{ row }">
-                {{ getDisplayText(row.dataSource, dataSourceOptions) }}
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-      </div>
     </div>
 
     <!-- 底部按钮 -->
@@ -795,7 +769,7 @@ const dialogVisible = computed({
 
 // 根据时间范围过滤数据
 const getFilteredNavData = () => {
-  if (!props.fundData.navList || props.fundData.navList.length === 0) {
+  if (!navDataList.value || navDataList.value.length === 0) {
     return []
   }
 
@@ -825,12 +799,12 @@ const getFilteredNavData = () => {
       startDate.setFullYear(now.getFullYear() - 10)
       break
     case 'all':
-      return props.fundData.navList
+      return navDataList.value
     default:
       startDate.setMonth(now.getMonth() - 1)
   }
 
-  return props.fundData.navList.filter(item => {
+  return navDataList.value.filter(item => {
     const itemDate = new Date(item.navDate)
     return itemDate >= startDate && itemDate <= now
   })
@@ -1558,6 +1532,12 @@ const getDataSourceText = (v) => {
 const getDataSourceTagType = (v) => {
   const map = { 1: 'primary', 2: 'success' }
   return map[v] || 'info'
+}
+
+// 时间周期显示方法
+const getPeriodTypeText = (v) => {
+  const map = { 1: '近1年', 2: '近3年', 3: '近5年' }
+  return map[v] || '-'
 }
 </script>
 
