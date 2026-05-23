@@ -24,7 +24,7 @@
     <!--  资产聚类分析-资产台账分析-资产状态分布分组数据获取  -->
     <select id="getAssetStatusGroup" resultType="com.xk.srhwzzqdn.model.vo.common.GroupTextValueVo">
         SELECT (SELECT d.`value` FROM t_sys_dict d WHERE d.type = 'asset_status' AND d.`code` = asset_status LIMIT 1) TEXT,
-               sum(amount) VALUE
+               sum(case when asset_status = 4 then -invest_amount else amount end) VALUE
         FROM
             t_asset_ledger
         WHERE asset_owner = #{param1}
@@ -38,6 +38,7 @@
                amount value
         from t_asset_ledger
         WHERE asset_owner = #{param1}
+          and asset_status != 4
         order by amount desc
     </select>
 

@@ -287,7 +287,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="投入金额">
-              <el-input-number v-model="form.investAmount" :precision="2" :step="1000" :min="0" style="width: 100%" />
+              <el-input-number v-model="form.investAmount" :precision="2" :step="1000" style="width: 100%" />
             </el-form-item>
           </el-col>
         </el-row>
