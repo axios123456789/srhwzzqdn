@@ -881,7 +881,7 @@ import { ElMessage } from 'element-plus'
 import { Close, Check, Search, Refresh, Plus, FullScreen, Aim, Download, User } from '@element-plus/icons-vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage, AddFundNav, UpdateFundNav, DeleteFundNav, AddFundTransaction, UpdateFundTransaction, DeleteFundTransaction, AddFundDividend, UpdateFundDividend, DeleteFundDividend, AddFundRiskPerformance, UpdateFundRiskPerformance, DeleteFundRiskPerformance, AddFundPortfolio, UpdateFundPortfolio, DeleteFundPortfolio } from "@/api/fundAsset"
+import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage, AddFundNav, UpdateFundNav, DeleteFundNav, AddFundTransaction, UpdateFundTransaction, DeleteFundTransaction, AddFundDividend, UpdateFundDividend, DeleteFundDividend, AddFundRiskPerformance, UpdateFundRiskPerformance, DeleteFundRiskPerformance, AddFundPortfolio, UpdateFundPortfolio, DeleteFundPortfolio, AddFundImportData } from "@/api/fundAsset"
 
 // 在需要全屏的组件中使用 Hook
 const { isFullscreen, initFullscreen, toggleFullscreen } = useFullscreenDialog()
@@ -2037,11 +2037,19 @@ const handleClose = () => {
 const fetchLoading = ref(false)
 
 const handleFetchRealTimeData = async () => {
+  const fundCode = props.fundRowData?.fundCode
+  if (!fundCode) {
+    ElMessage.warning('缺少基金代码，无法获取数据')
+    return
+  }
   fetchLoading.value = true
   try {
-    // TODO: 调用API获取实时数据(最新净值、持仓等)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    ElMessage.success('实时数据获取成功')
+    const result = await AddFundImportData(fundCode)
+    if (result.code === 200) {
+      ElMessage.success('实时数据获取成功')
+    } else {
+      ElMessage.error(result.message || '获取实时数据失败')
+    }
   } catch (error) {
     ElMessage.error('获取实时数据失败')
   } finally {

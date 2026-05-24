@@ -395,3 +395,16 @@ export const DeleteFundDataByCodes = (fundCodes) => {
     data: fundCodes
   })
 }
+
+/**
+ * 获取基金重要数据 -> 基金持仓数据插入数据库，基金净值数据插入数据库
+ * @param fundCode 基金代码
+ * @returns
+ */
+export const AddFundImportData = (fundCode) => {
+  return request({
+    url: `${base_api}/addFundImportData/${fundCode}`,
+    method: 'post',
+    timeout: 300000 // 设置5分钟超时，因为接口需要获取外部数据，耗时较长
+  })
+}
