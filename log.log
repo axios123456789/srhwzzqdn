@@ -11832,3 +11832,139 @@ Caused by: java.sql.SQLSyntaxErrorException: Unknown column 'investAmount' in 'f
 2026-05-23 21:07:48 HikariPool-1 - Start completed.
 2026-05-23 21:48:08 HikariPool-1 - Shutdown initiated...
 2026-05-23 21:48:08 HikariPool-1 - Shutdown completed.
+2026-05-24 11:04:58 Starting ManagerApplication using Java 17.0.17 with PID 20496 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-24 11:04:58 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-24 11:04:58 The following 1 profile is active: "dev"
+2026-05-24 11:04:59 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-24 11:04:59 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-24 11:05:00 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-05-24 11:05:00 Tomcat initialized with port(s): 8400 (http)
+2026-05-24 11:05:00 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-24 11:05:00 Starting service [Tomcat]
+2026-05-24 11:05:00 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-24 11:05:01 Initializing Spring embedded WebApplicationContext
+2026-05-24 11:05:01 Root WebApplicationContext: initialization completed in 2439 ms
+2026-05-24 11:05:03 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-24 11:05:03 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-24 11:05:03 Started ManagerApplication in 5.185 seconds (process running for 7.391)
+2026-05-24 11:05:42 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24 11:05:42 Initializing Servlet 'dispatcherServlet'
+2026-05-24 11:05:42 Completed initialization in 2 ms
+2026-05-24 11:05:47 HikariPool-1 - Starting...
+2026-05-24 11:05:47 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@11423edf
+2026-05-24 11:05:47 HikariPool-1 - Start completed.
+2026-05-24 12:20:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-24 12:20:44 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"b8a16c5f-c845-9493-a34b-2708df9e4892"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：279 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：58 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：296 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"4205c046-557b-94d4-8a89-de4349729280"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：47 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"e63f1897-4dc7-92f6-a899-457c926752fd"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：48 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"4b587c49-b4cb-9f79-a53b-55294951a96f"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：46 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"57b46247-bba8-927c-bf7e-d3c1e479a04e"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：45 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"1baad099-fc5a-934f-8215-8371a5b31a40"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：47 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"a23578c2-9828-9097-a576-89c74b0aa255"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：48 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"295e8efe-6b9d-91de-866b-924a874d159d"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：46 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"62b6808f-8505-99e8-a22f-d00d191cace5"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：46 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"bc898116-952e-973e-9c53-02793fd238e2"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：45 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"3613b5ad-160a-9542-8eef-977e35ac8616"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：47 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"9b5dd042-ffb2-9e91-b894-7a0545fcee88"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：45 ms
+2026-05-24 12:20:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-24 12:20:45 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-24 12:20:45 阿里云百炼 API 调用失败，状态码：401，错误信息：{"code":"InvalidApiKey","message":"API-key is blocked.","request_id":"300e027d-c29b-99c6-bb43-07fc59b43b71"}
+2026-05-24 12:20:45 阿里云百炼 AI 调用完成，耗时：45 ms
+2026-05-24 12:21:11 HikariPool-1 - Shutdown initiated...
+2026-05-24 12:21:11 HikariPool-1 - Shutdown completed.
+2026-05-24 12:21:33 Starting ManagerApplication using Java 17.0.17 with PID 9544 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-24 12:21:33 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-24 12:21:33 The following 1 profile is active: "dev"
+2026-05-24 12:21:33 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-24 12:21:33 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-24 12:21:33 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-24 12:21:34 Tomcat initialized with port(s): 8400 (http)
+2026-05-24 12:21:34 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-24 12:21:34 Starting service [Tomcat]
+2026-05-24 12:21:34 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-24 12:21:34 Initializing Spring embedded WebApplicationContext
+2026-05-24 12:21:34 Root WebApplicationContext: initialization completed in 1135 ms
+2026-05-24 12:21:35 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-24 12:21:35 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-24 12:21:35 Started ManagerApplication in 3.014 seconds (process running for 4.08)
+2026-05-24 12:21:45 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24 12:21:45 Initializing Servlet 'dispatcherServlet'
+2026-05-24 12:21:45 Completed initialization in 2 ms
+2026-05-24 12:21:45 HikariPool-1 - Starting...
+2026-05-24 12:21:45 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@11fbe535
+2026-05-24 12:21:45 HikariPool-1 - Start completed.
+2026-05-24 13:21:33 HikariPool-1 - Shutdown initiated...
+2026-05-24 13:21:33 HikariPool-1 - Shutdown completed.
+2026-05-24 13:21:40 Starting ManagerApplication using Java 17.0.17 with PID 19776 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-24 13:21:40 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-24 13:21:40 The following 1 profile is active: "dev"
+2026-05-24 13:21:40 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-24 13:21:40 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-24 13:21:40 Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2026-05-24 13:21:41 Tomcat initialized with port(s): 8400 (http)
+2026-05-24 13:21:41 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-24 13:21:41 Starting service [Tomcat]
+2026-05-24 13:21:41 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-24 13:21:41 Initializing Spring embedded WebApplicationContext
+2026-05-24 13:21:41 Root WebApplicationContext: initialization completed in 1005 ms
+2026-05-24 13:21:42 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-24 13:21:42 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-24 13:21:42 Started ManagerApplication in 2.685 seconds (process running for 3.249)
+2026-05-24 13:22:37 Starting ManagerApplication using Java 17.0.17 with PID 21904 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-24 13:22:37 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-24 13:22:37 The following 1 profile is active: "dev"
+2026-05-24 13:22:38 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-24 13:22:38 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-24 13:22:38 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-24 13:22:38 Tomcat initialized with port(s): 8400 (http)
+2026-05-24 13:22:38 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-24 13:22:38 Starting service [Tomcat]
+2026-05-24 13:22:38 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-24 13:22:38 Initializing Spring embedded WebApplicationContext
+2026-05-24 13:22:38 Root WebApplicationContext: initialization completed in 1046 ms
+2026-05-24 13:22:40 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-24 13:22:40 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-24 13:22:40 Started ManagerApplication in 3.194 seconds (process running for 3.716)
+2026-05-24 13:22:48 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24 13:22:48 Initializing Servlet 'dispatcherServlet'
+2026-05-24 13:22:48 Completed initialization in 1 ms
+2026-05-24 13:22:49 HikariPool-1 - Starting...
+2026-05-24 13:22:50 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@533d507b
+2026-05-24 13:22:50 HikariPool-1 - Start completed.
+2026-05-24 13:24:42 HikariPool-1 - Shutdown initiated...
+2026-05-24 13:24:42 HikariPool-1 - Shutdown completed.

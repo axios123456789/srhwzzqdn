@@ -5,6 +5,7 @@ import com.xk.srhwzzqdn.manager.assetControlArea.service.FundAssetService;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
+import com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo;
 import com.xk.srhwzzqdn.model.vo.common.Result;
 import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
 import org.apache.ibatis.annotations.Update;
@@ -473,6 +474,17 @@ public class FundAssetController {
             logger.error("删除基金持仓信息数据失败", e);
             return Result.build(null, 500, "删除基金持仓信息数据失败！");
         }
+    }
+
+    /**
+     * 获取业绩走势echarts数据
+     * @param fundComm
+     * @return
+     */
+    @GetMapping("/getNaveChartsByCondition")
+    public Result getNaveChartsByCondition(FundComm fundComm){
+        List<NavEChartsVo> navEChartsVos = fundAssetService.getNaveChartsByCondition(fundComm);
+        return Result.build(navEChartsVos, ResultCodeEnum.SUCCESS);
     }
 
 }

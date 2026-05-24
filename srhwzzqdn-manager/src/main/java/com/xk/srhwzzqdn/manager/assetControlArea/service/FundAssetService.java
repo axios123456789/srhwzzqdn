@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
+import com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo;
 
 import java.text.ParseException;
 import java.util.List;
@@ -92,4 +93,7 @@ public interface FundAssetService {
 
     //根据id删除基金持仓信息数据
     void deleteFundPortfolio(Long id);
+
+    //获取业绩走势echarts数据
+    List<NavEChartsVo> getNaveChartsByCondition(FundComm fundComm);
 }

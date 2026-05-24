@@ -3,6 +3,7 @@ package com.xk.srhwzzqdn.manager.assetControlArea.mapper;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
+import com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -106,4 +107,7 @@ public interface FundAssetMapper {
     //根据id删除基金持仓信息数据
     @Delete("delete from t_fund_portfolio where id = #{param1}")
     void deleteFundPortfolio(Long id);
+
+    //获取业绩走势echarts数据
+    List<NavEChartsVo> getNaveChartsByCondition(FundComm fundComm);
 }

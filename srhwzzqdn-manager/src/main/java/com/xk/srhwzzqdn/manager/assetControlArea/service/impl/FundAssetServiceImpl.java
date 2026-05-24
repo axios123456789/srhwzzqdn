@@ -11,6 +11,7 @@ import com.xk.srhwzzqdn.manager.util.BailianApiUtil;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
+import com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo;
 import com.xk.srhwzzqdn.util.AuthContextUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -569,6 +570,16 @@ public class FundAssetServiceImpl implements FundAssetService {
     @Override
     public void deleteFundPortfolio(Long id) {
         fundAssetMapper.deleteFundPortfolio(id);
+    }
+
+    /**
+     * 获取业绩走势echarts数据
+     * @param fundComm
+     * @return
+     */
+    @Override
+    public List<NavEChartsVo> getNaveChartsByCondition(FundComm fundComm) {
+        return fundAssetMapper.getNaveChartsByCondition(fundComm);
     }
 
     /**
