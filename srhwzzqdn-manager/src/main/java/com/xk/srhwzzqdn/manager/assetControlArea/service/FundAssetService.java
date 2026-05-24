@@ -102,4 +102,7 @@ public interface FundAssetService {
 
     //根据基金代码批量删除基金的全部数据
     void deleteFundDataByCodes(List<String> fund_codes);
+
+    //获取基金重要数据 -> 基金持仓数据插入数据库，基金净值数据插入数据库
+    void addFundImportData(String fundCode);
 }

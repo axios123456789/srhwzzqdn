@@ -700,4 +700,62 @@
             #{code}
         </foreach>
     </delete>
+
+    <!--  批量插入基金净值数据  -->
+    <insert id="batchAddFundNav">
+        insert into t_fund_nav (
+            fund_code,
+            nav_date,
+            unit_nav,
+            accumulated_nav,
+            daily_change_rate,
+            valuation,
+            create_time
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.fundCode},
+                #{item.navDate},
+                #{item.unitNav},
+                #{item.accumulatedNav},
+                #{item.dailyChangeRate},
+                #{item.valuation},
+                now()
+            )
+        </foreach>
+    </insert>
+
+    <!--  批量插入基金持仓信息数据  -->
+    <insert id="batchAddFundPortfolio">
+        insert into t_fund_portfolio (
+            fund_code,
+            portfolio_date,
+            position_type,
+            position_code,
+            position_name,
+            position_quantity,
+            position_market_value,
+            net_ratio,
+            industry_type,
+            data_source,
+            create_time,
+            create_by
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.fundCode},
+                #{item.portfolioDate},
+                #{item.positionType},
+                #{item.positionCode},
+                #{item.positionName},
+                #{item.positionQuantity},
+                #{item.positionMarketValue},
+                #{item.netRatio},
+                #{item.industryType},
+                #{item.dataSource},
+                now(),
+                #{item.createBy}
+            )
+        </foreach>
+    </insert>
 </mapper>

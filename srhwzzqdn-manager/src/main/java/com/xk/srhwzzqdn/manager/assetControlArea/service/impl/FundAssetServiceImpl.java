@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -647,6 +648,93 @@ public class FundAssetServiceImpl implements FundAssetService {
 
         //8.根据基金代码批量删除基金基本数据
         fundAssetMapper.deleteFundAssetByCodes(fund_codes);
+    }
+
+    /**
+     * 获取基金重要数据 -> 基金持仓数据插入数据库，基金净值数据插入数据库
+     * @param fundCode
+     */
+    @Override
+    @Transactional
+    public void addFundImportData(String fundCode) {
+        //1.获取基金数据接口URL配置
+        String fund_base_url = sysDictMapper.getConfigValueById("get_fund_base_data_url");
+        String fund_url = fund_base_url.replace("{fund_code}", fundCode);
+        String fund_content = fetchFundData(fund_url);
+
+        if (fund_content == null) {
+            throw new RuntimeException("获取基金数据失败，fundCode: " + fundCode);
+        }
+
+        //2.解析完整基金数据
+        FundDataParser.FundData fundData = FundDataParser.parseAllFundData(fund_content);
+
+        if (fundData.getFundCode() == null) {
+            throw new RuntimeException("无" + fundCode + "这个代码的基金！");
+        }
+
+        //3.批量插入基金净值数据（增量插入，避免重复）
+        List<FundDataParser.NavData> mergedNavList = fundData.getMergedWorthTrend();
+        if (mergedNavList != null && !mergedNavList.isEmpty()) {
+            // 查询数据库中该基金最新的净值日期
+            Date latestNavDateInDb = fundAssetMapper.getLatestNavDate(fundCode);
+
+            List<FundNav> navList = new ArrayList<>();
+            for (FundDataParser.NavData navData : mergedNavList) {
+                // 只插入数据库最新净值日期之后的数据
+                if (latestNavDateInDb != null && !navData.getDate().after(latestNavDateInDb)) {
+                    continue;
+                }
+                FundNav fundNav = new FundNav();
+                fundNav.setFundCode(fundCode);
+                fundNav.setNavDate(navData.getDate());
+                fundNav.setUnitNav(navData.getNav());
+                fundNav.setAccumulatedNav(navData.getAccumulatedNav());
+                fundNav.setDailyChangeRate(navData.getDailyReturn());
+                // valuation为空，createTime由数据库now()自动设置
+                navList.add(fundNav);
+            }
+
+            if (!navList.isEmpty()) {
+                fundAssetMapper.batchAddFundNav(navList);
+                logger.info("基金{}新增净值数据{}条", fundCode, navList.size());
+            } else {
+                logger.info("基金{}净值数据已是最新，无需插入", fundCode);
+            }
+        }
+
+        //4.批量插入基金持仓信息数据（前十大重仓股）- 已有数据则跳过
+        List<FundDataParser.StockInfo> stockInfoList = fundData.getStockInfoList();
+        if (stockInfoList != null && !stockInfoList.isEmpty()) {
+            // 检查数据库中是否已有该基金的持仓数据
+            int portfolioCount = fundAssetMapper.isPortfolioExistByCode(fundCode);
+            if (portfolioCount > 0) {
+                logger.info("基金{}持仓数据已存在，跳过插入", fundCode);
+            } else {
+                List<FundPortfolio> portfolioList = new ArrayList<>();
+                // 获取最新持仓日期（用净值数据的最新日期作为持仓日期）
+                Date portfolioDate = null;
+                if (mergedNavList != null && !mergedNavList.isEmpty()) {
+                    portfolioDate = mergedNavList.get(mergedNavList.size() - 1).getDate();
+                }
+
+                for (FundDataParser.StockInfo stockInfo : stockInfoList) {
+                    FundPortfolio fundPortfolio = new FundPortfolio();
+                    fundPortfolio.setFundCode(fundCode);
+                    fundPortfolio.setPortfolioDate(portfolioDate);
+                    fundPortfolio.setPositionType(1); // 1-股票
+                    fundPortfolio.setPositionCode(stockInfo.getRealCode());
+                    fundPortfolio.setPositionName(stockInfo.getName());
+                    // positionQuantity、positionMarketValue、netRatio、industryType为空
+                    fundPortfolio.setDataSource(2); // 2-天天基金
+                    fundPortfolio.setCreateBy("system");
+                    // createTime由数据库now()自动设置，updateTime、updateBy为空
+                    portfolioList.add(fundPortfolio);
+                }
+                fundAssetMapper.batchAddFundPortfolio(portfolioList);
+                logger.info("基金{}新增持仓数据{}条", fundCode, portfolioList.size());
+            }
+        }
     }
 
     /**

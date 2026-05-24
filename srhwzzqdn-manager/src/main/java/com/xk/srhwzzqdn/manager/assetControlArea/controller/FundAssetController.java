@@ -519,4 +519,20 @@ public class FundAssetController {
         }
     }
 
+    /**
+     * 获取基金重要数据 -> 基金持仓数据插入数据库，基金净值数据插入数据库
+     * @param fundCode
+     * @return
+     */
+    @PostMapping("/addFundImportData/{fundCode}")
+    public Result addFundImportData(@PathVariable("fundCode") String fundCode){
+        try {
+            fundAssetService.addFundImportData(fundCode);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("获取基金重要数据失败", e);
+            return Result.build(null, 500, "获取基金重要数据！");
+        }
+    }
+
 }

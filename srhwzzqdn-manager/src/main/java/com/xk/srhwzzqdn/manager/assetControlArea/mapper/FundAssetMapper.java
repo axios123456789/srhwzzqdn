@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -167,4 +168,18 @@ public interface FundAssetMapper {
 
     //根据基金代码批量删除基金基本数据
     void deleteFundAssetByCodes(@Param("fundCodes") List<String> fundCodes);
+
+    //批量插入基金净值数据
+    void batchAddFundNav(@Param("list") List<FundNav> list);
+
+    //批量插入基金持仓信息数据
+    void batchAddFundPortfolio(@Param("list") List<FundPortfolio> list);
+
+    //根据基金代码查询最新净值日期
+    @Select("select max(nav_date) from t_fund_nav where fund_code = #{param1}")
+    Date getLatestNavDate(String fundCode);
+
+    //根据基金代码查询持仓数据是否存在
+    @Select("select count(*) from t_fund_portfolio where fund_code = #{param1}")
+    int isPortfolioExistByCode(String fundCode);
 }
