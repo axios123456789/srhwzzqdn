@@ -221,11 +221,11 @@
         </div>
       </div>
 
-      <!-- 净值走势卡片 -->
+      <!-- 业绩走势卡片 -->
       <div class="info-card">
         <div class="card-header">
           <el-icon><TrendCharts /></el-icon>
-          <span>净值走势</span>
+          <span>业绩走势</span>
         </div>
         <div class="card-body">
           <!-- 时间范围选择器 -->
@@ -243,7 +243,9 @@
           </div>
           
           <!-- ECharts 图表 -->
-          <div ref="chartRef" class="nav-chart-container"></div>
+          <div class="nav-chart-container" v-loading="chartLoading" element-loading-background="rgba(255,255,255,0.8)">
+            <div ref="chartRef" style="width:100%;height:100%;"></div>
+          </div>
           
           <!-- 净值数据表格 -->
           <div class="nav-table-wrapper">
@@ -613,7 +615,7 @@
 import { computed, ref, watch, nextTick, onBeforeUnmount, reactive, onMounted } from 'vue'
 import { Coin, Close, FullScreen, Aim, Document, Discount, Wallet, TrendCharts, List, Money, DataAnalysis, Grid, User } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
-import { GetFundNavByConditionAndPage, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage } from "@/api/fundAsset"
+import { GetFundNavByConditionAndPage, GetNaveChartsByCondition, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage } from "@/api/fundAsset"
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { ElMessage } from 'element-plus'
 
@@ -703,6 +705,57 @@ const isFullscreen = ref(false)
 const chartInstance = ref(null)
 const chartRef = ref(null)
 const activeTimeRange = ref('1month')
+const chartLoading = ref(false)
+
+// echarts图表数据（从后端getNaveChartsByCondition接口获取）
+const chartDataList = ref([])
+
+// 根据时间范围计算beginTime和endTime
+const getTimeRange = (range) => {
+  const now = new Date()
+  const endTime = now.toISOString().slice(0, 10)
+  let startDate = new Date()
+  switch (range) {
+    case '1month': startDate.setMonth(now.getMonth() - 1); break
+    case '3month': startDate.setMonth(now.getMonth() - 3); break
+    case '6month': startDate.setMonth(now.getMonth() - 6); break
+    case '1year': startDate.setFullYear(now.getFullYear() - 1); break
+    case '3year': startDate.setFullYear(now.getFullYear() - 3); break
+    case '5year': startDate.setFullYear(now.getFullYear() - 5); break
+    case '10year': startDate.setFullYear(now.getFullYear() - 10); break
+    case 'all': return { beginTime: '', endTime: '' }
+    default: startDate.setMonth(now.getMonth() - 1)
+  }
+  const beginTime = startDate.toISOString().slice(0, 10)
+  return { beginTime, endTime }
+}
+
+// 获取echarts图表数据
+const fetchChartData = async () => {
+  const fundCode = props.fundData?.fundCode
+  if (!fundCode) return
+  chartLoading.value = true
+  try {
+    const { beginTime, endTime } = getTimeRange(activeTimeRange.value)
+    const result = await GetNaveChartsByCondition({
+      fundCode,
+      beginTime: beginTime || null,
+      endTime: endTime || null
+    })
+    if (result.code === 200) {
+      chartDataList.value = result.data || []
+    } else {
+      ElMessage.error(result.message || '获取图表数据失败')
+      chartDataList.value = []
+    }
+  } catch (error) {
+    console.error('获取图表数据失败:', error)
+    ElMessage.error('获取图表数据失败')
+    chartDataList.value = []
+  } finally {
+    chartLoading.value = false
+  }
+}
 
 // 分页相关状态
 const navTablePage = ref(1)
@@ -767,49 +820,6 @@ const dialogVisible = computed({
   set(val) { emit('update:visible', val) }
 })
 
-// 根据时间范围过滤数据
-const getFilteredNavData = () => {
-  if (!navDataList.value || navDataList.value.length === 0) {
-    return []
-  }
-
-  const now = new Date()
-  let startDate = new Date()
-
-  switch (activeTimeRange.value) {
-    case '1month':
-      startDate.setMonth(now.getMonth() - 1)
-      break
-    case '3month':
-      startDate.setMonth(now.getMonth() - 3)
-      break
-    case '6month':
-      startDate.setMonth(now.getMonth() - 6)
-      break
-    case '1year':
-      startDate.setFullYear(now.getFullYear() - 1)
-      break
-    case '3year':
-      startDate.setFullYear(now.getFullYear() - 3)
-      break
-    case '5year':
-      startDate.setFullYear(now.getFullYear() - 5)
-      break
-    case '10year':
-      startDate.setFullYear(now.getFullYear() - 10)
-      break
-    case 'all':
-      return navDataList.value
-    default:
-      startDate.setMonth(now.getMonth() - 1)
-  }
-
-  return navDataList.value.filter(item => {
-    const itemDate = new Date(item.navDate)
-    return itemDate >= startDate && itemDate <= now
-  })
-}
-
 // 获取分页后的净值数据 - 改为直接返回从后端获取的数据
 const getPaginatedNavData = () => {
   return navDataList.value
@@ -828,7 +838,7 @@ const handleNavTableSizeChange = (size) => {
   fetchNavData()
 }
 
-// 初始化图表
+// 初始化图表 - 仿照支付宝业绩走势图风格
 const initChart = () => {
   if (!chartRef.value) return
 
@@ -838,108 +848,108 @@ const initChart = () => {
 
   chartInstance.value = echarts.init(chartRef.value)
 
-  const filteredData = getFilteredNavData()
+  // 使用后端返回的chartDataList数据，按日期升序排列（时间从左往右）
+  const sortedData = [...chartDataList.value].sort((a, b) => {
+    return new Date(a.navDate) - new Date(b.navDate)
+  })
+
+  if (sortedData.length === 0) {
+    chartInstance.value.setOption({
+      title: {
+        text: '暂无数据',
+        left: 'center',
+        top: 'center',
+        textStyle: { color: '#999', fontSize: 14, fontWeight: 400 }
+      }
+    })
+    return
+  }
   
   // 准备图表数据
-  const dates = filteredData.map(item => item.navDate)
-  const unitNavs = filteredData.map(item => item.unitNav)
-  const accumulatedNavs = filteredData.map(item => item.accumulatedNav)
-  
-  // 计算业绩走势数据（第一天为0，后一天为前一天加涨跌幅）
-  const performanceData = []
-  if (filteredData.length > 0) {
-    performanceData.push(0) // 第一天为0
-    for (let i = 1; i < filteredData.length; i++) {
-      const prevNav = filteredData[i - 1].unitNav
-      const currNav = filteredData[i].unitNav
-      const changeRate = prevNav > 0 ? ((currNav - prevNav) / prevNav) * 100 : 0
-      performanceData.push(performanceData[i - 1] + changeRate)
-    }
-  }
+  const dates = sortedData.map(item => item.navDate)
+  const salesTrendData = sortedData.map(item => item.salesTrend)
+  const unitNavData = sortedData.map(item => item.unitNav)
+
+  // 判断整体涨跌，决定主色调
+  const lastTrend = salesTrendData[salesTrendData.length - 1] || 0
+  const isRise = lastTrend >= 0
+  const mainColor = isRise ? '#EE4B4B' : '#1DB068'  // 涨红跌绿
+  const areaColorTop = isRise ? 'rgba(238, 75, 75, 0.25)' : 'rgba(29, 176, 104, 0.25)'
+  const areaColorBottom = isRise ? 'rgba(238, 75, 75, 0.02)' : 'rgba(29, 176, 104, 0.02)'
+
+  // 计算Y轴范围，确保0线可见
+  const minTrend = Math.min(0, ...salesTrendData)
+  const maxTrend = Math.max(0, ...salesTrendData)
+  const yMin = minTrend < 0 ? Math.floor(minTrend / 5) * 5 - 5 : 0
+  const yMax = Math.ceil(maxTrend / 5) * 5 + 5
 
   const option = {
     tooltip: {
       trigger: 'axis',
-      backgroundColor: 'rgba(255, 255, 255, 0.98)',
-      borderColor: '#dcdfe6',
+      backgroundColor: 'rgba(255, 255, 255, 0.96)',
+      borderColor: '#e8e8e8',
       borderWidth: 1,
-      padding: [14, 18],
+      padding: [12, 16],
       textStyle: {
-        color: '#303133',
-        fontSize: 14
+        color: '#333',
+        fontSize: 13
       },
       axisPointer: {
-        type: 'cross',
-        crossStyle: {
-          color: '#999'
-        },
+        type: 'line',
         lineStyle: {
-          color: '#1e3c72',
+          color: '#ccc',
           width: 1,
           type: 'dashed'
         }
       },
       formatter: (params) => {
         if (!params || params.length === 0) return ''
-        
-        let result = `<div style="font-weight: 600; margin-bottom: 10px; color: #303133; font-size: 14px; border-bottom: 1px solid #ebeef5; padding-bottom: 8px;">📅 ${params[0].axisValue}</div>`
-        params.forEach(param => {
-          if (param.value !== undefined && param.value !== null) {
-            let color = '#ff6b6b'
-            if (param.seriesName === '累计净值') {
-              color = '#4ecdc4'
-            } else if (param.seriesName === '业绩走势') {
-              color = '#ffa726'
-            }
-            
-            const valueStr = param.seriesName === '业绩走势' 
-              ? `${param.value >= 0 ? '+' : ''}${param.value.toFixed(2)}%`
-              : param.value.toFixed(4)
-            
-            result += `
-              <div style="display: flex; align-items: center; margin: 8px 0; padding: 4px 0;">
-                <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: ${color}; margin-right: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></span>
-                <span style="color: #606266; font-size: 14px; font-weight: 500;">${param.seriesName}：</span>
-                <span style="color: ${color}; font-size: 15px; font-weight: 600; margin-left: 4px;">${valueStr}</span>
-              </div>
-            `
-          }
-        })
-        return result
+        const dataIndex = params[0].dataIndex
+        const date = params[0].axisValue
+        const trend = salesTrendData[dataIndex]
+        const unitNav = unitNavData[dataIndex]
+        const trendColor = trend >= 0 ? '#EE4B4B' : '#1DB068'
+        const trendSign = trend >= 0 ? '+' : ''
+        return `
+          <div style="font-size:12px;color:#999;margin-bottom:8px;">${date}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="color:#666;font-size:13px;">业绩走势</span>
+            <span style="color:${trendColor};font-size:15px;font-weight:600;">${trendSign}${trend.toFixed(2)}%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:#666;font-size:13px;">单位净值</span>
+            <span style="color:#333;font-size:15px;font-weight:600;">${unitNav != null ? unitNav.toFixed(4) : '-'}</span>
+          </div>
+        `
       }
     },
-    legend: {
-      data: ['单位净值', '累计净值', '业绩走势'],
-      top: 10,
-      right: 20,
-      textStyle: {
-        color: '#606266',
-        fontSize: 13
-      },
-      itemWidth: 20,
-      itemHeight: 10,
-      itemGap: 20
-    },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      top: 60,
-      containLabel: true
+      left: 50,
+      right: 20,
+      bottom: 30,
+      top: 20
     },
     xAxis: {
       type: 'category',
       boundaryGap: false,
       data: dates,
       axisLine: {
+        show: true,
         lineStyle: {
-          color: '#e8ecf1'
+          color: '#e8e8e8'
         }
       },
       axisLabel: {
-        color: '#909399',
+        color: '#999',
         fontSize: 11,
-        rotate: 45
+        interval: 'auto',
+        formatter: (value) => {
+          // 只显示月-日，节省空间
+          if (value && value.length >= 10) {
+            return value.substring(5, 10)
+          }
+          return value
+        }
       },
       axisTick: {
         show: false
@@ -947,18 +957,20 @@ const initChart = () => {
     },
     yAxis: {
       type: 'value',
+      min: yMin,
+      max: yMax,
       axisLine: {
         show: false
       },
       axisLabel: {
-        color: '#909399',
-        fontSize: 12,
-        formatter: (value) => value.toFixed(2)
+        color: '#999',
+        fontSize: 11,
+        formatter: (value) => value.toFixed(0) + '%'
       },
       splitLine: {
         lineStyle: {
-          color: '#f0f2f5',
-          type: 'dashed'
+          color: '#f0f0f0',
+          type: 'solid'
         }
       },
       axisTick: {
@@ -967,132 +979,54 @@ const initChart = () => {
     },
     series: [
       {
-        name: '单位净值',
-        type: 'line',
-        smooth: true,
-        symbol: 'circle',
-        symbolSize: 8,
-        showSymbol: true,
-        hoverAnimation: true,
-        lineStyle: {
-          width: 3,
-          color: '#ff6b6b',
-          shadowColor: 'rgba(255, 107, 107, 0.4)',
-          shadowBlur: 8,
-          shadowOffsetY: 3
-        },
-        itemStyle: {
-          color: '#ff6b6b',
-          borderWidth: 2,
-          borderColor: '#fff'
-        },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(255, 107, 107, 0.3)' },
-            { offset: 0.5, color: 'rgba(255, 107, 107, 0.15)' },
-            { offset: 1, color: 'rgba(255, 107, 107, 0.02)' }
-          ])
-        },
-        emphasis: {
-          focus: 'series',
-          itemStyle: {
-            color: '#ff6b6b',
-            borderWidth: 3,
-            borderColor: '#fff',
-            shadowBlur: 15,
-            shadowColor: 'rgba(255, 107, 107, 0.6)'
-          },
-          lineStyle: {
-            width: 4
-          }
-        },
-        data: unitNavs
-      },
-      {
-        name: '累计净值',
-        type: 'line',
-        smooth: true,
-        symbol: 'diamond',
-        symbolSize: 8,
-        showSymbol: true,
-        hoverAnimation: true,
-        lineStyle: {
-          width: 3,
-          color: '#4ecdc4',
-          type: 'dashed',
-          shadowColor: 'rgba(78, 205, 196, 0.4)',
-          shadowBlur: 8,
-          shadowOffsetY: 3
-        },
-        itemStyle: {
-          color: '#4ecdc4',
-          borderWidth: 2,
-          borderColor: '#fff'
-        },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(78, 205, 196, 0.25)' },
-            { offset: 0.5, color: 'rgba(78, 205, 196, 0.12)' },
-            { offset: 1, color: 'rgba(78, 205, 196, 0.02)' }
-          ])
-        },
-        emphasis: {
-          focus: 'series',
-          itemStyle: {
-            color: '#4ecdc4',
-            borderWidth: 3,
-            borderColor: '#fff',
-            shadowBlur: 15,
-            shadowColor: 'rgba(78, 205, 196, 0.6)'
-          },
-          lineStyle: {
-            width: 4
-          }
-        },
-        data: accumulatedNavs
-      },
-      {
         name: '业绩走势',
         type: 'line',
         smooth: true,
-        symbol: 'triangle',
-        symbolSize: 8,
+        symbol: 'circle',
+        symbolSize: 4,
         showSymbol: true,
-        hoverAnimation: true,
         lineStyle: {
-          width: 3,
-          color: '#ffa726',
-          type: 'dotted',
-          shadowColor: 'rgba(255, 167, 38, 0.4)',
-          shadowBlur: 8,
-          shadowOffsetY: 3
+          width: 2,
+          color: mainColor
         },
         itemStyle: {
-          color: '#ffa726',
-          borderWidth: 2,
-          borderColor: '#fff'
+          color: mainColor,
+          borderWidth: 0,
+          opacity: 0
         },
         areaStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(255, 167, 38, 0.2)' },
-            { offset: 0.5, color: 'rgba(255, 167, 38, 0.1)' },
-            { offset: 1, color: 'rgba(255, 167, 38, 0.02)' }
+            { offset: 0, color: areaColorTop },
+            { offset: 1, color: areaColorBottom }
           ])
         },
         emphasis: {
-          focus: 'series',
+          scale: 2,
           itemStyle: {
-            color: '#ffa726',
-            borderWidth: 3,
+            color: mainColor,
+            borderWidth: 2,
             borderColor: '#fff',
-            shadowBlur: 15,
-            shadowColor: 'rgba(255, 167, 38, 0.6)'
-          },
-          lineStyle: {
-            width: 4
+            shadowBlur: 6,
+            shadowColor: mainColor,
+            opacity: 1
           }
         },
-        data: performanceData
+        markLine: {
+          silent: true,
+          symbol: 'none',
+          label: {
+            show: false
+          },
+          lineStyle: {
+            color: '#ccc',
+            type: 'solid',
+            width: 1
+          },
+          data: [
+            { yAxis: 0 }
+          ]
+        },
+        data: salesTrendData
       }
     ]
   }
@@ -1104,8 +1038,11 @@ const initChart = () => {
 const handleTimeRangeChange = (range) => {
   activeTimeRange.value = range
   navTablePage.value = 1 // 重置分页
-  nextTick(() => {
-    initChart()
+  // 根据时间范围调用后端接口获取图表数据
+  fetchChartData().then(() => {
+    nextTick(() => {
+      initChart()
+    })
   })
 }
 
@@ -1116,24 +1053,12 @@ const handleResize = () => {
   }
 }
 
-// 监听数据变化
-watch(
-  () => props.fundData.navList,
-  () => {
-    nextTick(() => {
-      initChart()
-    })
-  },
-  { deep: true }
-)
-
 // 监听对话框显示状态
 watch(
   () => props.visible,
   (newVal) => {
     if (newVal) {
       nextTick(() => {
-        initChart()
         window.addEventListener('resize', handleResize)
       })
     } else {
@@ -1170,6 +1095,13 @@ watch(() => props.visible, (newVal) => {
     
     // 自动获取净值数据
     fetchNavData()
+    
+    // 自动获取echarts图表数据（根据当前选中的时间范围）
+    fetchChartData().then(() => {
+      nextTick(() => {
+        initChart()
+      })
+    })
     
     // 自动获取基金经理分析数据
     fetchManagerAnalysisData()
@@ -1693,52 +1625,54 @@ const getPeriodTypeText = (v) => {
   gap: 6px;
 }
 
-/* ====== 时间范围选择器 ====== */
+/* ====== 时间范围选择器 - 仿支付宝风格 ====== */
 .time-range-selector {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 
 .time-range-tabs {
   display: flex;
-  gap: 8px;
-  padding: 4px;
-  background: #f5f7fa;
-  border-radius: 8px;
+  gap: 0;
   width: fit-content;
 }
 
 .time-range-tab {
-  padding: 8px 16px;
+  padding: 6px 14px;
   font-size: 13px;
-  color: #606266;
-  background: transparent;
-  border-radius: 6px;
+  color: #666;
+  background: #f5f5f5;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   user-select: none;
-  font-weight: 500;
+  font-weight: 400;
+  border-right: 1px solid #e8e8e8;
+}
+
+.time-range-tab:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.time-range-tab:last-child {
+  border-radius: 0 4px 4px 0;
+  border-right: none;
 }
 
 .time-range-tab:hover {
-  color: #1e3c72;
-  background: rgba(30, 60, 114, 0.08);
+  color: #1677FF;
+  background: #e6f4ff;
 }
 
 .time-range-tab.active {
   color: #fff;
-  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  box-shadow: 0 2px 8px rgba(30, 60, 114, 0.3);
+  background: #1677FF;
+  font-weight: 500;
 }
 
-/* ====== 图表容器 ====== */
+/* ====== 图表容器 - 仿支付宝风格 ====== */
 .nav-chart-container {
   width: 100%;
-  height: 400px;
-  margin-bottom: 20px;
-  border-radius: 8px;
-  background: #fff;
-  padding: 10px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  height: 350px;
+  margin-bottom: 16px;
 }
 
 /* ====== 净值表格包装器 ====== */

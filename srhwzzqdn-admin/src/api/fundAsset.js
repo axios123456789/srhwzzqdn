@@ -46,6 +46,19 @@ export const GetFundNavByConditionAndPage = (current, limit, params) => {
 }
 
 /**
+ * 获取业绩走势echarts数据
+ * @param params 查询参数 { fundCode, beginTime, endTime }
+ * @returns
+ */
+export const GetNaveChartsByCondition = (params) => {
+  return request({
+    url: `${base_api}/getNaveChartsByCondition`,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
  * 根据基金代码获取基金经理分析数据
  * @param fundCode 基金代码
  * @returns

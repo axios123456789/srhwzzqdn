@@ -430,26 +430,44 @@
 
     <!--  获取业绩走势echarts数据   -->
     <select id="getNaveChartsByCondition" resultType="com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo">
-        with base as (
-            select unit_nav, nav_date
-            from t_fund_nav
-            where fund_code = #{fundCode} and nav_date >= #{beginTime} and nav_date &lt;= #{endTime}
-            order by nav_date asc
-            limit 1
+        WITH base AS (
+        SELECT unit_nav, nav_date
+        FROM t_fund_nav
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                AND fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                AND nav_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND nav_date &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY nav_date ASC
+        LIMIT 1
         )
-        select
-            t.nav_date,
-            t.unit_nav,
-            t.accumulated_nav,
-            case
-            when t.nav_date = (select nav_date from base) then 0
-            else round((t.unit_nav - (select unit_nav from base)) / (select unit_nav from base) * 100, 2)
-            end as sales_trend
-        from t_fund_nav t
-        where t.fund_code = #{fundCode}
-          and t.nav_date >= #{beginTime}
-          and t.nav_date &lt;= #{endTime}
-        order by t.nav_date asc;
+        SELECT
+        t.nav_date,
+        t.unit_nav,
+        t.accumulated_nav,
+        CASE
+        WHEN t.nav_date = (SELECT nav_date FROM base) THEN 0
+        ELSE ROUND((t.unit_nav - (SELECT unit_nav FROM base)) / (SELECT unit_nav FROM base) * 100, 2)
+        END AS sales_trend
+        FROM t_fund_nav t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                AND t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                AND t.nav_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND t.nav_date &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY t.nav_date ASC
     </select>
 
     <!--  添加基金交易数据  -->
