@@ -158,11 +158,11 @@ public class BailianApiUtil {
                     errorMsg = errorResponse.toString();
                 }
                 logger.error("阿里云百炼 API 调用失败，状态码：{}，错误信息：{}", responseCode, errorMsg);
-                return "AI 接口调用失败，HTTP 状态码：" + responseCode;
+                return "";
             }
         } catch (Exception e) {
             logger.error("阿里云百炼 API 调用异常", e);
-            return "AI 接口调用异常：" + e.getMessage();
+            return "";
         } finally {
             if (reader != null) {
                 try { reader.close(); } catch (Exception e) {}
@@ -254,7 +254,7 @@ public class BailianApiUtil {
             return content != null ? content : "";
         } catch (Exception e) {
             logger.error("解析响应失败，原始响应：{}", responseBody, e);
-            return "AI 响应解析失败：" + e.getMessage();
+            return "";
         }
     }
 }
