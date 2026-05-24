@@ -1,6 +1,8 @@
 package com.xk.srhwzzqdn.manager.assetControlArea.util;
 
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -14,6 +16,7 @@ import java.util.regex.Pattern;
  */
 public class FundDataParser {
 
+    private static final Logger logger = LoggerFactory.getLogger(FundDataParser.class);
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     // ==================== 股票名称映射表（静态常量） ====================
@@ -146,7 +149,15 @@ public class FundDataParser {
     public static Double extractDouble(String content, String varName) {
         Pattern p = Pattern.compile(varName + "\\s*=\\s*\"?([0-9.-]+)\"?");
         Matcher m = p.matcher(content);
-        return m.find() ? Double.parseDouble(m.group(1)) : null;
+        if (m.find()) {
+            try {
+                return Double.parseDouble(m.group(1));
+            } catch (NumberFormatException e) {
+                logger.warn("解析Double失败，变量名：{}，原始值：{}", varName, m.group(1));
+                return null;
+            }
+        }
+        return null;
     }
 
     // ==================== 2. 数组数据解析 ====================
@@ -437,7 +448,12 @@ public class FundDataParser {
                 List<Double> dataList = new ArrayList<>();
                 for (String d : dataArr) {
                     if (d != null && !d.trim().isEmpty()) {
-                        dataList.add(Double.parseDouble(d.trim()));
+                        try {
+                            dataList.add(Double.parseDouble(d.trim()));
+                        } catch (NumberFormatException e) {
+                            logger.warn("解析资产数据失败，名称：{}，原始值：{}", name, d);
+                            dataList.add(0.0);
+                        }
                     }
                 }
 
@@ -465,14 +481,19 @@ public class FundDataParser {
                 String[] netArr = netM.group(1).split(",");
                 for (String net : netArr) {
                     if (net != null && !net.trim().isEmpty()) {
-                        aa.getNetAssets().add(Double.parseDouble(net.trim()));
+                        try {
+                            aa.getNetAssets().add(Double.parseDouble(net.trim()));
+                        } catch (NumberFormatException e) {
+                            logger.warn("解析净资产失败，原始值：{}", net);
+                            aa.getNetAssets().add(0.0);
+                        }
                     }
                 }
             }
 
             // 调试：打印解析到的所有资产名称（用于验证）
             if (!aa.getSeries().isEmpty()) {
-                System.out.println("  [调试] 解析到的资产类型: " + aa.getSeries().keySet());
+                logger.debug("解析到的资产类型: {}", aa.getSeries().keySet());
             }
         }
         return aa;
@@ -543,7 +564,7 @@ public class FundDataParser {
         return workTime;
     }
 
-    // ==================== 8. 业绩评价解析 ====================
+    // ==================== 8. 业绩评价解析（修复版：处理"暂无数据"等异常值） ====================
 
     @Data
     public static class PerformanceEvaluation {
@@ -560,11 +581,18 @@ public class FundDataParser {
         if (m.find()) {
             String jsonStr = m.group(1);
 
-            // 提取平均分
+            // 提取平均分 - 修复：处理非数字字符串的情况
             Pattern avgP = Pattern.compile("\"avr\":\"([^\"]+)\"");
             Matcher avgM = avgP.matcher(jsonStr);
             if (avgM.find()) {
-                pe.setAvgScore(Double.parseDouble(avgM.group(1)));
+                String avgValue = avgM.group(1);
+                try {
+                    pe.setAvgScore(Double.parseDouble(avgValue));
+                } catch (NumberFormatException e) {
+                    // 当返回值为 "暂无数据" 或其他非数字字符串时，设置为默认值 0
+                    logger.warn("解析平均分失败，原始值：{}，设置为默认值 0", avgValue);
+                    pe.setAvgScore(0.0);
+                }
             }
 
             // 提取分类
@@ -578,14 +606,20 @@ public class FundDataParser {
                 }
             }
 
-            // 提取分数
+            // 提取分数 - 修复：处理非数字字符串的情况
             Pattern scoreP = Pattern.compile("\"data\":\\[([^\\]]+)\\]");
             Matcher scoreM = scoreP.matcher(jsonStr);
             if (scoreM.find()) {
                 String[] scores = scoreM.group(1).split(",");
                 pe.setScores(new ArrayList<>());
                 for (String score : scores) {
-                    pe.getScores().add(Double.parseDouble(score.trim()));
+                    String trimmedScore = score.trim();
+                    try {
+                        pe.getScores().add(Double.parseDouble(trimmedScore));
+                    } catch (NumberFormatException e) {
+                        logger.warn("解析分数失败，原始值：{}，设置为默认值 0", trimmedScore);
+                        pe.getScores().add(0.0);
+                    }
                 }
             }
 
@@ -636,7 +670,12 @@ public class FundDataParser {
             fs.setScale(new ArrayList<>());
             fs.setMom(new ArrayList<>());
             while (scaleM.find()) {
-                fs.getScale().add(Double.parseDouble(scaleM.group(1)));
+                try {
+                    fs.getScale().add(Double.parseDouble(scaleM.group(1)));
+                } catch (NumberFormatException e) {
+                    logger.warn("解析规模数据失败，原始值：{}", scaleM.group(1));
+                    fs.getScale().add(0.0);
+                }
                 fs.getMom().add(scaleM.group(2));
             }
         }
@@ -678,7 +717,12 @@ public class FundDataParser {
                 String[] data = instM.group(1).split(",");
                 hs.setInstitutionRatio(new ArrayList<>());
                 for (String d : data) {
-                    hs.getInstitutionRatio().add(Double.parseDouble(d.trim()));
+                    try {
+                        hs.getInstitutionRatio().add(Double.parseDouble(d.trim()));
+                    } catch (NumberFormatException e) {
+                        logger.warn("解析机构持有比例失败，原始值：{}", d);
+                        hs.getInstitutionRatio().add(0.0);
+                    }
                 }
             }
 
@@ -689,7 +733,12 @@ public class FundDataParser {
                 String[] data = indvM.group(1).split(",");
                 hs.setIndividualRatio(new ArrayList<>());
                 for (String d : data) {
-                    hs.getIndividualRatio().add(Double.parseDouble(d.trim()));
+                    try {
+                        hs.getIndividualRatio().add(Double.parseDouble(d.trim()));
+                    } catch (NumberFormatException e) {
+                        logger.warn("解析个人持有比例失败，原始值：{}", d);
+                        hs.getIndividualRatio().add(0.0);
+                    }
                 }
             }
 
@@ -700,7 +749,12 @@ public class FundDataParser {
                 String[] data = intM.group(1).split(",");
                 hs.setInternalRatio(new ArrayList<>());
                 for (String d : data) {
-                    hs.getInternalRatio().add(Double.parseDouble(d.trim()));
+                    try {
+                        hs.getInternalRatio().add(Double.parseDouble(d.trim()));
+                    } catch (NumberFormatException e) {
+                        logger.warn("解析内部持有比例失败，原始值：{}", d);
+                        hs.getInternalRatio().add(0.0);
+                    }
                 }
             }
         }

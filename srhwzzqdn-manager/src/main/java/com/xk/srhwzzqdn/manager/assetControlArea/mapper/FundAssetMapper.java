@@ -6,6 +6,7 @@ import com.xk.srhwzzqdn.model.entity.assetControl.*;
 import com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -110,4 +111,60 @@ public interface FundAssetMapper {
 
     //获取业绩走势echarts数据
     List<NavEChartsVo> getNaveChartsByCondition(FundComm fundComm);
+
+    //根据基金代码删除基金持仓信息数据
+    @Delete("delete from t_fund_portfolio where fund_code = #{param1}")
+    void deleteFundPortfolioByCode(String fundCode);
+
+    //根据基金代码删除基金风险绩效数据
+    @Delete("delete from t_fund_risk_performance where fund_code = #{param1}")
+    void deleteFundRiskPerformanceByCode(String fundCode);
+
+    //根据基金代码删除基金分红数据
+    @Delete("delete from t_fund_dividend where fund_code = #{param1}")
+    void deleteFundDividendByCode(String fundCode);
+
+    //根据基金代码删除基金交易数据
+    @Delete("delete from t_fund_transaction where fund_code = #{param1}")
+    void deleteFundTransactionByCode(String fundCode);
+
+    //根据基金代码删除持仓情况数据
+    @Delete("delete from t_fund_holding where fund_code = #{param1}")
+    void deleteFundHoldingByCode(String fundCode);
+
+    //根据基金代码删除基金经理分析数据
+    @Delete("delete from t_fund_manager_analysis where fund_code = #{param1}")
+    void deleteFundManagerAnalysisByCode(String fundCode);
+
+    //根据基金代码删除基金净值数据
+    @Delete("delete from t_fund_nav where fund_code = #{param1}")
+    void deleteFundNavByCode(String fundCode);
+
+    //根据基金代码删除基金基本数据
+    @Delete("delete from t_fund_asset where fund_code = #{param1}")
+    void deleteFundAssetByCode(String fundCode);
+
+    //根据基金代码批量删除基金持仓信息数据
+    void deleteFundPortfolioByCodes(@Param("fundCodes") List<String> fundCodes);
+
+    //根据基金代码批量删除基金风险绩效数据
+    void deleteFundRiskPerformanceByCodes(@Param("fundCodes") List<String> fundCodes);
+
+    //根据基金代码批量删除基金分红数据
+    void deleteFundDividendByCodes(@Param("fundCodes") List<String> fundCodes);
+
+    //根据基金代码批量删除基金交易数据
+    void deleteFundTransactionByCodes(@Param("fundCodes") List<String> fundCodes);
+
+    //根据基金代码批量删除持仓情况数据
+    void deleteFundHoldingByCodes(@Param("fundCodes") List<String> fundCodes);
+
+    //根据基金代码批量删除基金经理分析数据
+    void deleteFundManagerAnalysisByCodes(@Param("fundCodes") List<String> fundCodes);
+
+    //根据基金代码批量删除基金净值数据
+    void deleteFundNavByCodes(@Param("fundCodes") List<String> fundCodes);
+
+    //根据基金代码批量删除基金基本数据
+    void deleteFundAssetByCodes(@Param("fundCodes") List<String> fundCodes);
 }

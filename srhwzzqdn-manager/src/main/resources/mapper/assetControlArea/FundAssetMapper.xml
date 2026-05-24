@@ -636,4 +636,68 @@
                 update_by = #{updateBy}
         where id = #{id}
     </update>
+
+    <!--  根据基金代码批量删除基金持仓信息数据  -->
+    <delete id="deleteFundPortfolioByCodes">
+        delete from t_fund_portfolio where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金风险绩效数据  -->
+    <delete id="deleteFundRiskPerformanceByCodes">
+        delete from t_fund_risk_performance where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金分红数据  -->
+    <delete id="deleteFundDividendByCodes">
+        delete from t_fund_dividend where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金交易数据  -->
+    <delete id="deleteFundTransactionByCodes">
+        delete from t_fund_transaction where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除持仓情况数据  -->
+    <delete id="deleteFundHoldingByCodes">
+        delete from t_fund_holding where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金经理分析数据  -->
+    <delete id="deleteFundManagerAnalysisByCodes">
+        delete from t_fund_manager_analysis where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金净值数据  -->
+    <delete id="deleteFundNavByCodes">
+        delete from t_fund_nav where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金基本数据  -->
+    <delete id="deleteFundAssetByCodes">
+        delete from t_fund_asset where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
 </mapper>

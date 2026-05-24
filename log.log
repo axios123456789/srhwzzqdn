@@ -12012,3 +12012,653 @@ Caused by: java.sql.SQLSyntaxErrorException: Unknown column 'investAmount' in 'f
 2026-05-24 18:12:00 HikariPool-1 - Starting...
 2026-05-24 18:12:01 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@e4c3a5c
 2026-05-24 18:12:01 HikariPool-1 - Start completed.
+2026-05-24 19:38:30 HikariPool-1 - Shutdown initiated...
+2026-05-24 19:38:30 HikariPool-1 - Shutdown completed.
+2026-05-24 19:38:49 Starting ManagerApplication using Java 17.0.17 with PID 3204 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-24 19:38:49 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-24 19:38:49 The following 1 profile is active: "dev"
+2026-05-24 19:38:49 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-24 19:38:49 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-24 19:38:49 Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2026-05-24 19:38:50 Tomcat initialized with port(s): 8400 (http)
+2026-05-24 19:38:50 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-24 19:38:50 Starting service [Tomcat]
+2026-05-24 19:38:50 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-24 19:38:50 Initializing Spring embedded WebApplicationContext
+2026-05-24 19:38:50 Root WebApplicationContext: initialization completed in 1146 ms
+2026-05-24 19:38:51 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-24 19:38:51 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-24 19:38:51 Started ManagerApplication in 2.916 seconds (process running for 3.869)
+2026-05-24 19:39:08 Starting ManagerApplication using Java 17.0.17 with PID 23456 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-24 19:39:08 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-24 19:39:08 The following 1 profile is active: "dev"
+2026-05-24 19:39:08 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-24 19:39:08 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-24 19:39:08 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-05-24 19:39:09 Tomcat initialized with port(s): 8400 (http)
+2026-05-24 19:39:09 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-24 19:39:09 Starting service [Tomcat]
+2026-05-24 19:39:09 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-24 19:39:09 Initializing Spring embedded WebApplicationContext
+2026-05-24 19:39:09 Root WebApplicationContext: initialization completed in 963 ms
+2026-05-24 19:39:10 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-24 19:39:10 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-24 19:39:10 Started ManagerApplication in 2.685 seconds (process running for 3.145)
+2026-05-24 19:42:48 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24 19:42:48 Initializing Servlet 'dispatcherServlet'
+2026-05-24 19:42:48 Completed initialization in 2 ms
+2026-05-24 19:44:59 HikariPool-1 - Starting...
+2026-05-24 19:45:00 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@411b5e67
+2026-05-24 19:45:00 HikariPool-1 - Start completed.
+2026-05-24 19:52:58 获取基金基本数据失败
+java.lang.NumberFormatException: For input string: "暂无数据"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parsePerformanceEvaluation(FundDataParser.java:567)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parseAllFundData(FundDataParser.java:790)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl.getFundBaseDataByCode(FundAssetServiceImpl.java:125)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl$$SpringCGLIB$$0.getFundBaseDataByCode(<generated>)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController.getFundBaseDataByCode(FundAssetController.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-05-24 19:54:27 获取基金基本数据失败
+java.lang.NumberFormatException: For input string: "暂无数据"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parsePerformanceEvaluation(FundDataParser.java:567)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parseAllFundData(FundDataParser.java:790)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl.getFundBaseDataByCode(FundAssetServiceImpl.java:125)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl$$SpringCGLIB$$0.getFundBaseDataByCode(<generated>)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController.getFundBaseDataByCode(FundAssetController.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-05-24 19:55:15 获取基金基本数据失败
+java.lang.NumberFormatException: For input string: "暂无数据"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parsePerformanceEvaluation(FundDataParser.java:567)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parseAllFundData(FundDataParser.java:790)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl.getFundBaseDataByCode(FundAssetServiceImpl.java:125)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl$$SpringCGLIB$$0.getFundBaseDataByCode(<generated>)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController.getFundBaseDataByCode(FundAssetController.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-05-24 19:57:43 获取基金基本数据失败
+java.lang.NumberFormatException: For input string: "暂无数据"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parsePerformanceEvaluation(FundDataParser.java:567)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parseAllFundData(FundDataParser.java:790)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl.getFundBaseDataByCode(FundAssetServiceImpl.java:125)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl$$SpringCGLIB$$0.getFundBaseDataByCode(<generated>)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController.getFundBaseDataByCode(FundAssetController.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-05-24 20:00:03 获取基金基本数据失败
+java.lang.NumberFormatException: For input string: "暂无数据"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parsePerformanceEvaluation(FundDataParser.java:567)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parseAllFundData(FundDataParser.java:790)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl.getFundBaseDataByCode(FundAssetServiceImpl.java:125)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl$$SpringCGLIB$$0.getFundBaseDataByCode(<generated>)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController.getFundBaseDataByCode(FundAssetController.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-05-24 20:04:20 获取基金基本数据失败
+java.lang.NumberFormatException: For input string: "暂无数据"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parsePerformanceEvaluation(FundDataParser.java:567)
+	at com.xk.srhwzzqdn.manager.assetControlArea.util.FundDataParser.parseAllFundData(FundDataParser.java:790)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl.getFundBaseDataByCode(FundAssetServiceImpl.java:125)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl$$SpringCGLIB$$0.getFundBaseDataByCode(<generated>)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController.getFundBaseDataByCode(FundAssetController.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-05-24 20:07:04 HikariPool-1 - Shutdown initiated...
+2026-05-24 20:07:04 HikariPool-1 - Shutdown completed.
+2026-05-24 20:07:10 Starting ManagerApplication using Java 17.0.17 with PID 5444 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-24 20:07:10 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-24 20:07:10 The following 1 profile is active: "dev"
+2026-05-24 20:07:11 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-24 20:07:11 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-24 20:07:11 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-24 20:07:11 Tomcat initialized with port(s): 8400 (http)
+2026-05-24 20:07:11 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-24 20:07:11 Starting service [Tomcat]
+2026-05-24 20:07:11 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-24 20:07:12 Initializing Spring embedded WebApplicationContext
+2026-05-24 20:07:12 Root WebApplicationContext: initialization completed in 1046 ms
+2026-05-24 20:07:13 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-24 20:07:13 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-24 20:07:13 Started ManagerApplication in 2.854 seconds (process running for 3.374)
+2026-05-24 20:07:19 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-24 20:07:19 Initializing Servlet 'dispatcherServlet'
+2026-05-24 20:07:19 Completed initialization in 1 ms
+2026-05-24 20:07:20 HikariPool-1 - Starting...
+2026-05-24 20:07:20 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@498528c2
+2026-05-24 20:07:20 HikariPool-1 - Start completed.
+2026-05-24 20:07:22 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-24 20:07:22 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-05-24 20:07:22 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:07:22 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:07:22 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:07:22 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:07:22 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:07:22 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：32 字符
+2026-05-24 20:07:22 请求阿里云百炼 API，请求体大小：228 bytes
+2026-05-24 20:07:22 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"077440e8-287a-9727-89c4-c972726f0633"}
+2026-05-24 20:07:22 阿里云百炼 AI 调用完成，耗时：242 ms
+2026-05-24 20:07:22 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：36 字符
+2026-05-24 20:07:22 请求阿里云百炼 API，请求体大小：252 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"b6d713e1-47b0-97e3-9cb7-a8bf907d7644"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：65 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：24 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：216 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"5cd9d159-e497-9b19-8e13-551e24318436"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：81 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"4cc82785-fc46-9c75-81af-166c373b035c"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：93 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：32 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：240 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"ac24f8bb-9b1f-991a-9165-55ed7905eb67"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：69 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：55 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：303 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"9db06f18-ebf8-9681-bf63-c94318b2b2f9"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：75 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：54 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：300 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"abbb4ec4-d1c0-9bae-b5f6-44e52719dbf7"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：90 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：82 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：384 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"dde6a9d5-ecaf-9a66-ab38-f8e6df79a6f2"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：73 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：75 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：363 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"50d00f83-7cf9-9c2e-8737-62583d361391"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：104 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"5d586703-3bd8-90d2-8b23-359afab16566"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：72 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：118 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：492 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"6af638ac-6c1e-952b-98e8-9a307078924c"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：66 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：134 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：540 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"0ed577e8-3166-9701-b66d-cf2074bf4ffe"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：77 ms
+2026-05-24 20:07:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：82 字符
+2026-05-24 20:07:23 请求阿里云百炼 API，请求体大小：384 bytes
+2026-05-24 20:07:23 阿里云百炼 API 调用失败，状态码：400，错误信息：{"code":"Arrearage","message":"Access denied, please make sure your account is in good standing. For details, see: https://help.aliyun.com/zh/model-studio/error-code#overdue-payment","request_id":"d7e9b79b-1d90-9812-9844-7e257d27191c"}
+2026-05-24 20:07:23 阿里云百炼 AI 调用完成，耗时：81 ms
+2026-05-24 20:18:32 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-24 20:18:32 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-24 20:18:32 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-24 20:18:33 阿里云百炼 AI 调用完成，耗时：1010 ms
+2026-05-24 20:18:33 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-24 20:18:33 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-24 20:18:35 阿里云百炼 AI 调用完成，耗时：1885 ms
+2026-05-24 20:18:35 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-24 20:18:35 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-24 20:18:36 阿里云百炼 AI 调用完成，耗时：706 ms
+2026-05-24 20:18:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-24 20:18:36 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-24 20:18:41 阿里云百炼 AI 调用完成，耗时：5144 ms
+2026-05-24 20:18:41 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-24 20:18:41 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-24 20:18:45 阿里云百炼 AI 调用完成，耗时：4216 ms
+2026-05-24 20:18:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-24 20:18:45 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-24 20:18:51 阿里云百炼 AI 调用完成，耗时：6098 ms
+2026-05-24 20:18:51 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-24 20:18:51 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-24 20:18:59 阿里云百炼 AI 调用完成，耗时：7566 ms
+2026-05-24 20:18:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-24 20:18:59 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-24 20:19:06 阿里云百炼 AI 调用完成，耗时：7423 ms
+2026-05-24 20:19:06 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-24 20:19:06 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-24 20:19:14 阿里云百炼 AI 调用完成，耗时：7882 ms
+2026-05-24 20:19:14 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-24 20:19:14 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-24 20:19:22 阿里云百炼 AI 调用完成，耗时：7358 ms
+2026-05-24 20:19:22 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-24 20:19:22 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-24 20:19:28 阿里云百炼 AI 调用完成，耗时：5922 ms
+2026-05-24 20:19:28 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-24 20:19:28 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-24 20:19:35 阿里云百炼 AI 调用完成，耗时：7480 ms
+2026-05-24 20:19:35 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-24 20:19:35 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-24 20:19:41 阿里云百炼 AI 调用完成，耗时：5588 ms
+2026-05-24 20:27:10 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-24 20:27:10 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-05-24 20:27:10 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:27:10 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:27:10 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:27:10 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:27:10 解析分数失败，原始值：null，设置为默认值 0
+2026-05-24 20:27:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：32 字符
+2026-05-24 20:27:10 请求阿里云百炼 API，请求体大小：228 bytes
+2026-05-24 20:27:11 阿里云百炼 AI 调用完成，耗时：665 ms
+2026-05-24 20:27:11 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-24 20:27:11 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-24 20:27:13 阿里云百炼 AI 调用完成，耗时：1830 ms
+2026-05-24 20:27:13 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：24 字符
+2026-05-24 20:27:13 请求阿里云百炼 API，请求体大小：216 bytes
+2026-05-24 20:27:13 阿里云百炼 AI 调用完成，耗时：528 ms
+2026-05-24 20:27:13 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-24 20:27:13 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-24 20:27:19 阿里云百炼 AI 调用完成，耗时：5539 ms
+2026-05-24 20:27:19 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：32 字符
+2026-05-24 20:27:19 请求阿里云百炼 API，请求体大小：240 bytes
+2026-05-24 20:27:21 阿里云百炼 AI 调用完成，耗时：1981 ms
+2026-05-24 20:27:21 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：55 字符
+2026-05-24 20:27:21 请求阿里云百炼 API，请求体大小：303 bytes
+2026-05-24 20:27:28 阿里云百炼 AI 调用完成，耗时：6631 ms
+2026-05-24 20:27:28 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：54 字符
+2026-05-24 20:27:28 请求阿里云百炼 API，请求体大小：300 bytes
+2026-05-24 20:27:33 阿里云百炼 AI 调用完成，耗时：5499 ms
+2026-05-24 20:27:33 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：82 字符
+2026-05-24 20:27:33 请求阿里云百炼 API，请求体大小：384 bytes
+2026-05-24 20:27:39 阿里云百炼 AI 调用完成，耗时：5783 ms
+2026-05-24 20:27:39 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：75 字符
+2026-05-24 20:27:39 请求阿里云百炼 API，请求体大小：363 bytes
+2026-05-24 20:27:45 阿里云百炼 AI 调用完成，耗时：5955 ms
+2026-05-24 20:27:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-24 20:27:45 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-24 20:27:50 阿里云百炼 AI 调用完成，耗时：5312 ms
+2026-05-24 20:27:50 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：118 字符
+2026-05-24 20:27:50 请求阿里云百炼 API，请求体大小：492 bytes
+2026-05-24 20:27:56 阿里云百炼 AI 调用完成，耗时：5616 ms
+2026-05-24 20:27:56 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：134 字符
+2026-05-24 20:27:56 请求阿里云百炼 API，请求体大小：540 bytes
+2026-05-24 20:28:02 阿里云百炼 AI 调用完成，耗时：6204 ms
+2026-05-24 20:28:02 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：82 字符
+2026-05-24 20:28:02 请求阿里云百炼 API，请求体大小：384 bytes
+2026-05-24 20:28:07 阿里云百炼 AI 调用完成，耗时：5069 ms

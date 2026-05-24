@@ -370,3 +370,28 @@ export const DeleteFundPortfolio = (id) => {
     method: 'delete'
   })
 }
+
+/**
+ * 根据基金代码删除基金的全部数据
+ * @param fundCode 基金代码
+ * @returns
+ */
+export const DeleteFundDataByCode = (fundCode) => {
+  return request({
+    url: `${base_api}/deleteFundDataByCode/${fundCode}`,
+    method: 'delete'
+  })
+}
+
+/**
+ * 根据基金代码批量删除基金数据
+ * @param fundCodes 基金代码数组
+ * @returns
+ */
+export const DeleteFundDataByCodes = (fundCodes) => {
+  return request({
+    url: `${base_api}/deleteFundDataByCodes`,
+    method: 'post',
+    data: fundCodes
+  })
+}

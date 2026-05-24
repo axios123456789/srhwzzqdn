@@ -487,4 +487,36 @@ public class FundAssetController {
         return Result.build(navEChartsVos, ResultCodeEnum.SUCCESS);
     }
 
+    /**
+     * 根据基金代码删除基金的全部数据
+     * @param fund_code
+     * @return
+     */
+    @DeleteMapping("/deleteFundDataByCode/{fund_code}")
+    public Result deleteFundDataByCode(@PathVariable("fund_code") String fund_code){
+        try {
+            fundAssetService.deleteFundDataByCode(fund_code);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("删除基金数据失败", e);
+            return Result.build(null, 500, "基金数据删除失败！");
+        }
+    }
+
+    /**
+     * 根据基金代码批量删除基金数据
+     * @param fund_codes
+     * @return
+     */
+    @PostMapping("/deleteFundDataByCodes")
+    public Result deleteFundDataByCodes(@RequestBody List<String> fund_codes){
+        try {
+            fundAssetService.deleteFundDataByCodes(fund_codes);
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("批量删除基金数据失败", e);
+            return Result.build(null, 500, "批量基金数据删除失败！");
+        }
+    }
+
 }

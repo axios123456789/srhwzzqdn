@@ -96,4 +96,10 @@ public interface FundAssetService {
 
     //获取业绩走势echarts数据
     List<NavEChartsVo> getNaveChartsByCondition(FundComm fundComm);
+
+    //根据基金代码删除基金的全部数据
+    void deleteFundDataByCode(String fund_code);
+
+    //根据基金代码批量删除基金的全部数据
+    void deleteFundDataByCodes(List<String> fund_codes);
 }

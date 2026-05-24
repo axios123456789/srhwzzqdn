@@ -373,7 +373,7 @@ import { Coin, Search, Download, Refresh, Delete, Edit } from '@element-plus/ico
 import FundDetailDialog from './fundDetailDialog/fundDetailDialog.vue'
 import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage, GetFundNavByConditionAndPage, UpdateFundBaseAsset, UpdateFundManagerAnalysis, UpdateFundHolding } from "@/api/fundAsset"
+import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage, GetFundNavByConditionAndPage, UpdateFundBaseAsset, UpdateFundManagerAnalysis, UpdateFundHolding, DeleteFundDataByCode, DeleteFundDataByCodes } from "@/api/fundAsset"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
 
@@ -656,26 +656,42 @@ const batchDelete = async () => {
     return
   }
   try {
-    await ElMessageBox.confirm(`确定要删除选中的 ${selectedIds.value.length} 条基金数据吗？`, '批量删除确认', {
+    await ElMessageBox.confirm(`确定要删除选中的 ${selectedIds.value.length} 条基金数据吗？此操作将删除该基金的所有关联数据，且不可恢复！`, '批量删除确认', {
       confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
     })
-    // TODO: 调用后端删除接口
-    selectedIds.value = []
-    fetchData()
-    ElMessage.success('批量删除成功')
+    // 根据选中的id获取对应的fundCode列表
+    const fundCodes = fundList.value
+      .filter(item => selectedIds.value.includes(item.id))
+      .map(item => item.fundCode)
+    if (fundCodes.length === 0) {
+      ElMessage.warning('未找到选中基金对应的基金代码')
+      return
+    }
+    const result = await DeleteFundDataByCodes(fundCodes)
+    if (result.code === 200) {
+      selectedIds.value = []
+      fetchData()
+      ElMessage.success('批量删除成功')
+    } else {
+      ElMessage.error(result.message || '批量删除失败')
+    }
   } catch (e) { /* cancel */ }
 }
 
 // ============ 单条删除 ============
 const deleteFund = async (item) => {
   try {
-    await ElMessageBox.confirm(`确定要删除基金【${item.fundName}】吗？`, '删除确认', {
+    await ElMessageBox.confirm(`确定要删除基金【${item.fundName}】吗？此操作将删除该基金的所有关联数据，且不可恢复！`, '删除确认', {
       confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
     })
-    // TODO: 调用后端删除接口
-    selectedIds.value = selectedIds.value.filter(i => i !== item.id)
-    fetchData()
-    ElMessage.success('删除成功')
+    const result = await DeleteFundDataByCode(item.fundCode)
+    if (result.code === 200) {
+      selectedIds.value = selectedIds.value.filter(i => i !== item.id)
+      fetchData()
+      ElMessage.success('删除成功')
+    } else {
+      ElMessage.error(result.message || '删除失败')
+    }
   } catch (e) { /* cancel */ }
 }
 

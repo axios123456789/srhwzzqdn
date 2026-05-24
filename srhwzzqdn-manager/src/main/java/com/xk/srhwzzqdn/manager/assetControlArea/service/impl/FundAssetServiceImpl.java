@@ -583,6 +583,73 @@ public class FundAssetServiceImpl implements FundAssetService {
     }
 
     /**
+     * 根据基金代码删除基金的全部数据
+     * @param fund_code
+     */
+    @Override
+    @Transactional
+    public void deleteFundDataByCode(String fund_code) {
+        //1.根据基金代码删除所有基金持仓数据
+        fundAssetMapper.deleteFundPortfolioByCode(fund_code);
+
+        //2.根据基金代码删除所有风险与绩效指标信息
+        fundAssetMapper.deleteFundRiskPerformanceByCode(fund_code);
+
+        //3.根据基金代码删除所有分红信息
+        fundAssetMapper.deleteFundDividendByCode(fund_code);
+
+        //4.根据基金代码删除所有交易与流水信息
+        fundAssetMapper.deleteFundTransactionByCode(fund_code);
+
+        //5.根据基金代码删除所有份额与持仓信息
+        fundAssetMapper.deleteFundHoldingByCode(fund_code);
+
+        //6.根据基金代码删除基金经理分析数据
+        fundAssetMapper.deleteFundManagerAnalysisByCode(fund_code);
+
+        //7.根据基金代码删除净值与估值信息数据
+        fundAssetMapper.deleteFundNavByCode(fund_code);
+
+        //8.根据基金代码删除基金基本数据
+        fundAssetMapper.deleteFundAssetByCode(fund_code);
+    }
+
+    /**
+     * 根据基金代码批量删除基金的全部数据
+     * @param fund_codes
+     */
+    @Override
+    @Transactional
+    public void deleteFundDataByCodes(List<String> fund_codes) {
+        if (fund_codes == null || fund_codes.isEmpty()) {
+            return;
+        }
+        //1.根据基金代码批量删除所有基金持仓数据
+        fundAssetMapper.deleteFundPortfolioByCodes(fund_codes);
+
+        //2.根据基金代码批量删除所有风险与绩效指标信息
+        fundAssetMapper.deleteFundRiskPerformanceByCodes(fund_codes);
+
+        //3.根据基金代码批量删除所有分红信息
+        fundAssetMapper.deleteFundDividendByCodes(fund_codes);
+
+        //4.根据基金代码批量删除所有交易与流水信息
+        fundAssetMapper.deleteFundTransactionByCodes(fund_codes);
+
+        //5.根据基金代码批量删除所有份额与持仓信息
+        fundAssetMapper.deleteFundHoldingByCodes(fund_codes);
+
+        //6.根据基金代码批量删除基金经理分析数据
+        fundAssetMapper.deleteFundManagerAnalysisByCodes(fund_codes);
+
+        //7.根据基金代码批量删除净值与估值信息数据
+        fundAssetMapper.deleteFundNavByCodes(fund_codes);
+
+        //8.根据基金代码批量删除基金基本数据
+        fundAssetMapper.deleteFundAssetByCodes(fund_codes);
+    }
+
+    /**
      * 打印基金数据到控制台
      * 按模块分类输出解析结果，便于查看和调试
      *
