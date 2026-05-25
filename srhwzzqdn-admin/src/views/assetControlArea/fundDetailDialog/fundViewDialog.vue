@@ -240,11 +240,36 @@
                 {{ option.label }}
               </div>
             </div>
+            <!-- 右上角业绩显示 - 仿支付宝风格 -->
+            <div class="performance-badge" v-if="performanceText">
+              <span class="performance-value" :style="{ color: performanceColor }">{{ performanceText }}</span>
+              <span class="performance-label">{{ performanceRangeLabel }}业绩</span>
+            </div>
           </div>
           
           <!-- ECharts 图表 -->
-          <div class="nav-chart-container" v-loading="chartLoading" element-loading-background="rgba(255,255,255,0.8)">
-            <div ref="chartRef" style="width:100%;height:100%;"></div>
+          <div class="nav-chart-container" style="position:relative;">
+            <div ref="chartRef" v-show="!chartLoading" style="width:100%;height:100%;"></div>
+            <div v-if="chartLoading" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+              <el-icon class="is-loading" :size="24" color="#409EFF"><Loading /></el-icon>
+              <span style="margin-left:8px;color:#999;font-size:13px;">加载中...</span>
+            </div>
+            <!-- 自定义tooltip - 仿支付宝风格 -->
+            <div v-if="customTooltip.visible" class="custom-chart-tooltip" :style="customTooltip.positionStyle">
+              <div class="tooltip-date">{{ customTooltip.date }}</div>
+              <div class="tooltip-row">
+                <span class="tooltip-label">业绩走势</span>
+                <span class="tooltip-value" :style="{ color: customTooltip.trendColor }">{{ customTooltip.trendText }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span class="tooltip-label">单位净值</span>
+                <span class="tooltip-value tooltip-value-dark">{{ customTooltip.unitNavText }}</span>
+              </div>
+              <div class="tooltip-row">
+                <span class="tooltip-label">累计净值</span>
+                <span class="tooltip-value tooltip-value-dark">{{ customTooltip.accumulatedNavText }}</span>
+              </div>
+            </div>
           </div>
           
           <!-- 净值数据表格 -->
@@ -613,7 +638,7 @@
 
 <script setup>
 import { computed, ref, watch, nextTick, onBeforeUnmount, reactive, onMounted } from 'vue'
-import { Coin, Close, FullScreen, Aim, Document, Discount, Wallet, TrendCharts, List, Money, DataAnalysis, Grid, User } from '@element-plus/icons-vue'
+import { Coin, Close, FullScreen, Aim, Document, Discount, Wallet, TrendCharts, List, Money, DataAnalysis, Grid, User, Loading } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { GetFundNavByConditionAndPage, GetNaveChartsByCondition, GetFundManagerAnalysisByCode, GetFundHoldingByCode, GetFundTransactionByConditionAndPage, GetFundDividendByConditionAndPage, GetFundRiskPerformanceByCode, GetFundPortfolioByConditionAndPage } from "@/api/fundAsset"
 import { GetKeyAndValueByType } from "@/api/sysDict"
@@ -706,6 +731,22 @@ const chartInstance = ref(null)
 const chartRef = ref(null)
 const activeTimeRange = ref('1month')
 const chartLoading = ref(false)
+
+// 右上角业绩显示相关
+const performanceText = ref('')
+const performanceColor = ref('#EE4B4B')
+const performanceRangeLabel = ref('')
+
+// 自定义tooltip数据
+const customTooltip = reactive({
+  visible: false,
+  date: '',
+  trendText: '',
+  trendColor: '#EE4B4B',
+  unitNavText: '',
+  accumulatedNavText: '',
+  positionStyle: {}
+})
 
 // echarts图表数据（从后端getNaveChartsByCondition接口获取）
 const chartDataList = ref([])
@@ -842,6 +883,19 @@ const handleNavTableSizeChange = (size) => {
 const initChart = () => {
   if (!chartRef.value) return
 
+  // 隐藏自定义tooltip
+  customTooltip.visible = false
+
+  // 移除旧的事件监听
+  if (chartRef.value._tooltipMoveHandler) {
+    chartRef.value.removeEventListener('mousemove', chartRef.value._tooltipMoveHandler)
+    chartRef.value._tooltipMoveHandler = null
+  }
+  if (chartRef.value._tooltipLeaveHandler) {
+    chartRef.value.removeEventListener('mouseleave', chartRef.value._tooltipLeaveHandler)
+    chartRef.value._tooltipLeaveHandler = null
+  }
+
   if (chartInstance.value) {
     chartInstance.value.dispose()
   }
@@ -869,6 +923,7 @@ const initChart = () => {
   const dates = sortedData.map(item => item.navDate)
   const salesTrendData = sortedData.map(item => item.salesTrend)
   const unitNavData = sortedData.map(item => item.unitNav)
+  const accumulatedNavData = sortedData.map(item => item.accumulatedNav)
 
   // 判断整体涨跌，决定主色调
   const lastTrend = salesTrendData[salesTrendData.length - 1] || 0
@@ -883,45 +938,16 @@ const initChart = () => {
   const yMin = minTrend < 0 ? Math.floor(minTrend / 5) * 5 - 5 : 0
   const yMax = Math.ceil(maxTrend / 5) * 5 + 5
 
+  // 更新右上角业绩显示
+  const currentPerformance = lastTrend
+  const performanceSign = currentPerformance >= 0 ? '+' : ''
+  performanceText.value = `${performanceSign}${currentPerformance.toFixed(2)}%`
+  performanceColor.value = mainColor
+  performanceRangeLabel.value = timeRangeOptions.find(o => o.value === activeTimeRange.value)?.label || ''
+
   const option = {
     tooltip: {
-      trigger: 'axis',
-      backgroundColor: 'rgba(255, 255, 255, 0.96)',
-      borderColor: '#e8e8e8',
-      borderWidth: 1,
-      padding: [12, 16],
-      textStyle: {
-        color: '#333',
-        fontSize: 13
-      },
-      axisPointer: {
-        type: 'line',
-        lineStyle: {
-          color: '#ccc',
-          width: 1,
-          type: 'dashed'
-        }
-      },
-      formatter: (params) => {
-        if (!params || params.length === 0) return ''
-        const dataIndex = params[0].dataIndex
-        const date = params[0].axisValue
-        const trend = salesTrendData[dataIndex]
-        const unitNav = unitNavData[dataIndex]
-        const trendColor = trend >= 0 ? '#EE4B4B' : '#1DB068'
-        const trendSign = trend >= 0 ? '+' : ''
-        return `
-          <div style="font-size:12px;color:#999;margin-bottom:8px;">${date}</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="color:#666;font-size:13px;">业绩走势</span>
-            <span style="color:${trendColor};font-size:15px;font-weight:600;">${trendSign}${trend.toFixed(2)}%</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="color:#666;font-size:13px;">单位净值</span>
-            <span style="color:#333;font-size:15px;font-weight:600;">${unitNav != null ? unitNav.toFixed(4) : '-'}</span>
-          </div>
-        `
-      }
+      show: false  // 禁用ECharts内置tooltip，使用Vue自定义tooltip
     },
     grid: {
       left: 50,
@@ -942,17 +968,22 @@ const initChart = () => {
       axisLabel: {
         color: '#999',
         fontSize: 11,
-        interval: 'auto',
-        formatter: (value) => {
-          // 只显示月-日，节省空间
-          if (value && value.length >= 10) {
-            return value.substring(5, 10)
-          }
-          return value
-        }
+        interval: 'auto'
       },
       axisTick: {
         show: false
+      },
+      axisPointer: {
+        show: true,
+        type: 'line',
+        lineStyle: {
+          color: '#ccc',
+          width: 1,
+          type: 'dashed'
+        },
+        label: {
+          show: false
+        }
       }
     },
     yAxis: {
@@ -1032,6 +1063,111 @@ const initChart = () => {
   }
 
   chartInstance.value.setOption(option)
+
+  // 使用ECharts的convertFromPixel来将鼠标像素坐标转换为数据索引
+  // 监听canvas原生mousemove事件，驱动Vue自定义tooltip
+  const chartDom = chartRef.value
+  const handleMouseMove = (e) => {
+    if (!chartInstance.value) return
+    const rect = chartDom.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    
+    // 使用ECharts API将像素坐标转换为数据坐标
+    const pointInGrid = chartInstance.value.convertFromPixel({ seriesIndex: 0 }, [x, y])
+    if (!pointInGrid || pointInGrid.length === 0) {
+      customTooltip.visible = false
+      return
+    }
+    
+    // 对于category轴，pointInGrid[0]是类别索引（浮点数）
+    const categoryIndex = Math.round(pointInGrid[0])
+    if (categoryIndex < 0 || categoryIndex >= dates.length) {
+      customTooltip.visible = false
+      return
+    }
+    
+    // 检查鼠标是否在grid区域内
+    const gridRect = chartInstance.value.getModel().getComponent('grid', 0).coordinateSystem.getRect()
+    if (x < gridRect.x || x > gridRect.x + gridRect.width || y < gridRect.y || y > gridRect.y + gridRect.height) {
+      customTooltip.visible = false
+      return
+    }
+    
+    const dataIndex = categoryIndex
+    const date = dates[dataIndex]
+    const trend = salesTrendData[dataIndex]
+    const unitNav = unitNavData[dataIndex]
+    const accumulatedNav = accumulatedNavData[dataIndex]
+    
+    // 安全取值
+    const trendVal = (trend != null && !isNaN(trend)) ? trend : 0
+    const unitNavVal = (unitNav != null && !isNaN(unitNav)) ? unitNav : null
+    const accNavVal = (accumulatedNav != null && !isNaN(accumulatedNav)) ? accumulatedNav : null
+    
+    const trendColor = trendVal >= 0 ? '#EE4B4B' : '#1DB068'
+    const trendSign = trendVal >= 0 ? '+' : ''
+    
+    // 更新tooltip数据
+    customTooltip.date = date
+    customTooltip.trendText = trendSign + trendVal.toFixed(2) + '%'
+    customTooltip.trendColor = trendColor
+    customTooltip.unitNavText = unitNavVal != null ? unitNavVal.toFixed(4) : '-'
+    customTooltip.accumulatedNavText = accNavVal != null ? accNavVal.toFixed(4) : '-'
+    customTooltip.visible = true
+    
+    // 计算tooltip位置（相对于chart容器）
+    const tooltipWidth = 140
+    const tooltipHeight = 80
+    const containerWidth = chartDom.offsetWidth
+    let left = x + 15
+    let top = y - tooltipHeight / 2
+    // 防止右侧溢出
+    if (left + tooltipWidth > containerWidth) {
+      left = x - tooltipWidth - 15
+    }
+    // 防止顶部溢出
+    if (top < 0) top = 5
+    // 防止底部溢出
+    if (top + tooltipHeight > chartDom.offsetHeight) {
+      top = chartDom.offsetHeight - tooltipHeight - 5
+    }
+    customTooltip.positionStyle = {
+      left: left + 'px',
+      top: top + 'px'
+    }
+    
+    // 使用dispatchAction显示axisPointer竖线和高亮数据点
+    chartInstance.value.dispatchAction({
+      type: 'highlight',
+      seriesIndex: 0,
+      dataIndex: dataIndex
+    })
+    chartInstance.value.dispatchAction({
+      type: 'showTip',
+      seriesIndex: 0,
+      dataIndex: dataIndex
+    })
+  }
+  
+  const handleMouseLeave = () => {
+    customTooltip.visible = false
+    if (chartInstance.value) {
+      chartInstance.value.dispatchAction({
+        type: 'downplay',
+        seriesIndex: 0
+      })
+      chartInstance.value.dispatchAction({
+        type: 'hideTip'
+      })
+    }
+  }
+  
+  // 添加事件监听
+  chartDom.addEventListener('mousemove', handleMouseMove)
+  chartDom.addEventListener('mouseleave', handleMouseLeave)
+  chartDom._tooltipMoveHandler = handleMouseMove
+  chartDom._tooltipLeaveHandler = handleMouseLeave
 }
 
 // 切换时间范围
@@ -1582,7 +1718,7 @@ const getPeriodTypeText = (v) => {
 .info-card {
   background: #fff;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
 }
@@ -1598,6 +1734,7 @@ const getPeriodTypeText = (v) => {
   padding: 14px 20px;
   background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
   border-bottom: 1px solid #e8ecf1;
+  border-radius: 10px 10px 0 0;
   font-size: 15px;
   font-weight: 700;
   color: #2c3e50;
@@ -1627,6 +1764,9 @@ const getPeriodTypeText = (v) => {
 
 /* ====== 时间范围选择器 - 仿支付宝风格 ====== */
 .time-range-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 12px;
 }
 
@@ -1634,6 +1774,27 @@ const getPeriodTypeText = (v) => {
   display: flex;
   gap: 0;
   width: fit-content;
+}
+
+/* ====== 右上角业绩显示 - 仿支付宝风格 ====== */
+.performance-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.performance-value {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'DIN Alternate', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.2;
+}
+
+.performance-label {
+  font-size: 11px;
+  color: #999;
+  font-weight: 400;
 }
 
 .time-range-tab {
@@ -1673,6 +1834,48 @@ const getPeriodTypeText = (v) => {
   width: 100%;
   height: 350px;
   margin-bottom: 16px;
+}
+
+/* ====== 自定义图表tooltip - 仿支付宝风格 ====== */
+.custom-chart-tooltip {
+  position: absolute;
+  z-index: 100;
+  min-width: 120px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 4px;
+  pointer-events: none;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.custom-chart-tooltip .tooltip-date {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 4px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+.custom-chart-tooltip .tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+.custom-chart-tooltip .tooltip-row:last-child {
+  margin-bottom: 0;
+}
+.custom-chart-tooltip .tooltip-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 10px;
+}
+.custom-chart-tooltip .tooltip-value {
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+.custom-chart-tooltip .tooltip-value-dark {
+  color: #fff;
 }
 
 /* ====== 净值表格包装器 ====== */
