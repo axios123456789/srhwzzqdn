@@ -165,7 +165,18 @@
         >
           <el-table-column type="selection" width="55" />
           <el-table-column prop="assetName" label="资产名称" min-width="150" />
-          <el-table-column prop="assetCode" label="资产官方标识" min-width="150" />
+          <el-table-column prop="assetCode" label="资产官方标识" min-width="150">
+            <template #default="scope">
+              <span
+                v-if="scope.row.assetType === 3"
+                class="fund-code-link"
+                @click="openFundViewDialog(scope.row.assetCode)"
+              >
+                {{ scope.row.assetCode }}
+              </span>
+              <span v-else>{{ scope.row.assetCode }}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="assetNo" label="资产编号" width="180" />
           <el-table-column prop="assetType" label="资产类型" width="100">
             <template #default="scope">
@@ -347,6 +358,12 @@
         @closed="resetExport"
     />
 
+    <!-- 基金详情查看模态窗口 -->
+    <FundViewDialog
+      v-model:visible="fundViewDialogVisible"
+      :fund-data="currentViewFund"
+    />
+
   </div>
 </template>
 
@@ -355,8 +372,10 @@ import { ref, reactive, computed, onMounted } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import { GetAssetLedgerByConditionAndPage, SaveAssetLedger, DeleteAssetLedgerById, DeleteAllAssetLedgerByIds } from "@/api/assetControl"
 import { GetKeyAndValueByType } from "@/api/sysDict"
+import { GetFundBaseDataByFundCode } from "@/api/fundAsset"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
+import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
 import {useFullscreenDialog} from "@/hooks/useFullscreenDialog";
 
 // 在需要全屏的组件中使用 Hook
@@ -493,6 +512,35 @@ const showExportDialog = async () => {
   showExport(currentData, total.value)
 }
 //---------------------------------------------------------------
+
+// ============ 基金详情查看功能 ============
+// 基金详情查看对话框状态
+const fundViewDialogVisible = ref(false)
+const currentViewFund = ref({})
+
+// 打开基金详情查看窗口 - 仿照基金资产台账的穿透方式
+const openFundViewDialog = async (fundCode) => {
+  if (!fundCode) {
+    ElMessage.warning('基金代码不存在')
+    return
+  }
+  
+  try {
+    // 调用后端接口获取基金基本数据
+    const result = await GetFundBaseDataByFundCode(fundCode)
+    if (result.code === 200 && result.data) {
+      // 仿照基金资产台账的方式：深拷贝数据并打开模态窗口
+      currentViewFund.value = JSON.parse(JSON.stringify(result.data))
+      fundViewDialogVisible.value = true
+    } else {
+      ElMessage.warning(result.message || '未找到该基金数据')
+    }
+  } catch (error) {
+    console.error('获取基金数据失败:', error)
+    ElMessage.warning('获取基金数据失败，请稍后重试')
+  }
+}
+// -----------------------------------------------------------
 
 //-------------------------数据字典获取------------------------------
 //数据字典
@@ -1096,5 +1144,19 @@ const batchDelete = async () => {
 :deep(.el-button--primary:hover) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(44, 90, 160, 0.4);
+}
+
+/* 基金代码链接样式 */
+.fund-code-link {
+  color: #4a7bc7;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.fund-code-link:hover {
+  color: #2c5aa0;
+  text-decoration: underline;
 }
 </style>

@@ -12960,3 +12960,994 @@ java.lang.NumberFormatException: For input string: "暂无数据"
 2026-05-26 19:42:19 HikariPool-1 - Starting...
 2026-05-26 19:42:19 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@602964a8
 2026-05-26 19:42:19 HikariPool-1 - Start completed.
+2026-05-26 20:07:54 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:07:54 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:07:54 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 20:07:55 阿里云百炼 AI 调用完成，耗时：1009 ms
+2026-05-26 20:07:55 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 20:07:55 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 20:07:57 阿里云百炼 AI 调用完成，耗时：2372 ms
+2026-05-26 20:07:57 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-26 20:07:57 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 20:07:58 阿里云百炼 AI 调用完成，耗时：600 ms
+2026-05-26 20:07:58 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-26 20:07:58 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-26 20:08:00 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:08:00 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：25 字符
+2026-05-26 20:08:00 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 20:08:01 阿里云百炼 AI 调用完成，耗时：1135 ms
+2026-05-26 20:08:01 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 20:08:01 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 20:08:04 阿里云百炼 AI 调用完成，耗时：2688 ms
+2026-05-26 20:08:04 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：17 字符
+2026-05-26 20:08:04 请求阿里云百炼 API，请求体大小：199 bytes
+2026-05-26 20:08:05 阿里云百炼 AI 调用完成，耗时：543 ms
+2026-05-26 20:08:05 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-26 20:08:05 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-26 20:08:05 阿里云百炼 AI 调用完成，耗时：6982 ms
+2026-05-26 20:08:05 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:08:05 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-26 20:08:11 阿里云百炼 AI 调用完成，耗时：6026 ms
+2026-05-26 20:08:11 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-26 20:08:11 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-26 20:08:11 阿里云百炼 AI 调用完成，耗时：6422 ms
+2026-05-26 20:08:11 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：25 字符
+2026-05-26 20:08:11 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 20:08:15 阿里云百炼 AI 调用完成，耗时：4537 ms
+2026-05-26 20:08:15 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-26 20:08:15 请求阿里云百炼 API，请求体大小：286 bytes
+2026-05-26 20:08:16 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:08:16 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:08:16 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 20:08:17 阿里云百炼 AI 调用完成，耗时：912 ms
+2026-05-26 20:08:17 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 20:08:17 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 20:08:18 阿里云百炼 AI 调用完成，耗时：6806 ms
+2026-05-26 20:08:18 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 20:08:18 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-26 20:08:20 阿里云百炼 AI 调用完成，耗时：2352 ms
+2026-05-26 20:08:20 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-26 20:08:20 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 20:08:20 阿里云百炼 AI 调用完成，耗时：469 ms
+2026-05-26 20:08:20 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-26 20:08:20 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-26 20:08:24 阿里云百炼 AI 调用完成，耗时：8372 ms
+2026-05-26 20:08:24 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：47 字符
+2026-05-26 20:08:24 请求阿里云百炼 API，请求体大小：283 bytes
+2026-05-26 20:08:24 阿里云百炼 AI 调用完成，耗时：6512 ms
+2026-05-26 20:08:24 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:08:24 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:08:26 阿里云百炼 AI 调用完成，耗时：6137 ms
+2026-05-26 20:08:26 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:08:26 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-26 20:08:27 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:08:27 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:08:27 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 20:08:28 阿里云百炼 AI 调用完成，耗时：1026 ms
+2026-05-26 20:08:28 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 20:08:28 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 20:08:30 阿里云百炼 AI 调用完成，耗时：2262 ms
+2026-05-26 20:08:30 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-26 20:08:30 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 20:08:30 阿里云百炼 AI 调用完成，耗时：544 ms
+2026-05-26 20:08:30 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-26 20:08:30 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-26 20:08:31 阿里云百炼 AI 调用完成，耗时：6368 ms
+2026-05-26 20:08:31 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-26 20:08:31 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-26 20:08:31 阿里云百炼 AI 调用完成，耗时：4807 ms
+2026-05-26 20:08:31 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-26 20:08:31 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-26 20:08:32 阿里云百炼 AI 调用完成，耗时：7753 ms
+2026-05-26 20:08:32 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：75 字符
+2026-05-26 20:08:32 请求阿里云百炼 API，请求体大小：367 bytes
+2026-05-26 20:08:36 阿里云百炼 AI 调用完成，耗时：6003 ms
+2026-05-26 20:08:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:08:36 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-26 20:08:37 阿里云百炼 AI 调用完成，耗时：6703 ms
+2026-05-26 20:08:37 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 20:08:37 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-26 20:08:38 阿里云百炼 AI 调用完成，耗时：6777 ms
+2026-05-26 20:08:38 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 20:08:38 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-26 20:08:38 阿里云百炼 AI 调用完成，耗时：6737 ms
+2026-05-26 20:08:38 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：68 字符
+2026-05-26 20:08:38 请求阿里云百炼 API，请求体大小：346 bytes
+2026-05-26 20:08:41 阿里云百炼 AI 调用完成，耗时：4258 ms
+2026-05-26 20:08:41 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-26 20:08:41 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-26 20:08:45 阿里云百炼 AI 调用完成，耗时：7345 ms
+2026-05-26 20:08:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-26 20:08:45 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-26 20:08:45 阿里云百炼 AI 调用完成，耗时：7132 ms
+2026-05-26 20:08:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:08:45 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:08:45 阿里云百炼 AI 调用完成，耗时：6833 ms
+2026-05-26 20:08:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 20:08:45 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-26 20:08:47 阿里云百炼 AI 调用完成，耗时：6738 ms
+2026-05-26 20:08:47 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 20:08:47 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-26 20:08:52 阿里云百炼 AI 调用完成，耗时：7290 ms
+2026-05-26 20:08:52 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-26 20:08:52 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-26 20:08:53 阿里云百炼 AI 调用完成，耗时：7811 ms
+2026-05-26 20:08:53 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：111 字符
+2026-05-26 20:08:53 请求阿里云百炼 API，请求体大小：475 bytes
+2026-05-26 20:08:53 阿里云百炼 AI 调用完成，耗时：8198 ms
+2026-05-26 20:08:53 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-26 20:08:53 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-26 20:08:56 阿里云百炼 AI 调用完成，耗时：8164 ms
+2026-05-26 20:08:56 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:08:56 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:08:59 阿里云百炼 AI 调用完成，耗时：6342 ms
+2026-05-26 20:08:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：127 字符
+2026-05-26 20:08:59 请求阿里云百炼 API，请求体大小：523 bytes
+2026-05-26 20:09:00 阿里云百炼 AI 调用完成，耗时：8060 ms
+2026-05-26 20:09:00 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:09:00 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:09:01 阿里云百炼 AI 调用完成，耗时：7873 ms
+2026-05-26 20:09:01 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 20:09:01 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-26 20:09:04 阿里云百炼 AI 调用完成，耗时：8113 ms
+2026-05-26 20:09:04 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-26 20:09:04 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-26 20:09:06 阿里云百炼 AI 调用完成，耗时：5734 ms
+2026-05-26 20:09:07 阿里云百炼 AI 调用完成，耗时：8005 ms
+2026-05-26 20:09:07 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：75 字符
+2026-05-26 20:09:07 请求阿里云百炼 API，请求体大小：367 bytes
+2026-05-26 20:09:09 阿里云百炼 AI 调用完成，耗时：8027 ms
+2026-05-26 20:09:09 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-26 20:09:09 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-26 20:09:12 阿里云百炼 AI 调用完成，耗时：8295 ms
+2026-05-26 20:09:12 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 20:09:12 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-26 20:09:14 阿里云百炼 AI 调用完成，耗时：7042 ms
+2026-05-26 20:09:15 阿里云百炼 AI 调用完成，耗时：6262 ms
+2026-05-26 20:09:15 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-26 20:09:15 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-26 20:09:20 阿里云百炼 AI 调用完成，耗时：7690 ms
+2026-05-26 20:09:20 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-26 20:09:20 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-26 20:09:23 阿里云百炼 AI 调用完成，耗时：7374 ms
+2026-05-26 20:09:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:09:23 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:09:27 阿里云百炼 AI 调用完成，耗时：6887 ms
+2026-05-26 20:09:27 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-26 20:09:27 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-26 20:09:30 阿里云百炼 AI 调用完成，耗时：7293 ms
+2026-05-26 20:09:30 获取基金基本数据失败
+org.springframework.dao.DuplicateKeyException: 
+### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '006567' for key 't_fund_holding.uk_fund_holding'
+### The error may exist in file [D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes\mapper\assetControlArea\FundAssetMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: insert into t_fund_holding (             fund_code,             hold_shares,             available_shares,             frozen_shares,             cost_amount,             market_value,             profit_loss,             profit_loss_rate,             create_time,             create_by,             owner         ) values (                   ?,                   ?,                   ?,                   ?,                   ?,                   ?,                   ?,                   ?,                   now(),                   ?,                   ?         )
+### Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '006567' for key 't_fund_holding.uk_fund_holding'
+; Duplicate entry '006567' for key 't_fund_holding.uk_fund_holding'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:251)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:70)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:92)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:439)
+	at jdk.proxy2/jdk.proxy2.$Proxy81.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:272)
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:62)
+	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:145)
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
+	at jdk.proxy2/jdk.proxy2.$Proxy88.addFundHolding(Unknown Source)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl.getFundBaseDataByCode(FundAssetServiceImpl.java:259)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl$$SpringCGLIB$$0.getFundBaseDataByCode(<generated>)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController.getFundBaseDataByCode(FundAssetController.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '006567' for key 't_fund_holding.uk_fund_holding'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:117)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:354)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at jdk.internal.reflect.GeneratedMethodAccessor41.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)
+	at jdk.proxy3/jdk.proxy3.$Proxy145.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)
+	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:50)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:76)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:64)
+	at jdk.proxy2/jdk.proxy2.$Proxy143.update(Unknown Source)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:194)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:181)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:425)
+	... 73 common frames omitted
+2026-05-26 20:09:35 阿里云百炼 AI 调用完成，耗时：8006 ms
+2026-05-26 20:09:35 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:09:35 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:09:41 阿里云百炼 AI 调用完成，耗时：6856 ms
+2026-05-26 20:09:41 获取基金基本数据失败
+org.springframework.dao.DuplicateKeyException: 
+### Error updating database.  Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '006567' for key 't_fund_holding.uk_fund_holding'
+### The error may exist in file [D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes\mapper\assetControlArea\FundAssetMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: insert into t_fund_holding (             fund_code,             hold_shares,             available_shares,             frozen_shares,             cost_amount,             market_value,             profit_loss,             profit_loss_rate,             create_time,             create_by,             owner         ) values (                   ?,                   ?,                   ?,                   ?,                   ?,                   ?,                   ?,                   ?,                   now(),                   ?,                   ?         )
+### Cause: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '006567' for key 't_fund_holding.uk_fund_holding'
+; Duplicate entry '006567' for key 't_fund_holding.uk_fund_holding'
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:251)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:70)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:92)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:439)
+	at jdk.proxy2/jdk.proxy2.$Proxy81.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:272)
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:62)
+	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:145)
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
+	at jdk.proxy2/jdk.proxy2.$Proxy88.addFundHolding(Unknown Source)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl.getFundBaseDataByCode(FundAssetServiceImpl.java:259)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl$$SpringCGLIB$$0.getFundBaseDataByCode(<generated>)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController.getFundBaseDataByCode(FundAssetController.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '006567' for key 't_fund_holding.uk_fund_holding'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:117)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:354)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at jdk.internal.reflect.GeneratedMethodAccessor41.invoke(Unknown Source)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)
+	at jdk.proxy3/jdk.proxy3.$Proxy145.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)
+	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:50)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:76)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:64)
+	at jdk.proxy2/jdk.proxy2.$Proxy143.update(Unknown Source)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:194)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:181)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:425)
+	... 73 common frames omitted
+2026-05-26 20:32:20 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:32:20 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：28 字符
+2026-05-26 20:32:20 请求阿里云百炼 API，请求体大小：222 bytes
+2026-05-26 20:32:21 阿里云百炼 AI 调用完成，耗时：789 ms
+2026-05-26 20:32:21 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-26 20:32:21 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-26 20:32:23 阿里云百炼 AI 调用完成，耗时：1970 ms
+2026-05-26 20:32:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：20 字符
+2026-05-26 20:32:23 请求阿里云百炼 API，请求体大小：210 bytes
+2026-05-26 20:32:24 阿里云百炼 AI 调用完成，耗时：764 ms
+2026-05-26 20:32:24 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-26 20:32:24 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-26 20:32:29 阿里云百炼 AI 调用完成，耗时：5064 ms
+2026-05-26 20:32:29 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：28 字符
+2026-05-26 20:32:29 请求阿里云百炼 API，请求体大小：234 bytes
+2026-05-26 20:32:33 阿里云百炼 AI 调用完成，耗时：4019 ms
+2026-05-26 20:32:33 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 20:32:33 请求阿里云百炼 API，请求体大小：297 bytes
+2026-05-26 20:32:38 阿里云百炼 AI 调用完成，耗时：5824 ms
+2026-05-26 20:32:38 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：50 字符
+2026-05-26 20:32:38 请求阿里云百炼 API，请求体大小：294 bytes
+2026-05-26 20:32:44 阿里云百炼 AI 调用完成，耗时：5974 ms
+2026-05-26 20:32:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：78 字符
+2026-05-26 20:32:44 请求阿里云百炼 API，请求体大小：378 bytes
+2026-05-26 20:32:50 阿里云百炼 AI 调用完成，耗时：5534 ms
+2026-05-26 20:32:50 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：71 字符
+2026-05-26 20:32:50 请求阿里云百炼 API，请求体大小：357 bytes
+2026-05-26 20:32:56 阿里云百炼 AI 调用完成，耗时：6443 ms
+2026-05-26 20:32:56 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-26 20:32:56 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-26 20:33:02 阿里云百炼 AI 调用完成，耗时：5465 ms
+2026-05-26 20:33:02 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：114 字符
+2026-05-26 20:33:02 请求阿里云百炼 API，请求体大小：486 bytes
+2026-05-26 20:33:08 阿里云百炼 AI 调用完成，耗时：6137 ms
+2026-05-26 20:33:08 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：130 字符
+2026-05-26 20:33:08 请求阿里云百炼 API，请求体大小：534 bytes
+2026-05-26 20:33:14 阿里云百炼 AI 调用完成，耗时：6074 ms
+2026-05-26 20:33:14 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：78 字符
+2026-05-26 20:33:14 请求阿里云百炼 API，请求体大小：378 bytes
+2026-05-26 20:33:21 阿里云百炼 AI 调用完成，耗时：6886 ms
+2026-05-26 20:34:13 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:34:14 基金460001新增净值数据5136条
+2026-05-26 20:34:14 基金460001新增持仓数据10条
+2026-05-26 20:38:31 HikariPool-1 - Shutdown initiated...
+2026-05-26 20:38:31 HikariPool-1 - Shutdown completed.
+2026-05-26 20:38:38 Starting ManagerApplication using Java 17.0.17 with PID 21976 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-26 20:38:38 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-26 20:38:38 The following 1 profile is active: "dev"
+2026-05-26 20:38:38 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-26 20:38:38 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-26 20:38:38 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-26 20:38:39 Tomcat initialized with port(s): 8400 (http)
+2026-05-26 20:38:39 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-26 20:38:39 Starting service [Tomcat]
+2026-05-26 20:38:39 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-26 20:38:39 Initializing Spring embedded WebApplicationContext
+2026-05-26 20:38:39 Root WebApplicationContext: initialization completed in 1055 ms
+2026-05-26 20:38:40 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-26 20:38:40 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-26 20:38:40 Started ManagerApplication in 2.863 seconds (process running for 3.4)
+2026-05-26 20:38:50 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-26 20:38:50 Initializing Servlet 'dispatcherServlet'
+2026-05-26 20:38:50 Completed initialization in 1 ms
+2026-05-26 20:38:51 HikariPool-1 - Starting...
+2026-05-26 20:38:51 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@46cd2ac
+2026-05-26 20:38:51 HikariPool-1 - Start completed.
+2026-05-26 20:44:50 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:44:50 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：28 字符
+2026-05-26 20:44:50 请求阿里云百炼 API，请求体大小：214 bytes
+2026-05-26 20:44:50 阿里云百炼 AI 调用完成，耗时：630 ms
+2026-05-26 20:44:50 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 20:44:50 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 20:44:52 阿里云百炼 AI 调用完成，耗时：1739 ms
+2026-05-26 20:44:52 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：20 字符
+2026-05-26 20:44:52 请求阿里云百炼 API，请求体大小：202 bytes
+2026-05-26 20:44:52 阿里云百炼 AI 调用完成，耗时：434 ms
+2026-05-26 20:44:52 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-26 20:44:52 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-26 20:44:57 阿里云百炼 AI 调用完成，耗时：4524 ms
+2026-05-26 20:44:57 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：28 字符
+2026-05-26 20:44:57 请求阿里云百炼 API，请求体大小：226 bytes
+2026-05-26 20:45:00 阿里云百炼 AI 调用完成，耗时：3196 ms
+2026-05-26 20:45:00 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 20:45:00 请求阿里云百炼 API，请求体大小：289 bytes
+2026-05-26 20:45:06 阿里云百炼 AI 调用完成，耗时：5832 ms
+2026-05-26 20:45:06 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：50 字符
+2026-05-26 20:45:06 请求阿里云百炼 API，请求体大小：286 bytes
+2026-05-26 20:45:12 阿里云百炼 AI 调用完成，耗时：5647 ms
+2026-05-26 20:45:12 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：78 字符
+2026-05-26 20:45:12 请求阿里云百炼 API，请求体大小：370 bytes
+2026-05-26 20:45:17 阿里云百炼 AI 调用完成，耗时：5704 ms
+2026-05-26 20:45:17 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：71 字符
+2026-05-26 20:45:17 请求阿里云百炼 API，请求体大小：349 bytes
+2026-05-26 20:45:23 阿里云百炼 AI 调用完成，耗时：6016 ms
+2026-05-26 20:45:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-26 20:45:23 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-26 20:45:29 阿里云百炼 AI 调用完成，耗时：5884 ms
+2026-05-26 20:45:29 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：114 字符
+2026-05-26 20:45:29 请求阿里云百炼 API，请求体大小：478 bytes
+2026-05-26 20:45:34 阿里云百炼 AI 调用完成，耗时：5251 ms
+2026-05-26 20:45:34 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：130 字符
+2026-05-26 20:45:34 请求阿里云百炼 API，请求体大小：526 bytes
+2026-05-26 20:45:41 阿里云百炼 AI 调用完成，耗时：6960 ms
+2026-05-26 20:45:41 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：78 字符
+2026-05-26 20:45:41 请求阿里云百炼 API，请求体大小：370 bytes
+2026-05-26 20:45:46 阿里云百炼 AI 调用完成，耗时：4182 ms
+2026-05-26 20:48:21 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:48:21 基金000218新增净值数据2462条
+2026-05-26 20:48:29 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:48:29 基金000218净值数据已是最新，无需插入
+2026-05-26 20:49:59 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:49:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:49:59 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 20:50:00 阿里云百炼 AI 调用完成，耗时：534 ms
+2026-05-26 20:50:00 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-26 20:50:00 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-26 20:50:01 阿里云百炼 AI 调用完成，耗时：1514 ms
+2026-05-26 20:50:01 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-26 20:50:01 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 20:50:02 阿里云百炼 AI 调用完成，耗时：466 ms
+2026-05-26 20:50:02 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-26 20:50:02 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-26 20:50:06 阿里云百炼 AI 调用完成，耗时：4092 ms
+2026-05-26 20:50:06 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:50:06 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-26 20:50:10 阿里云百炼 AI 调用完成，耗时：3832 ms
+2026-05-26 20:50:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-26 20:50:10 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-26 20:50:16 阿里云百炼 AI 调用完成，耗时：6022 ms
+2026-05-26 20:50:16 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 20:50:16 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-26 20:50:23 阿里云百炼 AI 调用完成，耗时：7248 ms
+2026-05-26 20:50:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:50:23 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:50:29 阿里云百炼 AI 调用完成，耗时：5781 ms
+2026-05-26 20:50:29 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-26 20:50:29 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-26 20:50:35 阿里云百炼 AI 调用完成，耗时：6397 ms
+2026-05-26 20:50:35 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-26 20:50:35 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-26 20:50:41 阿里云百炼 AI 调用完成，耗时：5915 ms
+2026-05-26 20:50:41 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-26 20:50:41 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-26 20:50:47 阿里云百炼 AI 调用完成，耗时：5746 ms
+2026-05-26 20:50:47 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-26 20:50:47 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-26 20:50:54 阿里云百炼 AI 调用完成，耗时：6967 ms
+2026-05-26 20:50:54 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:50:54 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:50:59 阿里云百炼 AI 调用完成，耗时：5185 ms
+2026-05-26 20:51:44 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:51:44 基金010416新增净值数据1204条
+2026-05-26 20:51:44 基金010416新增持仓数据10条
+2026-05-26 20:52:00 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:52:00 基金010416净值数据已是最新，无需插入
+2026-05-26 20:52:00 基金010416持仓数据已存在，跳过插入
+2026-05-26 20:52:57 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:52:57 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:52:57 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 20:52:58 阿里云百炼 AI 调用完成，耗时：1543 ms
+2026-05-26 20:52:58 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-26 20:52:58 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-26 20:53:00 阿里云百炼 AI 调用完成，耗时：1818 ms
+2026-05-26 20:53:00 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-26 20:53:00 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 20:53:01 阿里云百炼 AI 调用完成，耗时：614 ms
+2026-05-26 20:53:01 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-26 20:53:01 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-26 20:53:06 阿里云百炼 AI 调用完成，耗时：5339 ms
+2026-05-26 20:53:06 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 20:53:06 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-26 20:53:10 阿里云百炼 AI 调用完成，耗时：4200 ms
+2026-05-26 20:53:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-26 20:53:10 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-26 20:53:16 阿里云百炼 AI 调用完成，耗时：6151 ms
+2026-05-26 20:53:16 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 20:53:16 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-26 20:53:23 阿里云百炼 AI 调用完成，耗时：6381 ms
+2026-05-26 20:53:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:53:23 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:53:29 阿里云百炼 AI 调用完成，耗时：6319 ms
+2026-05-26 20:53:29 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-26 20:53:29 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-26 20:53:35 阿里云百炼 AI 调用完成，耗时：6513 ms
+2026-05-26 20:53:35 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-26 20:53:35 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-26 20:53:43 阿里云百炼 AI 调用完成，耗时：7205 ms
+2026-05-26 20:53:43 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-26 20:53:43 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-26 20:53:49 阿里云百炼 AI 调用完成，耗时：6157 ms
+2026-05-26 20:53:49 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-26 20:53:49 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-26 20:53:56 阿里云百炼 AI 调用完成，耗时：7123 ms
+2026-05-26 20:53:56 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 20:53:56 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 20:54:03 阿里云百炼 AI 调用完成，耗时：7111 ms
+2026-05-26 20:54:18 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:54:18 基金010415新增净值数据1204条
+2026-05-26 20:54:18 基金010415新增持仓数据10条
+2026-05-26 20:55:32 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:55:32 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：27 字符
+2026-05-26 20:55:32 请求阿里云百炼 API，请求体大小：217 bytes
+2026-05-26 20:55:34 阿里云百炼 AI 调用完成，耗时：1816 ms
+2026-05-26 20:55:34 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-26 20:55:34 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-26 20:55:35 阿里云百炼 AI 调用完成，耗时：1800 ms
+2026-05-26 20:55:35 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：19 字符
+2026-05-26 20:55:35 请求阿里云百炼 API，请求体大小：205 bytes
+2026-05-26 20:55:36 阿里云百炼 AI 调用完成，耗时：494 ms
+2026-05-26 20:55:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-26 20:55:36 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-26 20:55:42 阿里云百炼 AI 调用完成，耗时：5584 ms
+2026-05-26 20:55:42 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：27 字符
+2026-05-26 20:55:42 请求阿里云百炼 API，请求体大小：229 bytes
+2026-05-26 20:55:45 阿里云百炼 AI 调用完成，耗时：3388 ms
+2026-05-26 20:55:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：50 字符
+2026-05-26 20:55:45 请求阿里云百炼 API，请求体大小：292 bytes
+2026-05-26 20:55:53 阿里云百炼 AI 调用完成，耗时：7977 ms
+2026-05-26 20:55:53 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：49 字符
+2026-05-26 20:55:53 请求阿里云百炼 API，请求体大小：289 bytes
+2026-05-26 20:55:59 阿里云百炼 AI 调用完成，耗时：6001 ms
+2026-05-26 20:55:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：77 字符
+2026-05-26 20:55:59 请求阿里云百炼 API，请求体大小：373 bytes
+2026-05-26 20:56:05 阿里云百炼 AI 调用完成，耗时：5707 ms
+2026-05-26 20:56:05 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：70 字符
+2026-05-26 20:56:05 请求阿里云百炼 API，请求体大小：352 bytes
+2026-05-26 20:56:11 阿里云百炼 AI 调用完成，耗时：6264 ms
+2026-05-26 20:56:11 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-26 20:56:11 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-26 20:56:17 阿里云百炼 AI 调用完成，耗时：6122 ms
+2026-05-26 20:56:17 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：113 字符
+2026-05-26 20:56:17 请求阿里云百炼 API，请求体大小：481 bytes
+2026-05-26 20:56:23 阿里云百炼 AI 调用完成，耗时：6456 ms
+2026-05-26 20:56:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：129 字符
+2026-05-26 20:56:23 请求阿里云百炼 API，请求体大小：529 bytes
+2026-05-26 20:56:29 阿里云百炼 AI 调用完成，耗时：5881 ms
+2026-05-26 20:56:29 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：77 字符
+2026-05-26 20:56:29 请求阿里云百炼 API，请求体大小：373 bytes
+2026-05-26 20:56:36 阿里云百炼 AI 调用完成，耗时：6399 ms
+2026-05-26 20:58:12 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:58:12 基金005834新增净值数据1768条
+2026-05-26 20:58:12 基金005834新增持仓数据10条
+2026-05-26 20:58:22 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 20:58:22 基金005834净值数据已是最新，无需插入
+2026-05-26 20:58:22 基金005834持仓数据已存在，跳过插入
+2026-05-26 21:02:42 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:02:42 基金005834净值数据已是最新，无需插入
+2026-05-26 21:02:42 基金005834持仓数据已存在，跳过插入
+2026-05-26 21:32:34 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:32:34 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：36 字符
+2026-05-26 21:32:34 请求阿里云百炼 API，请求体大小：232 bytes
+2026-05-26 21:32:34 阿里云百炼 AI 调用完成，耗时：596 ms
+2026-05-26 21:32:34 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 21:32:34 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 21:32:36 阿里云百炼 AI 调用完成，耗时：1368 ms
+2026-05-26 21:32:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：28 字符
+2026-05-26 21:32:36 请求阿里云百炼 API，请求体大小：220 bytes
+2026-05-26 21:32:36 阿里云百炼 AI 调用完成，耗时：481 ms
+2026-05-26 21:32:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-26 21:32:36 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-26 21:32:40 阿里云百炼 AI 调用完成，耗时：3998 ms
+2026-05-26 21:32:40 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：36 字符
+2026-05-26 21:32:40 请求阿里云百炼 API，请求体大小：244 bytes
+2026-05-26 21:32:44 阿里云百炼 AI 调用完成，耗时：4024 ms
+2026-05-26 21:32:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 21:32:44 请求阿里云百炼 API，请求体大小：307 bytes
+2026-05-26 21:32:49 阿里云百炼 AI 调用完成，耗时：4983 ms
+2026-05-26 21:32:49 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：58 字符
+2026-05-26 21:32:49 请求阿里云百炼 API，请求体大小：304 bytes
+2026-05-26 21:32:55 阿里云百炼 AI 调用完成，耗时：6003 ms
+2026-05-26 21:32:55 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：86 字符
+2026-05-26 21:32:55 请求阿里云百炼 API，请求体大小：388 bytes
+2026-05-26 21:33:00 阿里云百炼 AI 调用完成，耗时：4938 ms
+2026-05-26 21:33:00 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 21:33:00 请求阿里云百炼 API，请求体大小：367 bytes
+2026-05-26 21:33:06 阿里云百炼 AI 调用完成，耗时：6088 ms
+2026-05-26 21:33:06 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-26 21:33:06 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-26 21:33:11 阿里云百炼 AI 调用完成，耗时：4818 ms
+2026-05-26 21:33:11 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：122 字符
+2026-05-26 21:33:11 请求阿里云百炼 API，请求体大小：496 bytes
+2026-05-26 21:33:17 阿里云百炼 AI 调用完成，耗时：5816 ms
+2026-05-26 21:33:17 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：138 字符
+2026-05-26 21:33:17 请求阿里云百炼 API，请求体大小：544 bytes
+2026-05-26 21:33:23 阿里云百炼 AI 调用完成，耗时：5877 ms
+2026-05-26 21:33:23 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：86 字符
+2026-05-26 21:33:23 请求阿里云百炼 API，请求体大小：388 bytes
+2026-05-26 21:33:27 阿里云百炼 AI 调用完成，耗时：4636 ms
+2026-05-26 21:34:27 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:34:27 基金270023新增净值数据3790条
+2026-05-26 21:34:27 基金270023新增持仓数据10条
+2026-05-26 21:35:07 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:35:07 基金270023净值数据已是最新，无需插入
+2026-05-26 21:35:07 基金270023持仓数据已存在，跳过插入
+2026-05-26 21:35:26 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:35:26 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 21:35:26 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 21:35:28 阿里云百炼 AI 调用完成，耗时：1943 ms
+2026-05-26 21:35:28 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-26 21:35:28 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-26 21:35:30 阿里云百炼 AI 调用完成，耗时：2097 ms
+2026-05-26 21:35:30 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-26 21:35:30 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 21:35:30 阿里云百炼 AI 调用完成，耗时：455 ms
+2026-05-26 21:35:30 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-26 21:35:30 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-26 21:35:36 阿里云百炼 AI 调用完成，耗时：5414 ms
+2026-05-26 21:35:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 21:35:36 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-26 21:35:39 阿里云百炼 AI 调用完成，耗时：3524 ms
+2026-05-26 21:35:39 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-26 21:35:39 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-26 21:35:44 阿里云百炼 AI 调用完成，耗时：4780 ms
+2026-05-26 21:35:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 21:35:44 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-26 21:35:49 阿里云百炼 AI 调用完成，耗时：5041 ms
+2026-05-26 21:35:49 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 21:35:49 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 21:35:54 阿里云百炼 AI 调用完成，耗时：5370 ms
+2026-05-26 21:35:54 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-26 21:35:54 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-26 21:35:59 阿里云百炼 AI 调用完成，耗时：5171 ms
+2026-05-26 21:35:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 21:35:59 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-26 21:36:05 阿里云百炼 AI 调用完成，耗时：5256 ms
+2026-05-26 21:36:05 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-26 21:36:05 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-26 21:36:09 阿里云百炼 AI 调用完成，耗时：4656 ms
+2026-05-26 21:36:09 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-26 21:36:09 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-26 21:36:15 阿里云百炼 AI 调用完成，耗时：5960 ms
+2026-05-26 21:36:15 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 21:36:15 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 21:36:21 阿里云百炼 AI 调用完成，耗时：5913 ms
+2026-05-26 21:37:42 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:37:42 基金003504新增净值数据2263条
+2026-05-26 21:37:42 基金003504新增持仓数据10条
+2026-05-26 21:38:19 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:38:19 基金003504净值数据已是最新，无需插入
+2026-05-26 21:38:19 基金003504持仓数据已存在，跳过插入
+2026-05-26 21:38:33 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:38:33 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 21:38:33 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 21:38:34 阿里云百炼 AI 调用完成，耗时：598 ms
+2026-05-26 21:38:34 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 21:38:34 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 21:38:36 阿里云百炼 AI 调用完成，耗时：1665 ms
+2026-05-26 21:38:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-26 21:38:36 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 21:38:36 阿里云百炼 AI 调用完成，耗时：394 ms
+2026-05-26 21:38:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-26 21:38:36 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-26 21:38:41 阿里云百炼 AI 调用完成，耗时：4411 ms
+2026-05-26 21:38:41 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 21:38:41 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-26 21:38:44 阿里云百炼 AI 调用完成，耗时：3978 ms
+2026-05-26 21:38:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-26 21:38:44 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-26 21:38:51 阿里云百炼 AI 调用完成，耗时：6645 ms
+2026-05-26 21:38:51 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 21:38:51 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-26 21:38:57 阿里云百炼 AI 调用完成，耗时：5526 ms
+2026-05-26 21:38:57 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 21:38:57 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 21:39:03 阿里云百炼 AI 调用完成，耗时：6203 ms
+2026-05-26 21:39:03 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-26 21:39:03 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-26 21:39:08 阿里云百炼 AI 调用完成，耗时：5634 ms
+2026-05-26 21:39:08 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 21:39:08 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-26 21:39:14 阿里云百炼 AI 调用完成，耗时：5888 ms
+2026-05-26 21:39:14 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-26 21:39:14 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-26 21:39:20 阿里云百炼 AI 调用完成，耗时：5278 ms
+2026-05-26 21:39:20 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-26 21:39:20 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-26 21:39:26 阿里云百炼 AI 调用完成，耗时：6076 ms
+2026-05-26 21:39:26 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 21:39:26 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 21:39:31 阿里云百炼 AI 调用完成，耗时：4880 ms
+2026-05-26 21:40:30 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:40:31 基金006567新增净值数据1770条
+2026-05-26 21:40:31 基金006567新增持仓数据10条
+2026-05-26 21:41:09 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:41:09 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：25 字符
+2026-05-26 21:41:09 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 21:41:10 阿里云百炼 AI 调用完成，耗时：547 ms
+2026-05-26 21:41:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 21:41:10 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 21:41:11 阿里云百炼 AI 调用完成，耗时：1790 ms
+2026-05-26 21:41:11 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：17 字符
+2026-05-26 21:41:11 请求阿里云百炼 API，请求体大小：199 bytes
+2026-05-26 21:41:12 阿里云百炼 AI 调用完成，耗时：552 ms
+2026-05-26 21:41:12 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-26 21:41:12 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-26 21:41:16 阿里云百炼 AI 调用完成，耗时：4457 ms
+2026-05-26 21:41:16 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：25 字符
+2026-05-26 21:41:16 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 21:41:20 阿里云百炼 AI 调用完成，耗时：3993 ms
+2026-05-26 21:41:20 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-26 21:41:20 请求阿里云百炼 API，请求体大小：286 bytes
+2026-05-26 21:41:26 阿里云百炼 AI 调用完成，耗时：5261 ms
+2026-05-26 21:41:26 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：47 字符
+2026-05-26 21:41:26 请求阿里云百炼 API，请求体大小：283 bytes
+2026-05-26 21:41:32 阿里云百炼 AI 调用完成，耗时：5980 ms
+2026-05-26 21:41:32 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：75 字符
+2026-05-26 21:41:32 请求阿里云百炼 API，请求体大小：367 bytes
+2026-05-26 21:41:37 阿里云百炼 AI 调用完成，耗时：5550 ms
+2026-05-26 21:41:37 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：68 字符
+2026-05-26 21:41:37 请求阿里云百炼 API，请求体大小：346 bytes
+2026-05-26 21:41:42 阿里云百炼 AI 调用完成，耗时：5007 ms
+2026-05-26 21:41:42 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 21:41:42 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-26 21:41:48 阿里云百炼 AI 调用完成，耗时：5901 ms
+2026-05-26 21:41:48 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：111 字符
+2026-05-26 21:41:48 请求阿里云百炼 API，请求体大小：475 bytes
+2026-05-26 21:41:53 阿里云百炼 AI 调用完成，耗时：4906 ms
+2026-05-26 21:41:53 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：127 字符
+2026-05-26 21:41:53 请求阿里云百炼 API，请求体大小：523 bytes
+2026-05-26 21:41:59 阿里云百炼 AI 调用完成，耗时：6533 ms
+2026-05-26 21:41:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：75 字符
+2026-05-26 21:41:59 请求阿里云百炼 API，请求体大小：367 bytes
+2026-05-26 21:42:05 阿里云百炼 AI 调用完成，耗时：5661 ms
+2026-05-26 21:42:44 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:42:45 基金000628新增净值数据2746条
+2026-05-26 21:42:45 基金000628新增持仓数据10条
+2026-05-26 21:43:44 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:43:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：34 字符
+2026-05-26 21:43:44 请求阿里云百炼 API，请求体大小：232 bytes
+2026-05-26 21:43:44 阿里云百炼 AI 调用完成，耗时：548 ms
+2026-05-26 21:43:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 21:43:44 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 21:43:46 阿里云百炼 AI 调用完成，耗时：1838 ms
+2026-05-26 21:43:46 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：26 字符
+2026-05-26 21:43:46 请求阿里云百炼 API，请求体大小：220 bytes
+2026-05-26 21:43:47 阿里云百炼 AI 调用完成，耗时：464 ms
+2026-05-26 21:43:47 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-26 21:43:47 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-26 21:43:51 阿里云百炼 AI 调用完成，耗时：4381 ms
+2026-05-26 21:43:51 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：34 字符
+2026-05-26 21:43:51 请求阿里云百炼 API，请求体大小：244 bytes
+2026-05-26 21:43:54 阿里云百炼 AI 调用完成，耗时：3293 ms
+2026-05-26 21:43:54 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：57 字符
+2026-05-26 21:43:54 请求阿里云百炼 API，请求体大小：307 bytes
+2026-05-26 21:44:00 阿里云百炼 AI 调用完成，耗时：5265 ms
+2026-05-26 21:44:00 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：56 字符
+2026-05-26 21:44:00 请求阿里云百炼 API，请求体大小：304 bytes
+2026-05-26 21:44:05 阿里云百炼 AI 调用完成，耗时：5915 ms
+2026-05-26 21:44:05 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：84 字符
+2026-05-26 21:44:05 请求阿里云百炼 API，请求体大小：388 bytes
+2026-05-26 21:44:10 阿里云百炼 AI 调用完成，耗时：4499 ms
+2026-05-26 21:44:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：77 字符
+2026-05-26 21:44:10 请求阿里云百炼 API，请求体大小：367 bytes
+2026-05-26 21:44:15 阿里云百炼 AI 调用完成，耗时：5470 ms
+2026-05-26 21:44:15 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-26 21:44:15 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-26 21:44:21 阿里云百炼 AI 调用完成，耗时：5823 ms
+2026-05-26 21:44:21 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：120 字符
+2026-05-26 21:44:21 请求阿里云百炼 API，请求体大小：496 bytes
+2026-05-26 21:44:26 阿里云百炼 AI 调用完成，耗时：4865 ms
+2026-05-26 21:44:26 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：136 字符
+2026-05-26 21:44:26 请求阿里云百炼 API，请求体大小：544 bytes
+2026-05-26 21:44:33 阿里云百炼 AI 调用完成，耗时：6991 ms
+2026-05-26 21:44:33 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：84 字符
+2026-05-26 21:44:33 请求阿里云百炼 API，请求体大小：388 bytes
+2026-05-26 21:44:39 阿里云百炼 AI 调用完成，耗时：5406 ms
+2026-05-26 21:45:50 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:45:50 基金018257新增净值数据745条
+2026-05-26 21:45:50 基金018257新增持仓数据10条
+2026-05-26 21:46:33 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:46:33 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：27 字符
+2026-05-26 21:46:33 请求阿里云百炼 API，请求体大小：217 bytes
+2026-05-26 21:46:34 阿里云百炼 AI 调用完成，耗时：588 ms
+2026-05-26 21:46:34 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：48 字符
+2026-05-26 21:46:34 请求阿里云百炼 API，请求体大小：288 bytes
+2026-05-26 21:46:36 阿里云百炼 AI 调用完成，耗时：1724 ms
+2026-05-26 21:46:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：19 字符
+2026-05-26 21:46:36 请求阿里云百炼 API，请求体大小：205 bytes
+2026-05-26 21:46:36 阿里云百炼 AI 调用完成，耗时：458 ms
+2026-05-26 21:46:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-26 21:46:36 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-26 21:46:41 阿里云百炼 AI 调用完成，耗时：5004 ms
+2026-05-26 21:46:41 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：27 字符
+2026-05-26 21:46:41 请求阿里云百炼 API，请求体大小：229 bytes
+2026-05-26 21:46:45 阿里云百炼 AI 调用完成，耗时：3748 ms
+2026-05-26 21:46:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：50 字符
+2026-05-26 21:46:45 请求阿里云百炼 API，请求体大小：292 bytes
+2026-05-26 21:46:51 阿里云百炼 AI 调用完成，耗时：6164 ms
+2026-05-26 21:46:51 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：49 字符
+2026-05-26 21:46:51 请求阿里云百炼 API，请求体大小：289 bytes
+2026-05-26 21:46:57 阿里云百炼 AI 调用完成，耗时：6345 ms
+2026-05-26 21:46:57 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：77 字符
+2026-05-26 21:46:57 请求阿里云百炼 API，请求体大小：373 bytes
+2026-05-26 21:47:03 阿里云百炼 AI 调用完成，耗时：5985 ms
+2026-05-26 21:47:03 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：70 字符
+2026-05-26 21:47:03 请求阿里云百炼 API，请求体大小：352 bytes
+2026-05-26 21:47:09 阿里云百炼 AI 调用完成，耗时：6007 ms
+2026-05-26 21:47:09 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-26 21:47:09 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-26 21:47:15 阿里云百炼 AI 调用完成，耗时：5848 ms
+2026-05-26 21:47:15 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：113 字符
+2026-05-26 21:47:15 请求阿里云百炼 API，请求体大小：481 bytes
+2026-05-26 21:47:21 阿里云百炼 AI 调用完成，耗时：5577 ms
+2026-05-26 21:47:21 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：129 字符
+2026-05-26 21:47:21 请求阿里云百炼 API，请求体大小：529 bytes
+2026-05-26 21:47:27 阿里云百炼 AI 调用完成，耗时：6770 ms
+2026-05-26 21:47:27 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：77 字符
+2026-05-26 21:47:27 请求阿里云百炼 API，请求体大小：373 bytes
+2026-05-26 21:47:33 阿里云百炼 AI 调用完成，耗时：6016 ms
+2026-05-26 21:48:09 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:48:09 基金675111新增净值数据2229条
+2026-05-26 21:48:59 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:48:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 21:48:59 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-26 21:48:59 阿里云百炼 AI 调用完成，耗时：667 ms
+2026-05-26 21:48:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 21:48:59 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 21:49:01 阿里云百炼 AI 调用完成，耗时：1305 ms
+2026-05-26 21:49:01 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-26 21:49:01 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-26 21:49:01 阿里云百炼 AI 调用完成，耗时：462 ms
+2026-05-26 21:49:01 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-26 21:49:01 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-26 21:49:06 阿里云百炼 AI 调用完成，耗时：4869 ms
+2026-05-26 21:49:06 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-26 21:49:06 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-26 21:49:10 阿里云百炼 AI 调用完成，耗时：3865 ms
+2026-05-26 21:49:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-26 21:49:10 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-26 21:49:16 阿里云百炼 AI 调用完成，耗时：6515 ms
+2026-05-26 21:49:16 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-26 21:49:16 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-26 21:49:22 阿里云百炼 AI 调用完成，耗时：5921 ms
+2026-05-26 21:49:22 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 21:49:22 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 21:49:30 阿里云百炼 AI 调用完成，耗时：7339 ms
+2026-05-26 21:49:30 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-26 21:49:30 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-26 21:49:36 阿里云百炼 AI 调用完成，耗时：6542 ms
+2026-05-26 21:49:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 21:49:36 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-26 21:49:44 阿里云百炼 AI 调用完成，耗时：7473 ms
+2026-05-26 21:49:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-26 21:49:44 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-26 21:49:50 阿里云百炼 AI 调用完成，耗时：6151 ms
+2026-05-26 21:49:50 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-26 21:49:50 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-26 21:49:57 阿里云百炼 AI 调用完成，耗时：7060 ms
+2026-05-26 21:49:57 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-26 21:49:57 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-26 21:50:02 阿里云百炼 AI 调用完成，耗时：5059 ms
+2026-05-26 21:50:33 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:50:33 基金013107新增净值数据1073条
+2026-05-26 21:50:33 基金013107新增持仓数据10条
+2026-05-26 21:51:08 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:51:08 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：30 字符
+2026-05-26 21:51:08 请求阿里云百炼 API，请求体大小：226 bytes
+2026-05-26 21:51:08 阿里云百炼 AI 调用完成，耗时：591 ms
+2026-05-26 21:51:08 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-26 21:51:08 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-26 21:51:10 阿里云百炼 AI 调用完成，耗时：1578 ms
+2026-05-26 21:51:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：22 字符
+2026-05-26 21:51:10 请求阿里云百炼 API，请求体大小：214 bytes
+2026-05-26 21:51:10 阿里云百炼 AI 调用完成，耗时：415 ms
+2026-05-26 21:51:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-26 21:51:10 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-26 21:51:15 阿里云百炼 AI 调用完成，耗时：4928 ms
+2026-05-26 21:51:15 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：30 字符
+2026-05-26 21:51:15 请求阿里云百炼 API，请求体大小：238 bytes
+2026-05-26 21:51:19 阿里云百炼 AI 调用完成，耗时：3693 ms
+2026-05-26 21:51:19 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：53 字符
+2026-05-26 21:51:19 请求阿里云百炼 API，请求体大小：301 bytes
+2026-05-26 21:51:25 阿里云百炼 AI 调用完成，耗时：5923 ms
+2026-05-26 21:51:25 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-26 21:51:25 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-26 21:51:31 阿里云百炼 AI 调用完成，耗时：6440 ms
+2026-05-26 21:51:31 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：80 字符
+2026-05-26 21:51:31 请求阿里云百炼 API，请求体大小：382 bytes
+2026-05-26 21:51:38 阿里云百炼 AI 调用完成，耗时：6391 ms
+2026-05-26 21:51:38 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：73 字符
+2026-05-26 21:51:38 请求阿里云百炼 API，请求体大小：361 bytes
+2026-05-26 21:51:44 阿里云百炼 AI 调用完成，耗时：5901 ms
+2026-05-26 21:51:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-26 21:51:44 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-26 21:51:50 阿里云百炼 AI 调用完成，耗时：6515 ms
+2026-05-26 21:51:50 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：116 字符
+2026-05-26 21:51:50 请求阿里云百炼 API，请求体大小：490 bytes
+2026-05-26 21:51:55 阿里云百炼 AI 调用完成，耗时：4757 ms
+2026-05-26 21:51:55 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：132 字符
+2026-05-26 21:51:55 请求阿里云百炼 API，请求体大小：538 bytes
+2026-05-26 21:52:01 阿里云百炼 AI 调用完成，耗时：5673 ms
+2026-05-26 21:52:01 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：80 字符
+2026-05-26 21:52:01 请求阿里云百炼 API，请求体大小：382 bytes
+2026-05-26 21:52:07 阿里云百炼 AI 调用完成，耗时：6177 ms
+2026-05-26 21:53:06 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-26 21:53:06 基金016500新增净值数据882条
+2026-05-26 21:53:06 基金016500新增持仓数据10条

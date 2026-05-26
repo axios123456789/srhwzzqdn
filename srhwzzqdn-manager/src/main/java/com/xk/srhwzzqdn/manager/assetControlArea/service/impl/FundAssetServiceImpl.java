@@ -262,6 +262,16 @@ public class FundAssetServiceImpl implements FundAssetService {
     }
 
     /**
+     * 根据基金代码查询基金基本数据（用于资产台账穿透查看）
+     * @param fundCode 基金代码
+     * @return 基金基本数据
+     */
+    @Override
+    public FundAsset getFundBaseDataByFundCode(String fundCode) {
+        return fundAssetMapper.getFundBaseDataByFundCode(fundCode);
+    }
+
+    /**
      * 条件分页查询基金基本数据
      * @param current
      * @param limit

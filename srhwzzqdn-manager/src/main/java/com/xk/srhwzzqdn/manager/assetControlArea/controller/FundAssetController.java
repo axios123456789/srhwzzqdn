@@ -71,6 +71,25 @@ public class FundAssetController {
     }
 
     /**
+     * 根据基金代码查询基金基本数据（用于资产台账穿透查看）
+     * @param fundCode 基金代码
+     * @return 基金基本数据
+     */
+    @GetMapping("/getFundBaseDataByFundCode/{fundCode}")
+    public Result getFundBaseDataByFundCode(@PathVariable("fundCode") String fundCode) {
+        try {
+            FundAsset fundAsset = fundAssetService.getFundBaseDataByFundCode(fundCode);
+            if (fundAsset == null) {
+                return Result.build(null, 404, "未找到该基金代码对应的数据");
+            }
+            return Result.build(fundAsset, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("根据基金代码查询基金基本数据失败", e);
+            return Result.build(null, 500, "查询基金基本数据失败！");
+        }
+    }
+
+    /**
      * 条件分页查询基金基本数据
      * @param current
      * @param limit

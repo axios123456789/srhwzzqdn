@@ -16,6 +16,18 @@ export const GetFundBaseDataByCode = (fundCode) => {
 }
 
 /**
+ * 根据基金代码查询基金基本数据（用于资产台账穿透查看）
+ * @param fundCode 基金代码
+ * @returns 
+ */
+export const GetFundBaseDataByFundCode = (fundCode) => {
+  return request({
+    url: `${base_api}/getFundBaseDataByFundCode/${fundCode}`,
+    method: 'get'
+  })
+}
+
+/**
  * 条件分页查询基金基本数据
  * @param current 当前页
  * @param limit 每页条数

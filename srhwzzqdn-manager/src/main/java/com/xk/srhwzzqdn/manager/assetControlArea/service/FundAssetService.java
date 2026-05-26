@@ -16,6 +16,9 @@ public interface FundAssetService {
     //获取基金基本数据，基金经理基本数据，关联持仓数据获取
     String getFundBaseDataByCode(String fundCode) throws ParseException;
 
+    //根据基金代码查询基金基本数据（用于资产台账穿透查看）
+    FundAsset getFundBaseDataByFundCode(String fundCode);
+
     //条件分页查询基金基本数据
     PageInfo<FundAsset> getFundBaseDataByConditionAndPage(Integer current, Integer limit, FundBaseDateDto fundBaseDateDto);
 

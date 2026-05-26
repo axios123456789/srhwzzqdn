@@ -18,6 +18,10 @@ public interface FundAssetMapper {
     @Select("select count(*) from t_fund_asset where fund_code = #{param1}")
     int isExistByCode(String fundCode);
 
+    //根据基金代码查询基金基本数据（用于资产台账穿透查看）
+    @Select("select * from t_fund_asset where fund_code = #{param1}")
+    FundAsset getFundBaseDataByFundCode(String fundCode);
+
     //基金基本数据入库
     void addFundAsset(FundAsset fundAsset);
 
