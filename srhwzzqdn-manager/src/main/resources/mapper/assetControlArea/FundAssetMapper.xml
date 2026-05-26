@@ -451,6 +451,7 @@
         t.nav_date,
         t.unit_nav,
         t.accumulated_nav,
+        t.daily_change_rate,
         CASE
         WHEN t.nav_date = (SELECT nav_date FROM base) THEN 0
         ELSE ROUND((t.unit_nav - (SELECT unit_nav FROM base)) / (SELECT unit_nav FROM base) * 100, 2)

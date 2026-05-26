@@ -20,6 +20,9 @@ public class NavEChartsVo {
     @Schema(description = "累计净值")
     private BigDecimal accumulatedNav;
 
+    @Schema(description = "日涨跌幅")
+    private BigDecimal dailyChangeRate;
+
     @Schema(description = "业绩走势")
     private BigDecimal salesTrend;
 }

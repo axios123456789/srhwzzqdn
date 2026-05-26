@@ -269,6 +269,10 @@
                 <span class="tooltip-label">累计净值</span>
                 <span class="tooltip-value tooltip-value-dark">{{ customTooltip.accumulatedNavText }}</span>
               </div>
+              <div class="tooltip-row">
+                <span class="tooltip-label">日涨跌幅</span>
+                <span class="tooltip-value" :style="{ color: customTooltip.dailyChangeRateColor }">{{ customTooltip.dailyChangeRateText }}</span>
+              </div>
             </div>
           </div>
           
@@ -745,6 +749,8 @@ const customTooltip = reactive({
   trendColor: '#EE4B4B',
   unitNavText: '',
   accumulatedNavText: '',
+  dailyChangeRateText: '',
+  dailyChangeRateColor: '#EE4B4B',
   positionStyle: {}
 })
 
@@ -924,6 +930,7 @@ const initChart = () => {
   const salesTrendData = sortedData.map(item => item.salesTrend)
   const unitNavData = sortedData.map(item => item.unitNav)
   const accumulatedNavData = sortedData.map(item => item.accumulatedNav)
+  const dailyChangeRateData = sortedData.map(item => item.dailyChangeRate)
 
   // 判断整体涨跌，决定主色调
   const lastTrend = salesTrendData[salesTrendData.length - 1] || 0
@@ -1099,11 +1106,13 @@ const initChart = () => {
     const trend = salesTrendData[dataIndex]
     const unitNav = unitNavData[dataIndex]
     const accumulatedNav = accumulatedNavData[dataIndex]
+    const dailyChangeRate = dailyChangeRateData[dataIndex]
     
     // 安全取值
     const trendVal = (trend != null && !isNaN(trend)) ? trend : 0
     const unitNavVal = (unitNav != null && !isNaN(unitNav)) ? unitNav : null
     const accNavVal = (accumulatedNav != null && !isNaN(accumulatedNav)) ? accumulatedNav : null
+    const dailyChangeRateVal = (dailyChangeRate != null && !isNaN(dailyChangeRate)) ? dailyChangeRate : null
     
     const trendColor = trendVal >= 0 ? '#EE4B4B' : '#1DB068'
     const trendSign = trendVal >= 0 ? '+' : ''
@@ -1114,6 +1123,18 @@ const initChart = () => {
     customTooltip.trendColor = trendColor
     customTooltip.unitNavText = unitNavVal != null ? unitNavVal.toFixed(4) : '-'
     customTooltip.accumulatedNavText = accNavVal != null ? accNavVal.toFixed(4) : '-'
+    
+    // 日涨跌幅显示
+    if (dailyChangeRateVal != null) {
+      const dailyChangeRateColor = dailyChangeRateVal >= 0 ? '#EE4B4B' : '#1DB068'
+      const dailyChangeRateSign = dailyChangeRateVal >= 0 ? '+' : ''
+      customTooltip.dailyChangeRateText = dailyChangeRateSign + dailyChangeRateVal.toFixed(2) + '%'
+      customTooltip.dailyChangeRateColor = dailyChangeRateColor
+    } else {
+      customTooltip.dailyChangeRateText = '-'
+      customTooltip.dailyChangeRateColor = '#fff'
+    }
+    
     customTooltip.visible = true
     
     // 计算tooltip位置（相对于chart容器）
