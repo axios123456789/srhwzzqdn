@@ -745,6 +745,141 @@ public class FundAssetServiceImpl implements FundAssetService {
                 logger.info("基金{}新增持仓数据{}条", fundCode, portfolioList.size());
             }
         }
+
+        //5.更新基金可变数据（收益率、资产配置、规模、持有人结构等）
+        if (fundAssetMapper.isExistByCode(fundCode) > 0) {
+            FundAsset updateAsset = new FundAsset();
+            updateAsset.setFundCode(fundCode);
+            updateAsset.setUpdateBy("system");
+
+            // 收益率
+            if (fundData.getReturn1Month() != null) {
+                updateAsset.setReturn1m(BigDecimal.valueOf(fundData.getReturn1Month()));
+            }
+            if (fundData.getReturn3Month() != null) {
+                updateAsset.setReturn3m(BigDecimal.valueOf(fundData.getReturn3Month()));
+            }
+            if (fundData.getReturn6Month() != null) {
+                updateAsset.setReturn6m(BigDecimal.valueOf(fundData.getReturn6Month()));
+            }
+            if (fundData.getReturn1Year() != null) {
+                updateAsset.setReturn1y(BigDecimal.valueOf(fundData.getReturn1Year()));
+            }
+
+            // 资产配置（取最新一期数据，即列表最后一个元素）
+            FundDataParser.AssetAllocation assetAllocation = fundData.getAssetAllocation();
+            if (assetAllocation != null) {
+                if (assetAllocation.getNetAssets() != null && !assetAllocation.getNetAssets().isEmpty()) {
+                    Double latestNetAssets = assetAllocation.getNetAssets().get(assetAllocation.getNetAssets().size() - 1);
+                    updateAsset.setNetAssets(String.valueOf(latestNetAssets));
+                }
+                if (assetAllocation.getStockRatio() != null && !assetAllocation.getStockRatio().isEmpty()) {
+                    updateAsset.setStockRatio(BigDecimal.valueOf(assetAllocation.getStockRatio().get(assetAllocation.getStockRatio().size() - 1)));
+                }
+                if (assetAllocation.getBondRatio() != null && !assetAllocation.getBondRatio().isEmpty()) {
+                    updateAsset.setBondRatio(BigDecimal.valueOf(assetAllocation.getBondRatio().get(assetAllocation.getBondRatio().size() - 1)));
+                }
+                if (assetAllocation.getCashRatio() != null && !assetAllocation.getCashRatio().isEmpty()) {
+                    updateAsset.setCashRatio(BigDecimal.valueOf(assetAllocation.getCashRatio().get(assetAllocation.getCashRatio().size() - 1)));
+                }
+            }
+
+            // 规模变动（取最新一期规模）
+            FundDataParser.FluctuationScale fluctuationScale = fundData.getFluctuationScale();
+            if (fluctuationScale != null && fluctuationScale.getScale() != null && !fluctuationScale.getScale().isEmpty()) {
+                updateAsset.setLatestScale(BigDecimal.valueOf(fluctuationScale.getScale().get(fluctuationScale.getScale().size() - 1)));
+            }
+
+            // 持有人结构（取最新一期数据）
+            FundDataParser.HolderStructure holderStructure = fundData.getHolderStructure();
+            if (holderStructure != null) {
+                if (holderStructure.getInstitutionRatio() != null && !holderStructure.getInstitutionRatio().isEmpty()) {
+                    updateAsset.setInstitutionRatio(BigDecimal.valueOf(holderStructure.getInstitutionRatio().get(holderStructure.getInstitutionRatio().size() - 1)));
+                }
+                if (holderStructure.getIndividualRatio() != null && !holderStructure.getIndividualRatio().isEmpty()) {
+                    updateAsset.setIndividualRatio(BigDecimal.valueOf(holderStructure.getIndividualRatio().get(holderStructure.getIndividualRatio().size() - 1)));
+                }
+                if (holderStructure.getInternalRatio() != null && !holderStructure.getInternalRatio().isEmpty()) {
+                    updateAsset.setInternalRatio(BigDecimal.valueOf(holderStructure.getInternalRatio().get(holderStructure.getInternalRatio().size() - 1)));
+                }
+            }
+
+            fundAssetMapper.updateFundDynamicDataByCode(updateAsset);
+            logger.info("基金{}可变数据更新成功", fundCode);
+        } else {
+            logger.info("基金{}在t_fund_asset中不存在，跳过可变数据更新", fundCode);
+        }
+
+        //6.更新基金经理可变数据（星级、从业时间、管理规模、能力评分等）
+        FundManagerAnalysis existingManager = fundAssetMapper.getFundManagerAnalysisByCode(fundCode);
+        if (existingManager != null) {
+            List<FundDataParser.FundManager> fundManagers = fundData.getFundManagers();
+            FundDataParser.PerformanceEvaluation performanceEvaluation = fundData.getPerformanceEvaluation();
+
+            FundManagerAnalysis updateManager = new FundManagerAnalysis();
+            updateManager.setFundCode(fundCode);
+            updateManager.setUpdateBy("system");
+
+            // 基金经理基础信息（取第一个经理，即当前在任经理）
+            if (fundManagers != null && !fundManagers.isEmpty()) {
+                FundDataParser.FundManager currentManager = fundManagers.get(0);
+                updateManager.setManagerName(currentManager.getName());
+                updateManager.setStarRating(BigDecimal.valueOf(currentManager.getStar()));
+                // 从业时间转换为数值（如 "12.3年" → 12.3）
+                String workTimeStr = FundDataParser.convertWorkTimeToYears(currentManager.getWorkTime());
+                try {
+                    updateManager.setWorkTime(new BigDecimal(workTimeStr.replace("年", "")));
+                } catch (NumberFormatException e) {
+                    logger.warn("基金经理从业时间解析失败：{}", workTimeStr);
+                }
+                // 管理规模（如 "113.11亿(4只基金)"，去除非数字字符后解析）
+                if (currentManager.getFundSize() != null && !currentManager.getFundSize().isEmpty()) {
+                    String fundSizeStr = currentManager.getFundSize().replaceAll("[^0-9.-]", "");
+                    if (!fundSizeStr.isEmpty()) {
+                        try {
+                            updateManager.setManageScale(new BigDecimal(fundSizeStr));
+                        } catch (NumberFormatException e) {
+                            logger.warn("基金经理管理规模解析失败：{}", currentManager.getFundSize());
+                        }
+                    }
+                }
+            }
+
+            // 业绩评价评分（avgScore为0且scores全为0或null时视为无效数据，不更新）
+            if (performanceEvaluation != null) {
+                List<Double> scores = performanceEvaluation.getScores();
+                boolean hasValidScore = performanceEvaluation.getAvgScore() > 0
+                        || (scores != null && scores.stream().anyMatch(s -> s != null && s > 0));
+                if (hasValidScore) {
+                    if (performanceEvaluation.getAvgScore() > 0) {
+                        updateManager.setTotalScore(BigDecimal.valueOf(performanceEvaluation.getAvgScore()));
+                    }
+                    if (scores != null && scores.size() >= 5) {
+                        // scores顺序：选证能力、收益率、抗风险、稳定性、择时能力
+                        if (scores.get(0) != null && scores.get(0) > 0) {
+                            updateManager.setStockSelectScore(BigDecimal.valueOf(scores.get(0)));
+                        }
+                        if (scores.get(1) != null && scores.get(1) > 0) {
+                            updateManager.setReturnScore(BigDecimal.valueOf(scores.get(1)));
+                        }
+                        if (scores.get(2) != null && scores.get(2) > 0) {
+                            updateManager.setRiskControlScore(BigDecimal.valueOf(scores.get(2)));
+                        }
+                        if (scores.get(3) != null && scores.get(3) > 0) {
+                            updateManager.setStabilityScore(BigDecimal.valueOf(scores.get(3)));
+                        }
+                        if (scores.get(4) != null && scores.get(4) > 0) {
+                            updateManager.setTimingScore(BigDecimal.valueOf(scores.get(4)));
+                        }
+                    }
+                }
+            }
+
+            fundAssetMapper.updateFundManagerDynamicDataByCode(updateManager);
+            logger.info("基金{}基金经理可变数据更新成功", fundCode);
+        } else {
+            logger.info("基金{}在t_fund_manager_analysis中不存在，跳过基金经理可变数据更新", fundCode);
+        }
     }
 
     /**

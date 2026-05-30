@@ -13951,3 +13951,751 @@ Caused by: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '0
 2026-05-26 21:53:06 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
 2026-05-26 21:53:06 基金016500新增净值数据882条
 2026-05-26 21:53:06 基金016500新增持仓数据10条
+2026-05-26 22:34:47 HikariPool-1 - Shutdown initiated...
+2026-05-26 22:34:47 HikariPool-1 - Shutdown completed.
+2026-05-27 08:38:07 Starting ManagerApplication using Java 17.0.17 with PID 21340 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-27 08:38:07 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-27 08:38:07 The following 1 profile is active: "dev"
+2026-05-27 08:38:08 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-27 08:38:08 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-27 08:38:08 Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2026-05-27 08:38:08 Tomcat initialized with port(s): 8400 (http)
+2026-05-27 08:38:08 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-27 08:38:08 Starting service [Tomcat]
+2026-05-27 08:38:08 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-27 08:38:08 Initializing Spring embedded WebApplicationContext
+2026-05-27 08:38:08 Root WebApplicationContext: initialization completed in 1312 ms
+2026-05-27 08:38:10 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-27 08:38:10 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-27 08:38:10 Started ManagerApplication in 3.349 seconds (process running for 5.083)
+2026-05-27 08:38:59 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-27 08:38:59 Initializing Servlet 'dispatcherServlet'
+2026-05-27 08:38:59 Completed initialization in 0 ms
+2026-05-27 08:39:05 HikariPool-1 - Starting...
+2026-05-27 08:39:05 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@525c396
+2026-05-27 08:39:05 HikariPool-1 - Start completed.
+2026-05-27 08:42:25 获取基金重要数据失败
+java.lang.RuntimeException: 获取基金数据失败，fundCode: 260112
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl.addFundImportData(FundAssetServiceImpl.java:676)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:343)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:196)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.transaction.interceptor.TransactionInterceptor$1.proceedWithInvocation(TransactionInterceptor.java:123)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:391)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.CglibAopProxy$CglibMethodInvocation.proceed(CglibAopProxy.java:750)
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:702)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.FundAssetServiceImpl$$SpringCGLIB$$0.addFundImportData(<generated>)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.FundAssetController.addFundImportData(FundAssetController.java:549)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-05-27 08:43:08 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-27 08:43:08 基金260112新增净值数据1条
+2026-05-27 08:43:08 基金260112持仓数据已存在，跳过插入
+2026-05-27 08:43:28 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-27 08:43:28 基金000218新增净值数据1条
+2026-05-27 18:44:58 HikariPool-1 - Shutdown initiated...
+2026-05-27 18:44:58 HikariPool-1 - Shutdown completed.
+2026-05-27 19:33:06 Starting ManagerApplication using Java 17.0.17 with PID 24872 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-27 19:33:06 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-27 19:33:06 The following 1 profile is active: "dev"
+2026-05-27 19:33:07 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-27 19:33:07 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-27 19:33:07 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-27 19:33:07 Tomcat initialized with port(s): 8400 (http)
+2026-05-27 19:33:07 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-27 19:33:07 Starting service [Tomcat]
+2026-05-27 19:33:07 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-27 19:33:07 Initializing Spring embedded WebApplicationContext
+2026-05-27 19:33:07 Root WebApplicationContext: initialization completed in 1377 ms
+2026-05-27 19:33:09 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-27 19:33:09 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-27 19:33:09 Started ManagerApplication in 3.507 seconds (process running for 5.151)
+2026-05-27 19:33:37 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-27 19:33:37 Initializing Servlet 'dispatcherServlet'
+2026-05-27 19:33:37 Completed initialization in 0 ms
+2026-05-27 19:33:57 HikariPool-1 - Starting...
+2026-05-27 19:33:57 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6872b320
+2026-05-27 19:33:57 HikariPool-1 - Start completed.
+2026-05-27 19:57:36 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-27 19:57:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-27 19:57:36 请求阿里云百炼 API，请求体大小：241 bytes
+2026-05-27 19:57:37 阿里云百炼 AI 调用完成，耗时：1004 ms
+2026-05-27 19:57:37 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：47 字符
+2026-05-27 19:57:37 请求阿里云百炼 API，请求体大小：285 bytes
+2026-05-27 19:57:39 阿里云百炼 AI 调用完成，耗时：2196 ms
+2026-05-27 19:57:39 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：31 字符
+2026-05-27 19:57:39 请求阿里云百炼 API，请求体大小：229 bytes
+2026-05-27 19:57:39 阿里云百炼 AI 调用完成，耗时：500 ms
+2026-05-27 19:57:39 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：38 字符
+2026-05-27 19:57:39 请求阿里云百炼 API，请求体大小：258 bytes
+2026-05-27 19:57:45 阿里云百炼 AI 调用完成，耗时：5834 ms
+2026-05-27 19:57:45 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-27 19:57:45 请求阿里云百炼 API，请求体大小：253 bytes
+2026-05-27 19:57:50 阿里云百炼 AI 调用完成，耗时：4581 ms
+2026-05-27 19:57:50 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：62 字符
+2026-05-27 19:57:50 请求阿里云百炼 API，请求体大小：316 bytes
+2026-05-27 19:57:57 阿里云百炼 AI 调用完成，耗时：7050 ms
+2026-05-27 19:57:57 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：61 字符
+2026-05-27 19:57:57 请求阿里云百炼 API，请求体大小：313 bytes
+2026-05-27 19:58:03 阿里云百炼 AI 调用完成，耗时：5820 ms
+2026-05-27 19:58:03 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：89 字符
+2026-05-27 19:58:03 请求阿里云百炼 API，请求体大小：397 bytes
+2026-05-27 19:58:08 阿里云百炼 AI 调用完成，耗时：5556 ms
+2026-05-27 19:58:08 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：82 字符
+2026-05-27 19:58:08 请求阿里云百炼 API，请求体大小：376 bytes
+2026-05-27 19:58:14 阿里云百炼 AI 调用完成，耗时：6188 ms
+2026-05-27 19:58:14 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：59 字符
+2026-05-27 19:58:14 请求阿里云百炼 API，请求体大小：321 bytes
+2026-05-27 19:58:21 阿里云百炼 AI 调用完成，耗时：6487 ms
+2026-05-27 19:58:21 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：125 字符
+2026-05-27 19:58:21 请求阿里云百炼 API，请求体大小：505 bytes
+2026-05-27 19:58:28 阿里云百炼 AI 调用完成，耗时：6885 ms
+2026-05-27 19:58:28 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：141 字符
+2026-05-27 19:58:28 请求阿里云百炼 API，请求体大小：553 bytes
+2026-05-27 19:58:34 阿里云百炼 AI 调用完成，耗时：6640 ms
+2026-05-27 19:58:34 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：89 字符
+2026-05-27 19:58:34 请求阿里云百炼 API，请求体大小：397 bytes
+2026-05-27 19:58:41 阿里云百炼 AI 调用完成，耗时：6716 ms
+2026-05-27 19:59:49 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-27 19:59:49 基金012920新增净值数据1018条
+2026-05-27 19:59:49 基金012920新增持仓数据10条
+2026-05-27 20:16:46 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-27 20:16:46 基金016500新增净值数据1条
+2026-05-27 20:16:46 基金016500持仓数据已存在，跳过插入
+2026-05-27 20:16:53 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-27 20:16:53 基金016500净值数据已是最新，无需插入
+2026-05-27 20:16:53 基金016500持仓数据已存在，跳过插入
+2026-05-27 20:52:26 Failure in @ExceptionHandler com.xk.srhwzzqdn.service.exception.GlobalExceptionHandler#error()
+org.apache.catalina.connector.ClientAbortException: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:347)
+	at org.apache.catalina.connector.OutputBuffer.flushByteBuffer(OutputBuffer.java:780)
+	at org.apache.catalina.connector.OutputBuffer.append(OutputBuffer.java:683)
+	at org.apache.catalina.connector.OutputBuffer.writeBytes(OutputBuffer.java:382)
+	at org.apache.catalina.connector.OutputBuffer.write(OutputBuffer.java:360)
+	at org.apache.catalina.connector.CoyoteOutputStream.write(CoyoteOutputStream.java:96)
+	at org.springframework.util.StreamUtils$NonClosingOutputStream.write(StreamUtils.java:267)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator._flushBuffer(UTF8JsonGenerator.java:2203)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.flush(UTF8JsonGenerator.java:1197)
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1063)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483)
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:103)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:194)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:413)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:74)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:141)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1341)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1152)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1098)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:132)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:97)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:53)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:532)
+	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:118)
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1381)
+	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:764)
+	at org.apache.tomcat.util.net.SocketWrapperBase.writeBlocking(SocketWrapperBase.java:589)
+	at org.apache.tomcat.util.net.SocketWrapperBase.write(SocketWrapperBase.java:533)
+	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.doWrite(Http11OutputBuffer.java:540)
+	at org.apache.coyote.http11.filters.ChunkedOutputFilter.doWrite(ChunkedOutputFilter.java:110)
+	at org.apache.coyote.http11.Http11OutputBuffer.doWrite(Http11OutputBuffer.java:193)
+	at org.apache.coyote.Response.doWrite(Response.java:613)
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:334)
+	... 61 common frames omitted
+2026-05-27 21:41:43 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-27 21:41:43 基金010415新增净值数据2条
+2026-05-27 21:41:43 基金010415持仓数据已存在，跳过插入
+2026-05-27 21:42:44 HikariPool-1 - Shutdown initiated...
+2026-05-27 21:42:44 HikariPool-1 - Shutdown completed.
+2026-05-28 08:39:19 Starting ManagerApplication using Java 17.0.17 with PID 18204 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-28 08:39:19 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-28 08:39:19 The following 1 profile is active: "dev"
+2026-05-28 08:39:20 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-28 08:39:20 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-28 08:39:20 Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2026-05-28 08:39:21 Tomcat initialized with port(s): 8400 (http)
+2026-05-28 08:39:21 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-28 08:39:21 Starting service [Tomcat]
+2026-05-28 08:39:21 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-28 08:39:21 Initializing Spring embedded WebApplicationContext
+2026-05-28 08:39:21 Root WebApplicationContext: initialization completed in 1389 ms
+2026-05-28 08:39:22 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-28 08:39:22 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-28 08:39:22 Started ManagerApplication in 3.477 seconds (process running for 5.28)
+2026-05-28 08:39:55 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-28 08:39:55 Initializing Servlet 'dispatcherServlet'
+2026-05-28 08:39:55 Completed initialization in 0 ms
+2026-05-28 08:40:00 HikariPool-1 - Starting...
+2026-05-28 08:40:00 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6c64f28
+2026-05-28 08:40:00 HikariPool-1 - Start completed.
+2026-05-28 12:03:37 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=13m9s192ms747µs700ns).
+2026-05-28 16:54:26 null Unexpected exception during request: java.net.SocketException: Connection reset
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:394)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:426)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:256)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:357)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-05-28 16:54:26 Reconnecting, last destination was /127.0.0.1:6379
+2026-05-28 16:54:26 Cannot reconnect to [127.0.0.1/<unresolved>:6379]: Connection refused: getsockopt: /127.0.0.1:6379
+2026-05-28 17:02:28 Starting ManagerApplication using Java 17.0.17 with PID 18032 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-28 17:02:28 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-28 17:02:28 The following 1 profile is active: "dev"
+2026-05-28 17:02:29 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-28 17:02:29 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-28 17:02:29 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-28 17:02:29 Tomcat initialized with port(s): 8400 (http)
+2026-05-28 17:02:29 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-28 17:02:29 Starting service [Tomcat]
+2026-05-28 17:02:29 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-28 17:02:29 Initializing Spring embedded WebApplicationContext
+2026-05-28 17:02:29 Root WebApplicationContext: initialization completed in 1267 ms
+2026-05-28 17:02:31 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-28 17:02:31 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-28 17:02:31 Started ManagerApplication in 3.256 seconds (process running for 5.165)
+2026-05-28 17:03:04 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-28 17:03:04 Initializing Servlet 'dispatcherServlet'
+2026-05-28 17:03:04 Completed initialization in 1 ms
+2026-05-28 17:03:12 HikariPool-1 - Starting...
+2026-05-28 17:03:12 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@628e4dd
+2026-05-28 17:03:12 HikariPool-1 - Start completed.
+2026-05-28 18:03:12 HikariPool-1 - Shutdown initiated...
+2026-05-28 18:03:12 HikariPool-1 - Shutdown completed.
+2026-05-28 18:43:00 Starting ManagerApplication using Java 17.0.17 with PID 10608 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-28 18:43:00 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-28 18:43:00 The following 1 profile is active: "dev"
+2026-05-28 18:43:01 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-28 18:43:01 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-28 18:43:01 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-28 18:43:02 Tomcat initialized with port(s): 8400 (http)
+2026-05-28 18:43:02 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-28 18:43:02 Starting service [Tomcat]
+2026-05-28 18:43:02 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-28 18:43:02 Initializing Spring embedded WebApplicationContext
+2026-05-28 18:43:02 Root WebApplicationContext: initialization completed in 1302 ms
+2026-05-28 18:43:03 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-28 18:43:03 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-28 18:43:03 Started ManagerApplication in 3.304 seconds (process running for 4.98)
+2026-05-28 18:47:41 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-28 18:47:41 Initializing Servlet 'dispatcherServlet'
+2026-05-28 18:47:41 Completed initialization in 0 ms
+2026-05-28 18:47:53 HikariPool-1 - Starting...
+2026-05-28 18:47:53 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@210365ac
+2026-05-28 18:47:53 HikariPool-1 - Start completed.
+2026-05-28 20:54:55 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-28 20:54:55 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-28 20:54:55 请求阿里云百炼 API，请求体大小：223 bytes
+2026-05-28 20:54:56 阿里云百炼 AI 调用完成，耗时：725 ms
+2026-05-28 20:54:56 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-28 20:54:56 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-28 20:54:59 阿里云百炼 AI 调用完成，耗时：2638 ms
+2026-05-28 20:54:59 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：21 字符
+2026-05-28 20:54:59 请求阿里云百炼 API，请求体大小：211 bytes
+2026-05-28 20:55:00 阿里云百炼 AI 调用完成，耗时：1050 ms
+2026-05-28 20:55:00 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-28 20:55:00 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-28 20:55:05 阿里云百炼 AI 调用完成，耗时：5710 ms
+2026-05-28 20:55:05 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：29 字符
+2026-05-28 20:55:05 请求阿里云百炼 API，请求体大小：235 bytes
+2026-05-28 20:55:10 阿里云百炼 AI 调用完成，耗时：4120 ms
+2026-05-28 20:55:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：52 字符
+2026-05-28 20:55:10 请求阿里云百炼 API，请求体大小：298 bytes
+2026-05-28 20:55:15 阿里云百炼 AI 调用完成，耗时：5666 ms
+2026-05-28 20:55:15 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：51 字符
+2026-05-28 20:55:15 请求阿里云百炼 API，请求体大小：295 bytes
+2026-05-28 20:55:22 阿里云百炼 AI 调用完成，耗时：6263 ms
+2026-05-28 20:55:22 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-28 20:55:22 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-28 20:55:28 阿里云百炼 AI 调用完成，耗时：6497 ms
+2026-05-28 20:55:28 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：72 字符
+2026-05-28 20:55:28 请求阿里云百炼 API，请求体大小：358 bytes
+2026-05-28 20:55:34 阿里云百炼 AI 调用完成，耗时：5510 ms
+2026-05-28 20:55:34 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-28 20:55:34 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-28 20:55:40 阿里云百炼 AI 调用完成，耗时：6182 ms
+2026-05-28 20:55:40 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：115 字符
+2026-05-28 20:55:40 请求阿里云百炼 API，请求体大小：487 bytes
+2026-05-28 20:55:46 阿里云百炼 AI 调用完成，耗时：6568 ms
+2026-05-28 20:55:46 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：131 字符
+2026-05-28 20:55:46 请求阿里云百炼 API，请求体大小：535 bytes
+2026-05-28 20:55:53 阿里云百炼 AI 调用完成，耗时：6339 ms
+2026-05-28 20:55:53 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：79 字符
+2026-05-28 20:55:53 请求阿里云百炼 API，请求体大小：379 bytes
+2026-05-28 20:56:00 阿里云百炼 AI 调用完成，耗时：7080 ms
+2026-05-28 20:56:14 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-28 20:56:14 基金018993新增净值数据609条
+2026-05-28 20:56:14 基金018993新增持仓数据10条
+2026-05-28 20:57:47 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-28 20:57:47 基金018257新增净值数据3条
+2026-05-28 20:57:47 基金018257持仓数据已存在，跳过插入
+2026-05-28 21:45:17 HikariPool-1 - Shutdown initiated...
+2026-05-28 21:45:17 HikariPool-1 - Shutdown completed.
+2026-05-29 08:34:18 Starting ManagerApplication using Java 17.0.17 with PID 28720 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-29 08:34:18 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-29 08:34:18 The following 1 profile is active: "dev"
+2026-05-29 08:34:19 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-29 08:34:19 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-29 08:34:19 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-29 08:34:19 Tomcat initialized with port(s): 8400 (http)
+2026-05-29 08:34:19 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-29 08:34:19 Starting service [Tomcat]
+2026-05-29 08:34:19 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-29 08:34:19 Initializing Spring embedded WebApplicationContext
+2026-05-29 08:34:19 Root WebApplicationContext: initialization completed in 1324 ms
+2026-05-29 08:34:21 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-29 08:34:21 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-29 08:34:21 Started ManagerApplication in 3.343 seconds (process running for 5.109)
+2026-05-29 08:34:49 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-29 08:34:49 Initializing Servlet 'dispatcherServlet'
+2026-05-29 08:34:49 Completed initialization in 2 ms
+2026-05-29 08:34:55 HikariPool-1 - Starting...
+2026-05-29 08:34:55 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@77f59f3e
+2026-05-29 08:34:55 HikariPool-1 - Start completed.
+2026-05-29 08:41:59 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m33s797ms81µs700ns).
+2026-05-29 08:46:05 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m35s998ms136µs100ns).
+2026-05-29 09:46:00 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m53s307ms628µs300ns).
+2026-05-29 10:12:49 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11m18s645ms114µs500ns).
+2026-05-29 10:32:05 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=4m15s655ms127µs500ns).
+2026-05-29 10:41:19 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m43s978ms256µs900ns).
+2026-05-29 11:03:33 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m13s313ms970µs800ns).
+2026-05-29 11:31:02 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m28s313ms652µs500ns).
+2026-05-29 14:15:06 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2h37m31s195ms436µs700ns).
+2026-05-29 19:00:39 HikariPool-1 - Shutdown initiated...
+2026-05-29 19:00:39 HikariPool-1 - Shutdown completed.
+2026-05-29 20:28:37 Starting ManagerApplication using Java 17.0.17 with PID 23292 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-29 20:28:37 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-29 20:28:37 The following 1 profile is active: "dev"
+2026-05-29 20:28:38 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-29 20:28:38 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-29 20:28:38 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-05-29 20:28:38 Tomcat initialized with port(s): 8400 (http)
+2026-05-29 20:28:38 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-29 20:28:38 Starting service [Tomcat]
+2026-05-29 20:28:38 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-29 20:28:38 Initializing Spring embedded WebApplicationContext
+2026-05-29 20:28:38 Root WebApplicationContext: initialization completed in 1330 ms
+2026-05-29 20:28:40 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-29 20:28:40 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-29 20:28:40 Started ManagerApplication in 3.316 seconds (process running for 5.324)
+2026-05-29 20:29:08 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-29 20:29:08 Initializing Servlet 'dispatcherServlet'
+2026-05-29 20:29:08 Completed initialization in 6 ms
+2026-05-29 20:29:28 HikariPool-1 - Starting...
+2026-05-29 20:29:29 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7d967b98
+2026-05-29 20:29:29 HikariPool-1 - Start completed.
+2026-05-29 21:38:40 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-29 21:38:40 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-05-29 21:38:40 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:38:40 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:38:40 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:38:40 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:38:40 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:38:40 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：27 字符
+2026-05-29 21:38:40 请求阿里云百炼 API，请求体大小：217 bytes
+2026-05-29 21:38:41 阿里云百炼 AI 调用完成，耗时：703 ms
+2026-05-29 21:38:41 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-29 21:38:41 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-29 21:38:43 阿里云百炼 AI 调用完成，耗时：2264 ms
+2026-05-29 21:38:43 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：19 字符
+2026-05-29 21:38:43 请求阿里云百炼 API，请求体大小：205 bytes
+2026-05-29 21:38:44 阿里云百炼 AI 调用完成，耗时：461 ms
+2026-05-29 21:38:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-29 21:38:44 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-29 21:38:49 阿里云百炼 AI 调用完成，耗时：4817 ms
+2026-05-29 21:38:49 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：27 字符
+2026-05-29 21:38:49 请求阿里云百炼 API，请求体大小：229 bytes
+2026-05-29 21:38:52 阿里云百炼 AI 调用完成，耗时：3564 ms
+2026-05-29 21:38:52 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：50 字符
+2026-05-29 21:38:52 请求阿里云百炼 API，请求体大小：292 bytes
+2026-05-29 21:38:58 阿里云百炼 AI 调用完成，耗时：5733 ms
+2026-05-29 21:38:58 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：49 字符
+2026-05-29 21:38:58 请求阿里云百炼 API，请求体大小：289 bytes
+2026-05-29 21:39:04 阿里云百炼 AI 调用完成，耗时：6290 ms
+2026-05-29 21:39:04 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：77 字符
+2026-05-29 21:39:04 请求阿里云百炼 API，请求体大小：373 bytes
+2026-05-29 21:39:10 阿里云百炼 AI 调用完成，耗时：5718 ms
+2026-05-29 21:39:10 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：70 字符
+2026-05-29 21:39:10 请求阿里云百炼 API，请求体大小：352 bytes
+2026-05-29 21:39:16 阿里云百炼 AI 调用完成，耗时：6081 ms
+2026-05-29 21:39:16 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-29 21:39:16 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-29 21:39:21 阿里云百炼 AI 调用完成，耗时：5402 ms
+2026-05-29 21:39:21 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：113 字符
+2026-05-29 21:39:21 请求阿里云百炼 API，请求体大小：481 bytes
+2026-05-29 21:39:28 阿里云百炼 AI 调用完成，耗时：6194 ms
+2026-05-29 21:39:28 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：129 字符
+2026-05-29 21:39:28 请求阿里云百炼 API，请求体大小：529 bytes
+2026-05-29 21:39:34 阿里云百炼 AI 调用完成，耗时：6524 ms
+2026-05-29 21:39:34 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：77 字符
+2026-05-29 21:39:34 请求阿里云百炼 API，请求体大小：373 bytes
+2026-05-29 21:39:39 阿里云百炼 AI 调用完成，耗时：5245 ms
+2026-05-29 21:39:57 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-29 21:39:57 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-05-29 21:39:57 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:39:57 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:39:57 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:39:57 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:39:57 解析分数失败，原始值：null，设置为默认值 0
+2026-05-29 21:39:57 基金021528新增净值数据486条
+2026-05-29 21:39:57 基金021528新增持仓数据10条
+2026-05-29 21:40:33 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-29 21:40:33 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：27 字符
+2026-05-29 21:40:33 请求阿里云百炼 API，请求体大小：217 bytes
+2026-05-29 21:40:33 阿里云百炼 AI 调用完成，耗时：585 ms
+2026-05-29 21:40:33 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：46 字符
+2026-05-29 21:40:33 请求阿里云百炼 API，请求体大小：282 bytes
+2026-05-29 21:40:35 阿里云百炼 AI 调用完成，耗时：1904 ms
+2026-05-29 21:40:35 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：19 字符
+2026-05-29 21:40:35 请求阿里云百炼 API，请求体大小：205 bytes
+2026-05-29 21:40:36 阿里云百炼 AI 调用完成，耗时：407 ms
+2026-05-29 21:40:36 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：39 字符
+2026-05-29 21:40:36 请求阿里云百炼 API，请求体大小：261 bytes
+2026-05-29 21:40:40 阿里云百炼 AI 调用完成，耗时：4399 ms
+2026-05-29 21:40:40 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：27 字符
+2026-05-29 21:40:40 请求阿里云百炼 API，请求体大小：229 bytes
+2026-05-29 21:40:44 阿里云百炼 AI 调用完成，耗时：3866 ms
+2026-05-29 21:40:44 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：50 字符
+2026-05-29 21:40:44 请求阿里云百炼 API，请求体大小：292 bytes
+2026-05-29 21:40:49 阿里云百炼 AI 调用完成，耗时：5545 ms
+2026-05-29 21:40:49 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：49 字符
+2026-05-29 21:40:49 请求阿里云百炼 API，请求体大小：289 bytes
+2026-05-29 21:40:56 阿里云百炼 AI 调用完成，耗时：6197 ms
+2026-05-29 21:40:56 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：77 字符
+2026-05-29 21:40:56 请求阿里云百炼 API，请求体大小：373 bytes
+2026-05-29 21:41:01 阿里云百炼 AI 调用完成，耗时：5753 ms
+2026-05-29 21:41:01 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：70 字符
+2026-05-29 21:41:01 请求阿里云百炼 API，请求体大小：352 bytes
+2026-05-29 21:41:07 阿里云百炼 AI 调用完成，耗时：6143 ms
+2026-05-29 21:41:07 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：60 字符
+2026-05-29 21:41:07 请求阿里云百炼 API，请求体大小：324 bytes
+2026-05-29 21:41:13 阿里云百炼 AI 调用完成，耗时：5555 ms
+2026-05-29 21:41:13 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：113 字符
+2026-05-29 21:41:13 请求阿里云百炼 API，请求体大小：481 bytes
+2026-05-29 21:41:19 阿里云百炼 AI 调用完成，耗时：5953 ms
+2026-05-29 21:41:19 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：129 字符
+2026-05-29 21:41:19 请求阿里云百炼 API，请求体大小：529 bytes
+2026-05-29 21:41:25 阿里云百炼 AI 调用完成，耗时：5673 ms
+2026-05-29 21:41:25 调用阿里云百炼 AI，model：qwen-plus，prompt 长度：77 字符
+2026-05-29 21:41:25 请求阿里云百炼 API，请求体大小：373 bytes
+2026-05-29 21:41:31 阿里云百炼 AI 调用完成，耗时：6200 ms
+2026-05-29 21:42:05 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-29 21:42:06 基金000390新增净值数据3027条
+2026-05-29 21:42:06 基金000390新增持仓数据10条
+2026-05-29 22:46:44 HikariPool-1 - Shutdown initiated...
+2026-05-29 22:46:44 HikariPool-1 - Shutdown completed.
+2026-05-30 10:51:46 Starting ManagerApplication using Java 17.0.17 with PID 24260 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-30 10:51:46 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-30 10:51:46 The following 1 profile is active: "dev"
+2026-05-30 10:51:47 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-30 10:51:47 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-30 10:51:47 Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2026-05-30 10:51:48 Tomcat initialized with port(s): 8400 (http)
+2026-05-30 10:51:48 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-30 10:51:48 Starting service [Tomcat]
+2026-05-30 10:51:48 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-30 10:51:48 Initializing Spring embedded WebApplicationContext
+2026-05-30 10:51:48 Root WebApplicationContext: initialization completed in 1430 ms
+2026-05-30 10:51:49 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-30 10:51:50 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-30 10:51:50 Started ManagerApplication in 3.754 seconds (process running for 5.566)
+2026-05-30 10:53:39 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-30 10:53:39 Initializing Servlet 'dispatcherServlet'
+2026-05-30 10:53:39 Completed initialization in 2 ms
+2026-05-30 10:53:48 HikariPool-1 - Starting...
+2026-05-30 10:53:48 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@29c9d6cc
+2026-05-30 10:53:48 HikariPool-1 - Start completed.
+2026-05-30 12:20:49 HikariPool-1 - Shutdown initiated...
+2026-05-30 12:20:49 HikariPool-1 - Shutdown completed.
+2026-05-30 12:21:08 Starting ManagerApplication using Java 17.0.17 with PID 25608 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-30 12:21:08 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-30 12:21:08 The following 1 profile is active: "dev"
+2026-05-30 12:21:09 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-30 12:21:09 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-30 12:21:09 Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-05-30 12:21:09 Tomcat initialized with port(s): 8400 (http)
+2026-05-30 12:21:09 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:21:09 Starting service [Tomcat]
+2026-05-30 12:21:09 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-30 12:21:09 Initializing Spring embedded WebApplicationContext
+2026-05-30 12:21:09 Root WebApplicationContext: initialization completed in 1056 ms
+2026-05-30 12:21:11 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:21:11 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-30 12:21:11 Started ManagerApplication in 2.773 seconds (process running for 3.762)
+2026-05-30 12:21:42 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-30 12:21:42 Initializing Servlet 'dispatcherServlet'
+2026-05-30 12:21:42 Completed initialization in 2 ms
+2026-05-30 12:21:47 HikariPool-1 - Starting...
+2026-05-30 12:21:47 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@749d897a
+2026-05-30 12:21:47 HikariPool-1 - Start completed.
+2026-05-30 12:22:22 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-30 12:22:22 基金260112新增净值数据3条
+2026-05-30 12:22:22 基金260112持仓数据已存在，跳过插入
+2026-05-30 12:22:22 基金260112可变数据更新成功
+2026-05-30 12:22:22 基金经理管理规模解析失败：807.78亿(19只基金)
+2026-05-30 12:22:22 基金260112基金经理可变数据更新成功
+2026-05-30 12:24:14 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-30 12:24:14 基金010415新增净值数据2条
+2026-05-30 12:24:14 基金010415持仓数据已存在，跳过插入
+2026-05-30 12:24:14 基金010415可变数据更新成功
+2026-05-30 12:24:14 基金经理管理规模解析失败：113.11亿(4只基金)
+2026-05-30 12:24:14 基金010415基金经理可变数据更新成功
+2026-05-30 12:31:23 HikariPool-1 - Shutdown initiated...
+2026-05-30 12:31:23 HikariPool-1 - Shutdown completed.
+2026-05-30 12:31:31 Starting ManagerApplication using Java 17.0.17 with PID 2108 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-30 12:31:31 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-30 12:31:31 The following 1 profile is active: "dev"
+2026-05-30 12:31:32 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-30 12:31:32 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-30 12:31:32 Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-05-30 12:31:32 Tomcat initialized with port(s): 8400 (http)
+2026-05-30 12:31:32 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:31:32 Starting service [Tomcat]
+2026-05-30 12:31:32 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-30 12:31:32 Initializing Spring embedded WebApplicationContext
+2026-05-30 12:31:32 Root WebApplicationContext: initialization completed in 1168 ms
+2026-05-30 12:31:34 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:31:34 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-30 12:31:34 Started ManagerApplication in 3.313 seconds (process running for 4.072)
+2026-05-30 12:32:06 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-30 12:32:06 Initializing Servlet 'dispatcherServlet'
+2026-05-30 12:32:06 Completed initialization in 2 ms
+2026-05-30 12:32:07 HikariPool-1 - Starting...
+2026-05-30 12:32:07 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@51bb631e
+2026-05-30 12:32:07 HikariPool-1 - Start completed.
+2026-05-30 12:32:16 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-30 12:32:16 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-05-30 12:32:16 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:32:16 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:32:16 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:32:16 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:32:16 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:32:16 基金022403新增净值数据5条
+2026-05-30 12:32:16 基金022403可变数据更新成功
+2026-05-30 12:32:16 基金022403基金经理可变数据更新成功
+2026-05-30 12:40:08 HikariPool-1 - Shutdown initiated...
+2026-05-30 12:40:08 HikariPool-1 - Shutdown completed.
+2026-05-30 12:40:14 Starting ManagerApplication using Java 17.0.17 with PID 20416 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-30 12:40:14 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-30 12:40:14 The following 1 profile is active: "dev"
+2026-05-30 12:40:15 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-30 12:40:15 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-30 12:40:15 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-05-30 12:40:15 Tomcat initialized with port(s): 8400 (http)
+2026-05-30 12:40:15 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:40:15 Starting service [Tomcat]
+2026-05-30 12:40:15 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-30 12:40:15 Initializing Spring embedded WebApplicationContext
+2026-05-30 12:40:15 Root WebApplicationContext: initialization completed in 1005 ms
+2026-05-30 12:40:17 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:40:17 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-30 12:40:17 Started ManagerApplication in 2.712 seconds (process running for 3.32)
+2026-05-30 12:41:05 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-30 12:41:05 Initializing Servlet 'dispatcherServlet'
+2026-05-30 12:41:05 Completed initialization in 1 ms
+2026-05-30 12:41:06 HikariPool-1 - Starting...
+2026-05-30 12:41:06 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@278ef690
+2026-05-30 12:41:06 HikariPool-1 - Start completed.
+2026-05-30 12:41:15 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-30 12:41:15 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-05-30 12:41:15 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:41:15 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:41:15 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:41:15 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:41:15 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:41:15 基金022403净值数据已是最新，无需插入
+2026-05-30 12:41:15 基金022403可变数据更新成功
+2026-05-30 12:41:15 基金022403基金经理可变数据更新成功
+2026-05-30 12:42:51 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-30 12:42:51 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-05-30 12:42:51 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:42:51 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:42:51 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:42:51 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:42:51 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:42:51 基金022403净值数据已是最新，无需插入
+2026-05-30 12:42:51 基金022403可变数据更新成功
+2026-05-30 12:42:51 基金022403基金经理可变数据更新成功
+2026-05-30 12:48:02 HikariPool-1 - Shutdown initiated...
+2026-05-30 12:48:02 HikariPool-1 - Shutdown completed.
+2026-05-30 12:48:08 Starting ManagerApplication using Java 17.0.17 with PID 3748 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-30 12:48:08 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-30 12:48:08 The following 1 profile is active: "dev"
+2026-05-30 12:48:09 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-30 12:48:09 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-30 12:48:09 Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-05-30 12:48:09 Tomcat initialized with port(s): 8400 (http)
+2026-05-30 12:48:09 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:48:09 Starting service [Tomcat]
+2026-05-30 12:48:09 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-30 12:48:09 Initializing Spring embedded WebApplicationContext
+2026-05-30 12:48:09 Root WebApplicationContext: initialization completed in 1041 ms
+2026-05-30 12:48:11 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:48:11 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-30 12:48:11 Started ManagerApplication in 2.817 seconds (process running for 3.305)
+2026-05-30 12:48:33 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-30 12:48:33 Initializing Servlet 'dispatcherServlet'
+2026-05-30 12:48:33 Completed initialization in 8 ms
+2026-05-30 12:48:33 HikariPool-1 - Starting...
+2026-05-30 12:48:34 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2c5a0dff
+2026-05-30 12:48:34 HikariPool-1 - Start completed.
+2026-05-30 12:48:36 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-30 12:48:36 基金010415净值数据已是最新，无需插入
+2026-05-30 12:48:36 基金010415持仓数据已存在，跳过插入
+2026-05-30 12:48:36 基金010415可变数据更新成功
+2026-05-30 12:48:36 基金010415基金经理可变数据更新成功
+2026-05-30 12:49:01 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-30 12:49:01 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-05-30 12:49:01 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:49:02 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:49:02 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:49:02 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:49:02 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 12:49:02 基金022403净值数据已是最新，无需插入
+2026-05-30 12:49:02 基金022403可变数据更新成功
+2026-05-30 12:49:02 基金022403基金经理可变数据更新成功
+2026-05-30 12:58:20 HikariPool-1 - Shutdown initiated...
+2026-05-30 12:58:20 HikariPool-1 - Shutdown completed.
+2026-05-30 12:58:24 Starting ManagerApplication using Java 17.0.17 with PID 17684 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-05-30 12:58:24 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-05-30 12:58:24 The following 1 profile is active: "dev"
+2026-05-30 12:58:24 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-30 12:58:24 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-30 12:58:25 Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+2026-05-30 12:58:25 Tomcat initialized with port(s): 8400 (http)
+2026-05-30 12:58:25 Initializing ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:58:25 Starting service [Tomcat]
+2026-05-30 12:58:25 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-05-30 12:58:25 Initializing Spring embedded WebApplicationContext
+2026-05-30 12:58:25 Root WebApplicationContext: initialization completed in 1442 ms
+2026-05-30 12:58:27 Starting ProtocolHandler ["http-nio-8400"]
+2026-05-30 12:58:27 Tomcat started on port(s): 8400 (http) with context path ''
+2026-05-30 12:58:27 Started ManagerApplication in 3.549 seconds (process running for 4.273)
+2026-05-30 12:58:34 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-30 12:58:34 Initializing Servlet 'dispatcherServlet'
+2026-05-30 12:58:34 Completed initialization in 3 ms
+2026-05-30 12:58:34 HikariPool-1 - Starting...
+2026-05-30 12:58:34 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@405688dc
+2026-05-30 12:58:34 HikariPool-1 - Start completed.
+2026-05-30 13:03:20 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-30 13:03:20 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-05-30 13:03:20 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 13:03:20 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 13:03:20 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 13:03:20 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 13:03:20 解析分数失败，原始值：null，设置为默认值 0
+2026-05-30 13:03:20 基金022403净值数据已是最新，无需插入
+2026-05-30 13:03:20 基金022403可变数据更新成功
+2026-05-30 13:03:20 基金022403基金经理可变数据更新成功
+2026-05-30 13:03:57 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-05-30 13:03:57 基金000218新增净值数据3条
+2026-05-30 13:03:57 基金000218可变数据更新成功
+2026-05-30 13:03:57 基金000218基金经理可变数据更新成功

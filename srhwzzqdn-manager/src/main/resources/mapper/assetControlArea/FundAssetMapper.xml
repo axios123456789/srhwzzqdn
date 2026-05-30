@@ -726,6 +726,44 @@
         </foreach>
     </insert>
 
+    <!--  根据基金代码更新基金可变数据（收益率、资产配置、规模、持有人结构等）  -->
+    <update id="updateFundDynamicDataByCode">
+        update t_fund_asset
+           set return_1m = #{return1m},
+               return_3m = #{return3m},
+               return_6m = #{return6m},
+               return_1y = #{return1y},
+               net_assets = #{netAssets},
+               stock_ratio = #{stockRatio},
+               bond_ratio = #{bondRatio},
+               cash_ratio = #{cashRatio},
+               latest_scale = #{latestScale},
+               institution_ratio = #{institutionRatio},
+               individual_ratio = #{individualRatio},
+               internal_ratio = #{internalRatio},
+               update_time = now(),
+               update_by = #{updateBy}
+        where fund_code = #{fundCode}
+    </update>
+
+    <!--  根据基金代码更新基金经理可变数据（星级、从业时间、管理规模、能力评分等）  -->
+    <update id="updateFundManagerDynamicDataByCode">
+        update t_fund_manager_analysis
+           set manager_name = #{managerName},
+               star_rating = #{starRating},
+               work_time = #{workTime},
+               manage_scale = #{manageScale},
+               total_score = #{totalScore},
+               stock_select_score = #{stockSelectScore},
+               return_score = #{returnScore},
+               risk_control_score = #{riskControlScore},
+               stability_score = #{stabilityScore},
+               timing_score = #{timingScore},
+               update_time = now(),
+               update_by = #{updateBy}
+        where fund_code = #{fundCode}
+    </update>
+
     <!--  批量插入基金持仓信息数据  -->
     <insert id="batchAddFundPortfolio">
         insert into t_fund_portfolio (

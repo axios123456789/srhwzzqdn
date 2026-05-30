@@ -186,4 +186,10 @@ public interface FundAssetMapper {
     //根据基金代码查询持仓数据是否存在
     @Select("select count(*) from t_fund_portfolio where fund_code = #{param1}")
     int isPortfolioExistByCode(String fundCode);
+
+    //根据基金代码更新基金可变数据（收益率、资产配置、规模、持有人结构等）
+    void updateFundDynamicDataByCode(FundAsset fundAsset);
+
+    //根据基金代码更新基金经理可变数据（星级、从业时间、管理规模、能力评分等）
+    void updateFundManagerDynamicDataByCode(FundManagerAnalysis fundManagerAnalysis);
 }
