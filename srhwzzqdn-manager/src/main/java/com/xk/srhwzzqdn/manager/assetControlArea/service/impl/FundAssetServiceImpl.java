@@ -435,8 +435,15 @@ public class FundAssetServiceImpl implements FundAssetService {
      */
     @Override
     public void updateFundHolding(FundHolding fundHolding) {
-        fundHolding.setUpdateBy(AuthContextUtil.get().getUserName());
-        fundAssetMapper.updateFundHolding(fundHolding);
+        if(fundHolding.getId() == null){
+            fundHolding.setCreateBy(AuthContextUtil.get().getUserName());
+            fundHolding.setOwner(AuthContextUtil.get().getId());
+
+            fundAssetMapper.addFundHolding(fundHolding);
+        }else {
+            fundHolding.setUpdateBy(AuthContextUtil.get().getUserName());
+            fundAssetMapper.updateFundHolding(fundHolding);
+        }
     }
 
     /**
