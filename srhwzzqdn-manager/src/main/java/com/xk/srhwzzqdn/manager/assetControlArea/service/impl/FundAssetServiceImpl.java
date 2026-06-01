@@ -887,6 +887,22 @@ public class FundAssetServiceImpl implements FundAssetService {
         } else {
             logger.info("基金{}在t_fund_manager_analysis中不存在，跳过基金经理可变数据更新", fundCode);
         }
+
+        //7.更新持仓信息数据
+        //7.1获取基金台账数据
+        AssetLedger assetLedger = assetLedgerMapper.getAssetLedgerByCode(fundCode, AuthContextUtil.get().getId());
+        if (assetLedger != null){
+            FundHolding fundHolding = new FundHolding();
+            fundHolding.setFundCode(fundCode);
+            fundHolding.setCostAmount(assetLedger.getInvestAmount());
+            fundHolding.setMarketValue(assetLedger.getAmount());
+            fundHolding.setProfitLoss(fundHolding.getMarketValue().subtract(fundHolding.getCostAmount()));
+            fundHolding.setProfitLossRate(fundHolding.getProfitLoss().divide(fundHolding.getCostAmount(), 4, RoundingMode.HALF_UP).multiply(new BigDecimal("100")));
+            fundHolding.setUpdateBy(AuthContextUtil.get().getUserName());
+
+            //11.更新持仓情况
+            fundAssetMapper.updateFundHoldingByCode(fundHolding);
+        }
     }
 
     /**

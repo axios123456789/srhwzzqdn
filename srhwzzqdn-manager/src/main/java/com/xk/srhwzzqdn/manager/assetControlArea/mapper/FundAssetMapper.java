@@ -192,4 +192,6 @@ public interface FundAssetMapper {
 
     //根据基金代码更新基金经理可变数据（星级、从业时间、管理规模、能力评分等）
     void updateFundManagerDynamicDataByCode(FundManagerAnalysis fundManagerAnalysis);
+
+    void updateFundHoldingByCode(FundHolding fundHolding);
 }
