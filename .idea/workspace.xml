@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="基金资产管理-45">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="基金资产管理-46">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -13,8 +13,6 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/FundAssetMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/FundAssetMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/FundAssetServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/FundAssetServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/FundAssetMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/FundAssetMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -361,14 +359,17 @@
       <workItem from="1780273993385" duration="1494000" />
       <workItem from="1780308822010" duration="24000" />
       <workItem from="1780310200110" duration="476000" />
-      <workItem from="1780312205707" duration="2174000" />
-    </task>
-    <task id="LOCAL-00090" summary="资产聚类分析-05">
-      <created>1775997694387</created>
-      <option name="number" value="00090" />
-      <option name="presentableId" value="LOCAL-00090" />
-      <option name="project" value="LOCAL" />
-      <updated>1775997694387</updated>
+      <workItem from="1780312205707" duration="2952000" />
+      <workItem from="1780360360832" duration="88000" />
+      <workItem from="1780360553816" duration="1278000" />
+      <workItem from="1780385167515" duration="697000" />
+      <workItem from="1780396800958" duration="149000" />
+      <workItem from="1780397050075" duration="1243000" />
+      <workItem from="1780446825603" duration="3487000" />
+      <workItem from="1780489529201" duration="728000" />
+      <workItem from="1780533161923" duration="1271000" />
+      <workItem from="1780560004188" duration="261000" />
+      <workItem from="1780560627237" duration="1364000" />
     </task>
     <task id="LOCAL-00091" summary="资产聚类分析-05">
       <created>1775997702399</created>
@@ -706,7 +707,14 @@
       <option name="project" value="LOCAL" />
       <updated>1780234392062</updated>
     </task>
-    <option name="localTasksCounter" value="139" />
+    <task id="LOCAL-00139" summary="基金资产管理-46">
+      <created>1780322351214</created>
+      <option name="number" value="00139" />
+      <option name="presentableId" value="LOCAL-00139" />
+      <option name="project" value="LOCAL" />
+      <updated>1780322351214</updated>
+    </task>
+    <option name="localTasksCounter" value="140" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -725,7 +733,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="基金资产管理-20" />
     <MESSAGE value="基金资产管理-21" />
     <MESSAGE value="基金资产管理-22" />
     <MESSAGE value="基金资产管理-23" />
@@ -750,7 +757,8 @@
     <MESSAGE value="基金资产管理-43" />
     <MESSAGE value="基金资产管理-44" />
     <MESSAGE value="基金资产管理-45" />
-    <option name="LAST_COMMIT_MESSAGE" value="基金资产管理-45" />
+    <MESSAGE value="基金资产管理-46" />
+    <option name="LAST_COMMIT_MESSAGE" value="基金资产管理-46" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

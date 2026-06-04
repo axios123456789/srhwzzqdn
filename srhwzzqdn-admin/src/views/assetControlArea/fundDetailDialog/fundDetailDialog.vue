@@ -271,7 +271,7 @@
             <div style="flex:1"></div>
             <el-button type="success" size="small" @click="addNavRow" :icon="Plus">新增</el-button>
           </div>
-          <el-table :data="navPageData" border stripe size="small" max-height="320px" v-loading="navTableLoading">
+          <el-table :data="navData" border stripe size="small" max-height="320px" v-loading="navTableLoading">
             <el-table-column prop="navDate" label="净值日期" width="120" />
             <el-table-column prop="unitNav" label="单位净值" width="110" align="right" />
             <el-table-column prop="accumulatedNav" label="累计净值" width="110" align="right" />
@@ -571,7 +571,7 @@
             <div style="flex:1"></div>
             <el-button type="success" size="small" @click="addTradeRow" :icon="Plus">新增</el-button>
           </div>
-          <el-table :data="tradePageData" border stripe size="small" max-height="280px">
+          <el-table :data="tradeData" border stripe size="small" max-height="280px" v-loading="tradeTableLoading">
             <el-table-column prop="tradeDate" label="交易日期" width="120" />
             <el-table-column prop="tradeType" label="交易类型" width="100">
               <template #default="{ row }">{{ getTradeTypeText(row.tradeType) }}</template>
@@ -589,7 +589,7 @@
             </el-table-column>
           </el-table>
           <div class="sub-pagination">
-            <el-pagination background layout="total, sizes, prev, pager, next" :total="tradeFilterData.length" :page-size="tradePage.limit" :current-page="tradePage.page" :page-sizes="[5, 10, 20]" @size-change="(s) => { tradePage.limit = s; tradePage.page = 1 }" @current-change="(p) => tradePage.page = p" size="small" />
+            <el-pagination background layout="total, sizes, prev, pager, next" :total="tradeTableTotal" :page-size="tradePage.limit" :current-page="tradePage.page" :page-sizes="[5, 10, 20]" @size-change="(s) => { tradePage.limit = s; tradePage.page = 1; fetchTradeData() }" @current-change="(p) => { tradePage.page = p; fetchTradeData() }" size="small" />
           </div>
         </div>
       </div>
@@ -608,7 +608,7 @@
             <div style="flex:1"></div>
             <el-button type="success" size="small" @click="addDividendRow" :icon="Plus">新增</el-button>
           </div>
-          <el-table :data="dividendPageData" border stripe size="small" max-height="280px">
+          <el-table :data="dividendData" border stripe size="small" max-height="280px" v-loading="dividendTableLoading">
             <el-table-column prop="dividendDate" label="分红时间" width="120" />
             <el-table-column prop="arrivalDate" label="到账时间" width="120" />
             <el-table-column prop="dividendType" label="分红方式" width="100">
@@ -624,7 +624,7 @@
             </el-table-column>
           </el-table>
           <div class="sub-pagination">
-            <el-pagination background layout="total, sizes, prev, pager, next" :total="dividendFilterData.length" :page-size="dividendPage.limit" :current-page="dividendPage.page" :page-sizes="[5, 10, 20]" @size-change="(s) => { dividendPage.limit = s; dividendPage.page = 1 }" @current-change="(p) => dividendPage.page = p" size="small" />
+            <el-pagination background layout="total, sizes, prev, pager, next" :total="dividendTableTotal" :page-size="dividendPage.limit" :current-page="dividendPage.page" :page-sizes="[5, 10, 20]" @size-change="(s) => { dividendPage.limit = s; dividendPage.page = 1; fetchDividendData() }" @current-change="(p) => { dividendPage.page = p; fetchDividendData() }" size="small" />
           </div>
         </div>
       </div>
@@ -1178,19 +1178,7 @@ const fetchHoldingData = async () => {
   }
 }
 
-const navFilterData = computed(() => {
-  let list = [...navData.value]
-  if (navQuery.timeRange && navQuery.timeRange.length === 2) {
-    const [start, end] = navQuery.timeRange
-    list = list.filter(r => r.navDate >= start && r.navDate <= end)
-  }
-  list.sort((a, b) => b.navDate.localeCompare(a.navDate))
-  return list
-})
-const navPageData = computed(() => {
-  const s = (navPage.page - 1) * navPage.limit
-  return navFilterData.value.slice(s, s + navPage.limit)
-})
+// 净值数据已改为后端分页，navData 直接存储当前页数据
 
 // 时间范围变化处理
 const queryNavData = () => { 
@@ -1245,19 +1233,7 @@ const tradeData = ref([])
 const tradeQuery = reactive({ timeRange: null })
 const tradePage = reactive({ page: 1, limit: 5 })
 
-const tradeFilterData = computed(() => {
-  let list = [...tradeData.value]
-  if (tradeQuery.timeRange && tradeQuery.timeRange.length === 2) {
-    const [start, end] = tradeQuery.timeRange
-    list = list.filter(r => r.tradeDate >= start && r.tradeDate <= end)
-  }
-  list.sort((a, b) => b.tradeDate.localeCompare(a.tradeDate))
-  return list
-})
-const tradePageData = computed(() => {
-  const s = (tradePage.page - 1) * tradePage.limit
-  return tradeFilterData.value.slice(s, s + tradePage.limit)
-})
+// 交易数据已改为后端分页，tradeData 直接存储当前页数据
 
 // 交易数据查询参数
 const tradeQueryParams = reactive({
@@ -1328,19 +1304,7 @@ const dividendData = ref([])
 const dividendQuery = reactive({ timeRange: null })
 const dividendPage = reactive({ page: 1, limit: 5 })
 
-const dividendFilterData = computed(() => {
-  let list = [...dividendData.value]
-  if (dividendQuery.timeRange && dividendQuery.timeRange.length === 2) {
-    const [start, end] = dividendQuery.timeRange
-    list = list.filter(r => r.dividendDate >= start && r.dividendDate <= end)
-  }
-  list.sort((a, b) => b.dividendDate.localeCompare(a.dividendDate))
-  return list
-})
-const dividendPageData = computed(() => {
-  const s = (dividendPage.page - 1) * dividendPage.limit
-  return dividendFilterData.value.slice(s, s + dividendPage.limit)
-})
+// 分红数据已改为后端分页，dividendData 直接存储当前页数据
 
 // 分红数据查询参数
 const dividendQueryParams = reactive({
@@ -1435,19 +1399,7 @@ const holdingData = ref([])
 const holdingQuery = reactive({ timeRange: null })
 const holdingPage = reactive({ page: 1, limit: 10 })
 
-const holdingFilterData = computed(() => {
-  let list = [...holdingData.value]
-  if (holdingQuery.timeRange && holdingQuery.timeRange.length === 2) {
-    const [start, end] = holdingQuery.timeRange
-    list = list.filter(r => r.holdingDate >= start && r.holdingDate <= end)
-  }
-  list.sort((a, b) => b.holdingDate.localeCompare(a.holdingDate))
-  return list
-})
-const holdingPageData = computed(() => {
-  const s = (holdingPage.page - 1) * holdingPage.limit
-  return holdingFilterData.value.slice(s, s + holdingPage.limit)
-})
+// 持仓数据已改为后端分页，holdingData 直接存储当前页数据
 
 // 持仓数据查询参数
 const holdingQueryParams = reactive({

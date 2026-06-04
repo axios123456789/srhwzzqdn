@@ -767,10 +767,7 @@
     <!--  根据基金代码更新持仓信息  -->
     <update id="updateFundHoldingByCode">
         update t_fund_holding
-        set  hold_shares = #{holdShares},
-             available_shares = #{availableShares},
-             frozen_shares = #{frozenShares},
-             cost_amount = #{costAmount},
+        set  cost_amount = #{costAmount},
              market_value = #{marketValue},
              profit_loss = #{profitLoss},
              profit_loss_rate = #{profitLossRate},
