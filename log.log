@@ -15156,3 +15156,39 @@ java.net.SocketException: Connection reset
 2026-06-04 21:06:30 基金016500持仓数据已存在，跳过插入
 2026-06-04 21:06:30 基金016500可变数据更新成功
 2026-06-04 21:06:30 基金016500基金经理可变数据更新成功
+2026-06-04 22:10:09 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-06-04 22:10:09 基金270023新增净值数据1条
+2026-06-04 22:10:09 基金270023持仓数据已存在，跳过插入
+2026-06-04 22:10:09 基金270023可变数据更新成功
+2026-06-04 22:10:09 基金270023基金经理可变数据更新成功
+2026-06-04 22:45:10 Reconnecting, last destination was /127.0.0.1:6379
+2026-06-04 22:45:10 Cannot reconnect to [127.0.0.1/<unresolved>:6379]: Connection closed prematurely
+io.lettuce.core.RedisConnectionException: Connection closed prematurely
+	at io.lettuce.core.protocol.RedisHandshakeHandler.channelInactive(RedisHandshakeHandler.java:91)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:305)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:281)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:274)
+	at io.netty.channel.ChannelInboundHandlerAdapter.channelInactive(ChannelInboundHandlerAdapter.java:81)
+	at io.lettuce.core.ChannelGroupListener.channelInactive(ChannelGroupListener.java:69)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:305)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:281)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelInactive(AbstractChannelHandlerContext.java:274)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelInactive(DefaultChannelPipeline.java:1405)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:301)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelInactive(AbstractChannelHandlerContext.java:281)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelInactive(DefaultChannelPipeline.java:901)
+	at io.netty.channel.AbstractChannel$AbstractUnsafe$7.run(AbstractChannel.java:813)
+	at io.netty.util.concurrent.AbstractEventExecutor.runTask$$$capture(AbstractEventExecutor.java:174)
+	at io.netty.util.concurrent.AbstractEventExecutor.runTask(AbstractEventExecutor.java)
+	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute$$$capture(AbstractEventExecutor.java:167)
+	at io.netty.util.concurrent.AbstractEventExecutor.safeExecute(AbstractEventExecutor.java)
+	at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:470)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:566)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-06-04 22:45:19 Reconnecting, last destination was 127.0.0.1/<unresolved>:6379
+2026-06-04 22:45:19 Cannot reconnect to [127.0.0.1/<unresolved>:6379]: Connection refused: getsockopt: /127.0.0.1:6379
+2026-06-04 22:45:26 HikariPool-1 - Shutdown initiated...
+2026-06-04 22:45:26 HikariPool-1 - Shutdown completed.

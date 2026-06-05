@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="基金资产管理-46">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="基金资产管理-48">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -13,7 +13,7 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/FundAssetMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/FundAssetMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/fundDetailDialog/fundDetailDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/fundDetailDialog/fundDetailDialog.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -370,13 +370,8 @@
       <workItem from="1780533161923" duration="1271000" />
       <workItem from="1780560004188" duration="261000" />
       <workItem from="1780560627237" duration="1364000" />
-    </task>
-    <task id="LOCAL-00091" summary="资产聚类分析-05">
-      <created>1775997702399</created>
-      <option name="number" value="00091" />
-      <option name="presentableId" value="LOCAL-00091" />
-      <option name="project" value="LOCAL" />
-      <updated>1775997702399</updated>
+      <workItem from="1780575182670" duration="1914000" />
+      <workItem from="1780584596136" duration="92000" />
     </task>
     <task id="LOCAL-00092" summary="资产聚类分析-06">
       <created>1776175136607</created>
@@ -714,7 +709,14 @@
       <option name="project" value="LOCAL" />
       <updated>1780322351214</updated>
     </task>
-    <option name="localTasksCounter" value="140" />
+    <task id="LOCAL-00140" summary="基金资产管理-47">
+      <created>1780578748131</created>
+      <option name="number" value="00140" />
+      <option name="presentableId" value="LOCAL-00140" />
+      <option name="project" value="LOCAL" />
+      <updated>1780578748135</updated>
+    </task>
+    <option name="localTasksCounter" value="141" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -733,8 +735,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="基金资产管理-21" />
-    <MESSAGE value="基金资产管理-22" />
     <MESSAGE value="基金资产管理-23" />
     <MESSAGE value="基金资产管理-24" />
     <MESSAGE value="基金资产管理-25" />
@@ -758,7 +758,9 @@
     <MESSAGE value="基金资产管理-44" />
     <MESSAGE value="基金资产管理-45" />
     <MESSAGE value="基金资产管理-46" />
-    <option name="LAST_COMMIT_MESSAGE" value="基金资产管理-46" />
+    <MESSAGE value="基金资产管理-47" />
+    <MESSAGE value="基金资产管理-48" />
+    <option name="LAST_COMMIT_MESSAGE" value="基金资产管理-48" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -853,10 +853,8 @@
             <el-input-number v-model="subFormData.netRatio" :precision="2" :step="0.01" :min="0" style="width: 100%" controls-position="right" />
           </el-form-item>
           <el-form-item label="行业分类">
-            <el-select v-model="subFormData.industryType" style="width: 100%" placeholder="请选择">
-              <el-option label="通信装备" :value="1" />
-              <el-option label="电池" :value="2" />
-              <el-option label="半导体" :value="3" />
+            <el-select v-model="subFormData.industryType" style="width: 100%" placeholder="请选择" clearable>
+              <el-option v-for="item in industryClassOptions" :key="item.value" :label="item.text" :value="item.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="数据来源">
@@ -1025,8 +1023,9 @@ const getPositionTypeTagType = (v) => {
 
 // 行业分类显示方法
 const getIndustryTypeText = (v) => {
-  const map = { 1: '通信装备', 2: '电池', 3: '半导体' }
-  return map[v] || '-'
+  if (!v) return '-'
+  const found = industryClassOptions.value.find(i => i.value === v)
+  return found ? found.text : v
 }
 
 // 行业分类标签颜色
