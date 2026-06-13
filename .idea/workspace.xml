@@ -5,6 +5,185 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="基金资产管理-48">
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/0db20a8b58b849c9a143088e50721589屏幕截图 2026-04-05 132233.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/15b940e2d71b45719daeba5ee572721e屏幕截图 2026-04-05 132254.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/1fa4664e6ade4469b304517b914f3773屏幕截图 2026-04-05 110728.png/6f7a7fd2-98c1-460c-958c-74bd08cb15f3/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/2ef2a80e14de484e94981a941fd5a7b5屏幕截图 2026-04-05 132151.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/3a8bc7ff0c4d474a8d6f3996e840cd0e屏幕截图 2026-04-05 132159.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/556d310194784219b20b7ad75819f7e4屏幕截图 2026-04-05 132223.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/6644a0c5635b432d86d4b81e24427287屏幕截图 2026-04-05 132303.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/674024edfc1049dca3387553e3756260屏幕截图 2026-04-05 132233.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/7cc737a37252421c8a3b70594b19391c屏幕截图 2026-04-05 132247.png/477c5243-a1d8-410c-9dd6-4388b9e20dc3/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/9a7b755dbb39483fa9d5b04d845fd0d4屏幕截图 2026-04-05 132216.png/db890ca3-c4f8-4b70-b268-85ee9e363a47/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/bc2d65b918704cc0afc19535ff226c44屏幕截图 2026-04-05 132240.png/dc8250f2-a6e5-4ed5-8390-8e183d9c43c0/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/bc2d65b918704cc0afc19535ff226c44屏幕截图 2026-04-05 132240.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/d8ff9ab4ff384ff39c2dd65552af4945屏幕截图 2026-04-05 132223.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/d9db487204614060bb78f97cedce58d4屏幕截图 2026-04-05 132254.png/67154bf4-df06-4ae6-ad2e-cb7c61826b28/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260405/da01ef8e998c400583d5ed0b2f7b30df屏幕截图 2026-04-05 132303.png/8a57d2f2-8d34-4cf4-8545-f642942ca140/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260406/0052a32d00d34eb8af51a314c213cb66屏幕截图 2026-04-06 194048.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260406/11476bf23e4f4840af62aeedc8286f70屏幕截图 2026-04-06 194117.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260406/3989591929d544beb3d0f655809da012屏幕截图 2026-04-06 194057.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260406/4f8622b1ce644023a02434a20c9a3bc1屏幕截图 2026-04-06 194127.png/29d5c11e-d565-49bb-a532-b597aff847e6/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260406/a6dc0680299d4d37926af5f0ad42c294屏幕截图 2026-04-06 194107.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260406/b4dcf4030d0046969f100cd40d4ae6de屏幕截图 2026-04-06 194122.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260407/5ef573227f4940cfa44176ab3734be95屏幕截图 2026-04-07 174015.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260407/e3af9310d944462ebec052e6a053be29屏幕截图 2026-04-07 145128.png/727fe0b2-7f77-42ac-9417-0f674c157577/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260408/898d9894b38c4afb9672a6208541ddf3屏幕截图 2026-04-08 185659.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260412/6379b17b3cff4d56b953887a74134a7f屏幕截图 2026-04-12 204113.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260412/962e91b4ade345258cdd1bd2be88eee6屏幕截图 2026-04-12 204122.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260414/0a4e9488ec284e0298e60f3c2a9272d3屏幕截图 2026-04-14 225719.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260414/21e9b809ee33477cb93e27961a6c9ee4屏幕截图 2026-04-14 225729.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260414/37a9ea39e472487db8f4bb33fe61b4ef屏幕截图 2026-04-14 224002.png/1c9cb4cf-5b6a-4271-a5a3-ede41617e247/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260414/37a9ea39e472487db8f4bb33fe61b4ef屏幕截图 2026-04-14 224002.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260414/e6d958d32c444202b9d057e96eddd0a2屏幕截图 2026-04-14 223943.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260416/c4a2cd1c9c704535aa923b8bdb9ba545屏幕截图 2026-04-16 181503.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260417/3abab60673eb45f18b585de5f13165bc屏幕截图 2026-04-17 174224.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260417/4ba623463ce34b9b86b21ba60e48dd72屏幕截图 2026-04-17 174244.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260417/588e8a7c1ada43369eef222a7e2ddc0a屏幕截图 2026-04-06 194107.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260417/c18ce5837bbf469bb46abf5af9df04a0屏幕截图 2026-04-17 215201.png/7feb9bf4-d5a8-4ea5-9a43-87426a2419c5/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260417/ff0d767ad8a7402fafe5dfba508f39e2屏幕截图 2026-04-17 215156.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/0bd393773d7f4da78741ce4a588d4f11屏幕截图 2026-04-18 162259.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/22c7b97a874047f5a0619c4e0a1e2395屏幕截图 2026-04-18 111538.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/2c58f0b392e145caa2e73189c33635e4屏幕截图 2026-04-18 162307.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/4387aa4dce5b49d287d8770316552802屏幕截图 2026-04-18 162239.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/59ac73adabd34de0a66765c881bcefb4屏幕截图 2026-04-18 111611.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/63147fe8d83f459782b5a81019949dc2屏幕截图 2026-04-18 111514.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/69c8df77ff94412ea2052f5b16e8585d屏幕截图 2026-04-18 111545.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/70e57f676c8b4f57b5da489f36906392屏幕截图 2026-04-18 111550.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/83306f0b727d4689aa667c5526fbbdc1屏幕截图 2026-04-18 162217.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/aaf971b12f1c41e3b079797ab65880f0屏幕截图 2026-04-18 162224.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/c9cfb99e5e8f46d8a12be2cd5181a081屏幕截图 2026-04-18 111601.png/16dafa99-79e9-4277-bd29-a117482b847d/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/ca6a1ba1a67740dca29d2c3f59ad24b5屏幕截图 2026-04-18 162221.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/d4bf93262fa84da7ba985d86181384a3屏幕截图 2026-04-18 111531.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/d6e4be5822c44a0092c5638823b7a3da屏幕截图 2026-04-18 162205.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260418/f8bb018131b64284aee2923dd962d25e屏幕截图 2026-04-18 162253.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260419/51b29425f37c497ebc2e6cc7a7157ed0屏幕截图 2026-04-19 215727.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260424/bb9afa9e90cd4009a8406b1b44f72d3b4月27号工作汇报文档.txt/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260425/588c0e7ceaf34b45b70ab424b5007c0b基金资产基本台账表.docx/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260425/a541d07af326457f9a34f8f2d8de038c屏幕截图 2026-04-25 223028.png/c22feee4-e3b7-4d72-8594-9e86aa8bd8a7/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260425/a541d07af326457f9a34f8f2d8de038c屏幕截图 2026-04-25 223028.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260426/1207980672774f04be9082f0a0541514屏幕截图 2026-04-26 214555.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260426/b0b3dd73ed9b4b1d9048876dd4e5a68e屏幕截图 2026-04-26 214529.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260427/23c7e0cefe80498b81259dbfeb4abf3a屏幕截图 2026-04-27 184848.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260504/03f3d19632bb45bdb21179217db85f60屏幕截图 2026-04-18 162229.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260504/599f2f5a4e124ce9a7e106cf877b6d4b屏幕截图 2026-04-18 162224.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260505/1fff393780904b86a54cd4cdfa16976c屏幕截图 2026-05-05 101609.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260505/4a92f56aa7de4c1da96583c024907f5e屏幕截图 2026-05-05 101656.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260505/7718857bcc4f4267b9e44f7b71c29040屏幕截图 2026-05-05 101633.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260505/7b39d924f2e84485bdc723feaf66490a屏幕截图 2026-05-05 101706.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260505/811c1a2cb7b84f7481baf111c15e9a4a屏幕截图 2026-05-05 101603.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260505/829f764ae6a44458be53611efae2d3c5屏幕截图 2026-05-05 000015.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260505/a378ca9f439042c18a9a72e21485277f屏幕截图 2026-05-05 101718.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260505/b75cb6b6e9144e90956ee62b14ab72fe屏幕截图 2026-05-05 101620.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260505/ea2faa5a63a048788249c965bcd34b85屏幕截图 2026-05-05 101628.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260507/ce87a035be974e0dbcef778212fbaa1b屏幕截图 2026-05-07 170117.png/33639b70-4ffd-4921-802c-b79943b3e70b/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260507/ce87a035be974e0dbcef778212fbaa1b屏幕截图 2026-05-07 170117.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260512/0202a6a43427465da097b5a99d07c8a3屏幕截图 2026-05-12 185736.png/7804b0a6-e339-475c-a0e8-29bcdb572d2e/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260513/65f8182f008a404fb429943aa984353b可靠性执行监控新增指标实现方案.md/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/0702d5606f0349ed9c49d3a0482bc91d屏幕截图 2026-05-17 224857.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/0aaa24bc11df4adaa7796a3e95d7886e屏幕截图 2026-05-17 223254.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/11ca52c3a77e4610b3c0811fecef6a26屏幕截图 2026-05-17 224033.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/1b2c4cee33c54e44b9a7e3f8033bebd2屏幕截图 2026-05-17 223447.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/2afc73967b124300affe7fc220f9358f屏幕截图 2026-05-17 221811.png/9305aa47-1107-43e1-af6b-da8f1b2c892f/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/2afc73967b124300affe7fc220f9358f屏幕截图 2026-05-17 221811.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/399df3a58d7249269cf306f16779f3d5屏幕截图 2026-05-17 222806.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/4b217120a76142f7a193c6a9f1860ebc屏幕截图 2026-05-17 223738.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/4b604f49ca2f41b997b90e36e83a17cc屏幕截图 2026-05-17 221740.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/6e47b94d49954aaf9bfadefec3acfc95屏幕截图 2026-05-17 225115.png/65646e30-04ed-42b0-9e4e-cc8883d1a456/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/7568f2622ca04bb29092eef42deb68f1屏幕截图 2026-05-17 221615.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/80ec83e70cc74ec492e81eb6e545e712屏幕截图 2026-05-17 174820.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/c875146d5e5c4235bcbc7152d197261b屏幕截图 2026-05-17 201644.png/993bf97b-955b-4dae-8818-ffe2174d9c3a/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/c875146d5e5c4235bcbc7152d197261b屏幕截图 2026-05-17 201644.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/d47161cbfa0b4cc8b06769c835afcdfa屏幕截图 2026-05-17 223835.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/e7b102ae5b4046e2892d52d76518eda1屏幕截图 2026-05-17 224322.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260517/ffd6c05363234fd4b4dba359906a0a05屏幕截图 2026-05-17 225257.png/bbbe86b9-d792-480e-b222-5dc87458eb56/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/0968022fcd1f4d45a21de97f5db2a659屏幕截图 2026-05-17 221913.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/25df9aef647c40e58bce6707f0ed795c屏幕截图 2026-05-17 221513.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/286868ffaa42430992b844ce3a58c3e0屏幕截图 2026-05-17 221615.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/3216b227fbde4fa2b85d205fe1707f5d屏幕截图 2026-05-18 222459.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/347347b526434ec3835db4c2c95d682a屏幕截图 2026-05-17 223835.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/3ebbbe13f9764e3099c854528a8089c7屏幕截图 2026-05-17 221740.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/44a2b46859b9449fb7f3f686f94dffac屏幕截图 2026-05-17 224033.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/5d0a01612f334cad90eb037d68f57072屏幕截图 2026-05-17 225621.png/166b55e2-3340-4d16-8819-6f227ef0eb0d/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/5d0a01612f334cad90eb037d68f57072屏幕截图 2026-05-17 225621.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/64070127fe4147198c14506fbe497bbd屏幕截图 2026-05-18 221145.png/70a6ac6f-2b10-43ad-9b4a-d243c107a414/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/64d09ce82609485291929b497f2d7085屏幕截图 2026-05-18 222632.png/ebdd3d0a-aaa8-488e-8b26-4793fe81753c/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/7ce600bb755b4459842815e2f4606b17屏幕截图 2026-05-17 224857.png/e5b82565-f230-4430-acbb-b3232f98247c/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/7ce600bb755b4459842815e2f4606b17屏幕截图 2026-05-17 224857.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/8af29ffc23be42f6afc54520c17a5d24屏幕截图 2026-05-17 224726.png/486b5cce-f43b-4035-8205-269e8d83f0e4/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/8af29ffc23be42f6afc54520c17a5d24屏幕截图 2026-05-17 224726.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/94b674a38a974e8ab06e722b0c7cd67f屏幕截图 2026-05-17 225421.png/5a2b7618-56a5-42c7-977c-f70618840e97/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/9908c0acbe924d38a1acd4d435dc9095屏幕截图 2026-05-18 220032.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/99704e61dfe645abacfbd0544ee062fb屏幕截图 2026-05-17 223254.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/9deaffcc1b624cca88f11bd62f53b3cf屏幕截图 2026-05-18 221436.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/ae6fc8a837fe4a90a11eda28612be59d屏幕截图 2026-05-18 215821.png/67218757-b977-4860-aa9b-d42d88c98ab6/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/b5261a9653df40d4ae6c8680f693deea屏幕截图 2026-05-17 221418.png/cf25e14f-f13f-4250-89cf-9b79da089cf3/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/b5261a9653df40d4ae6c8680f693deea屏幕截图 2026-05-17 221418.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/b5793dd4c7a4446eb72368cbe31a445f屏幕截图 2026-05-17 222806.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/cf9f7f7020c74c719b2b41a335ad0ab2屏幕截图 2026-05-17 223531.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/ede52c9774094fe88b89c10b1b68328f屏幕截图 2026-05-17 225115.png/d6fb1d56-8d11-430c-b55f-d5d384908bbc/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260518/f766e12b190a4f31b7325748f93b169b屏幕截图 2026-05-17 224322.png/b0807ac3-7ddd-4757-b566-72f2ce4203a0/part.1" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260524/cf86ee9226a048e3b7a787e4688ef857屏幕截图 2026-05-24 221040.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260530/4e1056818d214f359612941be86ef126屏幕截图 2026-05-30 202135.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260530/5ae4f478105e4703aa189bfeae037a0f屏幕截图 2026-05-30 202233.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260530/d413c3c8ecd548d898e75fc74ed9bbc1屏幕截图 2026-05-30 202326.png/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/srhwzzqdn-bucket/20260604/733b3d658c324075aee3451ee9812a8e执行监控两大指标规则修改.txt/xl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/personalObservationArea/assetDynamicsObservation.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/personalObservationArea/controller/AssetDynamicsObservation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/personalObservationArea/mapper/AssetDynamicsObservationMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/personalObservationArea/service/AssetDynamicsObservationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/personalObservationArea/service/impl/AssetDynamicsObservationServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/personalObservationArea/AssetDynamicsObservationMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/controller/AssetClusteringAnalysisController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/controller/FundAssetController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/mapper/AssetClusteringAnalysisMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/mapper/FundAssetMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/AssetClusteringAnalysisService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/FundAssetService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetClusteringAnalysisServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/FundAssetServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$AssetAllocation.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$FluctuationScale.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$FundData.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$FundManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$GrandTotalData.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$HolderStructure.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$NavData.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$PerformanceEvaluation.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$PositionData.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser$StockInfo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/util/FundDataParser.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/personalObservationArea/controller/AssetDynamicsObservation.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/personalObservationArea/mapper/AssetDynamicsObservationMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/personalObservationArea/service/AssetDynamicsObservationService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/personalObservationArea/service/impl/AssetDynamicsObservationServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/BailianApiUtil.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/DeepSeekApiUtil.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/assetControlArea/AssetClusteringAnalysisMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/assetControlArea/FundAssetMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/personalObservationArea/AssetDynamicsObservationMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/vo/personalObservationArea/AssetTypeStatisticsVo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/vo/personalObservationArea/SubTypeAnalysisVo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/assetControl/FundBaseDateDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/assetControl/FundComm.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/assetControl/FundAsset.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/assetControl/FundDividend.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/assetControl/FundHolding.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/assetControl/FundManagerAnalysis.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/assetControl/FundNav.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/assetControl/FundPortfolio.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/assetControl/FundRiskPerformance.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/assetControl/FundTransaction.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/system/SysCommConfig.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/assetControl/AssetStructureGroupVo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/assetControl/AssetTransactionTypeGroupVo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/assetControl/AssetTransactionVo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/assetControl/InvestmentReturnAnalysisGroupVo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/assetControl/NavEChartsVo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/assetControl/TransactionAmountGroup.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/common/GroupTextValueVo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/personalObservationArea/AssetTypeStatisticsVo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/personalObservationArea/SubTypeAnalysisVo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -13,7 +192,7 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/fundDetailDialog/fundDetailDialog.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/fundDetailDialog/fundDetailDialog.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/personalObservationArea/assetDynamicsObservation.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/personalObservationArea/assetDynamicsObservation.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,18 +220,24 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/pom.xml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/application-dev.yml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/pom.xml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/properties/MinioProperties.java" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/srhwzzqdn-common/pom.xml" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/ManagerApplication.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/system/controller/FileUploadController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/pom.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-common/pom.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/controller/FundAssetController.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/FundAssetMapper.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/application-dev.yml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/properties/MinioProperties.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/AssetClusteringAnalysisServiceImpl.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/FundAssetMapper.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/entity/assetControl/FundHolding.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/pom.xml" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/ManagerApplication.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
         <option name="localRepository" value="D:\softSourceZip\apache-maven-3.6.3-bin\apache-maven-3.6.3\mvn_rep" />
+        <option name="mavenHome" value="$PROJECT_DIR$/../../../../softSourceZip/apache-maven-3.6.3-bin/apache-maven-3.6.3" />
         <option name="userSettingsFile" value="D:\softSourceZip\apache-maven-3.6.3-bin\apache-maven-3.6.3\conf\settings.xml" />
       </MavenGeneralSettings>
     </option>
@@ -79,7 +264,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.10040158" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="Qoder CN" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="ReactorSettings">
@@ -94,6 +279,17 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ManagerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="srhwzzqdn-manager" />
       <extension name="coverage">
@@ -372,13 +568,25 @@
       <workItem from="1780560627237" duration="1364000" />
       <workItem from="1780575182670" duration="1914000" />
       <workItem from="1780584596136" duration="92000" />
-    </task>
-    <task id="LOCAL-00092" summary="资产聚类分析-06">
-      <created>1776175136607</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1776175136607</updated>
+      <workItem from="1780619682559" duration="1310000" />
+      <workItem from="1780641218854" duration="1895000" />
+      <workItem from="1780652646187" duration="899000" />
+      <workItem from="1780658557379" duration="1931000" />
+      <workItem from="1780665271695" duration="651000" />
+      <workItem from="1780709781381" duration="681000" />
+      <workItem from="1780801540587" duration="673000" />
+      <workItem from="1780878737019" duration="1335000" />
+      <workItem from="1780884010901" duration="3150000" />
+      <workItem from="1780922031265" duration="660000" />
+      <workItem from="1780965064768" duration="1262000" />
+      <workItem from="1781005111511" duration="1482000" />
+      <workItem from="1781051645522" duration="2468000" />
+      <workItem from="1781092173164" duration="654000" />
+      <workItem from="1781137923089" duration="1241000" />
+      <workItem from="1781178791989" duration="836000" />
+      <workItem from="1781224391081" duration="2177000" />
+      <workItem from="1781268249722" duration="642000" />
+      <workItem from="1781314621310" duration="8670000" />
     </task>
     <task id="LOCAL-00093" summary="资产聚类分析-07">
       <created>1776179184277</created>
@@ -716,7 +924,14 @@
       <option name="project" value="LOCAL" />
       <updated>1780578748135</updated>
     </task>
-    <option name="localTasksCounter" value="141" />
+    <task id="LOCAL-00141" summary="基金资产管理-48">
+      <created>1780619689275</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1780619689275</updated>
+    </task>
+    <option name="localTasksCounter" value="142" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

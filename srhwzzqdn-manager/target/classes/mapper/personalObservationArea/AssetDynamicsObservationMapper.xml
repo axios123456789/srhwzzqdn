@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.personalObservationArea.mapper.AssetDynamicsObservationMapper">
+
+    <!-- 报表1：资产类型分组统计（储蓄/保险/基金/股票） -->
+    <select id="getAssetTypeStatistics"
+            resultType="com.xk.srhwzzqdn.model.vo.personalObservationArea.AssetTypeStatisticsVo">
+        SELECT asset_type                                                      assetType,
+               (SELECT d.`value` FROM t_sys_dict d WHERE d.type = 'asset_type' AND d.`code` = asset_type LIMIT 1) assetTypeName,
+               sum(amount)                                                     amount,
+               sum(invest_amount)                                              investAmount,
+               count(*)                                                        assetCount
+        FROM t_asset_ledger
+        WHERE asset_owner = #{assetOwner}
+        GROUP BY asset_type
+        ORDER BY asset_type
+    </select>
+
+    <!-- 报表2：基金子类分析（asset_type=3） -->
+    <select id="getFundSubTypeAnalysis"
+            resultType="com.xk.srhwzzqdn.model.vo.personalObservationArea.SubTypeAnalysisVo">
+        SELECT asset_sub_type                                                  assetSubType,
+               (SELECT d.`value` FROM t_sys_dict d WHERE d.type = 'asset_type_3' AND d.`code` = asset_sub_type LIMIT 1) assetSubTypeName,
+               sum(amount)                                                     amount,
+               sum(invest_amount)                                              investAmount,
+               count(*)                                                        assetCount,
+               sum(CASE WHEN asset_status = 4 THEN amount ELSE 0 END)         clearedAmount,
+               sum(CASE WHEN asset_status = 4 THEN invest_amount ELSE 0 END)  clearedInvestAmount,
+               sum(CASE WHEN asset_status = 4 THEN 1 ELSE 0 END)              clearedCount,
+               sum(CASE WHEN asset_status != 4 THEN amount ELSE 0 END)        activeAmount,
+               sum(CASE WHEN asset_status != 4 THEN invest_amount ELSE 0 END) activeInvestAmount,
+               sum(CASE WHEN asset_status != 4 THEN 1 ELSE 0 END)             activeCount
+        FROM t_asset_ledger
+        WHERE asset_owner = #{assetOwner}
+          AND asset_type = 3
+        GROUP BY asset_sub_type
+        ORDER BY asset_sub_type
+    </select>
+
+    <!-- 报表3：股票子类分析（asset_type=4） -->
+    <select id="getStockSubTypeAnalysis"
+            resultType="com.xk.srhwzzqdn.model.vo.personalObservationArea.SubTypeAnalysisVo">
+        SELECT asset_sub_type                                                  assetSubType,
+               (SELECT d.`value` FROM t_sys_dict d WHERE d.type = 'asset_type_4' AND d.`code` = asset_sub_type LIMIT 1) assetSubTypeName,
+               sum(amount)                                                     amount,
+               sum(invest_amount)                                              investAmount,
+               count(*)                                                        assetCount,
+               sum(CASE WHEN asset_status = 4 THEN amount ELSE 0 END)         clearedAmount,
+               sum(CASE WHEN asset_status = 4 THEN invest_amount ELSE 0 END)  clearedInvestAmount,
+               sum(CASE WHEN asset_status = 4 THEN 1 ELSE 0 END)              clearedCount,
+               sum(CASE WHEN asset_status != 4 THEN amount ELSE 0 END)        activeAmount,
+               sum(CASE WHEN asset_status != 4 THEN invest_amount ELSE 0 END) activeInvestAmount,
+               sum(CASE WHEN asset_status != 4 THEN 1 ELSE 0 END)             activeCount
+        FROM t_asset_ledger
+        WHERE asset_owner = #{assetOwner}
+          AND asset_type = 4
+        GROUP BY asset_sub_type
+        ORDER BY asset_sub_type
+    </select>
+
+    <!-- 穿透明细：按资产类型查询资产列表 -->
+    <select id="getAssetDetailByType"
+            resultType="com.xk.srhwzzqdn.model.vo.assetControl.AssetLedgerVo">
+        SELECT t.id,
+               t.asset_name,
+               t.asset_code,
+               t.asset_no,
+               t.asset_type,
+               t.asset_sub_type,
+               t.amount,
+               t.invest_amount,
+               t.asset_status,
+               t.remark,
+               t.asset_owner,
+               t.update_time,
+               t.update_by,
+               i.name AS assetOwnerName
+        FROM t_asset_ledger t
+                 LEFT JOIN t_sys_person_info i ON i.account_id = t.asset_owner
+        WHERE t.asset_owner = #{assetOwner}
+          <if test="assetType != null">
+              AND t.asset_type = #{assetType}
+          </if>
+        ORDER BY t.update_time DESC
+    </select>
+
+    <!-- 穿透明细：按资产类型+子类+清仓状态查询资产列表 -->
+    <select id="getAssetDetailBySubTypeAndStatus"
+            resultType="com.xk.srhwzzqdn.model.vo.assetControl.AssetLedgerVo">
+        SELECT t.id,
+               t.asset_name,
+               t.asset_code,
+               t.asset_no,
+               t.asset_type,
+               t.asset_sub_type,
+               t.amount,
+               t.invest_amount,
+               t.asset_status,
+               t.remark,
+               t.asset_owner,
+               t.update_time,
+               t.update_by,
+               i.name AS assetOwnerName
+        FROM t_asset_ledger t
+                 LEFT JOIN t_sys_person_info i ON i.account_id = t.asset_owner
+        WHERE t.asset_owner = #{assetOwner}
+          <if test="assetType != null">
+              AND t.asset_type = #{assetType}
+          </if>
+          <if test="assetSubType != null">
+              AND t.asset_sub_type = #{assetSubType}
+          </if>
+          <if test="isCleared != null and isCleared == true">
+              AND t.asset_status = 4
+          </if>
+          <if test="isCleared != null and isCleared == false">
+              AND t.asset_status != 4
+          </if>
+        ORDER BY t.update_time DESC
+    </select>
+
+    <!-- 图表：资产类型金额扇形图 -->
+    <select id="getAssetTypeDistribution" resultType="com.xk.srhwzzqdn.model.vo.common.GroupTextValueVo">
+        SELECT (SELECT d.`value` FROM t_sys_dict d WHERE d.type = 'asset_type' AND d.`code` = asset_type LIMIT 1) TEXT,
+               sum(amount) VALUE
+        FROM t_asset_ledger
+        WHERE asset_owner = #{assetOwner}
+        GROUP BY asset_type
+    </select>
+
+    <!-- 图表：指定资产类型的子类金额扇形图 -->
+    <select id="getSubTypeDistribution" resultType="com.xk.srhwzzqdn.model.vo.common.GroupTextValueVo">
+        SELECT (SELECT d.`value` FROM t_sys_dict d WHERE d.type = CONCAT('asset_type_', #{assetType}) AND d.`code` = asset_sub_type LIMIT 1) TEXT,
+               sum(amount) VALUE
+        FROM t_asset_ledger
+        WHERE asset_owner = #{assetOwner}
+          AND asset_type = #{assetType}
+        GROUP BY asset_sub_type
+    </select>
+
+    <!-- 图表：已清仓资产收益条形图（清仓收益=资产金额-投入金额） -->
+    <select id="getClearedAssetProfit" resultType="com.xk.srhwzzqdn.model.vo.common.GroupTextValueVo">
+        SELECT asset_name text,
+               (amount - IFNULL(invest_amount, 0)) value
+        FROM t_asset_ledger
+        WHERE asset_owner = #{assetOwner}
+          AND asset_status = 4
+        ORDER BY (amount - IFNULL(invest_amount, 0)) DESC
+    </select>
+
+</mapper>

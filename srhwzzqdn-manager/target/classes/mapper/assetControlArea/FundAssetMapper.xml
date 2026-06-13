@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.assetControlArea.mapper.FundAssetMapper">
+    <!--基金基本数据入库-->
+    <insert id="addFundAsset">
+        insert into t_fund_asset(
+            fund_code,
+            fund_name,
+            fund_type,
+            establish_date,
+            asset_scale,
+            fund_company,
+            fund_company_desc,
+            custodian,
+            fund_manager,
+            manager_start_date,
+            manager_desc,
+            operation_mode,
+            closed_end_days,
+            purchase_fee_rate,
+            redeem_fee_rate,
+            management_fee_rate,
+            custodian_fee_rate,
+            sales_service_fee_rate,
+            trade_rule,
+            remark,
+            create_time,
+            create_by,
+            return_1m,
+            return_3m,
+            return_6m,
+            return_1y,
+            net_assets,
+            stock_ratio,
+            bond_ratio,
+            cash_ratio,
+            latest_scale,
+            scale_history,
+            institution_ratio,
+            individual_ratio,
+            internal_ratio
+        ) values (
+                   #{fundCode},
+                   #{fundName},
+                   #{fundType},
+                   #{establishDate},
+                   #{assetScale},
+                   #{fundCompany},
+                   #{fundCompanyDesc},
+                   #{custodian},
+                   #{fundManager},
+                   #{managerStartDate},
+                   #{managerDesc},
+                   #{operationMode},
+                   #{closedEndDays},
+                   #{purchaseFeeRate},
+                   #{redeemFeeRate},
+                   #{managementFeeRate},
+                   #{custodianFeeRate},
+                    #{salesServiceFeeRate},
+                    #{tradeRule},
+                    #{remark},
+                    now(),
+                    #{createBy},
+                    #{return1m},
+                    #{return3m},
+                    #{return6m},
+                    #{return1y},
+                    #{netAssets},
+                    #{stockRatio},
+                    #{bondRatio},
+                    #{cashRatio},
+                    #{latestScale},
+                    #{scaleHistory},
+                    #{institutionRatio},
+                    #{individualRatio},
+                    #{internalRatio}
+        )
+    </insert>
+
+    <!--  基金经理数据入库  -->
+    <insert id="addFundManagerAnalysis">
+        insert into t_fund_manager_analysis (
+            fund_code,
+            manager_name,
+            star_rating,
+            work_time,
+            manage_scale,
+            total_score,
+            stock_select_score,
+            return_score,
+            risk_control_score,
+            stability_score,
+            timing_score,
+            manager_desc,
+            concentration_rate_analyse,
+            turnover_rate_analyse,
+            capability_path_analysis,
+            scale_ability_analysis,
+            professional_background,
+            product_management_analysis,
+            stability_analysis,
+            personal_holding,
+            holdings_concentration,
+            turnover_rate,
+            background_match,
+            scale_capability,
+            education,
+            focus_on_this_fund,
+            is_manager_holding,
+            award_records,
+            create_time,
+            create_by
+        ) values (
+                  #{fundCode},
+                  #{managerName},
+                  #{starRating},
+                  #{workTime},
+                  #{manageScale},
+                  #{totalScore},
+                  #{stockSelectScore},
+                  #{returnScore},
+                  #{riskControlScore},
+                  #{stabilityScore},
+                  #{timingScore},
+                  #{managerDesc},
+                  #{concentrationRateAnalyse},
+                  #{turnoverRateAnalyse},
+                  #{capabilityPathAnalysis},
+                  #{scaleAbilityAnalysis},
+                  #{professionalBackground},
+                  #{productManagementAnalysis},
+                  #{stabilityAnalysis},
+                  #{personalHolding},
+                  #{holdingsConcentration},
+                  #{turnoverRate},
+                  #{backgroundMatch},
+                  #{scaleCapability},
+                  #{education},
+                  #{focusOnThisFund},
+                  #{isManagerHolding},
+                  #{awardRecords},
+                  now(),
+                  #{createBy}
+        )
+    </insert>
+
+    <!--  持仓情况入库  -->
+    <insert id="addFundHolding">
+        insert into t_fund_holding (
+            fund_code,
+            hold_shares,
+            available_shares,
+            frozen_shares,
+            cost_amount,
+            market_value,
+            profit_loss,
+            profit_loss_rate,
+            create_time,
+            create_by,
+            owner
+        ) values (
+                  #{fundCode},
+                  #{holdShares},
+                  #{availableShares},
+                  #{frozenShares},
+                  #{costAmount},
+                  #{marketValue},
+                  #{profitLoss},
+                  #{profitLossRate},
+                  now(),
+                  #{createBy},
+                  #{owner}
+        )
+    </insert>
+
+    <!--  添加基金净值数据  -->
+    <insert id="addFundNav">
+        insert into t_fund_nav (
+            fund_code,
+            nav_date,
+            unit_nav,
+            accumulated_nav,
+            daily_change_rate,
+            valuation,
+            create_time
+        ) values (
+                  #{fundCode},
+                  #{navDate},
+                  #{unitNav},
+                  #{accumulatedNav},
+                  #{dailyChangeRate},
+                  #{valuation},
+                  now()
+        )
+    </insert>
+
+    <!--  更新基金基本数据  -->
+    <update id="updateFundBaseAsset">
+        update t_fund_asset
+           set  fund_name = #{fundName},
+                fund_type = #{fundType},
+                establish_date = #{establishDate},
+                asset_scale = #{assetScale},
+                fund_company = #{fundCompany},
+                fund_company_desc = #{fundCompanyDesc},
+                custodian = #{custodian},
+                fund_manager = #{fundManager},
+                manager_start_date = #{managerStartDate},
+                manager_desc = #{managerDesc},
+                operation_mode = #{operationMode},
+                closed_end_days = #{closedEndDays},
+                purchase_fee_rate = #{purchaseFeeRate},
+                redeem_fee_rate = #{redeemFeeRate},
+                management_fee_rate = #{managementFeeRate},
+                custodian_fee_rate = #{custodianFeeRate},
+                sales_service_fee_rate = #{salesServiceFeeRate},
+                trade_rule = #{tradeRule},
+                remark = #{remark},
+                update_time = now(),
+                update_by = #{updateBy},
+                return_1m = #{return1m},
+                return_3m = #{return3m},
+                return_6m = #{return6m},
+                return_1y = #{return1y},
+                net_assets = #{netAssets},
+                stock_ratio = #{stockRatio},
+                bond_ratio = #{bondRatio},
+                cash_ratio = #{cashRatio},
+                latest_scale = #{latestScale},
+                scale_history = #{scaleHistory},
+                institution_ratio = #{institutionRatio},
+                individual_ratio = #{individualRatio},
+                internal_ratio = #{internalRatio}
+        where id = #{id}
+    </update>
+
+    <!--  更新基金经理分析数据  -->
+    <update id="updateFundManagerAnalysis">
+        update t_fund_manager_analysis
+           set  manager_name = #{managerName},
+                star_rating = #{starRating},
+                work_time = #{workTime},
+                manage_scale = #{manageScale},
+                total_score = #{totalScore},
+                stock_select_score = #{stockSelectScore},
+                return_score = #{returnScore},
+                risk_control_score = #{riskControlScore},
+                stability_score = #{stabilityScore},
+                timing_score = #{timingScore},
+                manager_desc = #{managerDesc},
+                concentration_rate_analyse = #{concentrationRateAnalyse},
+                turnover_rate_analyse = #{turnoverRateAnalyse},
+                capability_path_analysis = #{capabilityPathAnalysis},
+                scale_ability_analysis = #{scaleAbilityAnalysis},
+                professional_background = #{professionalBackground},
+                product_management_analysis = #{productManagementAnalysis},
+                stability_analysis = #{stabilityAnalysis},
+                personal_holding = #{personalHolding},
+                holdings_concentration = #{holdingsConcentration},
+                turnover_rate = #{turnoverRate},
+                background_match = #{backgroundMatch},
+                scale_capability = #{scaleCapability},
+                education = #{education},
+                focus_on_this_fund = #{focusOnThisFund},
+                is_manager_holding = #{isManagerHolding},
+                award_records = #{awardRecords},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  更新基金持仓数据  -->
+    <update id="updateFundHolding">
+        update t_fund_holding
+           set  hold_shares = #{holdShares},
+                available_shares = #{availableShares},
+                frozen_shares = #{frozenShares},
+                cost_amount = #{costAmount},
+                market_value = #{marketValue},
+                profit_loss = #{profitLoss},
+                profit_loss_rate = #{profitLossRate},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  更新基金净值数据  -->
+    <update id="updateFundNav">
+        update t_fund_nav
+           set  nav_date = #{navDate},
+                unit_nav = #{unitNav},
+                accumulated_nav = #{accumulatedNav},
+                daily_change_rate = #{dailyChangeRate},
+                valuation = #{valuation},
+                update_time = now()
+        where id = #{id}
+    </update>
+
+    <!--  条件查询基金基本数据列表  -->
+    <select id="getFundBaseDataByCondition" resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundAsset">
+        select t.*
+          from t_fund_asset t
+        <where>
+            <if test="fundName != null and fundName != ''">
+                and t.fund_name like concat('%',#{fundName},'%')
+            </if>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code like concat('%',#{fundCode},'%')
+            </if>
+            <if test="fundType != null and fundType.size() > 0">
+                and t.fund_type in
+                <foreach collection="fundType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="assetScale != null">
+                and t.asset_scale >= #{assetScale}
+            </if>
+            <if test="operationMode != null">
+                and t.operation_mode = #{operationMode}
+            </if>
+            <if test="closedEndDays != null">
+                and t.closed_end_days >= #{closedEndDays}
+            </if>
+        </where>
+        order by t.update_time desc
+    </select>
+
+    <!--  条件查询基金净值列表  -->
+    <select id="getFundNavByCondition" resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundNav">
+        select *
+          from t_fund_nav t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.nav_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.nav_date &lt;= #{endTime}
+            </if>
+        </where>
+        order by t.nav_date desc
+    </select>
+
+    <!--  根据基金代码查询基金经理分析数据  -->
+    <select id="getFundManagerAnalysisByCode"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundManagerAnalysis">
+        select *
+          from t_fund_manager_analysis t
+        where t.fund_code = #{param1}
+    </select>
+
+    <!--    根据基金代码获取基金持仓数据  -->
+    <select id="getFundHoldingByCode" resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundHolding">
+        select *
+          from t_fund_holding t
+        where t.fund_code = #{param1}
+          and t.owner = #{param2}
+    </select>
+
+    <!--  条件查询基金交易列表  -->
+    <select id="getFundTransactionByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundTransaction">
+        select *
+          from t_fund_transaction t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.trade_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.trade_date &lt;= #{endTime}
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        order by t.trade_date desc
+    </select>
+
+    <!--  条件查询基金分红列表  -->
+    <select id="getFundDividendByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundDividend">
+        select *
+          from t_fund_dividend t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.dividend_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.dividend_date &lt;= #{endTime}
+            </if>
+        </where>
+        order by t.dividend_date desc
+    </select>
+
+    <!--  根据基金代码获取基金风险收益数据  -->
+    <select id="getFundRiskPerformance"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundRiskPerformance">
+        select *
+          from t_fund_risk_performance t
+        where t.fund_code = #{param1}
+    </select>
+
+    <!--  条件查询基金持仓数据列表  -->
+    <select id="getFundPortfolioByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.assetControl.FundPortfolio">
+        select *
+          from t_fund_portfolio t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                and t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                and t.portfolio_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.portfolio_date &lt;= #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <!--  获取业绩走势echarts数据   -->
+    <select id="getNaveChartsByCondition" resultType="com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo">
+        WITH base AS (
+        SELECT unit_nav, nav_date
+        FROM t_fund_nav
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                AND fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                AND nav_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND nav_date &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY nav_date ASC
+        LIMIT 1
+        )
+        SELECT
+        t.nav_date,
+        t.unit_nav,
+        t.accumulated_nav,
+        t.daily_change_rate,
+        CASE
+        WHEN t.nav_date = (SELECT nav_date FROM base) THEN 0
+        ELSE ROUND((t.unit_nav - (SELECT unit_nav FROM base)) / (SELECT unit_nav FROM base) * 100, 2)
+        END AS sales_trend
+        FROM t_fund_nav t
+        <where>
+            <if test="fundCode != null and fundCode != ''">
+                AND t.fund_code = #{fundCode}
+            </if>
+            <if test="beginTime != null and beginTime != ''">
+                AND t.nav_date >= #{beginTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                AND t.nav_date &lt;= #{endTime}
+            </if>
+        </where>
+        ORDER BY t.nav_date ASC
+    </select>
+
+    <!--  添加基金交易数据  -->
+    <insert id="addFundTransaction">
+        insert into t_fund_transaction (
+            fund_code,
+            trade_date,
+            trade_type,
+            trade_shares,
+            trade_amount,
+            trade_nav,
+            trade_fee,
+            confirm_date,
+            create_time,
+            create_by,
+            owner
+        ) values (
+                  #{fundCode},
+                  #{tradeDate},
+                  #{tradeType},
+                  #{tradeShares},
+                  #{tradeAmount},
+                  #{tradeNav},
+                  #{tradeFee},
+                  #{confirmDate},
+                  now(),
+                  #{createBy},
+                  #{owner}
+        )
+    </insert>
+
+    <!--  更新基金交易数据  -->
+    <update id="updateFundTransaction">
+        update t_fund_transaction
+           set  trade_date = #{tradeDate},
+                trade_type = #{tradeType},
+                trade_shares = #{tradeShares},
+                trade_amount = #{tradeAmount},
+                trade_nav = #{tradeNav},
+                trade_fee = #{tradeFee},
+                confirm_date = #{confirmDate},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  添加基金分红数据  -->
+    <insert id="addFundDividend">
+        insert into t_fund_dividend (
+            fund_code,
+            dividend_date,
+            arrival_date,
+            dividend_type,
+            dividend_rule,
+            dividend_amount,
+            create_time,
+            create_by
+        ) values (
+                  #{fundCode},
+                  #{dividendDate},
+                  #{arrivalDate},
+                  #{dividendType},
+                  #{dividendRule},
+                  #{dividendAmount},
+                  now(),
+                  #{createBy}
+        )
+    </insert>
+
+    <!--  更新基金分红数据  -->
+    <update id="updateFundDividend">
+        update t_fund_dividend
+           set  dividend_date = #{dividendDate},
+                arrival_date = #{arrivalDate},
+                dividend_type = #{dividendType},
+                dividend_rule = #{dividendRule},
+                dividend_amount = #{dividendAmount},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  添加基金风险绩效数据  -->
+    <insert id="addFundRiskPerformance">
+        insert into t_fund_risk_performance (
+            fund_code,
+            period_type,
+            max_draw_down,
+            recovery_days,
+            annual_return,
+            sharpe_ratio,
+            volatility,
+            create_time,
+            create_by
+        ) values (
+                  #{fundCode},
+                  #{periodType},
+                  #{maxDrawDown},
+                  #{recoveryDays},
+                  #{annualReturn},
+                  #{sharpeRatio},
+                  #{volatility},
+                  now(),
+                  #{createBy}
+        )
+    </insert>
+
+    <!--  更新基金风险绩效数据  -->
+    <update id="updateFundRiskPerformance">
+        update t_fund_risk_performance
+           set  period_type = #{periodType},
+                max_draw_down = #{maxDrawDown},
+                recovery_days = #{recoveryDays},
+                annual_return = #{annualReturn},
+                sharpe_ratio = #{sharpeRatio},
+                volatility = #{volatility},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  添加基金持仓信息数据  -->
+    <insert id="addFundPortfolio">
+        insert into t_fund_portfolio (
+            fund_code,
+            portfolio_date,
+            position_type,
+            position_code,
+            position_name,
+            position_quantity,
+            position_market_value,
+            net_ratio,
+            industry_type,
+            data_source,
+            create_time,
+            create_by
+        ) values (
+                  #{fundCode},
+                  #{portfolioDate},
+                  #{positionType},
+                  #{positionCode},
+                  #{positionName},
+                  #{positionQuantity},
+                  #{positionMarketValue},
+                  #{netRatio},
+                  #{industryType},
+                  #{dataSource},
+                  now(),
+                  #{createBy}
+        )
+    </insert>
+
+    <!--  更新基金持仓信息数据  -->
+    <update id="updateFundPortfolio">
+        update t_fund_portfolio
+           set  portfolio_date = #{portfolioDate},
+                position_type = #{positionType},
+                position_code = #{positionCode},
+                position_name = #{positionName},
+                position_quantity = #{positionQuantity},
+                position_market_value = #{positionMarketValue},
+                net_ratio = #{netRatio},
+                industry_type = #{industryType},
+                data_source = #{dataSource},
+                update_time = now(),
+                update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <!--  根据基金代码批量删除基金持仓信息数据  -->
+    <delete id="deleteFundPortfolioByCodes">
+        delete from t_fund_portfolio where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金风险绩效数据  -->
+    <delete id="deleteFundRiskPerformanceByCodes">
+        delete from t_fund_risk_performance where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金分红数据  -->
+    <delete id="deleteFundDividendByCodes">
+        delete from t_fund_dividend where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金交易数据  -->
+    <delete id="deleteFundTransactionByCodes">
+        delete from t_fund_transaction where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除持仓情况数据  -->
+    <delete id="deleteFundHoldingByCodes">
+        delete from t_fund_holding where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金经理分析数据  -->
+    <delete id="deleteFundManagerAnalysisByCodes">
+        delete from t_fund_manager_analysis where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金净值数据  -->
+    <delete id="deleteFundNavByCodes">
+        delete from t_fund_nav where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  根据基金代码批量删除基金基本数据  -->
+    <delete id="deleteFundAssetByCodes">
+        delete from t_fund_asset where fund_code in
+        <foreach collection="fundCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+    </delete>
+
+    <!--  批量插入基金净值数据  -->
+    <insert id="batchAddFundNav">
+        insert into t_fund_nav (
+            fund_code,
+            nav_date,
+            unit_nav,
+            accumulated_nav,
+            daily_change_rate,
+            valuation,
+            create_time
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.fundCode},
+                #{item.navDate},
+                #{item.unitNav},
+                #{item.accumulatedNav},
+                #{item.dailyChangeRate},
+                #{item.valuation},
+                now()
+            )
+        </foreach>
+    </insert>
+
+    <!--  根据基金代码更新基金可变数据（收益率、资产配置、规模、持有人结构等）  -->
+    <update id="updateFundDynamicDataByCode">
+        update t_fund_asset
+           set return_1m = #{return1m},
+               return_3m = #{return3m},
+               return_6m = #{return6m},
+               return_1y = #{return1y},
+               net_assets = #{netAssets},
+               stock_ratio = #{stockRatio},
+               bond_ratio = #{bondRatio},
+               cash_ratio = #{cashRatio},
+               latest_scale = #{latestScale},
+               institution_ratio = #{institutionRatio},
+               individual_ratio = #{individualRatio},
+               internal_ratio = #{internalRatio},
+               update_time = now(),
+               update_by = #{updateBy}
+        where fund_code = #{fundCode}
+    </update>
+
+    <!--  根据基金代码更新基金经理可变数据（星级、从业时间、管理规模、能力评分等）  -->
+    <update id="updateFundManagerDynamicDataByCode">
+        update t_fund_manager_analysis
+           set manager_name = #{managerName},
+               star_rating = #{starRating},
+               work_time = #{workTime},
+               manage_scale = #{manageScale},
+               total_score = #{totalScore},
+               stock_select_score = #{stockSelectScore},
+               return_score = #{returnScore},
+               risk_control_score = #{riskControlScore},
+               stability_score = #{stabilityScore},
+               timing_score = #{timingScore},
+               update_time = now(),
+               update_by = #{updateBy}
+        where fund_code = #{fundCode}
+    </update>
+
+    <!--  根据基金代码更新持仓信息  -->
+    <update id="updateFundHoldingByCode">
+        update t_fund_holding
+        set  cost_amount = #{costAmount},
+             market_value = #{marketValue},
+             profit_loss = #{profitLoss},
+             profit_loss_rate = #{profitLossRate},
+             update_time = now(),
+             update_by = #{updateBy}
+        where fund_code = #{fundCode}
+    </update>
+
+    <!--  批量插入基金持仓信息数据  -->
+    <insert id="batchAddFundPortfolio">
+        insert into t_fund_portfolio (
+            fund_code,
+            portfolio_date,
+            position_type,
+            position_code,
+            position_name,
+            position_quantity,
+            position_market_value,
+            net_ratio,
+            industry_type,
+            data_source,
+            create_time,
+            create_by
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.fundCode},
+                #{item.portfolioDate},
+                #{item.positionType},
+                #{item.positionCode},
+                #{item.positionName},
+                #{item.positionQuantity},
+                #{item.positionMarketValue},
+                #{item.netRatio},
+                #{item.industryType},
+                #{item.dataSource},
+                now(),
+                #{item.createBy}
+            )
+        </foreach>
+    </insert>
+</mapper>
