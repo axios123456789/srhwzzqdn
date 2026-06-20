@@ -471,6 +471,57 @@
         ORDER BY t.nav_date ASC
     </select>
 
+    <!--  获取业绩分析数据  -->
+    <select id="getPerformanceAnalysisByCondition"
+            resultType="com.xk.srhwzzqdn.model.vo.assetControl.PerformanceAnalysisVo">
+        SELECT
+        -- 最大日涨幅（%）
+        MAX(daily_change_rate) AS maxDayIncrease,
+        -- 最大日跌幅（%）
+        MIN(daily_change_rate) AS maxDayDecrease,
+        -- 超10涨幅天数（日涨跌幅  10）
+        COUNT(CASE WHEN daily_change_rate &gt; 10 THEN 1 END) AS overTenDayIncrease,
+        -- 超10跌幅天数（日涨跌幅 -10）
+        COUNT(CASE WHEN daily_change_rate &lt; -10 THEN 1 END) AS overTenDayDecrease,
+        -- 超10涨幅合计（%）
+        COALESCE(SUM(CASE WHEN daily_change_rate &gt; 10 THEN daily_change_rate ELSE 0 END), 0) AS overTenDayIncreaseSum,
+        -- 超10跌幅合计（%）
+        COALESCE(SUM(CASE WHEN daily_change_rate &lt; -10 THEN daily_change_rate ELSE 0 END), 0) AS overTenDayDecreaseSum,
+        -- 超5涨幅天数（日涨跌幅 > 5）
+        COUNT(CASE WHEN daily_change_rate &gt; 5 THEN 1 END) AS overFiveDayIncrease,
+        -- 超5跌幅天数（日涨跌幅 -5）
+        COUNT(CASE WHEN daily_change_rate &lt; -5 THEN 1 END) AS overFiveDayDecrease,
+        -- 超5涨幅合计（%）
+        COALESCE(SUM(CASE WHEN daily_change_rate &gt; 5 THEN daily_change_rate ELSE 0 END), 0) AS overFiveDayIncreaseSum,
+        -- 超5跌幅合计（%）
+        COALESCE(SUM(CASE WHEN daily_change_rate &lt; -5 THEN daily_change_rate ELSE 0 END), 0) AS overFiveDayDecreaseSum,
+        -- 上涨天数（日涨跌幅 > 0.01，避免浮点数0误差，下同）
+        COUNT(CASE WHEN daily_change_rate &gt; 0.01 THEN 1 END) AS increase,
+        -- 下跌天数（日涨跌幅 -0.01）
+        COUNT(CASE WHEN daily_change_rate &lt; -0.01 THEN 1 END) AS decrease,
+        -- 平盘天数（-0.01 = 日涨跌幅 = 0.01）
+        COUNT(CASE WHEN daily_change_rate BETWEEN -0.01 AND 0.01 THEN 1 END) AS flat,
+        -- 上涨合计（%）
+        COALESCE(SUM(CASE WHEN daily_change_rate &gt; 0.01 THEN daily_change_rate ELSE 0 END), 0) AS increaseSum,
+        -- 下跌合计（%）
+        COALESCE(SUM(CASE WHEN daily_change_rate &lt; -0.01 THEN daily_change_rate ELSE 0 END), 0) AS decreaseSum,
+        -- 总涨幅（%）
+        COALESCE(SUM(daily_change_rate), 0) AS totalIncrease,
+        -- 平均涨跌（%），保留4位小数
+        ROUND(
+        COALESCE(SUM(daily_change_rate) / NULLIF(COUNT(CASE WHEN daily_change_rate IS NOT NULL THEN 1 END), 0), 0),
+        4
+        ) AS averageIncrease
+        FROM t_fund_nav
+        WHERE fund_code = #{fundCode}
+        <if test="beginTime != null and beginTime != ''">
+            AND nav_date &gt;= #{beginTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND nav_date &lt;= #{endTime}
+        </if>
+    </select>
+
     <!--  添加基金交易数据  -->
     <insert id="addFundTransaction">
         insert into t_fund_transaction (

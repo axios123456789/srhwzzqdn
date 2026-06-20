@@ -12,6 +12,7 @@ import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
 import com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo;
+import com.xk.srhwzzqdn.model.vo.assetControl.PerformanceAnalysisVo;
 import com.xk.srhwzzqdn.util.AuthContextUtil;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -903,6 +904,17 @@ public class FundAssetServiceImpl implements FundAssetService {
             //11.更新持仓情况
             fundAssetMapper.updateFundHoldingByCode(fundHolding);
         }
+    }
+
+    /**
+     * 获取业绩分析数据
+     * @param fundComm
+     * @return
+     */
+    @Override
+    public PerformanceAnalysisVo getPerformanceAnalysisByCondition(FundComm fundComm) {
+        fundComm.setOwner(AuthContextUtil.get().getId());
+        return fundAssetMapper.getPerformanceAnalysisByCondition(fundComm);
     }
 
     /**

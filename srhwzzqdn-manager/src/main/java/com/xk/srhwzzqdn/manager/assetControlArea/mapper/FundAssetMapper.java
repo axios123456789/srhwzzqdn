@@ -4,6 +4,7 @@ import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
 import com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo;
+import com.xk.srhwzzqdn.model.vo.assetControl.PerformanceAnalysisVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -194,4 +195,7 @@ public interface FundAssetMapper {
     void updateFundManagerDynamicDataByCode(FundManagerAnalysis fundManagerAnalysis);
 
     void updateFundHoldingByCode(FundHolding fundHolding);
+
+    //获取业绩分析数据
+    PerformanceAnalysisVo getPerformanceAnalysisByCondition(FundComm fundComm);
 }

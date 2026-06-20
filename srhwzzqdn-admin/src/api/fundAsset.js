@@ -409,6 +409,19 @@ export const DeleteFundDataByCodes = (fundCodes) => {
 }
 
 /**
+ * 获取业绩分析数据
+ * @param params 查询参数 { fundCode, beginTime, endTime }
+ * @returns
+ */
+export const GetPerformanceAnalysisByCondition = (params) => {
+  return request({
+    url: `${base_api}/getPerformanceAnalysisByCondition`,
+    method: 'get',
+    params: params
+  })
+}
+
+/**
  * 获取基金重要数据 -> 基金持仓数据插入数据库，基金净值数据插入数据库
  * @param fundCode 基金代码
  * @returns

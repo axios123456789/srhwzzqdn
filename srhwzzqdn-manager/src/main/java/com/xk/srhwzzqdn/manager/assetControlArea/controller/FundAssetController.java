@@ -6,9 +6,9 @@ import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
 import com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo;
+import com.xk.srhwzzqdn.model.vo.assetControl.PerformanceAnalysisVo;
 import com.xk.srhwzzqdn.model.vo.common.Result;
 import com.xk.srhwzzqdn.model.vo.common.ResultCodeEnum;
-import org.apache.ibatis.annotations.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -552,6 +552,17 @@ public class FundAssetController {
             logger.error("获取基金重要数据失败", e);
             return Result.build(null, 500, "获取基金重要数据！");
         }
+    }
+
+    /**
+     * 获取业绩分析数据
+     * @param fundComm
+     * @return
+     */
+    @GetMapping("/getPerformanceAnalysisByCondition")
+    public Result getPerformanceAnalysisByCondition(FundComm fundComm){
+        PerformanceAnalysisVo performanceAnalysisVo = fundAssetService.getPerformanceAnalysisByCondition(fundComm);
+        return Result.build(performanceAnalysisVo, ResultCodeEnum.SUCCESS);
     }
 
 }

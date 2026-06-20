@@ -5,6 +5,7 @@ import com.xk.srhwzzqdn.model.dto.assetControl.FundBaseDateDto;
 import com.xk.srhwzzqdn.model.dto.assetControl.FundComm;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
 import com.xk.srhwzzqdn.model.vo.assetControl.NavEChartsVo;
+import com.xk.srhwzzqdn.model.vo.assetControl.PerformanceAnalysisVo;
 
 import java.text.ParseException;
 import java.util.List;
@@ -108,4 +109,7 @@ public interface FundAssetService {
 
     //获取基金重要数据 -> 基金持仓数据插入数据库，基金净值数据插入数据库
     void addFundImportData(String fundCode);
+
+    //获取业绩分析数据
+    PerformanceAnalysisVo getPerformanceAnalysisByCondition(FundComm fundComm);
 }
