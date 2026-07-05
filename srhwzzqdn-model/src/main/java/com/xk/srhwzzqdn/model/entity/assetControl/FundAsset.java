@@ -116,6 +116,9 @@ public class FundAsset {
     @Schema(description = "内部持有比例(%)")
     private BigDecimal internalRatio;
 
+    @Schema(description = "平均业绩(%)")
+    private BigDecimal averagePerformance;
+
     // ==================== 原有审计字段 ====================
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

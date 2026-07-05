@@ -565,4 +565,20 @@ public class FundAssetController {
         return Result.build(performanceAnalysisVo, ResultCodeEnum.SUCCESS);
     }
 
+    /**
+     * 批量计算所有基金的平均业绩
+     * 获取所有基金实时数据 -> 计算平均业绩 -> 更新到数据库
+     * @return
+     */
+    @PostMapping("/calculateAllFundPerformance")
+    public Result calculateAllFundPerformance() {
+        try {
+            fundAssetService.calculateAllFundPerformance();
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("批量计算基金平均业绩失败", e);
+            return Result.build(null, 500, "批量计算基金平均业绩失败！");
+        }
+    }
+
 }

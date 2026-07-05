@@ -198,4 +198,13 @@ public interface FundAssetMapper {
 
     //获取业绩分析数据
     PerformanceAnalysisVo getPerformanceAnalysisByCondition(FundComm fundComm);
+
+    //获取所有基金代码列表
+    List<String> getAllFundCodes();
+
+    //根据基金代码更新平均业绩
+    void updateAveragePerformanceByCode(FundAsset fundAsset);
+
+    //批量更新基金平均业绩
+    void batchUpdateAveragePerformance(@Param("list") List<FundAsset> list);
 }

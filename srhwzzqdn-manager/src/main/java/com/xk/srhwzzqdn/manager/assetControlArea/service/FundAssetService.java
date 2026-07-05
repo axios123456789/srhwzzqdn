@@ -112,4 +112,7 @@ public interface FundAssetService {
 
     //获取业绩分析数据
     PerformanceAnalysisVo getPerformanceAnalysisByCondition(FundComm fundComm);
+
+    //批量计算所有基金的平均业绩（获取实时数据+计算平均业绩+更新）
+    void calculateAllFundPerformance();
 }

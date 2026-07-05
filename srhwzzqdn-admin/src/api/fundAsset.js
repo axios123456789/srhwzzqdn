@@ -433,3 +433,16 @@ export const AddFundImportData = (fundCode) => {
     timeout: 300000 // 设置5分钟超时，因为接口需要获取外部数据，耗时较长
   })
 }
+
+/**
+ * 批量计算所有基金的平均业绩
+ * 获取所有基金实时数据 -> 计算平均业绩 -> 更新到数据库
+ * @returns
+ */
+export const CalculateAllFundPerformance = () => {
+  return request({
+    url: `${base_api}/calculateAllFundPerformance`,
+    method: 'post',
+    timeout: 600000 // 设置10分钟超时，因为需要批量获取所有基金数据，耗时较长
+  })
+}

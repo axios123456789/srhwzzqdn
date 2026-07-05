@@ -189,6 +189,11 @@
                   <el-input-number v-model="fundData.latestScale" :precision="2" :step="0.01" :min="0" style="width: 100%" controls-position="right" />
                 </el-form-item>
               </el-col>
+              <el-col :span="8">
+                <el-form-item label="平均业绩(%)">
+                  <el-input-number v-model="fundData.averagePerformance" :precision="4" :step="0.0001" style="width: 100%" controls-position="right" disabled />
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-row :gutter="16">
               <el-col :span="24">
@@ -1054,7 +1059,9 @@ const fundData = reactive({
   // 新增占比字段
   stockRatio: null, bondRatio: null, cashRatio: null,
   // 新增持有比例字段
-  institutionRatio: null, individualRatio: null, internalRatio: null
+  institutionRatio: null, individualRatio: null, internalRatio: null,
+  // 平均业绩
+  averagePerformance: null
 })
 
 // ============ 基金经理分析数据 ============
@@ -1902,7 +1909,8 @@ const initDialogData = () => {
     cashRatio: row.cashRatio,
     institutionRatio: row.institutionRatio,
     individualRatio: row.individualRatio,
-    internalRatio: row.internalRatio
+    internalRatio: row.internalRatio,
+    averagePerformance: row.averagePerformance
   })
 
   // 初始化基金经理分析数据 - 改为从后端接口获取

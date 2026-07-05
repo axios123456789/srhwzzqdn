@@ -94,6 +94,10 @@
               <label>最新规模</label>
               <span class="value highlight">{{ props.fundData.latestScale != null ? props.fundData.latestScale + ' 亿' : '-' }}</span>
             </div>
+            <div class="info-item">
+              <label>平均业绩</label>
+              <span class="value" :class="props.fundData.averagePerformance >= 0 ? 'profit-text' : 'loss-text'">{{ props.fundData.averagePerformance != null ? (props.fundData.averagePerformance >= 0 ? '+' : '') + props.fundData.averagePerformance + '%' : '-' }}</span>
+            </div>
             <!-- 新增占比字段 -->
             <div class="info-item">
               <label>股票占比</label>

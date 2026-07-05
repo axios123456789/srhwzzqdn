@@ -92,6 +92,10 @@
         <el-icon><Download /></el-icon>
         一键导出
       </el-button>
+      <el-button type="success" size="small" @click="handleCalculatePerformance" :loading="calcPerformanceLoading" class="action-btn-calc">
+        <el-icon><TrendCharts /></el-icon>
+        业绩计算
+      </el-button>
     </div>
 
     <!-- 卡片列表区（独立滚动块） -->
@@ -111,6 +115,9 @@
               <div class="card-title-row">
                 <span class="card-fund-name clickable" @click="openViewDialog(item)">{{ item.fundName }}</span>
                 <el-tag :type="getFundTypeTagType(getDisplayText(item.fundType, fundTypeOptions))" size="small">{{ getDisplayText(item.fundType, fundTypeOptions) || '未知' }}</el-tag>
+                <el-tag v-if="item.averagePerformance != null" :type="item.averagePerformance >= 0 ? 'success' : 'danger'" size="small" effect="plain" class="card-performance-tag">
+                  平均业绩 {{ item.averagePerformance >= 0 ? '+' : '' }}{{ item.averagePerformance }}%
+                </el-tag>
               </div>
               <div class="card-code">{{ item.fundCode }}</div>
             </div>
@@ -369,11 +376,11 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Coin, Search, Download, Refresh, Delete, Edit } from '@element-plus/icons-vue'
+import { Coin, Search, Download, Refresh, Delete, Edit, TrendCharts } from '@element-plus/icons-vue'
 import FundDetailDialog from './fundDetailDialog/fundDetailDialog.vue'
 import FundViewDialog from './fundDetailDialog/fundViewDialog.vue'
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage, GetFundNavByConditionAndPage, UpdateFundBaseAsset, UpdateFundManagerAnalysis, UpdateFundHolding, DeleteFundDataByCode, DeleteFundDataByCodes } from "@/api/fundAsset"
+import { GetFundBaseDataByCode, GetFundBaseDataByConditionAndPage, GetFundNavByConditionAndPage, UpdateFundBaseAsset, UpdateFundManagerAnalysis, UpdateFundHolding, DeleteFundDataByCode, DeleteFundDataByCodes, CalculateAllFundPerformance } from "@/api/fundAsset"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
 
@@ -590,6 +597,42 @@ const resetQuery = () => {
 const fundList = ref([])
 const total = ref(0)
 const loading = ref(false)
+
+// ============ 业绩计算 ============
+const calcPerformanceLoading = ref(false)
+
+const handleCalculatePerformance = async () => {
+  try {
+    await ElMessageBox.confirm('将批量获取所有基金的实时数据并计算平均业绩，该操作可能需要较长时间，是否继续？', '业绩计算确认', {
+      confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning'
+    })
+  } catch (e) { return }
+
+  calcPerformanceLoading.value = true
+  const calcMessage = ElMessage({
+    message: '正在批量获取基金实时数据并计算平均业绩，请耐心等待...',
+    type: 'info',
+    duration: 0,
+    showClose: false
+  })
+
+  try {
+    const response = await CalculateAllFundPerformance()
+    calcMessage.close()
+    if (response.code === 200) {
+      fetchData()
+      ElMessage.success('业绩计算完成，列表已按平均业绩降序排列')
+    } else {
+      ElMessage.error(response.message || '业绩计算失败')
+    }
+  } catch (error) {
+    calcMessage.close()
+    console.error('业绩计算失败:', error)
+    ElMessage.error('业绩计算失败，请稍后重试')
+  } finally {
+    calcPerformanceLoading.value = false
+  }
+}
 
 // ============ 分页参数 ============
 const pageParams = reactive({ page: 1, limit: 10 })
@@ -1007,6 +1050,22 @@ onMounted(() => {
   box-shadow: 0 4px 12px rgba(79, 172, 254, 0.5) !important;
 }
 
+.action-btn-calc {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(67, 233, 123, 0.4) !important;
+  transition: all 0.3s ease !important;
+  padding: 8px 20px !important;
+}
+
+.action-btn-calc:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(67, 233, 123, 0.5) !important;
+}
+
 /* ====== 卡片列表区 ====== */
 .card-list-section {
   flex: 1;
@@ -1107,6 +1166,12 @@ onMounted(() => {
   align-items: center;
   gap: 10px;
   margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.card-performance-tag {
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .card-fund-name {

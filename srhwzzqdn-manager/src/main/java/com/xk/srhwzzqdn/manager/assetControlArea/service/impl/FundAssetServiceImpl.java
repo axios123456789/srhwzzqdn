@@ -918,6 +918,146 @@ public class FundAssetServiceImpl implements FundAssetService {
     }
 
     /**
+     * 批量计算所有基金的平均业绩
+     * 1.获取所有基金代码
+     * 2.批量获取实时数据（复用addFundImportData逻辑，但跳过持仓更新避免依赖AuthContext）
+     * 3.计算每个基金的平均业绩（全部业绩数据的平均涨跌）
+     * 4.批量更新到t_fund_asset的average_performance字段
+     */
+    @Override
+    @Transactional
+    public void calculateAllFundPerformance() {
+        //1.获取所有基金代码
+        List<String> fundCodes = fundAssetMapper.getAllFundCodes();
+        if (fundCodes == null || fundCodes.isEmpty()) {
+            logger.info("没有基金数据，跳过业绩计算");
+            return;
+        }
+
+        logger.info("开始批量计算{}个基金的平均业绩", fundCodes.size());
+
+        //2.批量获取实时数据（每个基金获取最新净值数据并入库）
+        String fund_base_url = sysDictMapper.getConfigValueById("get_fund_base_data_url");
+        for (String fundCode : fundCodes) {
+            try {
+                String fund_url = fund_base_url.replace("{fund_code}", fundCode);
+                String fund_content = fetchFundData(fund_url);
+                if (fund_content == null) {
+                    logger.warn("基金{}获取实时数据失败，跳过", fundCode);
+                    continue;
+                }
+
+                FundDataParser.FundData fundData = FundDataParser.parseAllFundData(fund_content);
+                if (fundData.getFundCode() == null) {
+                    logger.warn("基金{}数据解析失败，跳过", fundCode);
+                    continue;
+                }
+
+                //2.1 增量插入净值数据
+                List<FundDataParser.NavData> mergedNavList = fundData.getMergedWorthTrend();
+                if (mergedNavList != null && !mergedNavList.isEmpty()) {
+                    Date latestNavDateInDb = fundAssetMapper.getLatestNavDate(fundCode);
+                    List<FundNav> navList = new ArrayList<>();
+                    for (FundDataParser.NavData navData : mergedNavList) {
+                        if (latestNavDateInDb != null && !navData.getDate().after(latestNavDateInDb)) {
+                            continue;
+                        }
+                        FundNav fundNav = new FundNav();
+                        fundNav.setFundCode(fundCode);
+                        fundNav.setNavDate(navData.getDate());
+                        fundNav.setUnitNav(navData.getNav());
+                        fundNav.setAccumulatedNav(navData.getAccumulatedNav());
+                        fundNav.setDailyChangeRate(navData.getDailyReturn());
+                        navList.add(fundNav);
+                    }
+                    if (!navList.isEmpty()) {
+                        fundAssetMapper.batchAddFundNav(navList);
+                        logger.info("基金{}新增净值数据{}条", fundCode, navList.size());
+                    }
+                }
+
+                //2.2 更新基金可变数据
+                if (fundAssetMapper.isExistByCode(fundCode) > 0) {
+                    FundAsset updateAsset = new FundAsset();
+                    updateAsset.setFundCode(fundCode);
+                    updateAsset.setUpdateBy("system");
+                    if (fundData.getReturn1Month() != null) {
+                        updateAsset.setReturn1m(BigDecimal.valueOf(fundData.getReturn1Month()));
+                    }
+                    if (fundData.getReturn3Month() != null) {
+                        updateAsset.setReturn3m(BigDecimal.valueOf(fundData.getReturn3Month()));
+                    }
+                    if (fundData.getReturn6Month() != null) {
+                        updateAsset.setReturn6m(BigDecimal.valueOf(fundData.getReturn6Month()));
+                    }
+                    if (fundData.getReturn1Year() != null) {
+                        updateAsset.setReturn1y(BigDecimal.valueOf(fundData.getReturn1Year()));
+                    }
+                    FundDataParser.AssetAllocation assetAllocation = fundData.getAssetAllocation();
+                    if (assetAllocation != null) {
+                        if (assetAllocation.getStockRatio() != null && !assetAllocation.getStockRatio().isEmpty()) {
+                            updateAsset.setStockRatio(BigDecimal.valueOf(assetAllocation.getStockRatio().get(assetAllocation.getStockRatio().size() - 1)));
+                        }
+                        if (assetAllocation.getBondRatio() != null && !assetAllocation.getBondRatio().isEmpty()) {
+                            updateAsset.setBondRatio(BigDecimal.valueOf(assetAllocation.getBondRatio().get(assetAllocation.getBondRatio().size() - 1)));
+                        }
+                        if (assetAllocation.getCashRatio() != null && !assetAllocation.getCashRatio().isEmpty()) {
+                            updateAsset.setCashRatio(BigDecimal.valueOf(assetAllocation.getCashRatio().get(assetAllocation.getCashRatio().size() - 1)));
+                        }
+                    }
+                    FundDataParser.FluctuationScale fluctuationScale = fundData.getFluctuationScale();
+                    if (fluctuationScale != null && fluctuationScale.getScale() != null && !fluctuationScale.getScale().isEmpty()) {
+                        updateAsset.setLatestScale(BigDecimal.valueOf(fluctuationScale.getScale().get(fluctuationScale.getScale().size() - 1)));
+                    }
+                    FundDataParser.HolderStructure holderStructure = fundData.getHolderStructure();
+                    if (holderStructure != null) {
+                        if (holderStructure.getInstitutionRatio() != null && !holderStructure.getInstitutionRatio().isEmpty()) {
+                            updateAsset.setInstitutionRatio(BigDecimal.valueOf(holderStructure.getInstitutionRatio().get(holderStructure.getInstitutionRatio().size() - 1)));
+                        }
+                        if (holderStructure.getIndividualRatio() != null && !holderStructure.getIndividualRatio().isEmpty()) {
+                            updateAsset.setIndividualRatio(BigDecimal.valueOf(holderStructure.getIndividualRatio().get(holderStructure.getIndividualRatio().size() - 1)));
+                        }
+                        if (holderStructure.getInternalRatio() != null && !holderStructure.getInternalRatio().isEmpty()) {
+                            updateAsset.setInternalRatio(BigDecimal.valueOf(holderStructure.getInternalRatio().get(holderStructure.getInternalRatio().size() - 1)));
+                        }
+                    }
+                    fundAssetMapper.updateFundDynamicDataByCode(updateAsset);
+                }
+            } catch (Exception e) {
+                logger.error("基金{}获取实时数据异常，跳过: {}", fundCode, e.getMessage());
+            }
+        }
+
+        //3.计算每个基金的平均业绩（全部业绩数据的平均涨跌，不传时间范围）
+        List<FundAsset> updateList = new ArrayList<>();
+        for (String fundCode : fundCodes) {
+            try {
+                FundComm fundComm = new FundComm();
+                fundComm.setFundCode(fundCode);
+                // 不传时间范围，计算全部业绩数据的平均涨跌
+                PerformanceAnalysisVo analysis = fundAssetMapper.getPerformanceAnalysisByCondition(fundComm);
+                if (analysis != null && analysis.getAverageIncrease() != null) {
+                    FundAsset fundAsset = new FundAsset();
+                    fundAsset.setFundCode(fundCode);
+                    fundAsset.setAveragePerformance(analysis.getAverageIncrease());
+                    fundAsset.setUpdateBy("system");
+                    updateList.add(fundAsset);
+                }
+            } catch (Exception e) {
+                logger.error("基金{}计算平均业绩异常，跳过: {}", fundCode, e.getMessage());
+            }
+        }
+
+        //4.批量更新平均业绩到数据库
+        if (!updateList.isEmpty()) {
+            for (FundAsset item : updateList) {
+                fundAssetMapper.updateAveragePerformanceByCode(item);
+            }
+            logger.info("批量更新{}个基金的平均业绩完成", updateList.size());
+        }
+    }
+
+    /**
      * 打印基金数据到控制台
      * 按模块分类输出解析结果，便于查看和调试
      *
