@@ -8,6 +8,8 @@ const humanNatureExperimentRun = () =>
   import('@/views/trialExecutionArea/humanNatureExperimentRun.vue')
 const bypassExperimentRun = () =>
   import('@/views/trialExecutionArea/bypassExperimentRun.vue')
+const transactionSystemTrial = () =>
+  import('@/views/trialExecutionArea/transactionSystemTrial.vue')
 
 // 导出该组件
 export default [
@@ -58,6 +60,16 @@ export default [
           title: '旁通试验开展',
         },
         icon: 'Connection', // 连接图标象征旁通路径
+        hidden: false,
+      },
+      {
+        path: '/transactionSystemTrial',
+        name: 'transactionSystemTrial',
+        component: transactionSystemTrial,
+        meta: {
+          title: '交易系统试验',
+        },
+        icon: 'goods', // 连接图标象征旁通路径
         hidden: false,
       },
     ],
