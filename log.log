@@ -17621,3 +17621,249 @@ Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立
 2026-07-10 18:14:43 HikariPool-1 - Starting...
 2026-07-10 18:14:43 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@53d93b89
 2026-07-10 18:14:43 HikariPool-1 - Start completed.
+2026-07-10 20:13:46 HikariPool-1 - Shutdown initiated...
+2026-07-10 20:13:46 HikariPool-1 - Shutdown completed.
+2026-07-10 20:17:10 Starting ManagerApplication using Java 17.0.17 with PID 14112 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-10 20:17:10 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-10 20:17:10 The following 1 profile is active: "dev"
+2026-07-10 20:17:11 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-10 20:17:11 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-10 20:17:11 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-07-10 20:17:11 Tomcat initialized with port(s): 8400 (http)
+2026-07-10 20:17:11 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-10 20:17:11 Starting service [Tomcat]
+2026-07-10 20:17:11 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-10 20:17:12 Initializing Spring embedded WebApplicationContext
+2026-07-10 20:17:12 Root WebApplicationContext: initialization completed in 1023 ms
+2026-07-10 20:17:13 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-10 20:17:13 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-10 20:17:13 Started ManagerApplication in 2.764 seconds (process running for 3.642)
+2026-07-10 20:18:22 Starting ManagerApplication using Java 17.0.17 with PID 4580 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-10 20:18:22 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-10 20:18:22 The following 1 profile is active: "dev"
+2026-07-10 20:18:23 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-10 20:18:23 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-10 20:18:23 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-07-10 20:18:23 Tomcat initialized with port(s): 8400 (http)
+2026-07-10 20:18:23 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-10 20:18:23 Starting service [Tomcat]
+2026-07-10 20:18:23 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-10 20:18:23 Initializing Spring embedded WebApplicationContext
+2026-07-10 20:18:23 Root WebApplicationContext: initialization completed in 1179 ms
+2026-07-10 20:18:25 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-10 20:18:25 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-10 20:18:25 Started ManagerApplication in 3.74 seconds (process running for 4.513)
+2026-07-10 20:18:42 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-10 20:18:42 Initializing Servlet 'dispatcherServlet'
+2026-07-10 20:18:42 Completed initialization in 0 ms
+2026-07-10 20:18:49 HikariPool-1 - Starting...
+2026-07-10 20:18:49 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5ba886a1
+2026-07-10 20:18:49 HikariPool-1 - Start completed.
+2026-07-10 20:50:22 HikariPool-1 - Shutdown initiated...
+2026-07-10 20:50:22 HikariPool-1 - Shutdown completed.
+2026-07-10 20:50:37 Starting ManagerApplication using Java 17.0.17 with PID 28560 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-10 20:50:37 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-10 20:50:37 The following 1 profile is active: "dev"
+2026-07-10 20:50:38 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-10 20:50:38 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-10 20:50:38 Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-07-10 20:50:38 Tomcat initialized with port(s): 8400 (http)
+2026-07-10 20:50:38 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-10 20:50:38 Starting service [Tomcat]
+2026-07-10 20:50:38 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-10 20:50:38 Initializing Spring embedded WebApplicationContext
+2026-07-10 20:50:38 Root WebApplicationContext: initialization completed in 1120 ms
+2026-07-10 20:50:39 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-10 20:50:39 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-10 20:50:40 Started ManagerApplication in 2.879 seconds (process running for 3.821)
+2026-07-10 20:50:45 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-10 20:50:45 Initializing Servlet 'dispatcherServlet'
+2026-07-10 20:50:45 Completed initialization in 2 ms
+2026-07-10 20:50:46 HikariPool-1 - Starting...
+2026-07-10 20:50:46 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7cba4408
+2026-07-10 20:50:46 HikariPool-1 - Start completed.
+2026-07-10 20:56:19 HikariPool-1 - Shutdown initiated...
+2026-07-10 20:56:19 HikariPool-1 - Shutdown completed.
+2026-07-10 20:56:22 Starting ManagerApplication using Java 17.0.17 with PID 9072 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-10 20:56:22 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-10 20:56:22 The following 1 profile is active: "dev"
+2026-07-10 20:56:23 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-10 20:56:23 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-10 20:56:23 Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2026-07-10 20:56:24 Tomcat initialized with port(s): 8400 (http)
+2026-07-10 20:56:24 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-10 20:56:24 Starting service [Tomcat]
+2026-07-10 20:56:24 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-10 20:56:24 Initializing Spring embedded WebApplicationContext
+2026-07-10 20:56:24 Root WebApplicationContext: initialization completed in 1636 ms
+2026-07-10 20:56:25 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-10 20:56:25 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-10 20:56:25 Started ManagerApplication in 3.825 seconds (process running for 4.486)
+2026-07-10 20:56:29 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-10 20:56:29 Initializing Servlet 'dispatcherServlet'
+2026-07-10 20:56:29 Completed initialization in 2 ms
+2026-07-10 20:56:30 HikariPool-1 - Starting...
+2026-07-10 20:56:30 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@76b15c1
+2026-07-10 20:56:30 HikariPool-1 - Start completed.
+2026-07-10 21:02:53 HikariPool-1 - Shutdown initiated...
+2026-07-10 21:02:53 HikariPool-1 - Shutdown completed.
+2026-07-10 21:02:55 Starting ManagerApplication using Java 17.0.17 with PID 23032 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-10 21:02:55 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-10 21:02:55 The following 1 profile is active: "dev"
+2026-07-10 21:02:56 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-10 21:02:56 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-10 21:02:56 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-07-10 21:02:56 Tomcat initialized with port(s): 8400 (http)
+2026-07-10 21:02:56 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-10 21:02:56 Starting service [Tomcat]
+2026-07-10 21:02:56 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-10 21:02:56 Initializing Spring embedded WebApplicationContext
+2026-07-10 21:02:56 Root WebApplicationContext: initialization completed in 1023 ms
+2026-07-10 21:02:58 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-10 21:02:58 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-10 21:02:58 Started ManagerApplication in 2.779 seconds (process running for 3.279)
+2026-07-10 21:03:04 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-10 21:03:04 Initializing Servlet 'dispatcherServlet'
+2026-07-10 21:03:04 Completed initialization in 2 ms
+2026-07-10 21:03:05 HikariPool-1 - Starting...
+2026-07-10 21:03:05 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6dc8df75
+2026-07-10 21:03:05 HikariPool-1 - Start completed.
+2026-07-10 21:13:14 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m8s493ms456µs).
+2026-07-10 21:41:51 HikariPool-1 - Shutdown initiated...
+2026-07-10 21:41:51 HikariPool-1 - Shutdown completed.
+2026-07-10 21:42:10 Starting ManagerApplication using Java 17.0.17 with PID 23784 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-10 21:42:10 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-10 21:42:10 The following 1 profile is active: "dev"
+2026-07-10 21:42:11 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-10 21:42:11 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-10 21:42:11 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-07-10 21:42:11 Tomcat initialized with port(s): 8400 (http)
+2026-07-10 21:42:11 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-10 21:42:11 Starting service [Tomcat]
+2026-07-10 21:42:11 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-10 21:42:12 Initializing Spring embedded WebApplicationContext
+2026-07-10 21:42:12 Root WebApplicationContext: initialization completed in 1095 ms
+2026-07-10 21:42:13 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-10 21:42:13 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-10 21:42:13 Started ManagerApplication in 2.845 seconds (process running for 3.776)
+2026-07-10 21:42:18 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-10 21:42:18 Initializing Servlet 'dispatcherServlet'
+2026-07-10 21:42:18 Completed initialization in 2 ms
+2026-07-10 21:42:18 HikariPool-1 - Starting...
+2026-07-10 21:42:19 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6ea7e83b
+2026-07-10 21:42:19 HikariPool-1 - Start completed.
+2026-07-10 22:10:49 HikariPool-1 - Shutdown initiated...
+2026-07-10 22:10:49 HikariPool-1 - Shutdown completed.
+2026-07-10 22:10:55 Starting ManagerApplication using Java 17.0.17 with PID 25356 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-10 22:10:55 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-10 22:10:55 The following 1 profile is active: "dev"
+2026-07-10 22:10:55 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-10 22:10:55 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-10 22:10:55 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-07-10 22:10:56 Tomcat initialized with port(s): 8400 (http)
+2026-07-10 22:10:56 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-10 22:10:56 Starting service [Tomcat]
+2026-07-10 22:10:56 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-10 22:10:56 Initializing Spring embedded WebApplicationContext
+2026-07-10 22:10:56 Root WebApplicationContext: initialization completed in 1042 ms
+2026-07-10 22:10:57 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-10 22:10:57 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-10 22:10:57 Started ManagerApplication in 2.822 seconds (process running for 3.296)
+2026-07-10 22:11:42 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-10 22:11:42 Initializing Servlet 'dispatcherServlet'
+2026-07-10 22:11:42 Completed initialization in 2 ms
+2026-07-10 22:11:43 HikariPool-1 - Starting...
+2026-07-10 22:11:43 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@73c6b040
+2026-07-10 22:11:43 HikariPool-1 - Start completed.
+2026-07-10 22:53:04 HikariPool-1 - Shutdown initiated...
+2026-07-10 22:53:04 HikariPool-1 - Shutdown completed.
+2026-07-11 11:26:29 Starting ManagerApplication using Java 17.0.17 with PID 8944 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-11 11:26:29 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-11 11:26:29 The following 1 profile is active: "dev"
+2026-07-11 11:26:30 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-11 11:26:30 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-11 11:26:30 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-07-11 11:26:30 Tomcat initialized with port(s): 8400 (http)
+2026-07-11 11:26:30 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-11 11:26:30 Starting service [Tomcat]
+2026-07-11 11:26:30 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-11 11:26:31 Initializing Spring embedded WebApplicationContext
+2026-07-11 11:26:31 Root WebApplicationContext: initialization completed in 1389 ms
+2026-07-11 11:26:32 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-11 11:26:32 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-11 11:26:32 Started ManagerApplication in 3.498 seconds (process running for 5.239)
+2026-07-11 11:27:15 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-11 11:27:15 Initializing Servlet 'dispatcherServlet'
+2026-07-11 11:27:15 Completed initialization in 2 ms
+2026-07-11 11:27:20 HikariPool-1 - Starting...
+2026-07-11 11:27:20 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4a867017
+2026-07-11 11:27:20 HikariPool-1 - Start completed.
+2026-07-11 22:46:42 HikariPool-1 - Shutdown initiated...
+2026-07-11 22:46:42 HikariPool-1 - Shutdown completed.
+2026-07-12 09:32:02 Starting ManagerApplication using Java 17.0.17 with PID 10096 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-12 09:32:02 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-12 09:32:02 The following 1 profile is active: "dev"
+2026-07-12 09:32:03 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-12 09:32:03 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-12 09:32:03 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-07-12 09:32:03 Tomcat initialized with port(s): 8400 (http)
+2026-07-12 09:32:03 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-12 09:32:03 Starting service [Tomcat]
+2026-07-12 09:32:03 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-12 09:32:03 Initializing Spring embedded WebApplicationContext
+2026-07-12 09:32:03 Root WebApplicationContext: initialization completed in 1654 ms
+2026-07-12 09:32:05 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-12 09:32:05 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-12 09:32:05 Started ManagerApplication in 3.809 seconds (process running for 5.976)
+2026-07-12 09:32:36 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 09:32:36 Initializing Servlet 'dispatcherServlet'
+2026-07-12 09:32:36 Completed initialization in 0 ms
+2026-07-12 09:32:42 HikariPool-1 - Starting...
+2026-07-12 09:32:42 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4d922695
+2026-07-12 09:32:42 HikariPool-1 - Start completed.
+2026-07-12 11:03:45 HikariPool-1 - Shutdown initiated...
+2026-07-12 11:03:45 HikariPool-1 - Shutdown completed.
+2026-07-12 11:04:01 Starting ManagerApplication using Java 17.0.17 with PID 30892 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-12 11:04:01 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-12 11:04:01 The following 1 profile is active: "dev"
+2026-07-12 11:04:01 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-12 11:04:01 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-12 11:04:01 Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-07-12 11:04:02 Tomcat initialized with port(s): 8400 (http)
+2026-07-12 11:04:02 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-12 11:04:02 Starting service [Tomcat]
+2026-07-12 11:04:02 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-12 11:04:02 Initializing Spring embedded WebApplicationContext
+2026-07-12 11:04:02 Root WebApplicationContext: initialization completed in 1159 ms
+2026-07-12 11:04:03 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-12 11:04:03 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-12 11:04:03 Started ManagerApplication in 2.89 seconds (process running for 4.064)
+2026-07-12 11:07:02 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 11:07:02 Initializing Servlet 'dispatcherServlet'
+2026-07-12 11:07:02 Completed initialization in 3 ms
+2026-07-12 11:07:03 HikariPool-1 - Starting...
+2026-07-12 11:07:03 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@8de85b4
+2026-07-12 11:07:03 HikariPool-1 - Start completed.
+2026-07-12 15:59:48 HikariPool-1 - Shutdown initiated...
+2026-07-12 15:59:48 HikariPool-1 - Shutdown completed.
+2026-07-12 15:59:54 Starting ManagerApplication using Java 17.0.17 with PID 15520 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-07-12 15:59:54 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-07-12 15:59:54 The following 1 profile is active: "dev"
+2026-07-12 15:59:54 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-12 15:59:54 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-12 15:59:54 Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-07-12 15:59:55 Tomcat initialized with port(s): 8400 (http)
+2026-07-12 15:59:55 Initializing ProtocolHandler ["http-nio-8400"]
+2026-07-12 15:59:55 Starting service [Tomcat]
+2026-07-12 15:59:55 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-07-12 15:59:55 Initializing Spring embedded WebApplicationContext
+2026-07-12 15:59:55 Root WebApplicationContext: initialization completed in 1201 ms
+2026-07-12 15:59:56 Starting ProtocolHandler ["http-nio-8400"]
+2026-07-12 15:59:56 Tomcat started on port(s): 8400 (http) with context path ''
+2026-07-12 15:59:56 Started ManagerApplication in 3.048 seconds (process running for 3.583)
+2026-07-12 16:00:01 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-12 16:00:01 Initializing Servlet 'dispatcherServlet'
+2026-07-12 16:00:01 Completed initialization in 2 ms
+2026-07-12 16:00:02 HikariPool-1 - Starting...
+2026-07-12 16:00:02 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@fcdde08
+2026-07-12 16:00:02 HikariPool-1 - Start completed.
