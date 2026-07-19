@@ -40,14 +40,14 @@ export function getTodayTimeRange() {
 
 // 通用方法：根据值和映射表获取中文文本
 export function getDisplayText(value, mappingArray) {
-  if (!value) return '-'
+  if (value === null || value === undefined || value === '') return '-'
   const foundItem = mappingArray.find(item => item.value === value)
   return foundItem ? foundItem.text : value
 }
 
 //通用方法：根据值和映射表获取中文文本值（树形）
 export function getDisplayTextByTree(value, treeData){
-  if (!value) return '-'
+  if (value === null || value === undefined || value === '') return '-'
 
   const traverse = nodes => {
     for (const node of nodes) {

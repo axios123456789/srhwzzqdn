@@ -8,21 +8,23 @@
       </h1>
     </div>
 
-    <!-- 交易规则块 -->
-    <div class="rule-div">
-      <div class="rule-header">
-        <span class="rule-title">交易规则</span>
-        <div class="rule-actions">
-          <el-button type="success" size="small" @click="addRule">
-            <el-icon><DocumentAdd /></el-icon>
-            添加规则
-          </el-button>
-          <el-button type="danger" size="small" @click="deleteRuleAll" :disabled="ruleSelectedRows.length === 0">
-            <el-icon><Delete /></el-icon>
-            批量删除
-          </el-button>
-        </div>
-      </div>
+    <!-- 标签页 -->
+    <el-tabs v-model="activeTab" class="main-tabs">
+      <!-- 交易规则标签页 -->
+      <el-tab-pane label="交易规则" name="rule">
+        <div class="rule-div">
+          <div class="rule-header">
+            <div class="rule-actions">
+              <el-button type="success" size="small" @click="addRule">
+                <el-icon><DocumentAdd /></el-icon>
+                添加规则
+              </el-button>
+              <el-button type="danger" size="small" @click="deleteRuleAll" :disabled="ruleSelectedRows.length === 0">
+                <el-icon><Delete /></el-icon>
+                批量删除
+              </el-button>
+            </div>
+          </div>
       <!-- 规则筛选条件 -->
       <div class="rule-search-div">
         <el-form label-width="80px" size="small" inline>
@@ -59,7 +61,7 @@
       <el-table
         :data="filteredRuleList"
         style="width: 100%"
-        height="320"
+        :height="ruleTableHeight"
         ref="ruleTable"
         @selection-change="handleRuleSelectionChange"
         border
@@ -101,15 +103,28 @@
         <el-table-column prop="complySuccessCount" label="遵守成功次数" align="center" min-width="110" />
         <el-table-column prop="violateSuccessCount" label="违反成功次数" align="center" min-width="110" />
         <el-table-column prop="violatePenalty" label="违反惩罚" align="center" min-width="120" show-overflow-tooltip />
+        <el-table-column label="遵守成功率" align="center" min-width="100">
+          <template #default="scope">
+            <span :class="getRateClass(calcComplySuccessRate(scope.row))">
+              {{ calcComplySuccessRate(scope.row) }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="违反成功率" align="center" min-width="100">
+          <template #default="scope">
+            <span :class="getRateClass(calcViolateSuccessRate(scope.row))">
+              {{ calcViolateSuccessRate(scope.row) }}
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column prop="sortOrder" label="排序" align="center" min-width="60" />
       </el-table>
-    </div>
+        </div>
+      </el-tab-pane>
 
-    <!-- 交易试验记录块 -->
-    <div class="trial-div">
-      <div class="trial-header">
-        <span class="trial-title">交易试验记录</span>
-      </div>
+      <!-- 交易试验记录标签页 -->
+      <el-tab-pane label="交易试验记录" name="trial">
+        <div class="trial-div">
       <!-- 搜索表单区域 -->
       <div class="search-div">
         <div class="search-header">
@@ -241,7 +256,11 @@
         stripe
       >
         <el-table-column type="selection" width="40" align="center" />
-        <el-table-column label="操作" align="center" fixed="left" width="180" #default="scope">
+        <el-table-column label="操作" align="center" fixed="left" width="240" #default="scope">
+          <el-button type="info" size="small" @click="viewTrialDetail(scope.row)">
+            <el-icon><View /></el-icon>
+            查看
+          </el-button>
           <el-button type="primary" size="small" @click="editRecord(scope.row)">
             <el-icon><Edit /></el-icon>
             编辑
@@ -305,6 +324,7 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="planContent" label="计划内容" align="center" min-width="150" show-overflow-tooltip />
         <el-table-column prop="planStartTime" label="计划开始时间" align="center" width="160" />
         <el-table-column prop="resultReview" label="结果复盘" align="center" min-width="150" show-overflow-tooltip />
       </el-table>
@@ -320,7 +340,11 @@
         layout="total, sizes, prev, pager, next"
         :total="total"
       />
-    </div>    <!-- 交易规则 详情查看对话框 -->
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+
+    <!-- 交易规则 详情查看对话框 -->
     <el-dialog
       v-model="ruleDetailVisible"
       title="规则详情"
@@ -396,6 +420,22 @@
               <div class="stat-card">
                 <div class="stat-value warning">{{ ruleDetailData.violateSuccessCount || 0 }}</div>
                 <div class="stat-label">违反成功次数</div>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="16" style="margin-top: 16px;">
+            <el-col :span="12">
+              <div class="stat-card rate-card">
+                <div class="stat-value" :class="getRateClass(calcComplySuccessRate(ruleDetailData))">{{ calcComplySuccessRate(ruleDetailData) }}</div>
+                <div class="stat-label">遵守规则成功率</div>
+                <div class="rate-formula">遵守成功次数 / 使用次数</div>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <div class="stat-card rate-card">
+                <div class="stat-value" :class="getRateClass(calcViolateSuccessRate(ruleDetailData))">{{ calcViolateSuccessRate(ruleDetailData) }}</div>
+                <div class="stat-label">违反规则成功率</div>
+                <div class="rate-formula">违反成功次数 / 违反次数</div>
               </div>
             </el-col>
           </el-row>
@@ -639,6 +679,133 @@
       </template>
     </el-dialog>
 
+    <!-- 交易试验记录 详情查看对话框 -->
+    <el-dialog
+      v-model="trialDetailVisible"
+      title="试验记录详情"
+      width="60%"
+      class="custom-dialog enhanced-dialog"
+      :close-on-click-modal="true"
+    >
+      <div class="trial-detail-container" v-if="trialDetailData">
+        <!-- 交易信息区 -->
+        <div class="detail-section">
+          <div class="detail-section-title">交易信息</div>
+          <el-descriptions :column="2" border size="default">
+            <el-descriptions-item label="交易对象" :span="1">
+              <span class="detail-value highlight">{{ trialDetailData.targetName || '-' }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="交易类型" :span="1">
+              <el-tag type="warning" size="small">{{ getDisplayText(trialDetailData.tradeType, tradeTypeOptions) }}</el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="计划类型" :span="1">
+              <el-tag size="small">{{ getDisplayText(trialDetailData.planType, planTypeOptions) }}</el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="交易状态" :span="1">
+              <el-tag :type="getTradeStatusTagType(trialDetailData.tradeStatus)" size="small">
+                {{ getDisplayText(trialDetailData.tradeStatus, tradeStatusOptions) }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="交易结果" :span="1">
+              <el-tag :type="trialDetailData.tradeResult === 1 ? 'success' : 'danger'" size="small">
+                {{ getDisplayText(trialDetailData.tradeResult, tradeResultOptions) }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="失败类型" :span="1">
+              <span class="detail-value">{{ getDisplayText(trialDetailData.tradeFailType, tradeFailTypeOptions) || '-' }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="是否触发计划" :span="1">
+              <el-tag :type="trialDetailData.isUsePlan === 1 ? 'success' : 'info'" size="small">
+                {{ trialDetailData.isUsePlan === 1 ? '是' : '否' }}
+              </el-tag>
+            </el-descriptions-item>
+            <el-descriptions-item label="创建时间" :span="1">
+              <span class="detail-value">{{ trialDetailData.createTime || '-' }}</span>
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <!-- 价格信息区 -->
+        <div class="detail-section">
+          <div class="detail-section-title">价格信息</div>
+          <el-row :gutter="16">
+            <el-col :span="4">
+              <div class="stat-card">
+                <div class="stat-value primary">{{ trialDetailData.currentPrice != null ? Number(trialDetailData.currentPrice).toFixed(2) : '-' }}</div>
+                <div class="stat-label">当前价</div>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="stat-card">
+                <div class="stat-value primary">{{ trialDetailData.planPrice != null ? Number(trialDetailData.planPrice).toFixed(2) : '-' }}</div>
+                <div class="stat-label">计划价</div>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="stat-card">
+                <div class="stat-value success">{{ trialDetailData.openPrice != null ? Number(trialDetailData.openPrice).toFixed(2) : '-' }}</div>
+                <div class="stat-label">开盘价</div>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="stat-card">
+                <div class="stat-value warning">{{ trialDetailData.actualPrice != null ? Number(trialDetailData.actualPrice).toFixed(2) : '-' }}</div>
+                <div class="stat-label">成交价</div>
+              </div>
+            </el-col>
+            <el-col :span="4">
+              <div class="stat-card">
+                <div class="stat-value danger">{{ trialDetailData.closePrice != null ? Number(trialDetailData.closePrice).toFixed(2) : '-' }}</div>
+                <div class="stat-label">收盘价</div>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+        <!-- 计划信息区 -->
+        <div class="detail-section">
+          <div class="detail-section-title">计划信息</div>
+          <el-descriptions :column="2" border size="default">
+            <el-descriptions-item label="计划开始时间" :span="1">
+              <span class="detail-value">{{ trialDetailData.planStartTime || '-' }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="计划结束时间" :span="1">
+              <span class="detail-value">{{ trialDetailData.planEndTime || '-' }}</span>
+            </el-descriptions-item>
+          </el-descriptions>
+          <el-descriptions :column="1" border size="default" style="margin-top: 0;">
+            <el-descriptions-item label="计划内容">
+              <div class="detail-text-block">{{ trialDetailData.planContent || '-' }}</div>
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <!-- 规则关联区 -->
+        <div class="detail-section">
+          <div class="detail-section-title">规则关联</div>
+          <el-descriptions :column="2" border size="default">
+            <el-descriptions-item label="遵守规则">
+              <div class="detail-text-block">{{ getRuleNames(trialDetailData.complyRuleIds) }}</div>
+            </el-descriptions-item>
+            <el-descriptions-item label="违反规则">
+              <div class="detail-text-block penalty-text">{{ getRuleNames(trialDetailData.violateRuleIds) }}</div>
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <!-- 结果复盘区 -->
+        <div class="detail-section">
+          <div class="detail-section-title">结果复盘</div>
+          <el-descriptions :column="1" border size="default">
+            <el-descriptions-item label="结果复盘">
+              <div class="detail-text-block">{{ trialDetailData.resultReview || '-' }}</div>
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="trialDetailVisible = false">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
     <!-- 导出对话框 -->
     <ExportDialog
         v-model="exportDialogVisible"
@@ -654,7 +821,7 @@
     />
   </div>
 </template><script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList, SaveTransactionRule, DeleteTransactionRuleById, DeleteAllTransactionRuleByIds } from "@/api/trialExecutionArea/transactionSystemTrial"
@@ -662,8 +829,35 @@ import { getDisplayText } from "@/utils/common"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
 
+// ==================== 标签页 ====================
+const activeTab = ref('rule')
+
+// ==================== 规则表格动态高度 ====================
+const ruleTableHeight = ref(320)
+
+const calcRuleTableHeight = () => {
+  nextTick(() => {
+    // 页面标题(约68) + 标签页头部(约44) + rule-header(约50) + 搜索条件(约56) + rule-div padding(30) + 底部留白(10)
+    const occupiedHeight = 68 + 44 + 50 + 56 + 30 + 10
+    const availableHeight = window.innerHeight - occupiedHeight
+    ruleTableHeight.value = Math.max(availableHeight, 200)
+  })
+}
+
+const handleResize = () => {
+  calcRuleTableHeight()
+}
+
+window.addEventListener('resize', handleResize)
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+})
+
 //--------------------钩子函数-------------------------
 onMounted(() => {
+  //0.计算规则表格高度
+  calcRuleTableHeight()
   //1.加载数据字典
   getTradeTypeItem()
   getPlanTypeItem()
@@ -705,7 +899,12 @@ const getTradeStatusItem = async () => {
 const tradeResultOptions = ref([])
 const getTradeResultItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_transaction_result")
-  tradeResultOptions.value = result.data
+  const data = result.data || []
+  // 兜底：确保码值为0（失败）的选项存在，防止字典接口因status过滤导致缺失
+  if (!data.find(item => item.value === 0)) {
+    data.push({ value: 0, text: '失败' })
+  }
+  tradeResultOptions.value = data
 }
 
 // 交易失败类型选项
@@ -728,7 +927,12 @@ const getIsUsePlanItem = () => {
 const ruleStatusOptions = ref([])
 const getRuleStatusItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_rule_status")
-  ruleStatusOptions.value = result.data
+  const data = result.data || []
+  // 兜底：确保码值为0（作废）的选项存在，防止字典接口因status过滤导致缺失
+  if (!data.find(item => item.value === 0)) {
+    data.push({ value: 0, text: '作废' })
+  }
+  ruleStatusOptions.value = data
 }
 
 // 规则类型选项
@@ -767,6 +971,31 @@ const filteredRuleList = computed(() => {
     return true
   })
 })
+
+// 计算遵守规则成功率 = 遵守成功次数 / 使用次数
+const calcComplySuccessRate = (row) => {
+  const useCount = row.useCount || 0
+  const complySuccessCount = row.complySuccessCount || 0
+  if (useCount === 0) return '-'
+  return (complySuccessCount / useCount * 100).toFixed(1) + '%'
+}
+
+// 计算违反规则成功率 = 违反成功次数 / 违反次数
+const calcViolateSuccessRate = (row) => {
+  const violateCount = row.violateCount || 0
+  const violateSuccessCount = row.violateSuccessCount || 0
+  if (violateCount === 0) return '-'
+  return (violateSuccessCount / violateCount * 100).toFixed(1) + '%'
+}
+
+// 根据成功率返回样式类名
+const getRateClass = (rateStr) => {
+  if (rateStr === '-') return 'rate-text rate-none'
+  const numVal = parseFloat(rateStr)
+  if (numVal >= 60) return 'rate-text rate-high'
+  if (numVal >= 30) return 'rate-text rate-medium'
+  return 'rate-text rate-low'
+}
 
 // 规则搜索（点击搜索时才应用筛选条件）
 const searchRuleData = () => {
@@ -1024,31 +1253,49 @@ const formRules = {
   tradeStatus: [{ required: true, message: '请选择交易状态', trigger: 'change' }]
 }
 
+// 获取下一个交易日的开盘和收盘时间（A股：9:30-15:00）
+const getNextTradingTime = () => {
+  const now = new Date()
+  let next = new Date(now)
+  next.setDate(next.getDate() + 1)
+  // 跳过周末
+  const day = next.getDay()
+  if (day === 0) next.setDate(next.getDate() + 1) // 周日->周一
+  if (day === 6) next.setDate(next.getDate() + 2) // 周六->周一
+  const pad = (n) => String(n).padStart(2, '0')
+  const dateStr = `${next.getFullYear()}-${pad(next.getMonth() + 1)}-${pad(next.getDate())}`
+  return {
+    planStartTime: `${dateStr} 09:30:00`,
+    planEndTime: `${dateStr} 15:00:00`
+  }
+}
+
 const addRecord = () => {
   dialogTitle.value = '添加试验'
   if (formRef.value) {
     formRef.value.resetFields()
   }
+  const nextTradingTime = getNextTradingTime()
   Object.assign(formData, {
     id: null,
     tradeType: null,
     targetName: '',
     planType: null,
     planContent: '',
-    planStartTime: '',
-    planEndTime: '',
+    planStartTime: nextTradingTime.planStartTime,
+    planEndTime: nextTradingTime.planEndTime,
     currentPrice: null,
     planPrice: null,
     openPrice: null,
     actualPrice: null,
     closePrice: null,
-    tradeStatus: null,
+    tradeStatus: 1,
     complyRuleIds: [],
     violateRuleIds: [],
     tradeResult: null,
     tradeFailType: null,
     resultReview: '',
-    isUsePlan: null
+    isUsePlan: 0
   })
   dialogVisible.value = true
 }
@@ -1152,6 +1399,26 @@ const deleteSelectAll = async () => {
 }
 
 // ==================== 辅助方法 ====================
+// 试验记录详情查看
+const trialDetailVisible = ref(false)
+const trialDetailData = ref(null)
+const viewTrialDetail = (row) => {
+  trialDetailData.value = { ...row }
+  trialDetailVisible.value = true
+}
+
+// 根据规则id获取规则名称
+const getRuleNames = (ruleIds) => {
+  if (!ruleIds) return '-'
+  const ids = String(ruleIds).split(',').map(id => Number(id.trim())).filter(id => !isNaN(id))
+  if (ids.length === 0) return '-'
+  const names = ids.map(id => {
+    const rule = ruleList.value.find(r => r.id === id)
+    return rule ? rule.ruleCode : `ID:${id}`
+  })
+  return names.join('、')
+}
+
 const getTradeStatusTagType = (status) => {
   switch (status) {
     case 1: return 'info'
@@ -1278,12 +1545,35 @@ const showExportDialog = () => {
   font-size: 28px;
 }
 
+/* 标签页样式 */
+.main-tabs {
+  margin: 0 15px;
+}
+
+:deep(.main-tabs .el-tabs__header) {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px 4px 0 0;
+  padding: 0 15px;
+  margin-bottom: 0;
+}
+
+:deep(.main-tabs .el-tabs__item) {
+  font-size: 15px;
+  font-weight: 600;
+  height: 44px;
+  line-height: 44px;
+}
+
+:deep(.main-tabs .el-tabs__content) {
+  padding: 0;
+}
+
 /* 交易规则块 */
 .rule-div {
-  margin: 15px 0;
   padding: 15px;
   border: 1px solid #ebeef5;
-  border-radius: 4px;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
   background-color: rgba(255, 255, 255, 0.8);
 }
 
@@ -1309,10 +1599,10 @@ const showExportDialog = () => {
 
 /* 交易试验记录块 */
 .trial-div {
-  margin: 15px 0;
   padding: 15px;
   border: 1px solid #ebeef5;
-  border-radius: 4px;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
   background-color: rgba(255, 255, 255, 0.8);
 }
 
@@ -1503,6 +1793,17 @@ const showExportDialog = () => {
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 4px 10px rgba(245, 108, 108, 0.4);
   background: linear-gradient(135deg, #d84646 0%, #f06b6b 100%);
+}
+
+/deep/ .el-table .el-button--info {
+  background: linear-gradient(135deg, #909399 0%, #a6a9ad 100%);
+  box-shadow: 0 2px 6px rgba(144, 147, 153, 0.3);
+}
+
+/deep/ .el-table .el-button--info:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 4px 10px rgba(144, 147, 153, 0.4);
+  background: linear-gradient(135deg, #73767a 0%, #8d9094 100%);
 }
 
 /deep/ .el-table .el-button:active {
@@ -1743,5 +2044,40 @@ const showExportDialog = () => {
   font-size: 13px;
   color: #909399;
   font-weight: 500;
+}
+
+/* 成功率文字样式 */
+.rate-text {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.rate-none {
+  color: #c0c4cc;
+}
+
+.rate-high {
+  color: #67C23A;
+}
+
+.rate-medium {
+  color: #E6A23C;
+}
+
+.rate-low {
+  color: #F56C6C;
+}
+
+/* 成功率卡片样式 */
+.rate-card {
+  position: relative;
+  padding: 24px 16px;
+}
+
+.rate-card .rate-formula {
+  font-size: 12px;
+  color: #b0b5bd;
+  margin-top: 6px;
+  font-style: italic;
 }
 </style>

@@ -89,12 +89,8 @@
             <if test="tradeStatus != null">
                 trade_status = #{tradeStatus},
             </if>
-            <if test="complyRuleIds != null and complyRuleIds != ''">
-                comply_rule_ids = #{complyRuleIds},
-            </if>
-            <if test="violateRuleIds != null and violateRuleIds != ''">
-                violate_rule_ids = #{violateRuleIds},
-            </if>
+            comply_rule_ids = #{complyRuleIds},
+            violate_rule_ids = #{violateRuleIds},
             <if test="tradeResult != null">
                 trade_result = #{tradeResult},
             </if>
@@ -301,7 +297,6 @@
             <if test="owner != null and owner != ''">
                 and t.owner = #{owner}
             </if>
-            and t.rule_status = 1
         </where>
         order by t.sort_order asc, t.create_time desc
     </select>
