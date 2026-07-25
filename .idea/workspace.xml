@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-02">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-03">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -13,9 +13,7 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/utils/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/utils/common.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/trialExecutionArea/TransactionSystemTrialMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/trialExecutionArea/TransactionSystemTrialMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/TransactionSystemTrialServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/TransactionSystemTrialServiceImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -462,13 +460,17 @@
       <workItem from="1784248148013" duration="837000" />
       <workItem from="1784287325281" duration="687000" />
       <workItem from="1784336703437" duration="1327000" />
-    </task>
-    <task id="LOCAL-00098" summary="基金资产管理-04">
-      <created>1777039645913</created>
-      <option name="number" value="00098" />
-      <option name="presentableId" value="LOCAL-00098" />
-      <option name="project" value="LOCAL" />
-      <updated>1777039645913</updated>
+      <workItem from="1784428339970" duration="3972000" />
+      <workItem from="1784507506205" duration="1264000" />
+      <workItem from="1784544623407" duration="715000" />
+      <workItem from="1784594029568" duration="1273000" />
+      <workItem from="1784631681156" duration="635000" />
+      <workItem from="1784680167973" duration="1885000" />
+      <workItem from="1784719871370" duration="671000" />
+      <workItem from="1784766758868" duration="1250000" />
+      <workItem from="1784808738294" duration="657000" />
+      <workItem from="1784852637830" duration="1310000" />
+      <workItem from="1784895156853" duration="636000" />
     </task>
     <task id="LOCAL-00099" summary="基金资产管理-05">
       <created>1777041025405</created>
@@ -806,7 +808,14 @@
       <option name="project" value="LOCAL" />
       <updated>1783852161238</updated>
     </task>
-    <option name="localTasksCounter" value="147" />
+    <task id="LOCAL-00147" summary="试验开展区-交易系统试验-03">
+      <created>1784429194154</created>
+      <option name="number" value="00147" />
+      <option name="presentableId" value="LOCAL-00147" />
+      <option name="project" value="LOCAL" />
+      <updated>1784429194154</updated>
+    </task>
+    <option name="localTasksCounter" value="148" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -825,7 +834,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="基金资产管理-28" />
     <MESSAGE value="基金资产管理-30" />
     <MESSAGE value="基金资产管理-31" />
     <MESSAGE value="基金资产管理-32" />
@@ -850,7 +858,8 @@
     <MESSAGE value="试验开展区-交易系统试验" />
     <MESSAGE value="试验开展区-交易系统试验-01" />
     <MESSAGE value="试验开展区-交易系统试验-02" />
-    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-02" />
+    <MESSAGE value="试验开展区-交易系统试验-03" />
+    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-03" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

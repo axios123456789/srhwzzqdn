@@ -165,31 +165,45 @@ public class TransactionSystemTrialServiceImpl implements TransactionSystemTrial
      * 联动逻辑：
      * - 第一层：仅当 isUsePlan=1 时才启动统计
      * - 第二层：tradeResult=1(成功)时增加成功次数
-     * - 遵守规则：useCount+1，成功时 complySuccessCount+1
-     * - 违反规则：useCount+1，violateCount+1，成功时 violateSuccessCount+1
+     * - 每个规则 useCount 只加1次（去重），无论同时出现在遵守和违反列表中
+     * - 遵守规则：成功时 complySuccessCount+1
+     * - 违反规则：violateCount+1，成功时 violateSuccessCount+1
      */
     private void addRuleCounts(TransactionSystemTrial record) {
         boolean isSuccess = record.getTradeResult() != null && record.getTradeResult() == 1;
 
-        // 处理遵守规则
         List<Integer> complyIds = parseRuleIds(record.getComplyRuleIds());
-        for (Integer ruleId : complyIds) {
+        List<Integer> violateIds = parseRuleIds(record.getViolateRuleIds());
+
+        // 合并去重所有规则ID，useCount每个规则只加1次
+        java.util.Set<Integer> allRuleIds = new java.util.LinkedHashSet<>();
+        allRuleIds.addAll(complyIds);
+        allRuleIds.addAll(violateIds);
+
+        // 先统一处理 useCount（去重后每个规则只加1次）
+        for (Integer ruleId : allRuleIds) {
             TransactionRule rule = transactionSystemTrialMapper.getTransactionRuleById(ruleId);
             if (rule != null) {
                 rule.setUseCount(rule.getUseCount() != null ? rule.getUseCount() + 1 : 1);
-                if (isSuccess) {
-                    rule.setComplySuccessCount(rule.getComplySuccessCount() != null ? rule.getComplySuccessCount() + 1 : 1);
-                }
                 transactionSystemTrialMapper.updateTransactionRule(rule);
             }
         }
 
-        // 处理违反规则
-        List<Integer> violateIds = parseRuleIds(record.getViolateRuleIds());
+        // 处理遵守规则的成功次数
+        for (Integer ruleId : complyIds) {
+            if (isSuccess) {
+                TransactionRule rule = transactionSystemTrialMapper.getTransactionRuleById(ruleId);
+                if (rule != null) {
+                    rule.setComplySuccessCount(rule.getComplySuccessCount() != null ? rule.getComplySuccessCount() + 1 : 1);
+                    transactionSystemTrialMapper.updateTransactionRule(rule);
+                }
+            }
+        }
+
+        // 处理违反规则的违反次数和成功次数
         for (Integer ruleId : violateIds) {
             TransactionRule rule = transactionSystemTrialMapper.getTransactionRuleById(ruleId);
             if (rule != null) {
-                rule.setUseCount(rule.getUseCount() != null ? rule.getUseCount() + 1 : 1);
                 rule.setViolateCount(rule.getViolateCount() != null ? rule.getViolateCount() + 1 : 1);
                 if (isSuccess) {
                     rule.setViolateSuccessCount(rule.getViolateSuccessCount() != null ? rule.getViolateSuccessCount() + 1 : 1);
@@ -203,8 +217,9 @@ public class TransactionSystemTrialServiceImpl implements TransactionSystemTrial
      * 回退规则次数（修改时回退旧记录、删除时回退）
      * 联动逻辑与addRuleCounts相反：
      * - 仅当 isUsePlan=1 时才回退统计
-     * - 遵守规则：useCount-1，成功时 complySuccessCount-1
-     * - 违反规则：useCount-1，violateCount-1，成功时 violateSuccessCount-1
+     * - 每个规则 useCount 只减1次（去重），无论同时出现在遵守和违反列表中
+     * - 遵守规则：成功时 complySuccessCount-1
+     * - 违反规则：violateCount-1，成功时 violateSuccessCount-1
      */
     private void rollbackRuleCounts(TransactionSystemTrial record) {
         if (record.getIsUsePlan() == null || record.getIsUsePlan() != 1) {
@@ -212,25 +227,38 @@ public class TransactionSystemTrialServiceImpl implements TransactionSystemTrial
         }
         boolean isSuccess = record.getTradeResult() != null && record.getTradeResult() == 1;
 
-        // 回退遵守规则
         List<Integer> complyIds = parseRuleIds(record.getComplyRuleIds());
-        for (Integer ruleId : complyIds) {
+        List<Integer> violateIds = parseRuleIds(record.getViolateRuleIds());
+
+        // 合并去重所有规则ID，useCount每个规则只减1次
+        java.util.Set<Integer> allRuleIds = new java.util.LinkedHashSet<>();
+        allRuleIds.addAll(complyIds);
+        allRuleIds.addAll(violateIds);
+
+        // 先统一回退 useCount（去重后每个规则只减1次）
+        for (Integer ruleId : allRuleIds) {
             TransactionRule rule = transactionSystemTrialMapper.getTransactionRuleById(ruleId);
             if (rule != null) {
                 rule.setUseCount(rule.getUseCount() != null && rule.getUseCount() > 0 ? rule.getUseCount() - 1 : 0);
-                if (isSuccess) {
-                    rule.setComplySuccessCount(rule.getComplySuccessCount() != null && rule.getComplySuccessCount() > 0 ? rule.getComplySuccessCount() - 1 : 0);
-                }
                 transactionSystemTrialMapper.updateTransactionRule(rule);
             }
         }
 
-        // 回退违反规则
-        List<Integer> violateIds = parseRuleIds(record.getViolateRuleIds());
+        // 回退遵守规则的成功次数
+        for (Integer ruleId : complyIds) {
+            if (isSuccess) {
+                TransactionRule rule = transactionSystemTrialMapper.getTransactionRuleById(ruleId);
+                if (rule != null) {
+                    rule.setComplySuccessCount(rule.getComplySuccessCount() != null && rule.getComplySuccessCount() > 0 ? rule.getComplySuccessCount() - 1 : 0);
+                    transactionSystemTrialMapper.updateTransactionRule(rule);
+                }
+            }
+        }
+
+        // 回退违反规则的违反次数和成功次数
         for (Integer ruleId : violateIds) {
             TransactionRule rule = transactionSystemTrialMapper.getTransactionRuleById(ruleId);
             if (rule != null) {
-                rule.setUseCount(rule.getUseCount() != null && rule.getUseCount() > 0 ? rule.getUseCount() - 1 : 0);
                 rule.setViolateCount(rule.getViolateCount() != null && rule.getViolateCount() > 0 ? rule.getViolateCount() - 1 : 0);
                 if (isSuccess) {
                     rule.setViolateSuccessCount(rule.getViolateSuccessCount() != null && rule.getViolateSuccessCount() > 0 ? rule.getViolateSuccessCount() - 1 : 0);
