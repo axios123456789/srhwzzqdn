@@ -46,6 +46,11 @@ public interface PredictionSimulateService {
     void deleteSimulateLedgerById(Long id);
 
     /**
+     * 删除当前用户所有模拟台账
+     */
+    void deleteAllSimulateLedgerByOwner();
+
+    /**
      * 获取预测统计报表
      */
     PredictionReportVo getPredictionReport(PredictionReportDto dto);

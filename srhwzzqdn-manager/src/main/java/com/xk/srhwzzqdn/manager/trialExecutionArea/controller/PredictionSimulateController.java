@@ -107,6 +107,19 @@ public class PredictionSimulateController {
         }
     }
 
+    /**
+     * 删除当前用户所有模拟台账
+     */
+    @DeleteMapping("/deleteAllSimulateLedger")
+    public Result deleteAllSimulateLedger() {
+        try {
+            predictionSimulateService.deleteAllSimulateLedgerByOwner();
+            return Result.build(null, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "删除所有台账失败！");
+        }
+    }
+
     //====================统计报表接口====================
 
     /**

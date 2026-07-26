@@ -64,6 +64,14 @@ export const DeleteSimulateLedgerById = id => {
   })
 }
 
+// 删除当前用户所有模拟台账
+export const DeleteAllSimulateLedger = () => {
+  return request({
+    url: base_api + '/deleteAllSimulateLedger',
+    method: 'delete',
+  })
+}
+
 // ====================统计报表====================
 
 // 获取预测统计报表

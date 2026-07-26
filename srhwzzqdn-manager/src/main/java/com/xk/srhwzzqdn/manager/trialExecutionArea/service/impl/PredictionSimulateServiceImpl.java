@@ -120,6 +120,15 @@ public class PredictionSimulateServiceImpl implements PredictionSimulateService 
     }
 
     /**
+     * 删除当前用户所有模拟台账
+     */
+    @Override
+    public void deleteAllSimulateLedgerByOwner() {
+        String owner = AuthContextUtil.get().getId();
+        predictionSimulateMapper.deleteAllSimulateLedgerByOwner(owner);
+    }
+
+    /**
      * 获取预测统计报表
      */
     @Override
@@ -251,7 +260,7 @@ public class PredictionSimulateServiceImpl implements PredictionSimulateService 
     //====================台账联动辅助方法====================
 
     /**
-     * 保存预测记录时联动台账
+     * 保存预测记录时联动台账（仿照证券账户买入卖出）
      */
     private void processLedgerOnSave(PredictionSimulate record) {
         if (record.getSimulateOperation() == null || record.getTradeShare() == null || record.getCurrentPrice() == null) {
@@ -263,17 +272,19 @@ public class PredictionSimulateServiceImpl implements PredictionSimulateService 
 
         if (record.getSimulateOperation() == 1) {
             // 模拟买入
-            // 1. 扣减总账户金额
+            // 1. 扣减总账户金额（可用资金减少）
             SimulateLedger mainAccount = predictionSimulateMapper.getLedgerByOwnerAndAssetType(owner, 1);
             if (mainAccount != null) {
                 mainAccount.setAssetAmount(mainAccount.getAssetAmount().subtract(tradeAmount).subtract(fee));
                 predictionSimulateMapper.updateSimulateLedger(mainAccount);
             }
-            // 2. 增加股票台账
+            // 2. 增加股票台账：若已存在则修改（数量+金额累加），不存在则新增
             SimulateLedger stockLedger = predictionSimulateMapper.getLedgerByOwnerAndAssetCode(owner, record.getStockCode());
             if (stockLedger != null) {
+                // 台账已存在（可能之前全部卖出后数量为0），修改而非新增
                 stockLedger.setAssetQuantity(stockLedger.getAssetQuantity() + record.getTradeShare());
                 stockLedger.setAssetAmount(stockLedger.getAssetAmount().add(tradeAmount));
+                stockLedger.setAssetName(record.getStockName()); // 更新名称
                 predictionSimulateMapper.updateSimulateLedger(stockLedger);
             } else {
                 // 新增股票台账记录
@@ -288,18 +299,19 @@ public class PredictionSimulateServiceImpl implements PredictionSimulateService 
             }
         } else if (record.getSimulateOperation() == 2) {
             // 模拟卖出
-            // 1. 减少股票台账
+            // 1. 减少股票台账：数量和金额减少，全部卖出后设为0而非删除
             SimulateLedger stockLedger = predictionSimulateMapper.getLedgerByOwnerAndAssetCode(owner, record.getStockCode());
             if (stockLedger != null) {
                 stockLedger.setAssetQuantity(stockLedger.getAssetQuantity() - record.getTradeShare());
                 stockLedger.setAssetAmount(stockLedger.getAssetAmount().subtract(tradeAmount));
+                // 全部卖出后数量和金额设为0，保留台账记录
                 if (stockLedger.getAssetQuantity() <= 0) {
-                    predictionSimulateMapper.deleteSimulateLedgerById(stockLedger.getId());
-                } else {
-                    predictionSimulateMapper.updateSimulateLedger(stockLedger);
+                    stockLedger.setAssetQuantity(0);
+                    stockLedger.setAssetAmount(BigDecimal.ZERO);
                 }
+                predictionSimulateMapper.updateSimulateLedger(stockLedger);
             }
-            // 2. 增加总账户金额
+            // 2. 增加总账户金额（可用资金增加）
             SimulateLedger mainAccount = predictionSimulateMapper.getLedgerByOwnerAndAssetType(owner, 1);
             if (mainAccount != null) {
                 mainAccount.setAssetAmount(mainAccount.getAssetAmount().add(tradeAmount).subtract(fee));
@@ -309,7 +321,7 @@ public class PredictionSimulateServiceImpl implements PredictionSimulateService 
     }
 
     /**
-     * 回退台账（删除或修改时回退旧记录）
+     * 回退台账（删除或修改时回退旧记录，仿照证券账户反向操作）
      */
     private void rollbackLedger(PredictionSimulate record) {
         if (record.getSimulateOperation() == null || record.getTradeShare() == null || record.getCurrentPrice() == null) {
@@ -330,20 +342,23 @@ public class PredictionSimulateServiceImpl implements PredictionSimulateService 
             if (stockLedger != null) {
                 stockLedger.setAssetQuantity(stockLedger.getAssetQuantity() - record.getTradeShare());
                 stockLedger.setAssetAmount(stockLedger.getAssetAmount().subtract(tradeAmount));
+                // 回退后数量为0则设为0，不删除
                 if (stockLedger.getAssetQuantity() <= 0) {
-                    predictionSimulateMapper.deleteSimulateLedgerById(stockLedger.getId());
-                } else {
-                    predictionSimulateMapper.updateSimulateLedger(stockLedger);
+                    stockLedger.setAssetQuantity(0);
+                    stockLedger.setAssetAmount(BigDecimal.ZERO);
                 }
+                predictionSimulateMapper.updateSimulateLedger(stockLedger);
             }
         } else if (record.getSimulateOperation() == 2) {
             // 回退卖出：股票台账加回，总账户减回
             SimulateLedger stockLedger = predictionSimulateMapper.getLedgerByOwnerAndAssetCode(owner, record.getStockCode());
             if (stockLedger != null) {
+                // 台账已存在，修改
                 stockLedger.setAssetQuantity(stockLedger.getAssetQuantity() + record.getTradeShare());
                 stockLedger.setAssetAmount(stockLedger.getAssetAmount().add(tradeAmount));
                 predictionSimulateMapper.updateSimulateLedger(stockLedger);
             } else {
+                // 台账不存在（可能之前被删除了），新增
                 SimulateLedger newLedger = new SimulateLedger();
                 newLedger.setAssetName(record.getStockName());
                 newLedger.setAssetCode(record.getStockCode());

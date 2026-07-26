@@ -521,7 +521,11 @@
             size="small"
           >
             <el-table-column type="selection" width="40" align="center" />
-            <el-table-column label="操作" align="center" fixed="left" width="160" #default="scope">
+            <el-table-column label="操作" align="center" fixed="left" width="280" #default="scope">
+              <el-button type="info" size="small" @click="viewPredDetail(scope.row)">
+                <el-icon><View /></el-icon>
+                查看
+              </el-button>
               <el-button type="primary" size="small" @click="editPrediction(scope.row)">
                 <el-icon><Edit /></el-icon>
                 编辑
@@ -538,6 +542,14 @@
                 <el-tag :type="scope.row.riseFallPrediction === 1 ? 'danger' : 'success'" size="small">
                   {{ getDisplayText(scope.row.riseFallPrediction, riseFallOptions) }}
                 </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="riseFallResult" label="涨跌结果" align="center" width="80">
+              <template #default="scope">
+                <el-tag v-if="scope.row.riseFallResult" :type="scope.row.riseFallResult === 1 ? 'danger' : 'success'" size="small">
+                  {{ getDisplayText(scope.row.riseFallResult, riseFallOptions) }}
+                </el-tag>
+                <span v-else>-</span>
               </template>
             </el-table-column>
             <el-table-column prop="predictionTime" label="预测时间" align="center" width="160" />
@@ -560,7 +572,10 @@
             </el-table-column>
             <el-table-column prop="simulateOperation" label="模拟操作" align="center" width="90">
               <template #default="scope">
-                {{ getDisplayText(scope.row.simulateOperation, simulateOperationOptions) }}
+                <el-tag v-if="scope.row.simulateOperation" :type="scope.row.simulateOperation === 1 ? 'danger' : 'success'" size="small">
+                  {{ getDisplayText(scope.row.simulateOperation, simulateOperationOptions) }}
+                </el-tag>
+                <span v-else>-</span>
               </template>
             </el-table-column>
             <el-table-column prop="tradeShare" label="交易份额" align="center" width="80" />
@@ -576,13 +591,16 @@
             </el-table-column>
             <el-table-column prop="tradeStatus" label="交易状态" align="center" width="80">
               <template #default="scope">
-                <el-tag :type="scope.row.tradeStatus === 1 ? 'success' : 'danger'" size="small">
+                <el-tag v-if="scope.row.tradeStatus" :type="scope.row.tradeStatus === 1 ? 'success' : 'danger'" size="small">
                   {{ getDisplayText(scope.row.tradeStatus, simulateTradeStatusOptions) }}
                 </el-tag>
+                <span v-else>-</span>
               </template>
             </el-table-column>
             <el-table-column prop="predictionContent" label="预测内容" align="center" min-width="120" show-overflow-tooltip />
             <el-table-column prop="predictionBasis" label="预测依据" align="center" min-width="120" show-overflow-tooltip />
+            <el-table-column prop="actualContent" label="实际内容" align="center" min-width="120" show-overflow-tooltip />
+            <el-table-column prop="resultAnalysis" label="结果分析" align="center" min-width="120" show-overflow-tooltip />
           </el-table>
           <!-- 分页组件 -->
           <el-pagination
@@ -851,11 +869,27 @@
         stripe
         size="small"
       >
+        <el-table-column label="操作" align="center" fixed="left" width="70" #default="scope">
+          <el-button type="info" size="small" @click="viewPredDetail(scope.row)">
+            <el-icon><View /></el-icon>
+            查看
+          </el-button>
+        </el-table-column>
         <el-table-column prop="stockName" label="股票名称" align="center" width="120" show-overflow-tooltip />
         <el-table-column prop="stockCode" label="股票代码" align="center" width="100" />
-        <el-table-column prop="riseFallPrediction" label="涨跌预测" align="center" width="90">
+        <el-table-column prop="riseFallPrediction" label="涨跌预测" align="center" width="80">
           <template #default="scope">
-            {{ getDisplayText(scope.row.riseFallPrediction, riseFallOptions) }}
+            <el-tag :type="scope.row.riseFallPrediction === 1 ? 'danger' : 'success'" size="small">
+              {{ getDisplayText(scope.row.riseFallPrediction, riseFallOptions) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="riseFallResult" label="涨跌结果" align="center" width="80">
+          <template #default="scope">
+            <el-tag v-if="scope.row.riseFallResult" :type="scope.row.riseFallResult === 1 ? 'danger' : 'success'" size="small">
+              {{ getDisplayText(scope.row.riseFallResult, riseFallOptions) }}
+            </el-tag>
+            <span v-else>-</span>
           </template>
         </el-table-column>
         <el-table-column prop="predictionTime" label="预测时间" align="center" width="160" />
@@ -864,40 +898,48 @@
             {{ getDisplayText(scope.row.basisType, basisTypeOptions) }}
           </template>
         </el-table-column>
-        <el-table-column prop="predictionSituation" label="预测情况" align="center" width="100">
-          <template #default="scope">
-            {{ getDisplayText(scope.row.predictionSituation, predictionSituationOptions) }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="predictionResult" label="预测结果" align="center" width="90">
+        <el-table-column prop="predictionResult" label="预测结果" align="center" width="80">
           <template #default="scope">
             <el-tag :type="scope.row.predictionResult === 1 ? 'success' : 'danger'" size="small">
               {{ getDisplayText(scope.row.predictionResult, predictionResultOptions) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="simulateOperation" label="模拟操作" align="center" width="90">
+        <el-table-column prop="predictionSituation" label="预测情况" align="center" width="100">
           <template #default="scope">
-            {{ getDisplayText(scope.row.simulateOperation, simulateOperationOptions) }}
+            {{ getDisplayText(scope.row.predictionSituation, predictionSituationOptions) }}
           </template>
         </el-table-column>
-        <el-table-column prop="tradeShare" label="交易股数" align="center" width="90" />
+        <el-table-column prop="simulateOperation" label="模拟操作" align="center" width="90">
+          <template #default="scope">
+            <el-tag v-if="scope.row.simulateOperation" :type="scope.row.simulateOperation === 1 ? 'danger' : 'success'" size="small">
+              {{ getDisplayText(scope.row.simulateOperation, simulateOperationOptions) }}
+            </el-tag>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="tradeShare" label="交易股数" align="center" width="80" />
         <el-table-column prop="currentPrice" label="当前价" align="center" width="90">
           <template #default="scope">
             {{ scope.row.currentPrice != null ? Number(scope.row.currentPrice).toFixed(2) : '-' }}
           </template>
         </el-table-column>
-        <el-table-column prop="handlingFee" label="手续费" align="center" width="90">
+        <el-table-column prop="handlingFee" label="手续费" align="center" width="80">
           <template #default="scope">
             {{ scope.row.handlingFee != null ? Number(scope.row.handlingFee).toFixed(2) : '-' }}
           </template>
         </el-table-column>
-        <el-table-column prop="tradeStatus" label="交易状态" align="center" width="90">
+        <el-table-column prop="tradeStatus" label="交易状态" align="center" width="80">
           <template #default="scope">
-            {{ getDisplayText(scope.row.tradeStatus, simulateTradeStatusOptions) }}
+            <el-tag v-if="scope.row.tradeStatus" :type="scope.row.tradeStatus === 1 ? 'success' : 'danger'" size="small">
+              {{ getDisplayText(scope.row.tradeStatus, simulateTradeStatusOptions) }}
+            </el-tag>
+            <span v-else>-</span>
           </template>
         </el-table-column>
-        <el-table-column prop="predictionContent" label="预测内容" align="center" min-width="150" show-overflow-tooltip />
+        <el-table-column prop="predictionContent" label="预测内容" align="center" min-width="120" show-overflow-tooltip />
+        <el-table-column prop="actualContent" label="实际内容" align="center" min-width="120" show-overflow-tooltip />
+        <el-table-column prop="resultAnalysis" label="结果分析" align="center" min-width="120" show-overflow-tooltip />
       </el-table>
       <el-pagination
         style="margin-top: 20px"
@@ -909,6 +951,130 @@
         layout="total, sizes, prev, pager, next"
         :total="drillDetailTotal"
       />
+    </el-dialog>
+
+    <!-- 预测详情查看对话框 -->
+    <el-dialog
+      v-model="predDetailVisible"
+      title="预测详情"
+      width="65%"
+      class="custom-dialog enhanced-dialog"
+      :close-on-click-modal="true"
+    >
+      <div class="pred-detail-container" v-if="predDetailData">
+        <!-- 股票信息区 -->
+        <div class="detail-section">
+          <div class="detail-section-title">股票信息</div>
+          <el-descriptions :column="2" border size="default" label-width="80px">
+            <el-descriptions-item label="股票名称" :span="1">
+              <span class="detail-value highlight">{{ predDetailData.stockName }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="股票代码" :span="1">
+              <span class="detail-value">{{ predDetailData.stockCode }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="预测时间" :span="1">
+              <span class="detail-value">{{ predDetailData.predictionTime || '-' }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="依据类型" :span="1">
+              <el-tag type="warning" size="small">{{ getDisplayText(predDetailData.basisType, basisTypeOptions) }}</el-tag>
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <!-- 预测与结果区 -->
+        <div class="detail-section">
+          <div class="detail-section-title">预测与结果</div>
+          <el-row :gutter="16">
+            <el-col :span="6">
+              <div class="stat-card">
+                <div class="stat-value" :class="predDetailData.riseFallPrediction === 1 ? 'danger' : 'success'">
+                  {{ getDisplayText(predDetailData.riseFallPrediction, riseFallOptions) }}
+                </div>
+                <div class="stat-label">涨跌预测</div>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="stat-card">
+                <div class="stat-value" :class="predDetailData.riseFallResult === 1 ? 'danger' : (predDetailData.riseFallResult === 2 ? 'success' : 'primary')">
+                  {{ predDetailData.riseFallResult ? getDisplayText(predDetailData.riseFallResult, riseFallOptions) : '-' }}
+                </div>
+                <div class="stat-label">涨跌结果</div>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="stat-card">
+                <div class="stat-value" :class="predDetailData.predictionResult === 1 ? 'success' : 'danger'">
+                  {{ getDisplayText(predDetailData.predictionResult, predictionResultOptions) }}
+                </div>
+                <div class="stat-label">预测结果</div>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="stat-card">
+                <div class="stat-value primary">
+                  {{ getDisplayText(predDetailData.predictionSituation, predictionSituationOptions) || '-' }}
+                </div>
+                <div class="stat-label">预测情况</div>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+        <!-- 预测内容区 -->
+        <div class="detail-section">
+          <div class="detail-section-title">预测内容</div>
+          <el-descriptions :column="1" border size="default" label-width="80px">
+            <el-descriptions-item label="预测内容">
+              <div class="detail-text-block">{{ predDetailData.predictionContent || '-' }}</div>
+            </el-descriptions-item>
+            <el-descriptions-item label="预测依据">
+              <div class="detail-text-block">{{ predDetailData.predictionBasis || '-' }}</div>
+            </el-descriptions-item>
+            <el-descriptions-item label="实际内容">
+              <div class="detail-text-block">{{ predDetailData.actualContent || '-' }}</div>
+            </el-descriptions-item>
+            <el-descriptions-item label="结果分析">
+              <div class="detail-text-block">{{ predDetailData.resultAnalysis || '-' }}</div>
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <!-- 模拟交易区 -->
+        <div class="detail-section">
+          <div class="detail-section-title">模拟交易</div>
+          <el-descriptions :column="3" border size="default" label-width="80px">
+            <el-descriptions-item label="模拟操作" :span="1">
+              <el-tag v-if="predDetailData.simulateOperation" :type="predDetailData.simulateOperation === 1 ? 'danger' : 'success'" size="small">
+                {{ getDisplayText(predDetailData.simulateOperation, simulateOperationOptions) }}
+              </el-tag>
+              <span v-else>-</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="交易份额" :span="1">
+              <span class="detail-value">{{ predDetailData.tradeShare != null ? predDetailData.tradeShare + ' 股' : '-' }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="当前股价" :span="1">
+              <span class="detail-value">{{ predDetailData.currentPrice != null ? '¥ ' + Number(predDetailData.currentPrice).toFixed(2) : '-' }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="手续费" :span="1">
+              <span class="detail-value">{{ predDetailData.handlingFee != null ? '¥ ' + Number(predDetailData.handlingFee).toFixed(2) : '-' }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="交易状态" :span="1">
+              <el-tag v-if="predDetailData.tradeStatus" :type="predDetailData.tradeStatus === 1 ? 'success' : 'danger'" size="small">
+                {{ getDisplayText(predDetailData.tradeStatus, simulateTradeStatusOptions) }}
+              </el-tag>
+              <span v-else>-</span>
+            </el-descriptions-item>
+            <el-descriptions-item label="交易金额" :span="1">
+              <span class="detail-value highlight" v-if="predDetailData.tradeShare && predDetailData.currentPrice">
+                ¥ {{ (Number(predDetailData.tradeShare) * Number(predDetailData.currentPrice)).toFixed(2) }}
+              </span>
+              <span v-else>-</span>
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </div>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="predDetailVisible = false">关闭</el-button>
+        </span>
+      </template>
     </el-dialog>
 
     <!-- 交易规则 详情查看对话框 -->
@@ -1594,7 +1760,7 @@ import { ref, reactive, onMounted, onBeforeUnmount, nextTick, computed } from 'v
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList, SaveTransactionRule, DeleteTransactionRuleById, DeleteAllTransactionRuleByIds } from "@/api/trialExecutionArea/transactionSystemTrial"
-import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, GetPredictionReport, GetPredictionDetailByCondition } from "@/api/trialExecutionArea/predictionSimulate"
+import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, DeleteAllSimulateLedger, GetPredictionReport, GetPredictionDetailByCondition } from "@/api/trialExecutionArea/predictionSimulate"
 import { getDisplayText } from "@/utils/common"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
@@ -1985,6 +2151,14 @@ const deletePredAll = async () => {
   }
 }
 
+// 预测详情查看
+const predDetailVisible = ref(false)
+const predDetailData = ref(null)
+const viewPredDetail = (row) => {
+  predDetailData.value = { ...row }
+  predDetailVisible.value = true
+}
+
 //=========================================================
 // ==================== 模拟台账 ====================
 const ledgerList = ref([])
@@ -2003,11 +2177,14 @@ const fetchLedgerData = async () => {
 // 初始化账户
 const initAccount = async () => {
   try {
-    await ElMessageBox.confirm('确定要初始化模拟账户吗？将创建一条模拟账户资产记录（初始金额10万）', '提示', {
+    await ElMessageBox.confirm('确定要初始化模拟账户吗？将删除所有台账数据后创建一条模拟账户资产记录（初始金额10万）', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
-      type: 'info',
+      type: 'warning',
     })
+    // 先删除所有台账数据
+    await DeleteAllSimulateLedger()
+    // 再新增模拟账户
     await SaveSimulateLedger({
       assetName: '模拟账户资产',
       assetCode: 'SIM_ACCOUNT',
@@ -2118,7 +2295,7 @@ const mainAccountAmount = computed(() => {
 })
 
 const positionList = computed(() => {
-  return ledgerList.value.filter(item => item.assetType !== 1)
+  return ledgerList.value.filter(item => item.assetType !== 1 && (item.assetQuantity || 0) > 0)
 })
 
 const positionAmount = computed(() => {

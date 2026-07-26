@@ -61,6 +61,10 @@ public interface PredictionSimulateMapper {
     @Select("select * from t_trial_simulate_ledger where owner = #{param1} and asset_code = #{param2} limit 1")
     SimulateLedger getLedgerByOwnerAndAssetCode(String owner, String assetCode);
 
+    //根据owner删除所有台账
+    @Delete("delete from t_trial_simulate_ledger where owner = #{param1}")
+    void deleteAllSimulateLedgerByOwner(String owner);
+
     //====================统计报表====================
     //统计总预测次数
     Integer countTotalPrediction(PredictionReportDto dto);
