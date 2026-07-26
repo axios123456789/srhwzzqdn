@@ -49,4 +49,9 @@ public interface PredictionSimulateService {
      * 获取预测统计报表
      */
     PredictionReportVo getPredictionReport(PredictionReportDto dto);
+
+    /**
+     * 穿透明细查询：根据报表条件+穿透维度分页查询预测记录明细
+     */
+    PageInfo<PredictionSimulate> getPredictionDetailByCondition(Integer current, Integer limit, PredictionReportDto dto);
 }

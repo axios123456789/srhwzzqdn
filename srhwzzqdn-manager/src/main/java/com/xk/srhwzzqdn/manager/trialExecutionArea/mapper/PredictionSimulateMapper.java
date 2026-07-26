@@ -82,4 +82,7 @@ public interface PredictionSimulateMapper {
 
     //按股票统计
     List<Map<String, Object>> statByStock(PredictionReportDto dto);
+
+    //穿透明细查询：根据报表条件+穿透维度查询预测记录明细
+    List<PredictionSimulate> getPredictionDetailByCondition(PredictionReportDto dto);
 }

@@ -656,19 +656,19 @@
           <el-row :gutter="16" style="margin-bottom: 20px;">
             <el-col :span="6">
               <div class="stat-card">
-                <div class="stat-value primary">{{ reportData.totalCount || 0 }}</div>
+                <div class="stat-value primary drill-link" @click="drillDown({ type: 'total' })">{{ reportData.totalCount || 0 }}</div>
                 <div class="stat-label">总预测次数</div>
               </div>
             </el-col>
             <el-col :span="6">
               <div class="stat-card">
-                <div class="stat-value success">{{ reportData.successCount || 0 }}</div>
+                <div class="stat-value success drill-link" @click="drillDown({ type: 'total', predictionResult: 1 })">{{ reportData.successCount || 0 }}</div>
                 <div class="stat-label">预测成功次数</div>
               </div>
             </el-col>
             <el-col :span="6">
               <div class="stat-card">
-                <div class="stat-value danger">{{ reportData.failCount || 0 }}</div>
+                <div class="stat-value danger drill-link" @click="drillDown({ type: 'total', predictionResult: 2 })">{{ reportData.failCount || 0 }}</div>
                 <div class="stat-label">预测失败次数</div>
               </div>
             </el-col>
@@ -691,8 +691,16 @@
                       {{ getDisplayText(scope.row.basisType, basisTypeOptions) }}
                     </template>
                   </el-table-column>
-                  <el-table-column prop="count" label="总次数" align="center" />
-                  <el-table-column prop="successCount" label="成功次数" align="center" />
+                  <el-table-column prop="count" label="总次数" align="center">
+                    <template #default="scope">
+                      <el-link type="primary" :underline="false" @click="drillDown({ type: 'basisType', basisType: scope.row.basisType })">{{ scope.row.count }}</el-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="successCount" label="成功次数" align="center">
+                    <template #default="scope">
+                      <el-link type="primary" :underline="false" @click="drillDown({ type: 'basisType', basisType: scope.row.basisType, predictionResult: 1 })">{{ scope.row.successCount }}</el-link>
+                    </template>
+                  </el-table-column>
                   <el-table-column prop="successRate" label="成功率" align="center">
                     <template #default="scope">
                       <span :class="getRateClass(scope.row.successRate + '%')">{{ scope.row.successRate }}%</span>
@@ -710,7 +718,11 @@
                       {{ getDisplayText(scope.row.predictionSituation, predictionSituationOptions) }}
                     </template>
                   </el-table-column>
-                  <el-table-column prop="count" label="次数" align="center" />
+                  <el-table-column prop="count" label="次数" align="center">
+                    <template #default="scope">
+                      <el-link type="primary" :underline="false" @click="drillDown({ type: 'situation', predictionSituation: scope.row.predictionSituation })">{{ scope.row.count }}</el-link>
+                    </template>
+                  </el-table-column>
                   <el-table-column prop="percentage" label="占比" align="center">
                     <template #default="scope">
                       <el-progress :percentage="Number(scope.row.percentage)" :stroke-width="14" :text-inside="true" />
@@ -728,8 +740,16 @@
                 <div class="detail-section-title">月度预测准确率趋势</div>
                 <el-table :data="reportData.monthlyTrends || []" border stripe size="small">
                   <el-table-column prop="month" label="月份" align="center" />
-                  <el-table-column prop="totalCount" label="总次数" align="center" />
-                  <el-table-column prop="successCount" label="成功次数" align="center" />
+                  <el-table-column prop="totalCount" label="总次数" align="center">
+                    <template #default="scope">
+                      <el-link type="primary" :underline="false" @click="drillDown({ type: 'month', month: scope.row.month })">{{ scope.row.totalCount }}</el-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="successCount" label="成功次数" align="center">
+                    <template #default="scope">
+                      <el-link type="primary" :underline="false" @click="drillDown({ type: 'month', month: scope.row.month, predictionResult: 1 })">{{ scope.row.successCount }}</el-link>
+                    </template>
+                  </el-table-column>
                   <el-table-column prop="successRate" label="成功率" align="center">
                     <template #default="scope">
                       <span :class="getRateClass(scope.row.successRate + '%')">{{ scope.row.successRate }}%</span>
@@ -744,13 +764,13 @@
                 <el-row :gutter="16" v-if="reportData.simulateTradeStat">
                   <el-col :span="8">
                     <div class="stat-card">
-                      <div class="stat-value primary">{{ reportData.simulateTradeStat.totalBuyCount || 0 }}</div>
+                      <div class="stat-value primary drill-link" @click="drillDown({ type: 'trade', simulateOperation: 1 })">{{ reportData.simulateTradeStat.totalBuyCount || 0 }}</div>
                       <div class="stat-label">买入次数</div>
                     </div>
                   </el-col>
                   <el-col :span="8">
                     <div class="stat-card">
-                      <div class="stat-value success">{{ reportData.simulateTradeStat.totalSellCount || 0 }}</div>
+                      <div class="stat-value success drill-link" @click="drillDown({ type: 'trade', simulateOperation: 2 })">{{ reportData.simulateTradeStat.totalSellCount || 0 }}</div>
                       <div class="stat-label">卖出次数</div>
                     </div>
                   </el-col>
@@ -793,8 +813,16 @@
             <el-table :data="reportData.stockStats || []" border stripe size="small">
               <el-table-column prop="stockName" label="股票名称" align="center" min-width="120" show-overflow-tooltip />
               <el-table-column prop="stockCode" label="股票代码" align="center" width="120" />
-              <el-table-column prop="predictCount" label="预测次数" align="center" width="100" />
-              <el-table-column prop="successCount" label="成功次数" align="center" width="100" />
+              <el-table-column prop="predictCount" label="预测次数" align="center" width="100">
+                <template #default="scope">
+                  <el-link type="primary" :underline="false" @click="drillDown({ type: 'stock', detailStockCode: scope.row.stockCode })">{{ scope.row.predictCount }}</el-link>
+                </template>
+              </el-table-column>
+              <el-table-column prop="successCount" label="成功次数" align="center" width="100">
+                <template #default="scope">
+                  <el-link type="primary" :underline="false" @click="drillDown({ type: 'stock', detailStockCode: scope.row.stockCode, predictionResult: 1 })">{{ scope.row.successCount }}</el-link>
+                </template>
+              </el-table-column>
               <el-table-column prop="successRate" label="成功率" align="center" width="100">
                 <template #default="scope">
                   <span :class="getRateClass(scope.row.successRate + '%')">{{ scope.row.successRate }}%</span>
@@ -805,6 +833,83 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+
+    <!-- 穿透明细对话框 -->
+    <el-dialog
+      v-model="drillDetailVisible"
+      :title="drillDetailTitle"
+      width="80%"
+      class="custom-dialog enhanced-dialog"
+      :close-on-click-modal="true"
+      destroy-on-close
+    >
+      <el-table
+        :data="drillDetailList"
+        style="width: 100%"
+        height="450"
+        border
+        stripe
+        size="small"
+      >
+        <el-table-column prop="stockName" label="股票名称" align="center" width="120" show-overflow-tooltip />
+        <el-table-column prop="stockCode" label="股票代码" align="center" width="100" />
+        <el-table-column prop="riseFallPrediction" label="涨跌预测" align="center" width="90">
+          <template #default="scope">
+            {{ getDisplayText(scope.row.riseFallPrediction, riseFallOptions) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="predictionTime" label="预测时间" align="center" width="160" />
+        <el-table-column prop="basisType" label="依据类型" align="center" width="100">
+          <template #default="scope">
+            {{ getDisplayText(scope.row.basisType, basisTypeOptions) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="predictionSituation" label="预测情况" align="center" width="100">
+          <template #default="scope">
+            {{ getDisplayText(scope.row.predictionSituation, predictionSituationOptions) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="predictionResult" label="预测结果" align="center" width="90">
+          <template #default="scope">
+            <el-tag :type="scope.row.predictionResult === 1 ? 'success' : 'danger'" size="small">
+              {{ getDisplayText(scope.row.predictionResult, predictionResultOptions) }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="simulateOperation" label="模拟操作" align="center" width="90">
+          <template #default="scope">
+            {{ getDisplayText(scope.row.simulateOperation, simulateOperationOptions) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="tradeShare" label="交易股数" align="center" width="90" />
+        <el-table-column prop="currentPrice" label="当前价" align="center" width="90">
+          <template #default="scope">
+            {{ scope.row.currentPrice != null ? Number(scope.row.currentPrice).toFixed(2) : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="handlingFee" label="手续费" align="center" width="90">
+          <template #default="scope">
+            {{ scope.row.handlingFee != null ? Number(scope.row.handlingFee).toFixed(2) : '-' }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="tradeStatus" label="交易状态" align="center" width="90">
+          <template #default="scope">
+            {{ getDisplayText(scope.row.tradeStatus, simulateTradeStatusOptions) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="predictionContent" label="预测内容" align="center" min-width="150" show-overflow-tooltip />
+      </el-table>
+      <el-pagination
+        style="margin-top: 20px"
+        v-model:current-page="drillPageParams.page"
+        v-model:page-size="drillPageParams.limit"
+        :page-sizes="[10, 20, 50, 100]"
+        @size-change="fetchDrillDetailData"
+        @current-change="fetchDrillDetailData"
+        layout="total, sizes, prev, pager, next"
+        :total="drillDetailTotal"
+      />
+    </el-dialog>
 
     <!-- 交易规则 详情查看对话框 -->
     <el-dialog
@@ -1489,7 +1594,7 @@ import { ref, reactive, onMounted, onBeforeUnmount, nextTick, computed } from 'v
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList, SaveTransactionRule, DeleteTransactionRuleById, DeleteAllTransactionRuleByIds } from "@/api/trialExecutionArea/transactionSystemTrial"
-import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, GetPredictionReport } from "@/api/trialExecutionArea/predictionSimulate"
+import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, GetPredictionReport, GetPredictionDetailByCondition } from "@/api/trialExecutionArea/predictionSimulate"
 import { getDisplayText } from "@/utils/common"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
@@ -2071,6 +2176,85 @@ const resetReportData = () => {
     stockCode: ''
   })
   fetchReportData()
+}
+
+// ==================== 穿透明细 ====================
+const drillDetailVisible = ref(false)
+const drillDetailTitle = ref('穿透明细')
+const drillDetailList = ref([])
+const drillDetailTotal = ref(0)
+const drillPageParams = reactive({ page: 1, limit: 10 })
+const drillQueryDto = reactive({
+  startTime: null,
+  endTime: null,
+  basisType: [],
+  stockCode: '',
+  predictionResult: null,
+  predictionSituation: null,
+  simulateOperation: null,
+  month: null,
+  detailStockCode: null
+})
+
+// 穿透点击处理
+const drillDown = (params) => {
+  // 构建查询条件：继承报表的统计条件 + 穿透维度的额外条件
+  drillQueryDto.startTime = reportDto.startTime
+  drillQueryDto.endTime = reportDto.endTime
+  drillQueryDto.basisType = [...(reportDto.basisType || [])]
+  drillQueryDto.stockCode = reportDto.stockCode
+  drillQueryDto.predictionResult = params.predictionResult || null
+  drillQueryDto.predictionSituation = params.predictionSituation || null
+  drillQueryDto.simulateOperation = params.simulateOperation || null
+  drillQueryDto.month = params.month || null
+  drillQueryDto.detailStockCode = params.detailStockCode || null
+
+  // 如果穿透维度是依据类型，将basisType覆盖为单个值
+  if (params.type === 'basisType' && params.basisType) {
+    drillQueryDto.basisType = [params.basisType]
+  }
+
+  // 生成标题
+  const titleParts = ['穿透明细']
+  if (params.type === 'basisType' && params.basisType) {
+    titleParts.push('依据类型: ' + getDisplayText(params.basisType, basisTypeOptions.value))
+  }
+  if (params.type === 'situation' && params.predictionSituation) {
+    titleParts.push('预测情况: ' + getDisplayText(params.predictionSituation, predictionSituationOptions.value))
+  }
+  if (params.type === 'month' && params.month) {
+    titleParts.push('月份: ' + params.month)
+  }
+  if (params.type === 'trade' && params.simulateOperation) {
+    titleParts.push('操作: ' + getDisplayText(params.simulateOperation, simulateOperationOptions.value))
+  }
+  if (params.type === 'stock' && params.detailStockCode) {
+    titleParts.push('股票: ' + params.detailStockCode)
+  }
+  if (params.predictionResult) {
+    titleParts.push(params.predictionResult === 1 ? '成功' : '失败')
+  }
+  drillDetailTitle.value = titleParts.join(' - ')
+
+  drillPageParams.page = 1
+  drillDetailVisible.value = true
+  fetchDrillDetailData()
+}
+
+// 获取穿透明细数据
+const fetchDrillDetailData = async () => {
+  try {
+    const result = await GetPredictionDetailByCondition(drillPageParams.page, drillPageParams.limit, drillQueryDto)
+    if (result.code === 200) {
+      const pageInfo = result.data || {}
+      drillDetailList.value = pageInfo.list || []
+      drillDetailTotal.value = pageInfo.total || 0
+    } else {
+      ElMessage.error(result.message || "查询穿透明细失败")
+    }
+  } catch (error) {
+    ElMessage.error("查询穿透明细失败")
+  }
 }
 
 //=========================================================
@@ -3396,6 +3580,19 @@ const showExportDialog = () => {
   font-size: 13px;
   color: #909399;
   font-weight: 500;
+}
+
+/* 穿透链接样式 */
+.drill-link {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.drill-link:hover {
+  transform: scale(1.1);
+  filter: brightness(1.2);
 }
 
 /* 成功率文字样式 */

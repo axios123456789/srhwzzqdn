@@ -22,4 +22,20 @@ public class PredictionReportDto {
 
     @Schema(description = "所属人")
     private String owner;
+
+    // ====================穿透明细查询参数====================
+    @Schema(description = "预测结果（1-成功 2-失败），用于穿透明细")
+    private Integer predictionResult;
+
+    @Schema(description = "预测情况，用于穿透明细")
+    private Integer predictionSituation;
+
+    @Schema(description = "模拟操作（1-买入 2-卖出），用于穿透明细")
+    private Integer simulateOperation;
+
+    @Schema(description = "月份（格式：YYYY-MM），用于穿透明细")
+    private String month;
+
+    @Schema(description = "明细股票代码，用于穿透明细（与统计条件stockCode区分）")
+    private String detailStockCode;
 }

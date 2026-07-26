@@ -237,6 +237,17 @@ public class PredictionSimulateServiceImpl implements PredictionSimulateService 
         return vo;
     }
 
+    /**
+     * 穿透明细查询：根据报表条件+穿透维度分页查询预测记录明细
+     */
+    @Override
+    public PageInfo<PredictionSimulate> getPredictionDetailByCondition(Integer current, Integer limit, PredictionReportDto dto) {
+        dto.setOwner(AuthContextUtil.get().getId());
+        PageHelper.startPage(current, limit);
+        List<PredictionSimulate> list = predictionSimulateMapper.getPredictionDetailByCondition(dto);
+        return new PageInfo<>(list);
+    }
+
     //====================台账联动辅助方法====================
 
     /**

@@ -74,3 +74,12 @@ export const GetPredictionReport = data => {
     data: data,
   })
 }
+
+// 穿透明细查询：根据报表条件+穿透维度分页查询预测记录明细
+export const GetPredictionDetailByCondition = (current, limit, queryDto) => {
+  return request({
+    url: base_api + '/getPredictionDetailByCondition/' + current + '/' + limit,
+    method: 'post',
+    data: queryDto,
+  })
+}

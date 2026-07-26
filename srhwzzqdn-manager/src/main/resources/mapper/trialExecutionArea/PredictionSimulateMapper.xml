@@ -462,4 +462,67 @@
         group by t.stock_code, t.stock_name
         order by predictCount desc
     </select>
+
+    <!-- 穿透明细查询：根据报表条件+穿透维度查询预测记录明细 -->
+    <select id="getPredictionDetailByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.trialExecutionArea.PredictionSimulate">
+        select t.id,
+               t.stock_name,
+               t.stock_code,
+               t.rise_fall_prediction,
+               t.prediction_time,
+               t.prediction_content,
+               t.prediction_basis,
+               t.basis_type,
+               t.rise_fall_result,
+               t.actual_content,
+               t.result_analysis,
+               t.prediction_situation,
+               t.prediction_result,
+               t.simulate_operation,
+               t.trade_share,
+               t.current_price,
+               t.handling_fee,
+               t.trade_status,
+               t.owner,
+               t.create_time,
+               t.update_time
+        from t_trial_prediction t
+        <where>
+            <if test="startTime != null and startTime != ''">
+                and t.prediction_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.prediction_time &lt;= #{endTime}
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and t.basis_type in
+                <foreach collection="basisType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+            <if test="predictionResult != null">
+                and t.prediction_result = #{predictionResult}
+            </if>
+            <if test="predictionSituation != null">
+                and t.prediction_situation = #{predictionSituation}
+            </if>
+            <if test="simulateOperation != null">
+                and t.simulate_operation = #{simulateOperation}
+            </if>
+            <if test="month != null and month != ''">
+                and date_format(t.prediction_time, '%Y-%m') = #{month}
+            </if>
+            <if test="detailStockCode != null and detailStockCode != ''">
+                and t.stock_code = #{detailStockCode}
+            </if>
+        </where>
+        order by t.prediction_time desc
+    </select>
 </mapper>

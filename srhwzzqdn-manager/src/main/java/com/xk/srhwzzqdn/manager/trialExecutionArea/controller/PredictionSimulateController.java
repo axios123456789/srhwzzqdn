@@ -117,4 +117,15 @@ public class PredictionSimulateController {
         PredictionReportVo vo = predictionSimulateService.getPredictionReport(dto);
         return Result.build(vo, ResultCodeEnum.SUCCESS);
     }
+
+    /**
+     * 穿透明细查询：根据报表条件+穿透维度分页查询预测记录明细
+     */
+    @RequestMapping("/getPredictionDetailByCondition/{current}/{limit}")
+    public Result getPredictionDetailByCondition(@PathVariable("current") Integer current,
+                                                  @PathVariable("limit") Integer limit,
+                                                  @RequestBody PredictionReportDto dto) {
+        PageInfo<PredictionSimulate> pageInfo = predictionSimulateService.getPredictionDetailByCondition(current, limit, dto);
+        return Result.build(pageInfo, ResultCodeEnum.SUCCESS);
+    }
 }
