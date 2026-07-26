@@ -14,8 +14,8 @@ public class PredictionReportDto {
     @Schema(description = "统计结束时间")
     private String endTime;
 
-    @Schema(description = "依据类型")
-    private List<Integer> basisType;
+    @Schema(description = "依据类型（多选查询，使用FIND_IN_SET匹配）")
+    private List<String> basisType;
 
     @Schema(description = "股票代码")
     private String stockCode;

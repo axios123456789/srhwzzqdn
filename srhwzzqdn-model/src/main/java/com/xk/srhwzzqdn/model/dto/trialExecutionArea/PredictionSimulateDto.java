@@ -17,8 +17,8 @@ public class PredictionSimulateDto {
     @Schema(description = "涨跌预测")
     private List<Integer> riseFallPrediction;
 
-    @Schema(description = "依据类型")
-    private List<Integer> basisType;
+    @Schema(description = "依据类型（多选查询，使用FIND_IN_SET匹配）")
+    private List<String> basisType;
 
     @Schema(description = "预测时间（起）")
     private String predictionTimeStart;

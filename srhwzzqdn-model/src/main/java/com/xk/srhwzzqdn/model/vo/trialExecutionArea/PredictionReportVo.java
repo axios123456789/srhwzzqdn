@@ -39,8 +39,8 @@ public class PredictionReportVo {
     @Data
     @Schema(description = "依据类型统计")
     public static class BasisTypeStat {
-        @Schema(description = "依据类型")
-        private Integer basisType;
+        @Schema(description = "依据类型（逗号分隔字符串）")
+        private String basisType;
         @Schema(description = "总次数")
         private Integer count;
         @Schema(description = "成功次数")

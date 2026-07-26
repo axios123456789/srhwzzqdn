@@ -32,8 +32,8 @@ public class PredictionSimulate {
     @Schema(description = "预测依据")
     private String predictionBasis;
 
-    @Schema(description = "依据类型：1-技术分析 2-基本面分析 3-消息面分析 4-逻辑分析 5-情绪分析")
-    private Integer basisType;
+    @Schema(description = "依据类型：1-技术分析 2-基本面分析 3-消息面分析 4-逻辑分析 5-情绪分析，多选逗号分隔")
+    private String basisType;
 
     @Schema(description = "涨跌结果：1-涨 2-跌")
     private Integer riseFallResult;

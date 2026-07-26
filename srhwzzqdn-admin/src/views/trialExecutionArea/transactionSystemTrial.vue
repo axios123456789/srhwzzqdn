@@ -553,9 +553,9 @@
               </template>
             </el-table-column>
             <el-table-column prop="predictionTime" label="预测时间" align="center" width="160" />
-            <el-table-column prop="basisType" label="依据类型" align="center" width="100">
+            <el-table-column prop="basisType" label="依据类型" align="center" min-width="120">
               <template #default="scope">
-                {{ getDisplayText(scope.row.basisType, basisTypeOptions) }}
+                {{ getBasisTypeDisplay(scope.row.basisType) }}
               </template>
             </el-table-column>
             <el-table-column prop="predictionResult" label="预测结果" align="center" width="80">
@@ -706,7 +706,7 @@
                 <el-table :data="reportData.basisTypeStats || []" border stripe size="small">
                   <el-table-column prop="basisType" label="依据类型" align="center">
                     <template #default="scope">
-                      {{ getDisplayText(scope.row.basisType, basisTypeOptions) }}
+                      {{ getBasisTypeDisplay(scope.row.basisType) }}
                     </template>
                   </el-table-column>
                   <el-table-column prop="count" label="总次数" align="center">
@@ -893,9 +893,9 @@
           </template>
         </el-table-column>
         <el-table-column prop="predictionTime" label="预测时间" align="center" width="160" />
-        <el-table-column prop="basisType" label="依据类型" align="center" width="100">
+        <el-table-column prop="basisType" label="依据类型" align="center" min-width="120">
           <template #default="scope">
-            {{ getDisplayText(scope.row.basisType, basisTypeOptions) }}
+            {{ getBasisTypeDisplay(scope.row.basisType) }}
           </template>
         </el-table-column>
         <el-table-column prop="predictionResult" label="预测结果" align="center" width="80">
@@ -976,7 +976,7 @@
               <span class="detail-value">{{ predDetailData.predictionTime || '-' }}</span>
             </el-descriptions-item>
             <el-descriptions-item label="依据类型" :span="1">
-              <el-tag type="warning" size="small">{{ getDisplayText(predDetailData.basisType, basisTypeOptions) }}</el-tag>
+              <el-tag type="warning" size="small">{{ getBasisTypeDisplay(predDetailData.basisType) }}</el-tag>
             </el-descriptions-item>
           </el-descriptions>
         </div>
@@ -1583,7 +1583,7 @@
           <el-row :gutter="20">
             <el-col :span="12">
               <el-form-item label="依据类型" prop="basisType">
-                <el-select v-model="predFormData.basisType" style="width: 100%" placeholder="请选择依据类型">
+                <el-select v-model="predFormData.basisType" style="width: 100%" placeholder="请选择依据类型(可多选)" multiple clearable>
                   <el-option v-for="item in basisTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
                 </el-select>
               </el-form-item>
@@ -1902,6 +1902,18 @@ const getBasisTypeItem = async () => {
   basisTypeOptions.value = result.data || []
 }
 
+// 依据类型多值显示：将逗号分隔字符串转为文字显示
+const getBasisTypeDisplay = (basisType) => {
+  if (!basisType) return '-'
+  if (Array.isArray(basisType)) {
+    return basisType.map(type => getDisplayText(Number(type), basisTypeOptions.value)).join(', ')
+  }
+  if (typeof basisType === 'string') {
+    return basisType.split(',').filter(v => v).map(type => getDisplayText(Number(type), basisTypeOptions.value)).join(', ')
+  }
+  return getDisplayText(basisType, basisTypeOptions.value)
+}
+
 // 预测情况选项
 const predictionSituationOptions = ref([])
 const getPredictionSituationItem = async () => {
@@ -2019,7 +2031,7 @@ const predFormData = reactive({
   predictionTime: '',
   predictionContent: '',
   predictionBasis: '',
-  basisType: null,
+  basisType: [],
   riseFallResult: null,
   actualContent: '',
   resultAnalysis: '',
@@ -2052,7 +2064,7 @@ const addPrediction = () => {
     predictionTime: '',
     predictionContent: '',
     predictionBasis: '',
-    basisType: null,
+    basisType: [],
     riseFallResult: null,
     actualContent: '',
     resultAnalysis: '',
@@ -2074,6 +2086,12 @@ const editPrediction = (row) => {
     predFormRef.value.resetFields()
   }
   Object.assign(predFormData, row)
+  // basisType在数据库中是逗号分隔字符串，编辑时转为数字数组供多选组件使用
+  if (predFormData.basisType && typeof predFormData.basisType === 'string') {
+    predFormData.basisType = predFormData.basisType.split(',').filter(v => v).map(v => Number(v))
+  } else if (!predFormData.basisType) {
+    predFormData.basisType = []
+  }
   predDialogVisible.value = true
 }
 
@@ -2086,7 +2104,12 @@ const submitPrediction = async () => {
     return
   }
   try {
-    const result = await SavePrediction(predFormData)
+    // basisType多选数组转为逗号分隔字符串存入数据库
+    const submitData = { ...predFormData }
+    if (Array.isArray(submitData.basisType)) {
+      submitData.basisType = submitData.basisType.join(',')
+    }
+    const result = await SavePrediction(submitData)
     if (result.code === 200) {
       ElMessage.success(predFormData.id ? '编辑成功' : '添加成功')
       predDialogVisible.value = false
@@ -2386,15 +2409,17 @@ const drillDown = (params) => {
   drillQueryDto.month = params.month || null
   drillQueryDto.detailStockCode = params.detailStockCode || null
 
-  // 如果穿透维度是依据类型，将basisType覆盖为单个值
+  // 如果穿透维度是依据类型，将basisType覆盖（支持逗号分隔的多值）
   if (params.type === 'basisType' && params.basisType) {
-    drillQueryDto.basisType = [params.basisType]
+    drillQueryDto.basisType = typeof params.basisType === 'string'
+      ? params.basisType.split(',').filter(v => v).map(v => Number(v))
+      : [params.basisType]
   }
 
   // 生成标题
   const titleParts = ['穿透明细']
   if (params.type === 'basisType' && params.basisType) {
-    titleParts.push('依据类型: ' + getDisplayText(params.basisType, basisTypeOptions.value))
+    titleParts.push('依据类型: ' + getBasisTypeDisplay(params.basisType))
   }
   if (params.type === 'situation' && params.predictionSituation) {
     titleParts.push('预测情况: ' + getDisplayText(params.predictionSituation, predictionSituationOptions.value))
