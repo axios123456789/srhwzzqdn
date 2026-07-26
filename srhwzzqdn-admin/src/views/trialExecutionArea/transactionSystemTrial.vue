@@ -342,6 +342,468 @@
       />
         </div>
       </el-tab-pane>
+
+      <!-- 预测模拟标签页 -->
+      <el-tab-pane label="预测模拟" name="prediction">
+        <div class="prediction-div">
+          <!-- 模拟账户总览 - 顶部横条 -->
+          <div class="account-overview">
+            <div class="account-overview-left">
+              <div class="account-icon">
+                <el-icon :size="28"><Wallet /></el-icon>
+              </div>
+              <div class="account-info">
+                <div class="account-label">模拟账户总资产</div>
+                <div class="account-total-amount">
+                  ¥ {{ formatMoney(totalAssetAmount) }}
+                </div>
+              </div>
+            </div>
+            <div class="account-overview-right">
+              <div class="account-stat-item">
+                <div class="account-stat-label">可用资金</div>
+                <div class="account-stat-value available">¥ {{ formatMoney(mainAccountAmount) }}</div>
+              </div>
+              <div class="account-stat-divider"></div>
+              <div class="account-stat-item">
+                <div class="account-stat-label">持仓市值</div>
+                <div class="account-stat-value position">¥ {{ formatMoney(positionAmount) }}</div>
+              </div>
+              <div class="account-stat-divider"></div>
+              <div class="account-stat-item">
+                <div class="account-stat-label">持仓数量</div>
+                <div class="account-stat-value count">{{ positionCount }} 只</div>
+              </div>
+              <div class="account-stat-divider"></div>
+              <div class="account-stat-item">
+                <el-button type="warning" size="small" @click="initAccount" plain>
+                  <el-icon><Wallet /></el-icon>
+                  初始化账户
+                </el-button>
+                <el-button type="success" size="small" @click="addLedger" plain>
+                  <el-icon><DocumentAdd /></el-icon>
+                  添加
+                </el-button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 持仓卡片区域 -->
+          <div class="position-cards" v-if="positionList.length > 0">
+            <div class="position-card" v-for="item in positionList" :key="item.id">
+              <div class="position-card-header">
+                <span class="position-stock-name">{{ item.assetName }}</span>
+                <span class="position-stock-code">{{ item.assetCode }}</span>
+                <el-tag size="small" type="info" style="margin-left: 6px;">{{ getDisplayText(item.assetType, simulateAssetTypeOptions) }}</el-tag>
+                <div class="position-card-actions">
+                  <el-button type="primary" link size="small" @click="editLedger(item)">
+                    <el-icon><Edit /></el-icon>
+                  </el-button>
+                  <el-button type="danger" link size="small" @click="deleteLedger(item)">
+                    <el-icon><Delete /></el-icon>
+                  </el-button>
+                </div>
+              </div>
+              <div class="position-card-body">
+                <div class="position-card-col">
+                  <div class="position-card-label">持仓数量</div>
+                  <div class="position-card-value">{{ item.assetQuantity || 0 }}<span class="position-card-unit">股</span></div>
+                </div>
+                <div class="position-card-col">
+                  <div class="position-card-label">持仓市值</div>
+                  <div class="position-card-value highlight">¥ {{ formatMoney(item.assetAmount) }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="position-empty" v-else>
+            <el-empty description="暂无持仓，请先初始化账户" :image-size="60" />
+          </div>
+
+          <!-- 预测模拟管理 - 搜索区域 -->
+          <div class="search-div" style="margin-top: 15px;">
+            <div class="search-header">
+              <span class="search-title">预测记录查询</span>
+            </div>
+            <el-form label-width="100px" size="small">
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <el-form-item label="股票名称">
+                    <el-input v-model="predQueryDto.stockName" style="width: 100%" clearable placeholder="请输入股票名称" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="股票代码">
+                    <el-input v-model="predQueryDto.stockCode" style="width: 100%" clearable placeholder="请输入股票代码" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="涨跌预测">
+                    <el-select v-model="predQueryDto.riseFallPrediction" style="width: 100%" clearable placeholder="请选择" multiple>
+                      <el-option v-for="item in riseFallOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="依据类型">
+                    <el-select v-model="predQueryDto.basisType" style="width: 100%" clearable placeholder="请选择" multiple>
+                      <el-option v-for="item in basisTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="预测时间">
+                    <el-date-picker
+                      v-model="predTimeArea"
+                      type="datetimerange"
+                      range-separator="至"
+                      start-placeholder="开始时间"
+                      end-placeholder="结束时间"
+                      style="width: 100%"
+                      value-format="YYYY-MM-DD HH:mm:ss"
+                      :unlink-panels="true"
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="预测结果">
+                    <el-select v-model="predQueryDto.predictionResult" style="width: 100%" clearable placeholder="请选择" multiple>
+                      <el-option v-for="item in predictionResultOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="交易状态">
+                    <el-select v-model="predQueryDto.tradeStatus" style="width: 100%" clearable placeholder="请选择" multiple>
+                      <el-option v-for="item in simulateTradeStatusOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24" style="text-align: right;">
+                  <el-form-item label-width="10px">
+                    <el-button type="primary" size="small" @click="searchPredData">
+                      <el-icon><Search /></el-icon>
+                      搜索
+                    </el-button>
+                    <el-button size="small" @click="resetPredData">
+                      <el-icon><Refresh /></el-icon>
+                      重置
+                    </el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </div>
+          <!-- 操作按钮区域 -->
+          <div class="tools-div beautified-tools" style="text-align: right;">
+            <el-button type="success" size="small" @click="addPrediction">
+              <el-icon><DocumentAdd /></el-icon>
+              添加预测
+            </el-button>
+            <el-button type="danger" size="small" @click="deletePredAll" :disabled="predSelectedRows.length === 0">
+              <el-icon><Delete /></el-icon>
+              批量删除
+            </el-button>
+          </div>
+          <!-- 预测模拟数据表格 -->
+          <el-table
+            :data="predList"
+            style="width: 100%"
+            height="300"
+            ref="predTable"
+            @selection-change="handlePredSelectionChange"
+            border
+            stripe
+            size="small"
+          >
+            <el-table-column type="selection" width="40" align="center" />
+            <el-table-column label="操作" align="center" fixed="left" width="160" #default="scope">
+              <el-button type="primary" size="small" @click="editPrediction(scope.row)">
+                <el-icon><Edit /></el-icon>
+                编辑
+              </el-button>
+              <el-button type="danger" size="small" @click="deletePrediction(scope.row)">
+                <el-icon><Delete /></el-icon>
+                删除
+              </el-button>
+            </el-table-column>
+            <el-table-column prop="stockName" label="股票名称" align="center" width="100" show-overflow-tooltip />
+            <el-table-column prop="stockCode" label="股票代码" align="center" width="100" />
+            <el-table-column prop="riseFallPrediction" label="涨跌预测" align="center" width="80">
+              <template #default="scope">
+                <el-tag :type="scope.row.riseFallPrediction === 1 ? 'danger' : 'success'" size="small">
+                  {{ getDisplayText(scope.row.riseFallPrediction, riseFallOptions) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="predictionTime" label="预测时间" align="center" width="160" />
+            <el-table-column prop="basisType" label="依据类型" align="center" width="100">
+              <template #default="scope">
+                {{ getDisplayText(scope.row.basisType, basisTypeOptions) }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="predictionResult" label="预测结果" align="center" width="80">
+              <template #default="scope">
+                <el-tag :type="scope.row.predictionResult === 1 ? 'success' : 'danger'" size="small">
+                  {{ getDisplayText(scope.row.predictionResult, predictionResultOptions) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="predictionSituation" label="预测情况" align="center" width="100">
+              <template #default="scope">
+                {{ getDisplayText(scope.row.predictionSituation, predictionSituationOptions) }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="simulateOperation" label="模拟操作" align="center" width="90">
+              <template #default="scope">
+                {{ getDisplayText(scope.row.simulateOperation, simulateOperationOptions) }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="tradeShare" label="交易份额" align="center" width="80" />
+            <el-table-column prop="currentPrice" label="当前股价" align="center" width="90">
+              <template #default="scope">
+                {{ scope.row.currentPrice != null ? Number(scope.row.currentPrice).toFixed(2) : '-' }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="handlingFee" label="手续费" align="center" width="80">
+              <template #default="scope">
+                {{ scope.row.handlingFee != null ? Number(scope.row.handlingFee).toFixed(2) : '-' }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="tradeStatus" label="交易状态" align="center" width="80">
+              <template #default="scope">
+                <el-tag :type="scope.row.tradeStatus === 1 ? 'success' : 'danger'" size="small">
+                  {{ getDisplayText(scope.row.tradeStatus, simulateTradeStatusOptions) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="predictionContent" label="预测内容" align="center" min-width="120" show-overflow-tooltip />
+            <el-table-column prop="predictionBasis" label="预测依据" align="center" min-width="120" show-overflow-tooltip />
+          </el-table>
+          <!-- 分页组件 -->
+          <el-pagination
+            style="margin-top: 15px"
+            v-model:current-page="predPageParams.page"
+            v-model:page-size="predPageParams.limit"
+            :page-sizes="[10, 20, 50, 100]"
+            @size-change="fetchPredData"
+            @current-change="fetchPredData"
+            layout="total, sizes, prev, pager, next"
+            :total="predTotal"
+          />
+        </div>
+      </el-tab-pane>
+
+      <!-- 统计报表标签页 -->
+      <el-tab-pane label="统计报表" name="report">
+        <div class="report-div">
+          <!-- 报表筛选条件 -->
+          <div class="search-div">
+            <div class="search-header">
+              <span class="search-title">统计条件</span>
+            </div>
+            <el-form label-width="100px" size="small">
+              <el-row :gutter="20">
+                <el-col :span="12">
+                  <el-form-item label="统计时间">
+                    <el-date-picker
+                      v-model="reportTimeArea"
+                      type="datetimerange"
+                      range-separator="至"
+                      start-placeholder="开始时间"
+                      end-placeholder="结束时间"
+                      style="width: 100%"
+                      value-format="YYYY-MM-DD HH:mm:ss"
+                      :unlink-panels="true"
+                    />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="依据类型">
+                    <el-select v-model="reportDto.basisType" style="width: 100%" clearable placeholder="请选择" multiple>
+                      <el-option v-for="item in basisTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="股票代码">
+                    <el-input v-model="reportDto.stockCode" style="width: 100%" clearable placeholder="请输入股票代码" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24" style="text-align: right;">
+                  <el-form-item label-width="10px">
+                    <el-button type="primary" size="small" @click="fetchReportData">
+                      <el-icon><Search /></el-icon>
+                      查询
+                    </el-button>
+                    <el-button size="small" @click="resetReportData">
+                      <el-icon><Refresh /></el-icon>
+                      重置
+                    </el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </div>
+
+          <!-- 概览卡片 -->
+          <el-row :gutter="16" style="margin-bottom: 20px;">
+            <el-col :span="6">
+              <div class="stat-card">
+                <div class="stat-value primary">{{ reportData.totalCount || 0 }}</div>
+                <div class="stat-label">总预测次数</div>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="stat-card">
+                <div class="stat-value success">{{ reportData.successCount || 0 }}</div>
+                <div class="stat-label">预测成功次数</div>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="stat-card">
+                <div class="stat-value danger">{{ reportData.failCount || 0 }}</div>
+                <div class="stat-label">预测失败次数</div>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="stat-card rate-card">
+                <div class="stat-value" :class="getRateClass((reportData.accuracyRate || 0) + '%')">{{ reportData.accuracyRate || '0.00' }}%</div>
+                <div class="stat-label">预测准确率</div>
+              </div>
+            </el-col>
+          </el-row>
+
+          <!-- 依据类型准确率 + 预测情况分布 -->
+          <el-row :gutter="16" style="margin-bottom: 20px;">
+            <el-col :span="12">
+              <div class="report-section">
+                <div class="detail-section-title">依据类型准确率</div>
+                <el-table :data="reportData.basisTypeStats || []" border stripe size="small">
+                  <el-table-column prop="basisType" label="依据类型" align="center">
+                    <template #default="scope">
+                      {{ getDisplayText(scope.row.basisType, basisTypeOptions) }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="count" label="总次数" align="center" />
+                  <el-table-column prop="successCount" label="成功次数" align="center" />
+                  <el-table-column prop="successRate" label="成功率" align="center">
+                    <template #default="scope">
+                      <span :class="getRateClass(scope.row.successRate + '%')">{{ scope.row.successRate }}%</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <div class="report-section">
+                <div class="detail-section-title">预测情况分布</div>
+                <el-table :data="reportData.situationStats || []" border stripe size="small">
+                  <el-table-column prop="predictionSituation" label="预测情况" align="center">
+                    <template #default="scope">
+                      {{ getDisplayText(scope.row.predictionSituation, predictionSituationOptions) }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="count" label="次数" align="center" />
+                  <el-table-column prop="percentage" label="占比" align="center">
+                    <template #default="scope">
+                      <el-progress :percentage="Number(scope.row.percentage)" :stroke-width="14" :text-inside="true" />
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </el-col>
+          </el-row>
+
+          <!-- 月度趋势 + 模拟操作统计 -->
+          <el-row :gutter="16" style="margin-bottom: 20px;">
+            <el-col :span="12">
+              <div class="report-section">
+                <div class="detail-section-title">月度预测准确率趋势</div>
+                <el-table :data="reportData.monthlyTrends || []" border stripe size="small">
+                  <el-table-column prop="month" label="月份" align="center" />
+                  <el-table-column prop="totalCount" label="总次数" align="center" />
+                  <el-table-column prop="successCount" label="成功次数" align="center" />
+                  <el-table-column prop="successRate" label="成功率" align="center">
+                    <template #default="scope">
+                      <span :class="getRateClass(scope.row.successRate + '%')">{{ scope.row.successRate }}%</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </el-col>
+            <el-col :span="12">
+              <div class="report-section">
+                <div class="detail-section-title">模拟操作盈亏统计</div>
+                <el-row :gutter="16" v-if="reportData.simulateTradeStat">
+                  <el-col :span="8">
+                    <div class="stat-card">
+                      <div class="stat-value primary">{{ reportData.simulateTradeStat.totalBuyCount || 0 }}</div>
+                      <div class="stat-label">买入次数</div>
+                    </div>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="stat-card">
+                      <div class="stat-value success">{{ reportData.simulateTradeStat.totalSellCount || 0 }}</div>
+                      <div class="stat-label">卖出次数</div>
+                    </div>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="stat-card">
+                      <div class="stat-value warning">{{ reportData.simulateTradeStat.totalHandlingFee || '0.00' }}</div>
+                      <div class="stat-label">总手续费</div>
+                    </div>
+                  </el-col>
+                </el-row>
+                <el-row :gutter="16" style="margin-top: 16px;" v-if="reportData.simulateTradeStat">
+                  <el-col :span="8">
+                    <div class="stat-card">
+                      <div class="stat-value primary">{{ reportData.simulateTradeStat.totalBuyAmount || '0.00' }}</div>
+                      <div class="stat-label">买入总额</div>
+                    </div>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="stat-card">
+                      <div class="stat-value success">{{ reportData.simulateTradeStat.totalSellAmount || '0.00' }}</div>
+                      <div class="stat-label">卖出总额</div>
+                    </div>
+                  </el-col>
+                  <el-col :span="8">
+                    <div class="stat-card">
+                      <div class="stat-value" :class="Number(reportData.simulateTradeStat.totalProfitLoss || 0) >= 0 ? 'success' : 'danger'">
+                        {{ reportData.simulateTradeStat.totalProfitLoss || '0.00' }}
+                      </div>
+                      <div class="stat-label">模拟盈亏</div>
+                    </div>
+                  </el-col>
+                </el-row>
+              </div>
+            </el-col>
+          </el-row>
+
+          <!-- 股票预测统计 -->
+          <div class="report-section">
+            <div class="detail-section-title">股票预测统计</div>
+            <el-table :data="reportData.stockStats || []" border stripe size="small">
+              <el-table-column prop="stockName" label="股票名称" align="center" min-width="120" show-overflow-tooltip />
+              <el-table-column prop="stockCode" label="股票代码" align="center" width="120" />
+              <el-table-column prop="predictCount" label="预测次数" align="center" width="100" />
+              <el-table-column prop="successCount" label="成功次数" align="center" width="100" />
+              <el-table-column prop="successRate" label="成功率" align="center" width="100">
+                <template #default="scope">
+                  <span :class="getRateClass(scope.row.successRate + '%')">{{ scope.row.successRate }}%</span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </div>
+      </el-tab-pane>
     </el-tabs>
 
     <!-- 交易规则 详情查看对话框 -->
@@ -806,6 +1268,208 @@
       </template>
     </el-dialog>
 
+    <!-- 预测模拟 添加/修改对话框 -->
+    <el-dialog
+      v-model="predDialogVisible"
+      :title="predDialogTitle"
+      width="65%"
+      class="custom-dialog enhanced-dialog"
+      :close-on-click-modal="false"
+    >
+      <el-steps :active="predFormStep" align-center style="margin-bottom: 20px;">
+        <el-step title="预测信息" />
+        <el-step title="结果与模拟" />
+      </el-steps>
+      <el-form :model="predFormData" label-width="120px" :rules="predFormRules" ref="predFormRef">
+        <!-- 步骤1：预测信息 -->
+        <div v-show="predFormStep === 0">
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="股票名称" prop="stockName">
+                <el-input v-model="predFormData.stockName" placeholder="请输入股票名称" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="股票代码" prop="stockCode">
+                <el-input v-model="predFormData.stockCode" placeholder="请输入股票代码" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="涨跌预测" prop="riseFallPrediction">
+                <el-select v-model="predFormData.riseFallPrediction" style="width: 100%" placeholder="请选择涨跌预测">
+                  <el-option v-for="item in riseFallOptions" :key="item.value" :label="item.text" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="预测时间" prop="predictionTime">
+                <el-date-picker v-model="predFormData.predictionTime" type="datetime" placeholder="请选择预测时间" style="width: 100%" value-format="YYYY-MM-DD HH:mm:ss" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="依据类型" prop="basisType">
+                <el-select v-model="predFormData.basisType" style="width: 100%" placeholder="请选择依据类型">
+                  <el-option v-for="item in basisTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <el-form-item label="预测内容" prop="predictionContent">
+                <el-input v-model="predFormData.predictionContent" type="textarea" :rows="2" placeholder="请输入预测内容" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <el-form-item label="预测依据" prop="predictionBasis">
+                <el-input v-model="predFormData.predictionBasis" type="textarea" :rows="2" placeholder="请输入预测依据" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+        <!-- 步骤2：结果与模拟 -->
+        <div v-show="predFormStep === 1">
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="涨跌结果" prop="riseFallResult">
+                <el-select v-model="predFormData.riseFallResult" style="width: 100%" clearable placeholder="请选择涨跌结果">
+                  <el-option v-for="item in riseFallOptions" :key="item.value" :label="item.text" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="预测情况" prop="predictionSituation">
+                <el-select v-model="predFormData.predictionSituation" style="width: 100%" clearable placeholder="请选择预测情况">
+                  <el-option v-for="item in predictionSituationOptions" :key="item.value" :label="item.text" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="预测结果" prop="predictionResult">
+                <el-select v-model="predFormData.predictionResult" style="width: 100%" clearable placeholder="请选择预测结果">
+                  <el-option v-for="item in predictionResultOptions" :key="item.value" :label="item.text" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="模拟操作" prop="simulateOperation">
+                <el-select v-model="predFormData.simulateOperation" style="width: 100%" clearable placeholder="请选择模拟操作">
+                  <el-option v-for="item in simulateOperationOptions" :key="item.value" :label="item.text" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="8">
+              <el-form-item label="交易份额" prop="tradeShare">
+                <el-input-number v-model="predFormData.tradeShare" :min="0" style="width: 100%" placeholder="交易份额" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="当前股价" prop="currentPrice">
+                <el-input-number v-model="predFormData.currentPrice" :precision="2" :min="0" style="width: 100%" placeholder="当前股价" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="手续费" prop="handlingFee">
+                <el-input-number v-model="predFormData.handlingFee" :precision="2" :min="0" style="width: 100%" placeholder="手续费" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-form-item label="交易状态" prop="tradeStatus">
+                <el-select v-model="predFormData.tradeStatus" style="width: 100%" clearable placeholder="请选择交易状态">
+                  <el-option v-for="item in simulateTradeStatusOptions" :key="item.value" :label="item.text" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <el-form-item label="实际内容" prop="actualContent">
+                <el-input v-model="predFormData.actualContent" type="textarea" :rows="2" placeholder="请输入实际内容" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <el-form-item label="结果分析" prop="resultAnalysis">
+                <el-input v-model="predFormData.resultAnalysis" type="textarea" :rows="2" placeholder="请输入结果分析" />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button v-if="predFormStep > 0" @click="predFormStep--">上一步</el-button>
+          <el-button v-if="predFormStep < 1" type="primary" @click="predFormStep++">下一步</el-button>
+          <el-button @click="predDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitPrediction">提交</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- 模拟台账 添加/修改对话框 -->
+    <el-dialog
+      v-model="ledgerDialogVisible"
+      :title="ledgerDialogTitle"
+      width="50%"
+      class="custom-dialog enhanced-dialog"
+      :close-on-click-modal="false"
+    >
+      <el-form :model="ledgerFormData" label-width="120px" :rules="ledgerFormRules" ref="ledgerFormRef">
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="资产名称" prop="assetName">
+              <el-input v-model="ledgerFormData.assetName" placeholder="请输入资产名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="资产编号" prop="assetCode">
+              <el-input v-model="ledgerFormData.assetCode" placeholder="请输入资产编号" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="资产类型" prop="assetType">
+              <el-select v-model="ledgerFormData.assetType" style="width: 100%" placeholder="请选择资产类型">
+                <el-option v-for="item in simulateAssetTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="资产金额" prop="assetAmount">
+              <el-input-number v-model="ledgerFormData.assetAmount" :precision="2" style="width: 100%" placeholder="资产金额" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="资产数量" prop="assetQuantity">
+              <el-input-number v-model="ledgerFormData.assetQuantity" :min="0" style="width: 100%" placeholder="资产数量(股)" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="ledgerDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="submitLedger">提交</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
     <!-- 导出对话框 -->
     <ExportDialog
         v-model="exportDialogVisible"
@@ -825,6 +1489,7 @@ import { ref, reactive, onMounted, onBeforeUnmount, nextTick, computed } from 'v
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList, SaveTransactionRule, DeleteTransactionRuleById, DeleteAllTransactionRuleByIds } from "@/api/trialExecutionArea/transactionSystemTrial"
+import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, GetPredictionReport } from "@/api/trialExecutionArea/predictionSimulate"
 import { getDisplayText } from "@/utils/common"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
@@ -837,7 +1502,6 @@ const ruleTableHeight = ref(320)
 
 const calcRuleTableHeight = () => {
   nextTick(() => {
-    // 页面标题(约68) + 标签页头部(约44) + rule-header(约50) + 搜索条件(约56) + rule-div padding(30) + 底部留白(10)
     const occupiedHeight = 68 + 44 + 50 + 56 + 30 + 10
     const availableHeight = window.innerHeight - occupiedHeight
     ruleTableHeight.value = Math.max(availableHeight, 200)
@@ -868,9 +1532,21 @@ onMounted(() => {
   getRuleStatusItem()
   getRuleTypeItem()
 
+  //3.加载预测模拟数据字典
+  getRiseFallItem()
+  getBasisTypeItem()
+  getPredictionSituationItem()
+  getPredictionResultItem()
+  getSimulateOperationItem()
+  getSimulateTradeStatusItem()
+  getSimulateAssetTypeItem()
+
   //2.调用查询数据接口
   fetchData()
   fetchRuleData()
+  fetchLedgerData()
+  fetchPredData()
+  fetchReportData()
 });
 
 // ==================== 数据字典 ====================
@@ -878,21 +1554,21 @@ onMounted(() => {
 const tradeTypeOptions = ref([])
 const getTradeTypeItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_transaction_type")
-  tradeTypeOptions.value = result.data
+  tradeTypeOptions.value = result.data || []
 }
 
 // 计划类型选项
 const planTypeOptions = ref([])
 const getPlanTypeItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_plan_type")
-  planTypeOptions.value = result.data
+  planTypeOptions.value = result.data || []
 }
 
 // 交易状态选项
 const tradeStatusOptions = ref([])
 const getTradeStatusItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_transaction_status")
-  tradeStatusOptions.value = result.data
+  tradeStatusOptions.value = result.data || []
 }
 
 // 交易结果选项
@@ -900,7 +1576,6 @@ const tradeResultOptions = ref([])
 const getTradeResultItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_transaction_result")
   const data = result.data || []
-  // 兜底：确保码值为0（失败）的选项存在，防止字典接口因status过滤导致缺失
   if (!data.find(item => item.value === 0)) {
     data.push({ value: 0, text: '失败' })
   }
@@ -911,7 +1586,7 @@ const getTradeResultItem = async () => {
 const tradeFailTypeOptions = ref([])
 const getTradeFailTypeItem = async () => {
   const result = await GetKeyAndValueByType("t_trade_fail_type")
-  tradeFailTypeOptions.value = result.data
+  tradeFailTypeOptions.value = result.data || []
 }
 
 // 是否触发计划选项（前端写死，不使用数据字典）
@@ -928,7 +1603,6 @@ const ruleStatusOptions = ref([])
 const getRuleStatusItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_rule_status")
   const data = result.data || []
-  // 兜底：确保码值为0（作废）的选项存在，防止字典接口因status过滤导致缺失
   if (!data.find(item => item.value === 0)) {
     data.push({ value: 0, text: '作废' })
   }
@@ -939,8 +1613,466 @@ const getRuleStatusItem = async () => {
 const ruleTypeOptions = ref([])
 const getRuleTypeItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_rule_type")
-  ruleTypeOptions.value = result.data
+  ruleTypeOptions.value = result.data || []
 }
+
+// ==================== 预测模拟数据字典 ====================
+// 涨跌预测选项
+const riseFallOptions = ref([])
+const getRiseFallItem = async () => {
+  const result = await GetKeyAndValueByType("t_trial_prediction_rise_fall")
+  riseFallOptions.value = result.data || []
+}
+
+// 依据类型选项
+const basisTypeOptions = ref([])
+const getBasisTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_trial_prediction_basis_type")
+  basisTypeOptions.value = result.data || []
+}
+
+// 预测情况选项
+const predictionSituationOptions = ref([])
+const getPredictionSituationItem = async () => {
+  const result = await GetKeyAndValueByType("t_trial_prediction_situation")
+  predictionSituationOptions.value = result.data || []
+}
+
+// 预测结果选项
+const predictionResultOptions = ref([])
+const getPredictionResultItem = async () => {
+  const result = await GetKeyAndValueByType("t_trial_prediction_result")
+  predictionResultOptions.value = result.data || []
+}
+
+// 模拟操作选项
+const simulateOperationOptions = ref([])
+const getSimulateOperationItem = async () => {
+  const result = await GetKeyAndValueByType("t_trial_simulate_operation")
+  simulateOperationOptions.value = result.data || []
+}
+
+// 模拟交易状态选项
+const simulateTradeStatusOptions = ref([])
+const getSimulateTradeStatusItem = async () => {
+  const result = await GetKeyAndValueByType("t_trial_simulate_trade_status")
+  simulateTradeStatusOptions.value = result.data || []
+}
+
+// 台账资产类型选项
+const simulateAssetTypeOptions = ref([])
+const getSimulateAssetTypeItem = async () => {
+  const result = await GetKeyAndValueByType("t_trial_simulate_asset_type")
+  simulateAssetTypeOptions.value = result.data || []
+}
+
+//=========================================================
+// ==================== 预测模拟管理 ====================
+const predList = ref([])
+const predTotal = ref(0)
+const predPageParams = reactive({ page: 1, limit: 10 })
+const predTimeArea = ref([])
+const predSelectedRows = ref([])
+const predTable = ref(null)
+const predQueryDto = reactive({
+  stockName: '',
+  stockCode: '',
+  riseFallPrediction: [],
+  basisType: [],
+  predictionTimeStart: null,
+  predictionTimeEnd: null,
+  predictionSituation: [],
+  predictionResult: [],
+  simulateOperation: [],
+  tradeStatus: []
+})
+
+// 获取预测模拟数据
+const fetchPredData = async () => {
+  try {
+    const result = await GetPredictionByConditionAndPage(predPageParams.page, predPageParams.limit, predQueryDto)
+    if (result.code === 200) {
+      const pageInfo = result.data || {}
+      predList.value = pageInfo.list || []
+      predTotal.value = pageInfo.total || 0
+    } else {
+      ElMessage.error(result.message || "查询失败")
+    }
+  } catch (error) {
+    ElMessage.error("查询预测模拟数据失败")
+  }
+}
+
+// 搜索预测模拟
+const searchPredData = () => {
+  predQueryDto.predictionTimeStart = predTimeArea.value && predTimeArea.value.length > 0 ? predTimeArea.value[0] : null
+  predQueryDto.predictionTimeEnd = predTimeArea.value && predTimeArea.value.length > 0 ? predTimeArea.value[1] : null
+  predPageParams.page = 1
+  fetchPredData()
+}
+
+// 重置预测模拟搜索
+const resetPredData = () => {
+  predTimeArea.value = []
+  Object.assign(predQueryDto, {
+    stockName: '',
+    stockCode: '',
+    riseFallPrediction: [],
+    basisType: [],
+    predictionTimeStart: null,
+    predictionTimeEnd: null,
+    predictionSituation: [],
+    predictionResult: [],
+    simulateOperation: [],
+    tradeStatus: []
+  })
+  predPageParams.page = 1
+  fetchPredData()
+}
+
+// 预测模拟选择变化
+const handlePredSelectionChange = (selection) => {
+  predSelectedRows.value = selection
+}
+
+// 预测模拟添加/修改对话框
+const predDialogVisible = ref(false)
+const predDialogTitle = ref('添加预测')
+const predFormRef = ref(null)
+const predFormStep = ref(0)
+const predFormData = reactive({
+  id: null,
+  stockName: '',
+  stockCode: '',
+  riseFallPrediction: null,
+  predictionTime: '',
+  predictionContent: '',
+  predictionBasis: '',
+  basisType: null,
+  riseFallResult: null,
+  actualContent: '',
+  resultAnalysis: '',
+  predictionSituation: null,
+  predictionResult: null,
+  simulateOperation: null,
+  tradeShare: null,
+  currentPrice: null,
+  handlingFee: null,
+  tradeStatus: null
+})
+
+const predFormRules = {
+  stockName: [{ required: true, message: '请输入股票名称', trigger: 'blur' }],
+  stockCode: [{ required: true, message: '请输入股票代码', trigger: 'blur' }],
+  riseFallPrediction: [{ required: true, message: '请选择涨跌预测', trigger: 'change' }]
+}
+
+const addPrediction = () => {
+  predDialogTitle.value = '添加预测'
+  predFormStep.value = 0
+  if (predFormRef.value) {
+    predFormRef.value.resetFields()
+  }
+  Object.assign(predFormData, {
+    id: null,
+    stockName: '',
+    stockCode: '',
+    riseFallPrediction: null,
+    predictionTime: '',
+    predictionContent: '',
+    predictionBasis: '',
+    basisType: null,
+    riseFallResult: null,
+    actualContent: '',
+    resultAnalysis: '',
+    predictionSituation: null,
+    predictionResult: null,
+    simulateOperation: null,
+    tradeShare: null,
+    currentPrice: null,
+    handlingFee: null,
+    tradeStatus: null
+  })
+  predDialogVisible.value = true
+}
+
+const editPrediction = (row) => {
+  predDialogTitle.value = '编辑预测'
+  predFormStep.value = 0
+  if (predFormRef.value) {
+    predFormRef.value.resetFields()
+  }
+  Object.assign(predFormData, row)
+  predDialogVisible.value = true
+}
+
+const submitPrediction = async () => {
+  if (!predFormRef.value) return
+  try {
+    const valid = await predFormRef.value.validate()
+    if (!valid) return
+  } catch (error) {
+    return
+  }
+  try {
+    const result = await SavePrediction(predFormData)
+    if (result.code === 200) {
+      ElMessage.success(predFormData.id ? '编辑成功' : '添加成功')
+      predDialogVisible.value = false
+      fetchPredData()
+      fetchLedgerData()
+    } else {
+      ElMessage.error(result.message || "保存失败")
+    }
+  } catch (error) {
+    ElMessage.error('保存失败')
+  }
+}
+
+const deletePrediction = async (row) => {
+  try {
+    await ElMessageBox.confirm('确定删除该预测记录吗？', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    const result = await DeletePredictionById(row.id)
+    if (result.code === 200) {
+      ElMessage.success('删除成功')
+      fetchPredData()
+      fetchLedgerData()
+    } else {
+      ElMessage.error(result.message || "删除失败")
+    }
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败')
+    }
+  }
+}
+
+const deletePredAll = async () => {
+  if (!predSelectedRows.value || predSelectedRows.value.length === 0) {
+    ElMessage.warning('请先选择要删除的记录')
+    return
+  }
+  try {
+    await ElMessageBox.confirm(
+      '确定要批量删除选中的 ' + predSelectedRows.value.length + ' 条记录吗？',
+      '警告',
+      { type: 'warning' }
+    )
+    const ids = predSelectedRows.value.map(row => row.id)
+    const result = await DeleteAllPredictionByIds(ids)
+    if (result.code === 200) {
+      ElMessage.success('批量删除成功')
+      fetchPredData()
+      fetchLedgerData()
+      predTable.value.clearSelection()
+      predSelectedRows.value = []
+    } else {
+      ElMessage.error(result.message || '批量删除失败')
+    }
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('批量删除失败')
+    }
+  }
+}
+
+//=========================================================
+// ==================== 模拟台账 ====================
+const ledgerList = ref([])
+
+const fetchLedgerData = async () => {
+  try {
+    const result = await GetSimulateLedgerList()
+    if (result.code === 200) {
+      ledgerList.value = result.data || []
+    }
+  } catch (error) {
+    // 台账数据加载失败不影响页面
+  }
+}
+
+// 初始化账户
+const initAccount = async () => {
+  try {
+    await ElMessageBox.confirm('确定要初始化模拟账户吗？将创建一条模拟账户资产记录（初始金额10万）', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'info',
+    })
+    await SaveSimulateLedger({
+      assetName: '模拟账户资产',
+      assetCode: 'SIM_ACCOUNT',
+      assetType: 1,
+      assetAmount: 100000,
+      assetQuantity: 0
+    })
+    ElMessage.success('初始化成功')
+    fetchLedgerData()
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('初始化失败')
+    }
+  }
+}
+
+// 台账添加/修改对话框
+const ledgerDialogVisible = ref(false)
+const ledgerDialogTitle = ref('添加台账')
+const ledgerFormRef = ref(null)
+const ledgerFormData = reactive({
+  id: null,
+  assetName: '',
+  assetCode: '',
+  assetType: null,
+  assetAmount: null,
+  assetQuantity: null
+})
+
+const ledgerFormRules = {
+  assetName: [{ required: true, message: '请输入资产名称', trigger: 'blur' }],
+  assetType: [{ required: true, message: '请选择资产类型', trigger: 'change' }],
+  assetAmount: [{ required: true, message: '请输入资产金额', trigger: 'blur' }]
+}
+
+const addLedger = () => {
+  ledgerDialogTitle.value = '添加台账'
+  if (ledgerFormRef.value) {
+    ledgerFormRef.value.resetFields()
+  }
+  Object.assign(ledgerFormData, {
+    id: null,
+    assetName: '',
+    assetCode: '',
+    assetType: null,
+    assetAmount: null,
+    assetQuantity: null
+  })
+  ledgerDialogVisible.value = true
+}
+
+const editLedger = (row) => {
+  ledgerDialogTitle.value = '编辑台账'
+  if (ledgerFormRef.value) {
+    ledgerFormRef.value.resetFields()
+  }
+  Object.assign(ledgerFormData, row)
+  ledgerDialogVisible.value = true
+}
+
+const submitLedger = async () => {
+  if (!ledgerFormRef.value) return
+  try {
+    const valid = await ledgerFormRef.value.validate()
+    if (!valid) return
+  } catch (error) {
+    return
+  }
+  try {
+    const result = await SaveSimulateLedger(ledgerFormData)
+    if (result.code === 200) {
+      ElMessage.success(ledgerFormData.id ? '编辑成功' : '添加成功')
+      ledgerDialogVisible.value = false
+      fetchLedgerData()
+    } else {
+      ElMessage.error(result.message || "保存失败")
+    }
+  } catch (error) {
+    ElMessage.error('保存失败')
+  }
+}
+
+const deleteLedger = async (row) => {
+  try {
+    await ElMessageBox.confirm('确定删除该台账记录吗？', '警告', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    const result = await DeleteSimulateLedgerById(row.id)
+    if (result.code === 200) {
+      ElMessage.success('删除成功')
+      fetchLedgerData()
+    } else {
+      ElMessage.error(result.message || "删除失败")
+    }
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败')
+    }
+  }
+}
+
+// 台账计算属性
+const mainAccountAmount = computed(() => {
+  const mainAccount = ledgerList.value.find(item => item.assetType === 1)
+  return mainAccount ? Number(mainAccount.assetAmount || 0) : 0
+})
+
+const positionList = computed(() => {
+  return ledgerList.value.filter(item => item.assetType !== 1)
+})
+
+const positionAmount = computed(() => {
+  return positionList.value.reduce((sum, item) => sum + Number(item.assetAmount || 0), 0)
+})
+
+const positionCount = computed(() => {
+  return positionList.value.length
+})
+
+const totalAssetAmount = computed(() => {
+  return mainAccountAmount.value + positionAmount.value
+})
+
+// 金额格式化
+const formatMoney = (value) => {
+  if (value === null || value === undefined) return '0.00'
+  const num = Number(value)
+  if (isNaN(num)) return '0.00'
+  return num.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
+//=========================================================
+// ==================== 统计报表 ====================
+const reportTimeArea = ref([])
+const reportDto = reactive({
+  startTime: null,
+  endTime: null,
+  basisType: [],
+  stockCode: ''
+})
+const reportData = ref({})
+
+const fetchReportData = async () => {
+  reportDto.startTime = reportTimeArea.value && reportTimeArea.value.length > 0 ? reportTimeArea.value[0] : null
+  reportDto.endTime = reportTimeArea.value && reportTimeArea.value.length > 0 ? reportTimeArea.value[1] : null
+  try {
+    const result = await GetPredictionReport(reportDto)
+    if (result.code === 200) {
+      reportData.value = result.data || {}
+    } else {
+      ElMessage.error(result.message || "查询报表失败")
+    }
+  } catch (error) {
+    ElMessage.error("查询报表失败")
+  }
+}
+
+const resetReportData = () => {
+  reportTimeArea.value = []
+  Object.assign(reportDto, {
+    startTime: null,
+    endTime: null,
+    basisType: [],
+    stockCode: ''
+  })
+  fetchReportData()
+}
+
 //=========================================================
 // ==================== 交易规则 ====================
 const ruleList = ref([])
@@ -1192,8 +2324,8 @@ const fetchData = async () => {
 
 // 搜索
 const searchData = () => {
-  queryDto.planStartTime = planTimeArea.value[0]
-  queryDto.planEndTime = planTimeArea.value[1]
+  queryDto.planStartTime = planTimeArea.value && planTimeArea.value.length > 0 ? planTimeArea.value[0] : null
+  queryDto.planEndTime = planTimeArea.value && planTimeArea.value.length > 0 ? planTimeArea.value[1] : null
   pageParams.page = 1
   fetchData()
 }
@@ -1604,6 +2736,226 @@ const showExportDialog = () => {
   border-top: none;
   border-radius: 0 0 4px 4px;
   background-color: rgba(255, 255, 255, 0.8);
+}
+
+.trial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.trial-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #303133;
+}
+
+/* 预测模拟块 */
+.prediction-div {
+  padding: 15px;
+  border: 1px solid #ebeef5;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* 模拟账户总览横条 */
+.account-overview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  border-radius: 8px;
+  color: #fff;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(15, 52, 96, 0.3);
+}
+
+.account-overview-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.account-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e94560, #c23616);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(233, 69, 96, 0.4);
+}
+
+.account-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4px;
+}
+
+.account-total-amount {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: 'DIN Alternate', 'Helvetica Neue', monospace;
+  letter-spacing: 1px;
+  color: #e94560;
+  text-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
+}
+
+.account-overview-right {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.account-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.account-stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 4px;
+}
+
+.account-stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'DIN Alternate', 'Helvetica Neue', monospace;
+}
+
+.account-stat-value.available {
+  color: #f5c542;
+}
+
+.account-stat-value.position {
+  color: #4ecdc4;
+}
+
+.account-stat-value.count {
+  color: #a8e6cf;
+}
+
+.account-stat-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* 持仓卡片区域 */
+.position-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.position-card {
+  flex: 0 0 calc(25% - 9px);
+  min-width: 220px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border: 1px solid #e0e6ed;
+  border-radius: 8px;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.position-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  border-color: #409eff;
+}
+
+.position-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f0f2f5;
+}
+
+.position-stock-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #303133;
+  margin-right: 8px;
+}
+
+.position-stock-code {
+  font-size: 12px;
+  color: #909399;
+  font-family: 'Courier New', monospace;
+}
+
+.position-card-actions {
+  margin-left: auto;
+}
+
+.position-card-body {
+  display: flex;
+  gap: 24px;
+}
+
+.position-card-col {
+  flex: 1;
+}
+
+.position-card-label {
+  font-size: 11px;
+  color: #909399;
+  margin-bottom: 4px;
+}
+
+.position-card-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #303133;
+  font-family: 'DIN Alternate', 'Helvetica Neue', monospace;
+}
+
+.position-card-value.highlight {
+  color: #e6a23c;
+}
+
+.position-card-unit {
+  font-size: 12px;
+  color: #909399;
+  font-weight: 400;
+  margin-left: 2px;
+}
+
+.position-empty {
+  padding: 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  border: 1px dashed #dcdfe6;
+  margin-bottom: 4px;
+}
+
+/* 统计报表块 */
+.report-div {
+  padding: 15px;
+  border: 1px solid #ebeef5;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.report-section {
+  padding: 15px;
+  border: 1px solid #ebeef5;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 .trial-header {

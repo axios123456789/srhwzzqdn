@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.trialExecutionArea.mapper.PredictionSimulateMapper">
+
+    <!--  添加预测模拟记录  -->
+    <insert id="addPrediction" useGeneratedKeys="true" keyProperty="id">
+        insert into t_trial_prediction (
+            stock_name,
+            stock_code,
+            rise_fall_prediction,
+            prediction_time,
+            prediction_content,
+            prediction_basis,
+            basis_type,
+            rise_fall_result,
+            actual_content,
+            result_analysis,
+            prediction_situation,
+            prediction_result,
+            simulate_operation,
+            trade_share,
+            current_price,
+            handling_fee,
+            trade_status,
+            owner,
+            create_time
+        ) values (
+            #{stockName},
+            #{stockCode},
+            #{riseFallPrediction},
+            #{predictionTime},
+            #{predictionContent},
+            #{predictionBasis},
+            #{basisType},
+            #{riseFallResult},
+            #{actualContent},
+            #{resultAnalysis},
+            #{predictionSituation},
+            #{predictionResult},
+            #{simulateOperation},
+            #{tradeShare},
+            #{currentPrice},
+            #{handlingFee},
+            #{tradeStatus},
+            #{owner},
+            now()
+        )
+    </insert>
+
+    <!--  修改预测模拟记录  -->
+    <update id="updatePrediction">
+        update t_trial_prediction t
+        <set>
+            <if test="stockName != null and stockName != ''">
+                stock_name = #{stockName},
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                stock_code = #{stockCode},
+            </if>
+            <if test="riseFallPrediction != null">
+                rise_fall_prediction = #{riseFallPrediction},
+            </if>
+            <if test="predictionTime != null">
+                prediction_time = #{predictionTime},
+            </if>
+            <if test="predictionContent != null and predictionContent != ''">
+                prediction_content = #{predictionContent},
+            </if>
+            <if test="predictionBasis != null and predictionBasis != ''">
+                prediction_basis = #{predictionBasis},
+            </if>
+            <if test="basisType != null">
+                basis_type = #{basisType},
+            </if>
+            <if test="riseFallResult != null">
+                rise_fall_result = #{riseFallResult},
+            </if>
+            <if test="actualContent != null and actualContent != ''">
+                actual_content = #{actualContent},
+            </if>
+            <if test="resultAnalysis != null and resultAnalysis != ''">
+                result_analysis = #{resultAnalysis},
+            </if>
+            <if test="predictionSituation != null">
+                prediction_situation = #{predictionSituation},
+            </if>
+            <if test="predictionResult != null">
+                prediction_result = #{predictionResult},
+            </if>
+            <if test="simulateOperation != null">
+                simulate_operation = #{simulateOperation},
+            </if>
+            <if test="tradeShare != null">
+                trade_share = #{tradeShare},
+            </if>
+            <if test="currentPrice != null">
+                current_price = #{currentPrice},
+            </if>
+            <if test="handlingFee != null">
+                handling_fee = #{handlingFee},
+            </if>
+            <if test="tradeStatus != null">
+                trade_status = #{tradeStatus},
+            </if>
+            update_time = now()
+        </set>
+        where t.id = #{id}
+    </update>
+
+    <!--   根据ids批量删除预测模拟记录  -->
+    <delete id="deleteAllPredictionByIds">
+        delete from t_trial_prediction where id in
+        <foreach item="item" collection="ids" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--  条件查询预测模拟列表  -->
+    <select id="getPredictionByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.trialExecutionArea.PredictionSimulate">
+        select t.id,
+               t.stock_name,
+               t.stock_code,
+               t.rise_fall_prediction,
+               t.prediction_time,
+               t.prediction_content,
+               t.prediction_basis,
+               t.basis_type,
+               t.rise_fall_result,
+               t.actual_content,
+               t.result_analysis,
+               t.prediction_situation,
+               t.prediction_result,
+               t.simulate_operation,
+               t.trade_share,
+               t.current_price,
+               t.handling_fee,
+               t.trade_status,
+               t.owner,
+               t.create_time,
+               t.update_time
+        from t_trial_prediction t
+        <where>
+            <if test="stockName != null and stockName != ''">
+                and t.stock_name like concat('%', #{stockName}, '%')
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="riseFallPrediction != null and riseFallPrediction.size() > 0">
+                and t.rise_fall_prediction in
+                <foreach collection="riseFallPrediction" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and t.basis_type in
+                <foreach collection="basisType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="predictionTimeStart != null and predictionTimeStart != ''">
+                and t.prediction_time &gt;= #{predictionTimeStart}
+            </if>
+            <if test="predictionTimeEnd != null and predictionTimeEnd != ''">
+                and t.prediction_time &lt;= #{predictionTimeEnd}
+            </if>
+            <if test="predictionSituation != null and predictionSituation.size() > 0">
+                and t.prediction_situation in
+                <foreach collection="predictionSituation" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="predictionResult != null and predictionResult.size() > 0">
+                and t.prediction_result in
+                <foreach collection="predictionResult" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="simulateOperation != null and simulateOperation.size() > 0">
+                and t.simulate_operation in
+                <foreach collection="simulateOperation" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tradeStatus != null and tradeStatus.size() > 0">
+                and t.trade_status in
+                <foreach collection="tradeStatus" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        order by t.create_time desc
+    </select>
+
+    <!-- ====================模拟台账==================== -->
+    <!--  添加模拟台账  -->
+    <insert id="addSimulateLedger" useGeneratedKeys="true" keyProperty="id">
+        insert into t_trial_simulate_ledger (
+            asset_name,
+            asset_code,
+            asset_type,
+            asset_amount,
+            asset_quantity,
+            owner,
+            create_time
+        ) values (
+            #{assetName},
+            #{assetCode},
+            #{assetType},
+            #{assetAmount},
+            #{assetQuantity},
+            #{owner},
+            now()
+        )
+    </insert>
+
+    <!--  修改模拟台账  -->
+    <update id="updateSimulateLedger">
+        update t_trial_simulate_ledger t
+        <set>
+            <if test="assetName != null and assetName != ''">
+                asset_name = #{assetName},
+            </if>
+            <if test="assetCode != null and assetCode != ''">
+                asset_code = #{assetCode},
+            </if>
+            <if test="assetType != null">
+                asset_type = #{assetType},
+            </if>
+            <if test="assetAmount != null">
+                asset_amount = #{assetAmount},
+            </if>
+            <if test="assetQuantity != null">
+                asset_quantity = #{assetQuantity},
+            </if>
+            update_time = now()
+        </set>
+        where t.id = #{id}
+    </update>
+
+    <!--  查询模拟台账列表  -->
+    <select id="getSimulateLedgerByOwner"
+            resultType="com.xk.srhwzzqdn.model.entity.trialExecutionArea.SimulateLedger">
+        select t.id,
+               t.asset_name,
+               t.asset_code,
+               t.asset_type,
+               t.asset_amount,
+               t.asset_quantity,
+               t.owner,
+               t.create_time,
+               t.update_time
+        from t_trial_simulate_ledger t
+        where t.owner = #{param1}
+        order by t.asset_type asc, t.create_time asc
+    </select>
+
+    <!-- ====================统计报表==================== -->
+    <!-- 统计总预测次数 -->
+    <select id="countTotalPrediction" resultType="java.lang.Integer">
+        select count(*) from t_trial_prediction t
+        <where>
+            <if test="startTime != null and startTime != ''">
+                and t.prediction_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.prediction_time &lt;= #{endTime}
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and t.basis_type in
+                <foreach collection="basisType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+    </select>
+
+    <!-- 统计成功次数 -->
+    <select id="countSuccessPrediction" resultType="java.lang.Integer">
+        select count(*) from t_trial_prediction t
+        <where>
+            t.prediction_result = 1
+            <if test="startTime != null and startTime != ''">
+                and t.prediction_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.prediction_time &lt;= #{endTime}
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and t.basis_type in
+                <foreach collection="basisType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+    </select>
+
+    <!-- 按依据类型统计 -->
+    <select id="statByBasisType" resultType="java.util.Map">
+        select t.basis_type as basisType,
+               count(*) as count,
+               sum(case when t.prediction_result = 1 then 1 else 0 end) as successCount
+        from t_trial_prediction t
+        <where>
+            <if test="startTime != null and startTime != ''">
+                and t.prediction_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.prediction_time &lt;= #{endTime}
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and t.basis_type in
+                <foreach collection="basisType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        group by t.basis_type
+        order by t.basis_type asc
+    </select>
+
+    <!-- 按预测情况统计 -->
+    <select id="statBySituation" resultType="java.util.Map">
+        select t.prediction_situation as predictionSituation,
+               count(*) as count
+        from t_trial_prediction t
+        <where>
+            t.prediction_situation is not null
+            <if test="startTime != null and startTime != ''">
+                and t.prediction_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.prediction_time &lt;= #{endTime}
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and t.basis_type in
+                <foreach collection="basisType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        group by t.prediction_situation
+        order by t.prediction_situation asc
+    </select>
+
+    <!-- 按月统计趋势 -->
+    <select id="statByMonth" resultType="java.util.Map">
+        select date_format(t.prediction_time, '%Y-%m') as month,
+               count(*) as totalCount,
+               sum(case when t.prediction_result = 1 then 1 else 0 end) as successCount
+        from t_trial_prediction t
+        <where>
+            <if test="startTime != null and startTime != ''">
+                and t.prediction_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.prediction_time &lt;= #{endTime}
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and t.basis_type in
+                <foreach collection="basisType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        group by date_format(t.prediction_time, '%Y-%m')
+        order by month asc
+    </select>
+
+    <!-- 模拟操作统计 -->
+    <select id="statSimulateTrade" resultType="java.util.Map">
+        select sum(case when t.simulate_operation = 1 then 1 else 0 end) as totalBuyCount,
+               sum(case when t.simulate_operation = 2 then 1 else 0 end) as totalSellCount,
+               ifnull(sum(case when t.simulate_operation = 1 then t.trade_share * t.current_price else 0 end), 0) as totalBuyAmount,
+               ifnull(sum(case when t.simulate_operation = 2 then t.trade_share * t.current_price else 0 end), 0) as totalSellAmount,
+               ifnull(sum(t.handling_fee), 0) as totalHandlingFee
+        from t_trial_prediction t
+        <where>
+            t.simulate_operation is not null
+            <if test="startTime != null and startTime != ''">
+                and t.prediction_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.prediction_time &lt;= #{endTime}
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and t.basis_type in
+                <foreach collection="basisType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+    </select>
+
+    <!-- 按股票统计 -->
+    <select id="statByStock" resultType="java.util.Map">
+        select t.stock_name as stockName,
+               t.stock_code as stockCode,
+               count(*) as predictCount,
+               sum(case when t.prediction_result = 1 then 1 else 0 end) as successCount
+        from t_trial_prediction t
+        <where>
+            <if test="startTime != null and startTime != ''">
+                and t.prediction_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.prediction_time &lt;= #{endTime}
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and t.basis_type in
+                <foreach collection="basisType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        group by t.stock_code, t.stock_name
+        order by predictCount desc
+    </select>
+</mapper>
