@@ -617,7 +617,7 @@
       </el-tab-pane>
 
       <!-- 统计报表标签页 -->
-      <el-tab-pane label="统计报表" name="report">
+      <el-tab-pane label="预测报表" name="report">
         <div class="report-div">
           <!-- 报表筛选条件 -->
           <div class="search-div">

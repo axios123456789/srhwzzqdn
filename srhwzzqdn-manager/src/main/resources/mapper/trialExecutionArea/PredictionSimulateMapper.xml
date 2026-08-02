@@ -314,12 +314,15 @@
         </where>
     </select>
 
-    <!-- 按依据类型统计 -->
+    <!-- 按依据类型统计（将逗号分隔的basis_type拆开后单独统计每个依据类型） -->
     <select id="statByBasisType" resultType="java.util.Map">
-        select t.basis_type as basisType,
+        select bt.basis_type as basisType,
                count(*) as count,
                sum(case when t.prediction_result = 1 then 1 else 0 end) as successCount
         from t_trial_prediction t
+        inner join (
+            select 1 as basis_type union select 2 union select 3 union select 4 union select 5
+        ) bt on FIND_IN_SET(bt.basis_type, t.basis_type) &gt; 0
         <where>
             <if test="startTime != null and startTime != ''">
                 and t.prediction_time &gt;= #{startTime}
@@ -341,8 +344,8 @@
                 and t.owner = #{owner}
             </if>
         </where>
-        group by t.basis_type
-        order by t.basis_type asc
+        group by bt.basis_type
+        order by bt.basis_type asc
     </select>
 
     <!-- 按预测情况统计 -->

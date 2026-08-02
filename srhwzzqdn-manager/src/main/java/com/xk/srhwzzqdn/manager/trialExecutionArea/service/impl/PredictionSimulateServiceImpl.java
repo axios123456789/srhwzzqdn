@@ -155,7 +155,7 @@ public class PredictionSimulateServiceImpl implements PredictionSimulateService 
         List<PredictionReportVo.BasisTypeStat> basisTypeStats = new ArrayList<>();
         for (Map<String, Object> map : basisTypeRaw) {
             PredictionReportVo.BasisTypeStat stat = new PredictionReportVo.BasisTypeStat();
-            stat.setBasisType((String) map.get("basisType"));
+            stat.setBasisType(String.valueOf(map.get("basisType")));
             stat.setCount(((Number) map.get("count")).intValue());
             stat.setSuccessCount(((Number) map.get("successCount")).intValue());
             if (stat.getCount() > 0) {
