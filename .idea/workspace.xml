@@ -4,7 +4,74 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-08">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-09">
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/dailyReview.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/reviewAnalysis.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/tradeRecord.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/DailyReviewController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/ReviewReportController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/TradeRecordController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/DailyReviewMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/ReviewReportMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/TradeRecordMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/DailyReviewService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/ReviewReportService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/TradeRecordService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/DailyReviewServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/ReviewReportServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/TradeRecordServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/trialExecutionArea/DailyReviewMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/trialExecutionArea/ReviewReportMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/trialExecutionArea/TradeRecordMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/DailyReviewController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/PredictionSimulateController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/ReviewReportController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/TradeRecordController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/TransactionSystemTrialController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/DailyReviewMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/PredictionSimulateMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/ReviewReportMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/TradeRecordMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/TransactionSystemTrialMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/DailyReviewService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/PredictionSimulateService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/ReviewReportService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/TradeRecordService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/TransactionSystemTrialService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/DailyReviewServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/PredictionSimulateServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/ReviewReportServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/TradeRecordServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/TransactionSystemTrialServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/trialExecutionArea/DailyReviewMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/trialExecutionArea/PredictionSimulateMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/trialExecutionArea/ReviewReportMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/trialExecutionArea/TradeRecordMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/trialExecutionArea/TransactionSystemTrialMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/dto/trialExecutionArea/DailyReviewDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/dto/trialExecutionArea/ReviewReportDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/dto/trialExecutionArea/TradeRecordDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/entity/trialExecutionArea/DailyReview.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/entity/trialExecutionArea/TradeRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/vo/trialExecutionArea/ReviewReportVo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/trialExecutionArea/DailyReviewDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/trialExecutionArea/PredictionReportDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/trialExecutionArea/PredictionSimulateDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/trialExecutionArea/ReviewReportDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/trialExecutionArea/TradeRecordDto.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/trialExecutionArea/DailyReview.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/trialExecutionArea/PredictionSimulate.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/trialExecutionArea/SimulateLedger.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/trialExecutionArea/TradeRecord.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$BasisTypeStat.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$MonthlyTrend.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$SimulateTradeStat.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$SituationStat.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$StockStat.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/ReviewReportVo$ReviewKpi.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/ReviewReportVo$TradeKpi.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/ReviewReportVo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -14,8 +81,6 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/PredictionSimulateServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/PredictionSimulateServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/trialExecutionArea/PredictionSimulateMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/trialExecutionArea/PredictionSimulateMapper.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,6 +167,17 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ManagerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
       <module name="srhwzzqdn-manager" />
       <extension name="coverage">
@@ -488,14 +564,32 @@
       <workItem from="1785457845373" duration="1832000" />
       <workItem from="1785511629927" duration="666000" />
       <workItem from="1785553668919" duration="640000" />
-      <workItem from="1785639876487" duration="2131000" />
-    </task>
-    <task id="LOCAL-00104" summary="基金资产管理-10">
-      <created>1777208143069</created>
-      <option name="number" value="00104" />
-      <option name="presentableId" value="LOCAL-00104" />
-      <option name="project" value="LOCAL" />
-      <updated>1777208143069</updated>
+      <workItem from="1785639876487" duration="2294000" />
+      <workItem from="1785716949227" duration="1923000" />
+      <workItem from="1785758914507" duration="643000" />
+      <workItem from="1785803429587" duration="647000" />
+      <workItem from="1785841648817" duration="1245000" />
+      <workItem from="1785890075574" duration="1563000" />
+      <workItem from="1785932260554" duration="659000" />
+      <workItem from="1785976383310" duration="1661000" />
+      <workItem from="1786014938234" duration="648000" />
+      <workItem from="1786062710678" duration="790000" />
+      <workItem from="1786105077560" duration="719000" />
+      <workItem from="1786159325779" duration="670000" />
+      <workItem from="1786239662537" duration="1238000" />
+      <workItem from="1786321622931" duration="1271000" />
+      <workItem from="1786360137854" duration="653000" />
+      <workItem from="1786408551629" duration="690000" />
+      <workItem from="1786451411675" duration="646000" />
+      <workItem from="1786494880222" duration="1249000" />
+      <workItem from="1786531576200" duration="783000" />
+      <workItem from="1786581088027" duration="1258000" />
+      <workItem from="1786620084441" duration="675000" />
+      <workItem from="1786667277894" duration="121000" />
+      <workItem from="1786667504380" duration="1249000" />
+      <workItem from="1786704775171" duration="651000" />
+      <workItem from="1786762521333" duration="646000" />
+      <workItem from="1786851732576" duration="5128000" />
     </task>
     <task id="LOCAL-00105" summary="基金资产管理-11">
       <created>1777211117175</created>
@@ -833,7 +927,14 @@
       <option name="project" value="LOCAL" />
       <updated>1785074891477</updated>
     </task>
-    <option name="localTasksCounter" value="153" />
+    <task id="LOCAL-00153" summary="试验开展区-交易系统试验-09">
+      <created>1785678282531</created>
+      <option name="number" value="00153" />
+      <option name="presentableId" value="LOCAL-00153" />
+      <option name="project" value="LOCAL" />
+      <updated>1785678282532</updated>
+    </task>
+    <option name="localTasksCounter" value="154" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -852,7 +953,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="基金资产管理-35" />
     <MESSAGE value="基金资产管理-36" />
     <MESSAGE value="基金资产管理-37" />
     <MESSAGE value="基金资产管理-38" />
@@ -877,7 +977,8 @@
     <MESSAGE value="试验开展区-交易系统试验-06" />
     <MESSAGE value="试验开展区-交易系统试验-07" />
     <MESSAGE value="试验开展区-交易系统试验-08" />
-    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-08" />
+    <MESSAGE value="试验开展区-交易系统试验-09" />
+    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-09" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

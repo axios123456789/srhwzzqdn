@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.trialExecutionArea.mapper.TradeRecordMapper">
+
+    <!--  添加交易记录  -->
+    <insert id="addTradeRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into t_trial_trade_record (
+            trade_datetime, stock_name, stock_code, trade_direction, trade_price, trade_quantity, trade_amount, time_slot,
+            market_status, stock_position, stock_change_pct,
+            psychology, emotion_intensity, follow_plan,
+            trade_reason, expected_profit_pct, stop_loss_price, take_profit_price,
+            profit_pct, holding_duration, execute_rating, reflection, lesson,
+            review_date, remark, owner, create_time
+        ) values (
+            #{tradeDatetime}, #{stockName}, #{stockCode}, #{tradeDirection}, #{tradePrice}, #{tradeQuantity}, #{tradeAmount}, #{timeSlot},
+            #{marketStatus}, #{stockPosition}, #{stockChangePct},
+            #{psychology}, #{emotionIntensity}, #{followPlan},
+            #{tradeReason}, #{expectedProfitPct}, #{stopLossPrice}, #{takeProfitPrice},
+            #{profitPct}, #{holdingDuration}, #{executeRating}, #{reflection}, #{lesson},
+            #{reviewDate}, #{remark}, #{owner}, now()
+        )
+    </insert>
+
+    <!--  修改交易记录  -->
+    <update id="updateTradeRecord">
+        update t_trial_trade_record t
+        <set>
+            <if test="tradeDatetime != null">trade_datetime = #{tradeDatetime},</if>
+            <if test="stockName != null">stock_name = #{stockName},</if>
+            <if test="stockCode != null">stock_code = #{stockCode},</if>
+            <if test="tradeDirection != null">trade_direction = #{tradeDirection},</if>
+            <if test="tradePrice != null">trade_price = #{tradePrice},</if>
+            <if test="tradeQuantity != null">trade_quantity = #{tradeQuantity},</if>
+            <if test="tradeAmount != null">trade_amount = #{tradeAmount},</if>
+            <if test="timeSlot != null">time_slot = #{timeSlot},</if>
+            <if test="marketStatus != null">market_status = #{marketStatus},</if>
+            <if test="stockPosition != null">stock_position = #{stockPosition},</if>
+            <if test="stockChangePct != null">stock_change_pct = #{stockChangePct},</if>
+            <if test="psychology != null">psychology = #{psychology},</if>
+            <if test="emotionIntensity != null">emotion_intensity = #{emotionIntensity},</if>
+            <if test="followPlan != null">follow_plan = #{followPlan},</if>
+            <if test="tradeReason != null">trade_reason = #{tradeReason},</if>
+            <if test="expectedProfitPct != null">expected_profit_pct = #{expectedProfitPct},</if>
+            <if test="stopLossPrice != null">stop_loss_price = #{stopLossPrice},</if>
+            <if test="takeProfitPrice != null">take_profit_price = #{takeProfitPrice},</if>
+            <if test="profitPct != null">profit_pct = #{profitPct},</if>
+            <if test="holdingDuration != null">holding_duration = #{holdingDuration},</if>
+            <if test="executeRating != null">execute_rating = #{executeRating},</if>
+            <if test="reflection != null">reflection = #{reflection},</if>
+            <if test="lesson != null">lesson = #{lesson},</if>
+            <if test="reviewDate != null">review_date = #{reviewDate},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = now()
+        </set>
+        where t.id = #{id}
+    </update>
+
+    <!--   根据ids批量删除  -->
+    <delete id="deleteAllTradeRecordByIds">
+        delete from t_trial_trade_record where id in
+        <foreach item="item" collection="ids" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--  条件查询交易记录列表  -->
+    <select id="getTradeRecordByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.trialExecutionArea.TradeRecord">
+        select t.* from t_trial_trade_record t
+        <where>
+            <if test="stockName != null and stockName != ''">
+                and t.stock_name like concat('%', #{stockName}, '%')
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="tradeDirection != null and tradeDirection.size() > 0">
+                and t.trade_direction in
+                <foreach collection="tradeDirection" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="psychology != null and psychology.size() > 0">
+                and t.psychology in
+                <foreach collection="psychology" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tradeTimeStart != null and tradeTimeStart != ''">
+                and t.trade_datetime &gt;= #{tradeTimeStart}
+            </if>
+            <if test="tradeTimeEnd != null and tradeTimeEnd != ''">
+                and t.trade_datetime &lt;= #{tradeTimeEnd}
+            </if>
+            <if test="followPlan != null and followPlan.size() > 0">
+                and t.follow_plan in
+                <foreach collection="followPlan" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="executeRating != null and executeRating.size() > 0">
+                and t.execute_rating in
+                <foreach collection="executeRating" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        order by t.trade_datetime desc
+    </select>
+
+    <!--  根据复盘日期汇总当天交易数据  -->
+    <select id="statTradeByReviewDate" resultType="java.util.Map">
+        select count(*) as tradeCount,
+               sum(case when t.profit_pct &gt; 0 then 1 else 0 end) as winTradeCount,
+               ifnull(sum(t.profit_pct), 0) as totalProfitPct
+        from t_trial_trade_record t
+        where t.review_date = #{reviewDate}
+          and t.owner = #{owner}
+    </select>
+</mapper>

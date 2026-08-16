@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.trialExecutionArea.mapper.ReviewReportMapper">
+
+    <!-- ==================== A. 每日复盘维度 ==================== -->
+
+    <!-- 个人绩效KPI基础数据（最高连续盈利天数在service层计算） -->
+    <select id="statReviewKpi" resultType="java.util.Map">
+        select count(*) as totalReviewDays,
+               sum(case when t.daily_profit_pct &gt; 0 then 1 else 0 end) as profitDays,
+               sum(case when t.daily_profit_pct &lt; 0 then 1 else 0 end) as lossDays,
+               ifnull(avg(t.daily_profit_pct), 0) as avgDailyProfitPct,
+               sum(case when t.win_trade_count &gt; 0 and t.trade_count &gt; 0 then 1 else 0 end) as winDays,
+               sum(case when t.trade_count &gt; 0 then 1 else 0 end) as tradeDays
+        from t_trial_daily_review t
+        <where>
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+    </select>
+
+    <!-- 情绪温度趋势 -->
+    <select id="statEmotionTrends" resultType="java.util.Map">
+        select date_format(t.review_date, '%Y-%m-%d') as date, t.emotion_temp as score
+        from t_trial_daily_review t
+        <where>
+            t.emotion_temp is not null
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        order by t.review_date asc
+    </select>
+
+    <!-- 市场状态分布 -->
+    <select id="statMarketStatus" resultType="java.util.Map">
+        select t.market_status as code, count(*) as count
+        from t_trial_daily_review t
+        <where>
+            t.market_status is not null
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        group by t.market_status order by count desc
+    </select>
+
+    <!-- 涨停跌停趋势 -->
+    <select id="statLimitTrends" resultType="java.util.Map">
+        select date_format(t.review_date, '%Y-%m-%d') as date,
+               ifnull(t.limit_up_count, 0) as limitUp,
+               ifnull(t.limit_down_count, 0) as limitDown,
+               ifnull(t.continuous_board_count, 0) as continuousBoard
+        from t_trial_daily_review t
+        <where>
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        order by t.review_date asc
+    </select>
+
+    <!-- 主线板块频次（合并3个板块字段） -->
+    <select id="statSector" resultType="java.util.Map">
+        select tmp.sector as code, count(*) as count
+        from (
+            select t.main_sector1 as sector from t_trial_daily_review t
+            where t.main_sector1 is not null
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+            union all
+            select t.main_sector2 as sector from t_trial_daily_review t
+            where t.main_sector2 is not null
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+            union all
+            select t.main_sector3 as sector from t_trial_daily_review t
+            where t.main_sector3 is not null
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        ) tmp
+        group by tmp.sector order by count desc
+    </select>
+
+    <!-- 适配体系分布 -->
+    <select id="statAdaptSystem" resultType="java.util.Map">
+        select t.adapt_system as code, count(*) as count
+        from t_trial_daily_review t
+        <where>
+            t.adapt_system is not null
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        group by t.adapt_system order by count desc
+    </select>
+
+    <!-- 操作自评趋势 -->
+    <select id="statSelfRatingTrends" resultType="java.util.Map">
+        select date_format(t.review_date, '%Y-%m-%d') as date, t.operation_self_rating as rating
+        from t_trial_daily_review t
+        <where>
+            t.operation_self_rating is not null
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        order by t.review_date asc
+    </select>
+
+    <!-- 当日盈亏趋势 -->
+    <select id="statDailyProfitTrends" resultType="java.util.Map">
+        select date_format(t.review_date, '%Y-%m-%d') as date, ifnull(t.daily_profit_pct, 0) as profit
+        from t_trial_daily_review t
+        <where>
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        order by t.review_date asc
+    </select>
+
+    <!-- 北向资金趋势 -->
+    <select id="statNorthTrends" resultType="java.util.Map">
+        select date_format(t.review_date, '%Y-%m-%d') as date, ifnull(t.north_flow_amount, 0) as amount
+        from t_trial_daily_review t
+        <where>
+            t.north_flow_amount is not null
+            <if test="startTime != null and startTime != ''">and t.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        order by t.review_date asc
+    </select>
+
+    <!-- ==================== B. 交易记录维度 ==================== -->
+
+    <!-- 交易胜率KPI -->
+    <select id="statTradeKpi" resultType="java.util.Map">
+        select count(*) as totalTradeCount,
+               sum(case when t.profit_pct &gt; 0 then 1 else 0 end) as winCount,
+               sum(case when t.profit_pct &lt; 0 then 1 else 0 end) as lossCount,
+               ifnull(avg(t.profit_pct), 0) as avgProfitPct,
+               ifnull(max(t.profit_pct), 0) as maxProfitPct,
+               ifnull(min(t.profit_pct), 0) as maxLossPct
+        from t_trial_trade_record t
+        <where>
+            t.profit_pct is not null
+            <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+    </select>
+
+    <!-- 心理状态分布 -->
+    <select id="statPsychology" resultType="java.util.Map">
+        select t.psychology as code, count(*) as count
+        from t_trial_trade_record t
+        <where>
+            t.psychology is not null
+            <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        group by t.psychology order by count desc
+    </select>
+
+    <!-- 心理状态与盈亏关系 -->
+    <select id="statPsychologyProfit" resultType="java.util.Map">
+        select t.psychology as code, ifnull(avg(t.profit_pct), 0) as avgProfit
+        from t_trial_trade_record t
+        <where>
+            t.psychology is not null and t.profit_pct is not null
+            <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        group by t.psychology order by avgProfit desc
+    </select>
+
+    <!-- 交易时段分布 -->
+    <select id="statTimeSlot" resultType="java.util.Map">
+        select t.time_slot as code, count(*) as count
+        from t_trial_trade_record t
+        <where>
+            t.time_slot is not null
+            <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        group by t.time_slot order by count desc
+    </select>
+
+    <!-- 买卖方向统计 -->
+    <select id="statDirection" resultType="java.util.Map">
+        select t.trade_direction as code, count(*) as count
+        from t_trial_trade_record t
+        <where>
+            t.trade_direction is not null
+            <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        group by t.trade_direction order by count desc
+    </select>
+
+    <!-- 执行评分趋势（按日平均） -->
+    <select id="statExecuteRatingTrends" resultType="java.util.Map">
+        select date_format(t.trade_datetime, '%Y-%m-%d') as date, avg(t.execute_rating) as rating
+        from t_trial_trade_record t
+        <where>
+            t.execute_rating is not null
+            <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        group by date_format(t.trade_datetime, '%Y-%m-%d') order by date asc
+    </select>
+
+    <!-- 是否符合计划统计 -->
+    <select id="statPlanMatch" resultType="java.util.Map">
+        select t.follow_plan as code, count(*) as count
+        from t_trial_trade_record t
+        <where>
+            t.follow_plan is not null
+            <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        group by t.follow_plan order by count desc
+    </select>
+
+    <!-- 个股交易频次排行Top10 -->
+    <select id="statStock" resultType="java.util.Map">
+        select t.stock_name as stockName, t.stock_code as stockCode, count(*) as count
+        from t_trial_trade_record t
+        <where>
+            t.stock_code is not null
+            <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
+        </where>
+        group by t.stock_code, t.stock_name order by count desc limit 10
+    </select>
+
+    <!-- ==================== C. 联动分析 ==================== -->
+
+    <!-- 每日盈亏vs当日交易笔数 -->
+    <select id="statDailyProfitVsTradeCount" resultType="java.util.Map">
+        select date_format(r.review_date, '%Y-%m-%d') as date,
+               ifnull(r.daily_profit_pct, 0) as profit,
+               ifnull(tc.tradeCount, 0) as tradeCount
+        from t_trial_daily_review r
+        left join (
+            select date_format(trade_datetime, '%Y-%m-%d') as td, owner, count(*) as tradeCount
+            from t_trial_trade_record
+            <where>
+                <if test="startTime != null and startTime != ''">and trade_datetime &gt;= #{startTime}</if>
+                <if test="endTime != null and endTime != ''">and trade_datetime &lt;= #{endTime}</if>
+            </where>
+            group by date_format(trade_datetime, '%Y-%m-%d'), owner
+        ) tc on tc.td = date_format(r.review_date, '%Y-%m-%d') and tc.owner = r.owner
+        <where>
+            <if test="startTime != null and startTime != ''">and r.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and r.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and r.owner = #{owner}</if>
+        </where>
+        order by r.review_date asc
+    </select>
+
+    <!-- 情绪温度vs次日交易胜率 -->
+    <select id="statEmotionVsWinRate" resultType="java.util.Map">
+        select date_format(r.review_date, '%Y-%m-%d') as date,
+               r.emotion_temp as emotion,
+               ifnull(wr.winRate, 0) as winRate
+        from t_trial_daily_review r
+        left join (
+            select date_format(date_add(trade_datetime, interval -1 day), '%Y-%m-%d') as td, owner,
+                   sum(case when profit_pct &gt; 0 then 1 else 0 end) / count(*) * 100 as winRate
+            from t_trial_trade_record
+            <where>
+                profit_pct is not null
+                <if test="startTime != null and startTime != ''">and trade_datetime &gt;= #{startTime}</if>
+                <if test="endTime != null and endTime != ''">and trade_datetime &lt;= #{endTime}</if>
+            </where>
+            group by date_format(date_add(trade_datetime, interval -1 day), '%Y-%m-%d'), owner
+        ) wr on wr.td = date_format(r.review_date, '%Y-%m-%d') and wr.owner = r.owner
+        <where>
+            r.emotion_temp is not null
+            <if test="startTime != null and startTime != ''">and r.review_date &gt;= #{startTime}</if>
+            <if test="endTime != null and endTime != ''">and r.review_date &lt;= #{endTime}</if>
+            <if test="owner != null and owner != ''">and r.owner = #{owner}</if>
+        </where>
+        order by r.review_date asc
+    </select>
+</mapper>

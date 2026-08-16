@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.trialExecutionArea.mapper.TransactionSystemTrialMapper">
+
+    <!--  添加交易系统试验  -->
+    <insert id="addTransactionSystemTrial" useGeneratedKeys="true" keyProperty="id">
+        insert into t_trial_transaction_record (
+            trade_type,
+            target_name,
+            plan_type,
+            plan_content,
+            plan_start_time,
+            plan_end_time,
+            current_price,
+            plan_price,
+            open_price,
+            actual_price,
+            close_price,
+            trade_status,
+            comply_rule_ids,
+            violate_rule_ids,
+            trade_result,
+            trade_fail_type,
+            result_review,
+            owner,
+            is_use_plan,
+            create_time
+        ) values (
+            #{tradeType},
+            #{targetName},
+            #{planType},
+            #{planContent},
+            #{planStartTime},
+            #{planEndTime},
+            #{currentPrice},
+            #{planPrice},
+            #{openPrice},
+            #{actualPrice},
+            #{closePrice},
+            #{tradeStatus},
+            #{complyRuleIds},
+            #{violateRuleIds},
+            #{tradeResult},
+            #{tradeFailType},
+            #{resultReview},
+            #{owner},
+            #{isUsePlan},
+            now()
+        )
+    </insert>
+
+    <!--  修改交易系统试验  -->
+    <update id="updateTransactionSystemTrial">
+        update t_trial_transaction_record t
+        <set>
+            <if test="tradeType != null">
+                trade_type = #{tradeType},
+            </if>
+            <if test="targetName != null and targetName != ''">
+                target_name = #{targetName},
+            </if>
+            <if test="planType != null">
+                plan_type = #{planType},
+            </if>
+            <if test="planContent != null and planContent != ''">
+                plan_content = #{planContent},
+            </if>
+            <if test="planStartTime != null">
+                plan_start_time = #{planStartTime},
+            </if>
+            <if test="planEndTime != null">
+                plan_end_time = #{planEndTime},
+            </if>
+            <if test="currentPrice != null">
+                current_price = #{currentPrice},
+            </if>
+            <if test="planPrice != null">
+                plan_price = #{planPrice},
+            </if>
+            <if test="openPrice != null">
+                open_price = #{openPrice},
+            </if>
+            <if test="actualPrice != null">
+                actual_price = #{actualPrice},
+            </if>
+            <if test="closePrice != null">
+                close_price = #{closePrice},
+            </if>
+            <if test="tradeStatus != null">
+                trade_status = #{tradeStatus},
+            </if>
+            comply_rule_ids = #{complyRuleIds},
+            violate_rule_ids = #{violateRuleIds},
+            <if test="tradeResult != null">
+                trade_result = #{tradeResult},
+            </if>
+            <if test="tradeFailType != null">
+                trade_fail_type = #{tradeFailType},
+            </if>
+            <if test="resultReview != null and resultReview != ''">
+                result_review = #{resultReview},
+            </if>
+            <if test="isUsePlan != null">
+                is_use_plan = #{isUsePlan},
+            </if>
+        </set>
+        where t.id = #{id}
+    </update>
+
+    <!--   根据ids批量删除交易系统试验  -->
+    <delete id="deleteAllTransactionSystemTrialByIds">
+        delete from t_trial_transaction_record where id in
+        <foreach item="item" collection="ids" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--  条件查询交易系统试验列表  -->
+    <select id="getTransactionSystemTrialByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.trialExecutionArea.TransactionSystemTrial">
+        select t.id,
+               t.trade_type,
+               t.target_name,
+               t.plan_type,
+               t.plan_content,
+               t.plan_start_time,
+               t.plan_end_time,
+               t.create_time,
+               t.current_price,
+               t.plan_price,
+               t.open_price,
+               t.actual_price,
+               t.close_price,
+               t.trade_status,
+               t.comply_rule_ids,
+               t.violate_rule_ids,
+               t.trade_result,
+               t.trade_fail_type,
+               t.result_review,
+               t.owner,
+               t.is_use_plan
+        from t_trial_transaction_record t
+        <where>
+            <if test="tradeType != null and tradeType.size() > 0">
+                and t.trade_type in
+                <foreach collection="tradeType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="targetName != null and targetName != ''">
+                and t.target_name like concat('%', #{targetName}, '%')
+            </if>
+            <if test="planType != null and planType.size() > 0">
+                and t.plan_type in
+                <foreach collection="planType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="planStartTime != null and planStartTime != ''">
+                and t.plan_start_time &gt;= #{planStartTime}
+            </if>
+            <if test="planEndTime != null and planEndTime != ''">
+                and t.plan_start_time &lt;= #{planEndTime}
+            </if>
+            <if test="tradeStatus != null and tradeStatus.size() > 0">
+                and t.trade_status in
+                <foreach collection="tradeStatus" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tradeResult != null and tradeResult.size() > 0">
+                and t.trade_result in
+                <foreach collection="tradeResult" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tradeFailType != null and tradeFailType.size() > 0">
+                and t.trade_fail_type in
+                <foreach collection="tradeFailType" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="isUsePlan != null">
+                and t.is_use_plan = #{isUsePlan}
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        order by t.create_time desc
+    </select>
+
+    <!-- ====================交易规则==================== -->
+    <!--  添加交易规则  -->
+    <insert id="addTransactionRule" useGeneratedKeys="true" keyProperty="id">
+        insert into t_trial_transaction_rule (
+            rule_code,
+            rule_type,
+            rule_content,
+            rule_detail,
+            sort_order,
+            rule_status,
+            use_count,
+            violate_count,
+            comply_success_count,
+            violate_success_count,
+            violate_penalty,
+            owner,
+            create_time
+        ) values (
+            #{ruleCode},
+            #{ruleType},
+            #{ruleContent},
+            #{ruleDetail},
+            #{sortOrder},
+            #{ruleStatus},
+            #{useCount},
+            #{violateCount},
+            #{complySuccessCount},
+            #{violateSuccessCount},
+            #{violatePenalty},
+            #{owner},
+            now()
+        )
+    </insert>
+
+    <!--  修改交易规则  -->
+    <update id="updateTransactionRule">
+        update t_trial_transaction_rule t
+        <set>
+            <if test="ruleCode != null and ruleCode != ''">
+                rule_code = #{ruleCode},
+            </if>
+            <if test="ruleType != null">
+                rule_type = #{ruleType},
+            </if>
+            <if test="ruleContent != null and ruleContent != ''">
+                rule_content = #{ruleContent},
+            </if>
+            <if test="ruleDetail != null and ruleDetail != ''">
+                rule_detail = #{ruleDetail},
+            </if>
+            <if test="sortOrder != null">
+                sort_order = #{sortOrder},
+            </if>
+            <if test="ruleStatus != null">
+                rule_status = #{ruleStatus},
+            </if>
+            <if test="useCount != null">
+                use_count = #{useCount},
+            </if>
+            <if test="violateCount != null">
+                violate_count = #{violateCount},
+            </if>
+            <if test="complySuccessCount != null">
+                comply_success_count = #{complySuccessCount},
+            </if>
+            <if test="violateSuccessCount != null">
+                violate_success_count = #{violateSuccessCount},
+            </if>
+            <if test="violatePenalty != null and violatePenalty != ''">
+                violate_penalty = #{violatePenalty},
+            </if>
+            update_time = now()
+        </set>
+        where t.id = #{id}
+    </update>
+
+    <!--   根据ids批量删除交易规则  -->
+    <delete id="deleteAllTransactionRuleByIds">
+        delete from t_trial_transaction_rule where id in
+        <foreach item="item" collection="ids" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--  条件查询交易规则列表  -->
+    <select id="getTransactionRuleByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.trialExecutionArea.TransactionRule">
+        select t.id,
+               t.rule_code,
+               t.rule_type,
+               t.rule_content,
+               t.rule_detail,
+               t.sort_order,
+               t.rule_status,
+               t.create_time,
+               t.update_time,
+               t.use_count,
+               t.violate_count,
+               t.comply_success_count,
+               t.violate_success_count,
+               t.violate_penalty,
+               t.owner
+        from t_trial_transaction_rule t
+        <where>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        order by t.sort_order asc, t.create_time desc
+    </select>
+</mapper>

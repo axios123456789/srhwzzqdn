@@ -850,7 +850,539 @@
           </div>
         </div>
       </el-tab-pane>
+
+      <!-- 每日复盘标签页 -->
+      <el-tab-pane label="每日复盘" name="dailyReview">
+        <div class="daily-review-div">
+          <!-- 查询条件 -->
+          <div class="search-div">
+            <div class="search-header">
+              <span class="search-title">查询条件</span>
+            </div>
+            <el-form label-width="80px" size="small">
+              <el-row :gutter="20">
+                <el-col :span="8">
+                  <el-form-item label="复盘日期">
+                    <el-date-picker v-model="dailyReviewTimeArea" type="daterange" range-separator="至" start-placeholder="开始" end-placeholder="结束" style="width: 100%" value-format="YYYY-MM-DD" :unlink-panels="true" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="市场状态">
+                    <el-select v-model="dailyReviewQueryDto.marketStatus" style="width: 100%" clearable multiple placeholder="请选择">
+                      <el-option v-for="item in reviewMarketStatusOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="情绪温度">
+                    <el-select v-model="dailyReviewQueryDto.emotionTemp" style="width: 100%" clearable multiple placeholder="请选择">
+                      <el-option v-for="item in reviewEmotionTempOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="5">
+                  <el-form-item label="适配体系">
+                    <el-select v-model="dailyReviewQueryDto.adaptSystem" style="width: 100%" clearable multiple placeholder="请选择">
+                      <el-option v-for="item in reviewAdaptSystemOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24" style="text-align: right;">
+                  <el-form-item label-width="10px">
+                    <el-button type="primary" size="small" @click="searchDailyReviewData"><el-icon><Search /></el-icon>搜索</el-button>
+                    <el-button size="small" @click="resetDailyReviewData"><el-icon><Refresh /></el-icon>重置</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </div>
+          <div class="tools-div beautified-tools" style="text-align: right;">
+            <el-button type="success" size="small" @click="addDailyReview">
+              <el-icon><DocumentAdd /></el-icon>
+              添加复盘
+            </el-button>
+            <el-button type="danger" size="small" @click="deleteDailyReviewAll" :disabled="dailyReviewSelectedRows.length === 0">
+              <el-icon><Delete /></el-icon>
+              批量删除
+            </el-button>
+          </div>
+          <el-table :data="dailyReviewList" style="width: 100%" height="500" border stripe size="small" @selection-change="handleDailyReviewSelectionChange">
+            <el-table-column type="selection" width="40" align="center" />
+            <el-table-column label="操作" align="center" fixed="left" width="240" #default="scope">
+              <el-button type="info" size="small" @click="viewDailyReviewDetail(scope.row)"><el-icon><View /></el-icon>查看</el-button>
+              <el-button type="primary" size="small" @click="editDailyReview(scope.row)"><el-icon><Edit /></el-icon>编辑</el-button>
+              <el-button type="danger" size="small" @click="deleteDailyReview(scope.row)"><el-icon><Delete /></el-icon>删除</el-button>
+            </el-table-column>
+            <el-table-column prop="reviewDate" label="复盘日期" align="center" width="110" />
+            <el-table-column prop="marketStatus" label="市场状态" align="center" width="100">
+              <template #default="scope">{{ getDisplayText(scope.row.marketStatus, reviewMarketStatusOptions) }}</template>
+            </el-table-column>
+            <el-table-column prop="emotionTemp" label="情绪温度" align="center" width="90">
+              <template #default="scope">
+                <el-tag :type="getEmotionTagType(scope.row.emotionTemp)" size="small">{{ getDisplayText(scope.row.emotionTemp, reviewEmotionTempOptions) }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="totalAmount" label="两市成交额(亿)" align="center" width="120">
+              <template #default="scope">{{ scope.row.totalAmount != null ? Number(scope.row.totalAmount).toFixed(2) : '-' }}</template>
+            </el-table-column>
+            <el-table-column prop="limitUpCount" label="涨停" align="center" width="70" />
+            <el-table-column prop="limitDownCount" label="跌停" align="center" width="70" />
+            <el-table-column prop="mainSector1" label="主线板块1" align="center" width="100">
+              <template #default="scope">{{ getDisplayText(scope.row.mainSector1, reviewSectorOptions) }}</template>
+            </el-table-column>
+            <el-table-column prop="leaderStockName" label="龙头股" align="center" width="100" show-overflow-tooltip />
+            <el-table-column prop="adaptSystem" label="适配体系" align="center" width="100">
+              <template #default="scope">{{ getDisplayText(scope.row.adaptSystem, reviewAdaptSystemOptions) }}</template>
+            </el-table-column>
+            <el-table-column prop="planPositionLimit" label="计划仓位%" align="center" width="90">
+              <template #default="scope">{{ scope.row.planPositionLimit != null ? Number(scope.row.planPositionLimit).toFixed(1) + '%' : '-' }}</template>
+            </el-table-column>
+            <el-table-column prop="dailyProfitPct" label="当日盈亏%" align="center" width="90">
+              <template #default="scope">
+                <span :style="{color: scope.row.dailyProfitPct > 0 ? '#F56C6C' : scope.row.dailyProfitPct < 0 ? '#67C23A' : '#909399'}">
+                  {{ scope.row.dailyProfitPct != null ? Number(scope.row.dailyProfitPct).toFixed(2) + '%' : '-' }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="operationSelfRating" label="操作自评" align="center" width="90">
+              <template #default="scope">{{ getDisplayText(scope.row.operationSelfRating, reviewSelfRatingOptions) }}</template>
+            </el-table-column>
+          </el-table>
+          <el-pagination style="margin-top: 15px" v-model:current-page="dailyReviewPageParams.page" v-model:page-size="dailyReviewPageParams.limit" :page-sizes="[10,20,50]" @size-change="fetchDailyReviewData" @current-change="fetchDailyReviewData" layout="total, sizes, prev, pager, next" :total="dailyReviewTotal" />
+        </div>
+      </el-tab-pane>
+
+      <!-- 交易记录标签页 -->
+      <el-tab-pane label="交易记录" name="tradeRecord">
+        <div class="trade-record-div">
+          <div class="search-div">
+            <div class="search-header">
+              <span class="search-title">查询条件</span>
+            </div>
+            <el-form label-width="80px" size="small">
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <el-form-item label="股票名称">
+                    <el-input v-model="tradeRecordQueryDto.stockName" style="width: 100%" clearable placeholder="请输入" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="股票代码">
+                    <el-input v-model="tradeRecordQueryDto.stockCode" style="width: 100%" clearable placeholder="请输入" />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="买卖方向">
+                    <el-select v-model="tradeRecordQueryDto.tradeDirection" style="width: 100%" clearable multiple placeholder="请选择">
+                      <el-option v-for="item in tradeDirectionOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="心理状态">
+                    <el-select v-model="tradeRecordQueryDto.psychology" style="width: 100%" clearable multiple placeholder="请选择">
+                      <el-option v-for="item in tradePsychologyOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row :gutter="20">
+                <el-col :span="6">
+                  <el-form-item label="符合计划">
+                    <el-select v-model="tradeRecordQueryDto.followPlan" style="width: 100%" clearable multiple placeholder="请选择">
+                      <el-option v-for="item in tradePlanMatchOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                  <el-form-item label="执行评分">
+                    <el-select v-model="tradeRecordQueryDto.executeRating" style="width: 100%" clearable multiple placeholder="请选择">
+                      <el-option v-for="item in tradeExecuteRatingOptions" :key="item.value" :label="item.text" :value="item.value" />
+                    </el-select>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="交易时间">
+                    <el-date-picker v-model="tradeRecordTimeArea" type="datetimerange" range-separator="至" start-placeholder="开始" end-placeholder="结束" style="width: 100%" value-format="YYYY-MM-DD HH:mm:ss" :unlink-panels="true" />
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="24" style="text-align: right;">
+                  <el-form-item label-width="10px">
+                    <el-button type="primary" size="small" @click="searchTradeRecordData"><el-icon><Search /></el-icon>搜索</el-button>
+                    <el-button size="small" @click="resetTradeRecordData"><el-icon><Refresh /></el-icon>重置</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </div>
+          <div class="tools-div beautified-tools" style="text-align: right;">
+            <el-button type="success" size="small" @click="addTradeRecord"><el-icon><DocumentAdd /></el-icon>添加交易记录</el-button>
+            <el-button type="danger" size="small" @click="deleteTradeRecordAll" :disabled="tradeRecordSelectedRows.length === 0"><el-icon><Delete /></el-icon>批量删除</el-button>
+          </div>
+          <el-table :data="tradeRecordList" style="width: 100%" height="400" border stripe size="small" @selection-change="handleTradeRecordSelectionChange">
+            <el-table-column type="selection" width="40" align="center" />
+            <el-table-column label="操作" align="center" fixed="left" width="240" #default="scope">
+              <el-button type="info" size="small" @click="viewTradeRecordDetail(scope.row)"><el-icon><View /></el-icon>查看</el-button>
+              <el-button type="primary" size="small" @click="editTradeRecord(scope.row)"><el-icon><Edit /></el-icon>编辑</el-button>
+              <el-button type="danger" size="small" @click="deleteTradeRecord(scope.row)"><el-icon><Delete /></el-icon>删除</el-button>
+            </el-table-column>
+            <el-table-column prop="tradeDatetime" label="交易时间" align="center" width="160" />
+            <el-table-column prop="stockName" label="股票名称" align="center" width="100" show-overflow-tooltip />
+            <el-table-column prop="stockCode" label="股票代码" align="center" width="90" />
+            <el-table-column prop="tradeDirection" label="方向" align="center" width="70">
+              <template #default="scope">
+                <el-tag :type="scope.row.tradeDirection === 1 || scope.row.tradeDirection === 3 ? 'danger' : 'success'" size="small">{{ getDisplayText(scope.row.tradeDirection, tradeDirectionOptions) }}</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="tradePrice" label="成交价" align="center" width="80">
+              <template #default="scope">{{ scope.row.tradePrice != null ? Number(scope.row.tradePrice).toFixed(2) : '-' }}</template>
+            </el-table-column>
+            <el-table-column prop="tradeQuantity" label="数量" align="center" width="70" />
+            <el-table-column prop="psychology" label="心理状态" align="center" width="80">
+              <template #default="scope">{{ getDisplayText(scope.row.psychology, tradePsychologyOptions) }}</template>
+            </el-table-column>
+            <el-table-column prop="followPlan" label="符合计划" align="center" width="80">
+              <template #default="scope">{{ getDisplayText(scope.row.followPlan, tradePlanMatchOptions) }}</template>
+            </el-table-column>
+            <el-table-column prop="profitPct" label="盈亏%" align="center" width="80">
+              <template #default="scope">
+                <span :style="{color: scope.row.profitPct > 0 ? '#F56C6C' : scope.row.profitPct < 0 ? '#67C23A' : '#909399'}">{{ scope.row.profitPct != null ? Number(scope.row.profitPct).toFixed(2) + '%' : '-' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="executeRating" label="执行评分" align="center" width="90">
+              <template #default="scope">{{ getDisplayText(scope.row.executeRating, tradeExecuteRatingOptions) }}</template>
+            </el-table-column>
+            <el-table-column prop="tradeReason" label="交易理由" align="center" min-width="120" show-overflow-tooltip />
+          </el-table>
+          <el-pagination style="margin-top: 15px" v-model:current-page="tradeRecordPageParams.page" v-model:page-size="tradeRecordPageParams.limit" :page-sizes="[10,20,50]" @size-change="fetchTradeRecordData" @current-change="fetchTradeRecordData" layout="total, sizes, prev, pager, next" :total="tradeRecordTotal" />
+        </div>
+      </el-tab-pane>
+
+      <!-- 复盘分析标签页 -->
+      <el-tab-pane label="复盘分析" name="reviewAnalysis">
+        <div class="review-analysis-div">
+          <div class="review-time-filter">
+            <el-radio-group v-model="reviewReportRange" @change="fetchReviewReportData">
+              <el-radio-button :label="7">近7天</el-radio-button>
+              <el-radio-button :label="30">近30天</el-radio-button>
+              <el-radio-button :label="90">近90天</el-radio-button>
+              <el-radio-button :label="0">全部</el-radio-button>
+            </el-radio-group>
+          </div>
+          <!-- KPI卡片 -->
+          <el-row :gutter="12" class="review-kpi-row">
+            <el-col :span="6">
+              <div class="review-kpi-card"><div class="kpi-label">总复盘天数</div><div class="kpi-value">{{ reviewReportData.reviewKpi?.totalReviewDays || 0 }}</div></div>
+            </el-col>
+            <el-col :span="6">
+              <div class="review-kpi-card"><div class="kpi-label">盈利/亏损天数</div><div class="kpi-value"><span style="color:#F56C6C">{{ reviewReportData.reviewKpi?.profitDays || 0 }}</span> / <span style="color:#67C23A">{{ reviewReportData.reviewKpi?.lossDays || 0 }}</span></div></div>
+            </el-col>
+            <el-col :span="6">
+              <div class="review-kpi-card"><div class="kpi-label">最高连续盈利</div><div class="kpi-value">{{ reviewReportData.reviewKpi?.maxContinuousProfitDays || 0 }} 天</div></div>
+            </el-col>
+            <el-col :span="6">
+              <div class="review-kpi-card"><div class="kpi-label">平均每日盈亏</div><div class="kpi-value" :style="{color: (reviewReportData.reviewKpi?.avgDailyProfitPct || 0) > 0 ? '#F56C6C' : '#67C23A'}">{{ (reviewReportData.reviewKpi?.avgDailyProfitPct || 0).toFixed(2) }}%</div></div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="12" class="review-kpi-row">
+            <el-col :span="6">
+              <div class="review-kpi-card"><div class="kpi-label">总交易笔数</div><div class="kpi-value">{{ reviewReportData.tradeKpi?.totalTradeCount || 0 }}</div></div>
+            </el-col>
+            <el-col :span="6">
+              <div class="review-kpi-card"><div class="kpi-label">胜率</div><div class="kpi-value" :style="{color: (reviewReportData.tradeKpi?.winRate || 0) > 50 ? '#F56C6C' : '#E6A23C'}">{{ (reviewReportData.tradeKpi?.winRate || 0).toFixed(1) }}%</div></div>
+            </el-col>
+            <el-col :span="6">
+              <div class="review-kpi-card"><div class="kpi-label">平均盈亏</div><div class="kpi-value" :style="{color: (reviewReportData.tradeKpi?.avgProfitPct || 0) > 0 ? '#F56C6C' : '#67C23A'}">{{ (reviewReportData.tradeKpi?.avgProfitPct || 0).toFixed(2) }}%</div></div>
+            </el-col>
+            <el-col :span="6">
+              <div class="review-kpi-card"><div class="kpi-label">最大盈/亏</div><div class="kpi-value"><span style="color:#F56C6C">{{ (reviewReportData.tradeKpi?.maxProfitPct || 0).toFixed(1) }}</span> / <span style="color:#67C23A">{{ (reviewReportData.tradeKpi?.maxLossPct || 0).toFixed(1) }}</span></div></div>
+            </el-col>
+          </el-row>
+          <!-- 图表网格 -->
+          <el-row :gutter="12">
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">情绪温度趋势</div><div ref="emotionChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">市场状态分布</div><div ref="marketStatusChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">涨停/跌停/连板趋势</div><div ref="limitChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">主线板块频次排行</div><div ref="sectorChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">适配体系分布</div><div ref="adaptSystemChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">操作自评趋势</div><div ref="selfRatingChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">当日盈亏趋势</div><div ref="dailyProfitChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">北向资金趋势</div><div ref="northChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">心理状态分布</div><div ref="psychologyChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">心理状态与盈亏关系</div><div ref="psychologyProfitChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">交易时段分布</div><div ref="timeSlotChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">买卖方向统计</div><div ref="directionChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">执行评分趋势</div><div ref="executeRatingChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">是否符合计划统计</div><div ref="planMatchChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">个股交易频次Top10</div><div ref="stockChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="12"><div class="review-chart-card"><div class="chart-title">每日盈亏vs交易笔数</div><div ref="profitVsCountChartRef" class="chart-box"></div></div></el-col>
+            <el-col :span="24"><div class="review-chart-card"><div class="chart-title">情绪温度vs次日交易胜率</div><div ref="emotionVsWinChartRef" class="chart-box"></div></div></el-col>
+          </el-row>
+        </div>
+      </el-tab-pane>
     </el-tabs>
+
+    <!-- 每日复盘编辑对话框 -->
+    <el-dialog v-model="dailyReviewDialogVisible" :title="dailyReviewDialogTitle" width="80%" class="custom-dialog enhanced-dialog" :close-on-click-modal="false">
+      <el-form :model="dailyReviewFormData" ref="dailyReviewFormRef" label-width="120px" size="small">
+        <div class="ai-fill-bar">
+          <el-button type="primary" plain size="small" @click="smartFillAll"><el-icon><MagicStick /></el-icon> 智能填充</el-button>
+          <span class="ai-fill-tip">根据基础数据自动推荐：市场状态 → 情绪温度 → 适配体系 → 仓位/止损止盈</span>
+        </div>
+        <el-divider content-position="left">大盘环境</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="8"><el-form-item label="复盘日期" prop="reviewDate" :rules="[{required:true,message:'请选择日期',trigger:'change'}]"><el-date-picker v-model="dailyReviewFormData.reviewDate" type="date" style="width:100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="市场状态" prop="marketStatus" :rules="[{required:true,message:'请选择',trigger:'change'}]"><div class="linkage-field"><el-select v-model="dailyReviewFormData.marketStatus" style="flex:1" clearable><el-option v-for="item in reviewMarketStatusOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select><el-button text type="primary" size="small" class="recommend-btn" @click="recommendMarketStatus">💡</el-button></div></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="两市成交额(亿)"><el-input-number v-model="dailyReviewFormData.totalAmount" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="上证涨跌%"><el-input-number v-model="dailyReviewFormData.shChangePct" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="深证涨跌%"><el-input-number v-model="dailyReviewFormData.szChangePct" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="创业板涨跌%"><el-input-number v-model="dailyReviewFormData.cybChangePct" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="上涨家数"><el-input-number v-model="dailyReviewFormData.riseCount" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="下跌家数"><el-input-number v-model="dailyReviewFormData.fallCount" style="width:100%" /></el-form-item></el-col>
+        </el-row>
+        <el-divider content-position="left">情绪指标</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="8"><el-form-item label="情绪温度" prop="emotionTemp" :rules="[{required:true,message:'请选择',trigger:'change'}]"><div class="linkage-field"><el-select v-model="dailyReviewFormData.emotionTemp" style="flex:1" clearable><el-option v-for="item in reviewEmotionTempOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select><el-button text type="primary" size="small" class="recommend-btn" @click="recommendEmotionTemp">💡</el-button></div></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="涨停家数"><el-input-number v-model="dailyReviewFormData.limitUpCount" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="跌停家数"><el-input-number v-model="dailyReviewFormData.limitDownCount" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="连板家数"><el-input-number v-model="dailyReviewFormData.continuousBoardCount" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="昨涨停溢价%"><el-input-number v-model="dailyReviewFormData.yesterdayPremiumPct" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="北向资金(亿)"><el-input-number v-model="dailyReviewFormData.northFlowAmount" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="炸板家数"><el-input-number v-model="dailyReviewFormData.brokenBoardCount" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="炸板率%"><div class="linkage-field"><el-input-number v-model="dailyReviewFormData.brokenBoardRate" :precision="2" style="flex:1" /><el-button text type="primary" size="small" class="recommend-btn" @click="calcBrokenBoardRate">🔢</el-button></div></el-form-item></el-col>
+        </el-row>
+        <el-divider content-position="left">主线与龙头</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="8"><el-form-item label="主线板块1"><el-select v-model="dailyReviewFormData.mainSector1" style="width:100%" clearable filterable><el-option v-for="item in reviewSectorOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="主线板块2"><el-select v-model="dailyReviewFormData.mainSector2" style="width:100%" clearable filterable><el-option v-for="item in reviewSectorOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="主线板块3"><el-select v-model="dailyReviewFormData.mainSector3" style="width:100%" clearable filterable><el-option v-for="item in reviewSectorOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="板块涨停数"><el-input-number v-model="dailyReviewFormData.sectorLimitUpCount" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="龙头股名称"><el-input v-model="dailyReviewFormData.leaderStockName" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="龙头股代码"><el-input v-model="dailyReviewFormData.leaderStockCode" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="龙头涨停时间"><el-date-picker v-model="dailyReviewFormData.leaderLimitUpTime" type="datetime" style="width:100%" value-format="YYYY-MM-DD HH:mm:ss" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="封单金额(亿)"><el-input-number v-model="dailyReviewFormData.leaderSealAmount" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="龙头连板数"><el-input-number v-model="dailyReviewFormData.leaderContinuousBoard" style="width:100%" /></el-form-item></el-col>
+        </el-row>
+        <el-divider content-position="left">次日策略</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="8"><el-form-item label="适配体系" prop="adaptSystem" :rules="[{required:true,message:'请选择',trigger:'change'}]"><div class="linkage-field"><el-select v-model="dailyReviewFormData.adaptSystem" style="flex:1" clearable><el-option v-for="item in reviewAdaptSystemOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select><el-button text type="primary" size="small" class="recommend-btn" @click="recommendAdaptSystem">💡</el-button></div></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="计划仓位上限%"><div class="linkage-field"><el-slider v-model="dailyReviewFormData.planPositionLimit" :min="0" :max="100" show-input style="flex:1" /><el-button text type="primary" size="small" class="recommend-btn" @click="recommendPositionLimit">💡</el-button></div></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="止损线%"><div class="linkage-field"><el-input-number v-model="dailyReviewFormData.stopLossPct" :precision="2" style="flex:1" /><el-button text type="primary" size="small" class="recommend-btn" @click="recommendStopLossTakeProfit">💡</el-button></div></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="止盈线%"><div class="linkage-field"><el-input-number v-model="dailyReviewFormData.takeProfitPct" :precision="2" style="flex:1" /><el-button text type="primary" size="small" class="recommend-btn" @click="recommendStopLossTakeProfit">💡</el-button></div></el-form-item></el-col>
+          <el-col :span="24"><el-form-item label="关注标的"><el-input v-model="dailyReviewFormData.watchTargets" style="width:100%" placeholder="多个用逗号分隔" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="买入条件"><el-input v-model="dailyReviewFormData.buyCondition" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="风险预警"><el-input v-model="dailyReviewFormData.riskWarning" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+        </el-row>
+        <el-divider content-position="left">持仓与自评</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="8"><el-form-item label="操作自评"><div class="linkage-field"><el-select v-model="dailyReviewFormData.operationSelfRating" style="flex:1" clearable><el-option v-for="item in reviewSelfRatingOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select><el-button text type="primary" size="small" class="recommend-btn" @click="recommendSelfRating">💡</el-button></div></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="当日盈亏%"><el-input-number v-model="dailyReviewFormData.dailyProfitPct" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="持仓盈亏%"><el-input-number v-model="dailyReviewFormData.positionProfitPct" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="交易次数"><el-input-number v-model="dailyReviewFormData.tradeCount" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="盈利交易次数"><el-input-number v-model="dailyReviewFormData.winTradeCount" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="24"><el-form-item label="今日操作记录"><el-input v-model="dailyReviewFormData.todayOperation" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+        </el-row>
+        <el-divider content-position="left">总结反思</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="12"><el-form-item label="经验总结"><el-input v-model="dailyReviewFormData.experience" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="教训反思"><el-input v-model="dailyReviewFormData.lesson" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="改进点"><el-input v-model="dailyReviewFormData.improvePoint" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="明日关注重点"><el-input v-model="dailyReviewFormData.tomorrowFocus" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <el-button @click="dailyReviewDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitDailyReview">提交</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 交易记录编辑对话框 -->
+    <el-dialog v-model="tradeRecordDialogVisible" :title="tradeRecordDialogTitle" width="70%" class="custom-dialog enhanced-dialog" :close-on-click-modal="false">
+      <el-form :model="tradeRecordFormData" ref="tradeRecordFormRef" label-width="110px" size="small">
+        <el-divider content-position="left">交易基本信息</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="8"><el-form-item label="交易时间" prop="tradeDatetime" :rules="[{required:true,message:'请选择',trigger:'change'}]"><el-date-picker v-model="tradeRecordFormData.tradeDatetime" type="datetime" style="width:100%" value-format="YYYY-MM-DD HH:mm:ss" /></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="股票名称" prop="stockName" :rules="[{required:true,message:'请输入',trigger:'blur'}]"><el-input v-model="tradeRecordFormData.stockName" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="股票代码"><el-input v-model="tradeRecordFormData.stockCode" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="买卖方向" prop="tradeDirection" :rules="[{required:true,message:'请选择',trigger:'change'}]"><el-select v-model="tradeRecordFormData.tradeDirection" style="width:100%" clearable><el-option v-for="item in tradeDirectionOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="成交价" prop="tradePrice" :rules="[{required:true,message:'请输入',trigger:'blur'}]"><el-input-number v-model="tradeRecordFormData.tradePrice" :precision="3" :min="0" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="成交数量" prop="tradeQuantity" :rules="[{required:true,message:'请输入',trigger:'blur'}]"><el-input-number v-model="tradeRecordFormData.tradeQuantity" :min="0" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="成交金额"><el-input-number v-model="tradeRecordFormData.tradeAmount" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="交易时段"><el-select v-model="tradeRecordFormData.timeSlot" style="width:100%" clearable><el-option v-for="item in tradeTimeSlotOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+        </el-row>
+        <el-divider content-position="left">交易背景</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="8"><el-form-item label="当时大盘状态"><el-select v-model="tradeRecordFormData.marketStatus" style="width:100%" clearable><el-option v-for="item in reviewMarketStatusOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="个股位置"><el-select v-model="tradeRecordFormData.stockPosition" style="width:100%" clearable><el-option v-for="item in tradePositionOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="个股涨跌%"><el-input-number v-model="tradeRecordFormData.stockChangePct" :precision="2" style="width:100%" /></el-form-item></el-col>
+        </el-row>
+        <el-divider content-position="left">心理状态</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="8"><el-form-item label="心理状态"><el-select v-model="tradeRecordFormData.psychology" style="width:100%" clearable><el-option v-for="item in tradePsychologyOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="情绪强度(1-5)"><el-rate v-model="tradeRecordFormData.emotionIntensity" :max="5" /></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="是否符合计划"><el-select v-model="tradeRecordFormData.followPlan" style="width:100%" clearable><el-option v-for="item in tradePlanMatchOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+        </el-row>
+        <el-divider content-position="left">交易逻辑</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="24"><el-form-item label="为何交易"><el-input v-model="tradeRecordFormData.tradeReason" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="预期收益%"><el-input-number v-model="tradeRecordFormData.expectedProfitPct" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="止损价"><el-input-number v-model="tradeRecordFormData.stopLossPrice" :precision="3" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="8"><el-form-item label="止盈价"><el-input-number v-model="tradeRecordFormData.takeProfitPrice" :precision="3" style="width:100%" /></el-form-item></el-col>
+        </el-row>
+        <el-divider content-position="left">结果与反思</el-divider>
+        <el-row :gutter="20">
+          <el-col :span="6"><el-form-item label="盈亏%"><el-input-number v-model="tradeRecordFormData.profitPct" :precision="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="持仓时长(分)"><el-input-number v-model="tradeRecordFormData.holdingDuration" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="执行评分"><el-select v-model="tradeRecordFormData.executeRating" style="width:100%" clearable><el-option v-for="item in tradeExecuteRatingOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="关联复盘日期"><el-date-picker v-model="tradeRecordFormData.reviewDate" type="date" style="width:100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="反思总结"><el-input v-model="tradeRecordFormData.reflection" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="教训"><el-input v-model="tradeRecordFormData.lesson" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+        </el-row>
+      </el-form>
+      <template #footer>
+        <el-button @click="tradeRecordDialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="submitTradeRecord">提交</el-button>
+      </template>
+    </el-dialog>
+
+    <!-- 每日复盘详情查看对话框 -->
+    <el-dialog v-model="dailyReviewDetailVisible" title="复盘详情" width="70%" class="custom-dialog enhanced-dialog" :close-on-click-modal="true">
+      <div class="pred-detail-container" v-if="dailyReviewDetailData">
+        <div class="detail-section">
+          <div class="detail-section-title">大盘环境</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="复盘日期"><span class="detail-value highlight">{{ dailyReviewDetailData.reviewDate || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="市场状态"><el-tag size="small">{{ getDisplayText(dailyReviewDetailData.marketStatus, reviewMarketStatusOptions) }}</el-tag></el-descriptions-item>
+            <el-descriptions-item label="两市成交额"><span class="detail-value">{{ dailyReviewDetailData.totalAmount != null ? Number(dailyReviewDetailData.totalAmount).toFixed(2) + ' 亿' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="上证涨跌%"><span class="detail-value" :style="{color: dailyReviewDetailData.shChangePct > 0 ? '#F56C6C' : '#67C23A'}">{{ dailyReviewDetailData.shChangePct != null ? Number(dailyReviewDetailData.shChangePct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="深证涨跌%"><span class="detail-value" :style="{color: dailyReviewDetailData.szChangePct > 0 ? '#F56C6C' : '#67C23A'}">{{ dailyReviewDetailData.szChangePct != null ? Number(dailyReviewDetailData.szChangePct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="创业板涨跌%"><span class="detail-value" :style="{color: dailyReviewDetailData.cybChangePct > 0 ? '#F56C6C' : '#67C23A'}">{{ dailyReviewDetailData.cybChangePct != null ? Number(dailyReviewDetailData.cybChangePct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="上涨家数"><span class="detail-value">{{ dailyReviewDetailData.riseCount || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="下跌家数"><span class="detail-value">{{ dailyReviewDetailData.fallCount || '-' }}</span></el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">情绪指标</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="情绪温度"><el-tag :type="getEmotionTagType(dailyReviewDetailData.emotionTemp)" size="small">{{ getDisplayText(dailyReviewDetailData.emotionTemp, reviewEmotionTempOptions) }}</el-tag></el-descriptions-item>
+            <el-descriptions-item label="涨停家数"><span class="detail-value">{{ dailyReviewDetailData.limitUpCount || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="跌停家数"><span class="detail-value">{{ dailyReviewDetailData.limitDownCount || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="连板家数"><span class="detail-value">{{ dailyReviewDetailData.continuousBoardCount || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="昨涨停溢价%"><span class="detail-value">{{ dailyReviewDetailData.yesterdayPremiumPct != null ? Number(dailyReviewDetailData.yesterdayPremiumPct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="北向资金"><span class="detail-value">{{ dailyReviewDetailData.northFlowAmount != null ? Number(dailyReviewDetailData.northFlowAmount).toFixed(2) + ' 万' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="炸板家数"><span class="detail-value">{{ dailyReviewDetailData.brokenBoardCount || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="炸板率%"><span class="detail-value">{{ dailyReviewDetailData.brokenBoardRate != null ? Number(dailyReviewDetailData.brokenBoardRate).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">主线与龙头</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="主线板块1">{{ getDisplayText(dailyReviewDetailData.mainSector1, reviewSectorOptions) || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="主线板块2">{{ getDisplayText(dailyReviewDetailData.mainSector2, reviewSectorOptions) || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="主线板块3">{{ getDisplayText(dailyReviewDetailData.mainSector3, reviewSectorOptions) || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="板块涨停数"><span class="detail-value">{{ dailyReviewDetailData.sectorLimitUpCount || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="龙头股名称"><span class="detail-value highlight">{{ dailyReviewDetailData.leaderStockName || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="龙头股代码"><span class="detail-value">{{ dailyReviewDetailData.leaderStockCode || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="涨停时间"><span class="detail-value">{{ dailyReviewDetailData.leaderLimitUpTime || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="封单金额"><span class="detail-value">{{ dailyReviewDetailData.leaderSealAmount != null ? Number(dailyReviewDetailData.leaderSealAmount).toFixed(2) + ' 万' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="龙头连板数"><span class="detail-value">{{ dailyReviewDetailData.leaderContinuousBoard || '-' }}</span></el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">次日策略</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="适配体系"><el-tag size="small" type="warning">{{ getDisplayText(dailyReviewDetailData.adaptSystem, reviewAdaptSystemOptions) }}</el-tag></el-descriptions-item>
+            <el-descriptions-item label="计划仓位上限"><span class="detail-value">{{ dailyReviewDetailData.planPositionLimit != null ? dailyReviewDetailData.planPositionLimit + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="止损线%"><span class="detail-value" style="color:#67C23A">{{ dailyReviewDetailData.stopLossPct != null ? Number(dailyReviewDetailData.stopLossPct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="止盈线%"><span class="detail-value" style="color:#F56C6C">{{ dailyReviewDetailData.takeProfitPct != null ? Number(dailyReviewDetailData.takeProfitPct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="关注标的" :span="2"><span class="detail-value">{{ dailyReviewDetailData.watchTargets || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="买入条件" :span="3"><div class="detail-text-block">{{ dailyReviewDetailData.buyCondition || '-' }}</div></el-descriptions-item>
+            <el-descriptions-item label="风险预警" :span="3"><div class="detail-text-block">{{ dailyReviewDetailData.riskWarning || '-' }}</div></el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">持仓与自评</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="操作自评"><el-tag size="small">{{ getDisplayText(dailyReviewDetailData.operationSelfRating, reviewSelfRatingOptions) }}</el-tag></el-descriptions-item>
+            <el-descriptions-item label="当日盈亏%"><span class="detail-value" :style="{color: dailyReviewDetailData.dailyProfitPct > 0 ? '#F56C6C' : '#67C23A'}">{{ dailyReviewDetailData.dailyProfitPct != null ? Number(dailyReviewDetailData.dailyProfitPct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="持仓盈亏%"><span class="detail-value" :style="{color: dailyReviewDetailData.positionProfitPct > 0 ? '#F56C6C' : '#67C23A'}">{{ dailyReviewDetailData.positionProfitPct != null ? Number(dailyReviewDetailData.positionProfitPct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="交易次数"><span class="detail-value">{{ dailyReviewDetailData.tradeCount || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="盈利交易次数"><span class="detail-value">{{ dailyReviewDetailData.winTradeCount || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="今日操作记录" :span="3"><div class="detail-text-block">{{ dailyReviewDetailData.todayOperation || '-' }}</div></el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">总结反思</div>
+          <el-descriptions :column="2" border size="default" label-width="100px">
+            <el-descriptions-item label="经验总结"><div class="detail-text-block">{{ dailyReviewDetailData.experience || '-' }}</div></el-descriptions-item>
+            <el-descriptions-item label="教训反思"><div class="detail-text-block">{{ dailyReviewDetailData.lesson || '-' }}</div></el-descriptions-item>
+            <el-descriptions-item label="改进点"><div class="detail-text-block">{{ dailyReviewDetailData.improvePoint || '-' }}</div></el-descriptions-item>
+            <el-descriptions-item label="明日关注重点"><div class="detail-text-block">{{ dailyReviewDetailData.tomorrowFocus || '-' }}</div></el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </div>
+      <template #footer><el-button @click="dailyReviewDetailVisible = false">关闭</el-button></template>
+    </el-dialog>
+
+    <!-- 交易记录详情查看对话框 -->
+    <el-dialog v-model="tradeRecordDetailVisible" title="交易记录详情" width="65%" class="custom-dialog enhanced-dialog" :close-on-click-modal="true">
+      <div class="pred-detail-container" v-if="tradeRecordDetailData">
+        <div class="detail-section">
+          <div class="detail-section-title">交易基本信息</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="交易时间"><span class="detail-value highlight">{{ tradeRecordDetailData.tradeDatetime || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="股票名称"><span class="detail-value highlight">{{ tradeRecordDetailData.stockName || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="股票代码"><span class="detail-value">{{ tradeRecordDetailData.stockCode || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="买卖方向"><el-tag :type="tradeRecordDetailData.tradeDirection === 1 || tradeRecordDetailData.tradeDirection === 3 ? 'danger' : 'success'" size="small">{{ getDisplayText(tradeRecordDetailData.tradeDirection, tradeDirectionOptions) }}</el-tag></el-descriptions-item>
+            <el-descriptions-item label="成交价"><span class="detail-value">{{ tradeRecordDetailData.tradePrice != null ? '¥ ' + Number(tradeRecordDetailData.tradePrice).toFixed(3) : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="成交数量"><span class="detail-value">{{ tradeRecordDetailData.tradeQuantity || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="成交金额"><span class="detail-value">{{ tradeRecordDetailData.tradeAmount != null ? '¥ ' + Number(tradeRecordDetailData.tradeAmount).toFixed(2) : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="交易时段">{{ getDisplayText(tradeRecordDetailData.timeSlot, tradeTimeSlotOptions) || '-' }}</el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">交易背景</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="当时大盘状态">{{ getDisplayText(tradeRecordDetailData.marketStatus, reviewMarketStatusOptions) || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="个股位置">{{ getDisplayText(tradeRecordDetailData.stockPosition, tradePositionOptions) || '-' }}</el-descriptions-item>
+            <el-descriptions-item label="个股涨跌%"><span class="detail-value" :style="{color: tradeRecordDetailData.stockChangePct > 0 ? '#F56C6C' : '#67C23A'}">{{ tradeRecordDetailData.stockChangePct != null ? Number(tradeRecordDetailData.stockChangePct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">心理状态</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="心理状态"><el-tag size="small">{{ getDisplayText(tradeRecordDetailData.psychology, tradePsychologyOptions) }}</el-tag></el-descriptions-item>
+            <el-descriptions-item label="情绪强度"><el-rate v-model="tradeRecordDetailData.emotionIntensity" :max="5" disabled /></el-descriptions-item>
+            <el-descriptions-item label="是否符合计划"><el-tag :type="tradeRecordDetailData.followPlan === 1 ? 'success' : 'danger'" size="small">{{ getDisplayText(tradeRecordDetailData.followPlan, tradePlanMatchOptions) }}</el-tag></el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">交易逻辑</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="为何交易" :span="3"><div class="detail-text-block">{{ tradeRecordDetailData.tradeReason || '-' }}</div></el-descriptions-item>
+            <el-descriptions-item label="预期收益%"><span class="detail-value">{{ tradeRecordDetailData.expectedProfitPct != null ? Number(tradeRecordDetailData.expectedProfitPct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="止损价"><span class="detail-value">{{ tradeRecordDetailData.stopLossPrice != null ? '¥ ' + Number(tradeRecordDetailData.stopLossPrice).toFixed(3) : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="止盈价"><span class="detail-value">{{ tradeRecordDetailData.takeProfitPrice != null ? '¥ ' + Number(tradeRecordDetailData.takeProfitPrice).toFixed(3) : '-' }}</span></el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <div class="detail-section">
+          <div class="detail-section-title">结果与反思</div>
+          <el-descriptions :column="3" border size="default" label-width="100px">
+            <el-descriptions-item label="盈亏%"><span class="detail-value" :style="{color: tradeRecordDetailData.profitPct > 0 ? '#F56C6C' : '#67C23A'}">{{ tradeRecordDetailData.profitPct != null ? Number(tradeRecordDetailData.profitPct).toFixed(2) + '%' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="持仓时长"><span class="detail-value">{{ tradeRecordDetailData.holdingDuration != null ? tradeRecordDetailData.holdingDuration + ' 分钟' : '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="执行评分"><el-tag size="small">{{ getDisplayText(tradeRecordDetailData.executeRating, tradeExecuteRatingOptions) }}</el-tag></el-descriptions-item>
+            <el-descriptions-item label="关联复盘日期"><span class="detail-value">{{ tradeRecordDetailData.reviewDate || '-' }}</span></el-descriptions-item>
+            <el-descriptions-item label="反思总结" :span="3"><div class="detail-text-block">{{ tradeRecordDetailData.reflection || '-' }}</div></el-descriptions-item>
+            <el-descriptions-item label="教训" :span="3"><div class="detail-text-block">{{ tradeRecordDetailData.lesson || '-' }}</div></el-descriptions-item>
+          </el-descriptions>
+        </div>
+      </div>
+      <template #footer><el-button @click="tradeRecordDetailVisible = false">关闭</el-button></template>
+    </el-dialog>
 
     <!-- 穿透明细对话框 -->
     <el-dialog
@@ -1756,11 +2288,15 @@
     />
   </div>
 </template><script setup>
-import { ref, reactive, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
+import { ref, reactive, onMounted, onBeforeUnmount, nextTick, computed, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList, SaveTransactionRule, DeleteTransactionRuleById, DeleteAllTransactionRuleByIds } from "@/api/trialExecutionArea/transactionSystemTrial"
 import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, DeleteAllSimulateLedger, GetPredictionReport, GetPredictionDetailByCondition } from "@/api/trialExecutionArea/predictionSimulate"
+import { GetDailyReviewByConditionAndPage, SaveDailyReview, DeleteDailyReviewById, DeleteAllDailyReviewByIds } from "@/api/trialExecutionArea/dailyReview"
+import { GetTradeRecordByConditionAndPage, SaveTradeRecord, DeleteTradeRecordById, DeleteAllTradeRecordByIds, StatTradeByReviewDate } from "@/api/trialExecutionArea/tradeRecord"
+import { GetReviewReport } from "@/api/trialExecutionArea/reviewAnalysis"
+import * as echarts from 'echarts'
 import { getDisplayText } from "@/utils/common"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
@@ -1781,12 +2317,20 @@ const calcRuleTableHeight = () => {
 
 const handleResize = () => {
   calcRuleTableHeight()
+  document.querySelectorAll('.chart-box').forEach(dom => {
+    const inst = echarts.getInstanceByDom(dom)
+    if (inst) inst.resize()
+  })
 }
 
 window.addEventListener('resize', handleResize)
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize)
+  document.querySelectorAll('.chart-box').forEach(dom => {
+    const inst = echarts.getInstanceByDom(dom)
+    if (inst) inst.dispose()
+  })
 })
 
 //--------------------钩子函数-------------------------
@@ -1818,6 +2362,23 @@ onMounted(() => {
   fetchLedgerData()
   fetchPredData()
   fetchReportData()
+
+  //4.加载每日复盘/交易记录数据字典
+  getReviewMarketStatusItem()
+  getReviewEmotionTempItem()
+  getReviewSectorItem()
+  getReviewAdaptSystemItem()
+  getReviewSelfRatingItem()
+  getTradeDirectionItem()
+  getTradeTimeSlotItem()
+  getTradePositionItem()
+  getTradePsychologyItem()
+  getTradePlanMatchItem()
+  getTradeExecuteRatingItem()
+
+  //5.加载每日复盘/交易记录数据
+  fetchDailyReviewData()
+  fetchTradeRecordData()
 });
 
 // ==================== 数据字典 ====================
@@ -1948,6 +2509,609 @@ const getSimulateAssetTypeItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_simulate_asset_type")
   simulateAssetTypeOptions.value = result.data || []
 }
+
+// ==================== 每日复盘/交易记录 数据字典 ====================
+const reviewMarketStatusOptions = ref([])
+const getReviewMarketStatusItem = async () => { reviewMarketStatusOptions.value = (await GetKeyAndValueByType("t_trial_review_market_status")).data || [] }
+const reviewEmotionTempOptions = ref([])
+const getReviewEmotionTempItem = async () => { reviewEmotionTempOptions.value = (await GetKeyAndValueByType("t_trial_review_emotion_temp")).data || [] }
+const reviewSectorOptions = ref([])
+const getReviewSectorItem = async () => { reviewSectorOptions.value = (await GetKeyAndValueByType("t_trial_review_sector")).data || [] }
+const reviewAdaptSystemOptions = ref([])
+const getReviewAdaptSystemItem = async () => { reviewAdaptSystemOptions.value = (await GetKeyAndValueByType("t_trial_review_adapt_system")).data || [] }
+const reviewSelfRatingOptions = ref([])
+const getReviewSelfRatingItem = async () => { reviewSelfRatingOptions.value = (await GetKeyAndValueByType("t_trial_review_self_rating")).data || [] }
+const tradeDirectionOptions = ref([])
+const getTradeDirectionItem = async () => { tradeDirectionOptions.value = (await GetKeyAndValueByType("t_trial_trade_direction")).data || [] }
+const tradeTimeSlotOptions = ref([])
+const getTradeTimeSlotItem = async () => { tradeTimeSlotOptions.value = (await GetKeyAndValueByType("t_trial_trade_time_slot")).data || [] }
+const tradePositionOptions = ref([])
+const getTradePositionItem = async () => { tradePositionOptions.value = (await GetKeyAndValueByType("t_trial_trade_position")).data || [] }
+const tradePsychologyOptions = ref([])
+const getTradePsychologyItem = async () => { tradePsychologyOptions.value = (await GetKeyAndValueByType("t_trial_trade_psychology")).data || [] }
+const tradePlanMatchOptions = ref([])
+const getTradePlanMatchItem = async () => { tradePlanMatchOptions.value = (await GetKeyAndValueByType("t_trial_trade_plan_match")).data || [] }
+const tradeExecuteRatingOptions = ref([])
+const getTradeExecuteRatingItem = async () => { tradeExecuteRatingOptions.value = (await GetKeyAndValueByType("t_trial_trade_execute_rating")).data || [] }
+
+// 情绪温度标签类型
+const getEmotionTagType = (val) => {
+  const map = { 1: 'info', 2: 'primary', 3: 'warning', 4: 'danger', 5: 'danger' }
+  return map[val] || 'info'
+}
+
+// ==================== 每日复盘管理 ====================
+const dailyReviewList = ref([])
+const dailyReviewTotal = ref(0)
+const dailyReviewPageParams = reactive({ page: 1, limit: 10 })
+const dailyReviewTimeArea = ref([])
+const dailyReviewSelectedRows = ref([])
+const dailyReviewQueryDto = reactive({ reviewDateStart: null, reviewDateEnd: null, marketStatus: [], emotionTemp: [], adaptSystem: [] })
+const handleDailyReviewSelectionChange = (selection) => { dailyReviewSelectedRows.value = selection }
+
+const fetchDailyReviewData = async () => {
+  try {
+    const result = await GetDailyReviewByConditionAndPage(dailyReviewPageParams.page, dailyReviewPageParams.limit, dailyReviewQueryDto)
+    if (result.code === 200) {
+      dailyReviewList.value = result.data.list || []
+      dailyReviewTotal.value = result.data.total || 0
+    }
+  } catch (e) { ElMessage.error("查询每日复盘失败") }
+}
+const searchDailyReviewData = () => {
+  dailyReviewQueryDto.reviewDateStart = dailyReviewTimeArea.value?.[0] || null
+  dailyReviewQueryDto.reviewDateEnd = dailyReviewTimeArea.value?.[1] || null
+  dailyReviewPageParams.page = 1
+  fetchDailyReviewData()
+}
+const resetDailyReviewData = () => {
+  dailyReviewTimeArea.value = []
+  Object.assign(dailyReviewQueryDto, { reviewDateStart: null, reviewDateEnd: null, marketStatus: [], emotionTemp: [], adaptSystem: [] })
+  dailyReviewPageParams.page = 1
+  fetchDailyReviewData()
+}
+
+// ==================== 复盘表单联动推荐引擎 ====================
+// 炸板率手动计算函数（watch在表单数据定义后注册）
+const calcBrokenBoardRate = () => {
+  const broken = dailyReviewFormData.brokenBoardCount
+  const limitUp = dailyReviewFormData.limitUpCount
+  if (broken == null || limitUp == null || limitUp <= 0) {
+    ElMessage.warning("请先填报：炸板家数和涨停家数")
+    return
+  }
+  dailyReviewFormData.brokenBoardRate = Number((broken / limitUp * 100).toFixed(2))
+  ElMessage.success("已计算炸板率：" + dailyReviewFormData.brokenBoardRate + "%")
+}
+
+// 联动1：市场状态推荐（多维度：指数+涨跌停比+涨跌家数比+背离检测）
+const recommendMarketStatus = () => {
+  const f = dailyReviewFormData
+  const filled = [f.shChangePct, f.szChangePct, f.cybChangePct, f.limitUpCount, f.limitDownCount, f.riseCount, f.fallCount].filter(v => v != null).length
+  if (filled < 4) {
+    ElMessage.warning("请先填报：指数涨跌%、涨停/跌停家数、上涨/下跌家数（至少4项）")
+    return
+  }
+  const sh = f.shChangePct || 0, sz = f.szChangePct || 0, cyb = f.cybChangePct || 0
+  const limitUp = f.limitUpCount || 0, limitDown = f.limitDownCount || 1
+  const riseCount = f.riseCount || 0, fallCount = f.fallCount || 1
+  const avgIdx = (sh + sz + cyb) / 3
+  const limitRatio = limitUp / limitDown
+  const riseFallRatio = riseCount / fallCount
+  const allUp = sh > 0 && sz > 0 && cyb > 0
+  const allDown = sh < 0 && sz < 0 && cyb < 0
+  let result = 3
+  if (allUp && avgIdx > 1 && riseFallRatio > 2 && limitRatio > 3) result = 5
+  else if (avgIdx > 0.3 && riseFallRatio > 1.2 && limitRatio > 1.5) result = 4
+  else if (Math.abs(avgIdx) < 0.5 && riseFallRatio > 0.8 && riseFallRatio < 1.2 && limitRatio > 0.5 && limitRatio < 2) result = 3
+  else if (allDown && avgIdx < -1 && limitUp > 30) result = 1
+  else if (allDown && limitUp > 20 && limitRatio > 0.8) result = 2
+  else if (avgIdx < 0 && riseFallRatio > 0.8) result = 2
+  else if (avgIdx > 0 && (limitDown > 20 || riseFallRatio < 0.5)) result = 1
+  else if (avgIdx > 0.5) result = 4
+  else if (avgIdx < -0.5) result = 2
+  dailyReviewFormData.marketStatus = result
+  ElMessage.success("已推荐市场状态：" + getDisplayText(result, reviewMarketStatusOptions.value))
+}
+
+// 联动2：情绪温度推荐（评分制：涨跌停+涨跌家数比+炸板率+溢价+连板，多维度打分）
+const recommendEmotionTemp = () => {
+  const f = dailyReviewFormData
+  if (f.limitUpCount == null || f.limitDownCount == null) {
+    ElMessage.warning("请先填报：涨停家数、跌停家数")
+    return
+  }
+  const limitUp = f.limitUpCount, limitDown = f.limitDownCount || 1
+  const riseCount = f.riseCount || 0, fallCount = f.fallCount || 1
+  const premium = f.yesterdayPremiumPct || 0
+  const brokenRate = f.brokenBoardRate || 0
+  const continuousBoard = f.continuousBoardCount || 0
+  let score = 0
+  if (limitUp > 80) score += 20
+  else if (limitUp > 50) score += 15
+  else if (limitUp > 35) score += 10
+  else if (limitUp > 20) score += 5
+  const limitRatio = limitUp / limitDown
+  if (limitRatio > 3) score += 20
+  else if (limitRatio > 2) score += 15
+  else if (limitRatio > 1) score += 10
+  else if (limitRatio > 0.5) score += 5
+  const riseFallRatio = riseCount / fallCount
+  if (riseFallRatio > 2) score += 20
+  else if (riseFallRatio > 1.5) score += 15
+  else if (riseFallRatio > 1) score += 10
+  else if (riseFallRatio > 0.5) score += 5
+  if (brokenRate < 10) score += 15
+  else if (brokenRate < 20) score += 10
+  else if (brokenRate < 30) score += 5
+  if (premium > 2) score += 15
+  else if (premium > 0) score += 10
+  else if (premium > -1) score += 3
+  if (continuousBoard > 10) score += 10
+  else if (continuousBoard > 5) score += 7
+  else if (continuousBoard > 2) score += 4
+  let result = 3
+  if (score >= 80) result = 5
+  else if (score >= 60) result = 4
+  else if (score >= 40) result = 3
+  else if (score >= 20) result = 2
+  else result = 1
+  dailyReviewFormData.emotionTemp = result
+  ElMessage.success("已推荐情绪温度：" + getDisplayText(result, reviewEmotionTempOptions.value) + "（综合评分" + score + "）")
+}
+
+// 联动3：适配体系推荐（多维度：情绪+市场状态+炸板率+溢价+连板+北向资金）
+const recommendAdaptSystem = () => {
+  const f = dailyReviewFormData
+  if (f.emotionTemp == null) {
+    ElMessage.warning("请先填报：情绪温度（可点击情绪温度旁💡按钮自动推荐）")
+    return
+  }
+  if (f.marketStatus == null) {
+    ElMessage.warning("请先填报：市场状态（可点击市场状态旁💡按钮自动推荐）")
+    return
+  }
+  const emotion = f.emotionTemp, market = f.marketStatus
+  const brokenRate = f.brokenBoardRate || 0, premium = f.yesterdayPremiumPct || 0
+  const continuousBoard = f.continuousBoardCount || 0
+  const northFlow = f.northFlowAmount || 0
+  let result = 3
+  if (emotion === 1) {
+    result = 5
+  } else if (emotion === 2) {
+    result = 3
+  } else if (emotion === 3) {
+    if (market === 3) result = 2
+    else if (market === 4 || market === 5) result = 4
+    else result = 3
+  } else if (emotion === 4) {
+    if (brokenRate > 30) result = 2
+    else if (premium < 0) result = 2
+    else if (continuousBoard < 3) result = 2
+    else result = 1
+  } else if (emotion === 5) {
+    if (brokenRate > 25) result = 2
+    else if (northFlow < -100000) result = 2
+    else result = 1
+  }
+  dailyReviewFormData.adaptSystem = result
+  ElMessage.success("已推荐适配体系：" + getDisplayText(result, reviewAdaptSystemOptions.value))
+}
+
+// 联动4：计划仓位上限推荐
+const recommendPositionLimit = () => {
+  const f = dailyReviewFormData
+  if (f.emotionTemp == null) {
+    ElMessage.warning("请先填报：情绪温度")
+    return
+  }
+  if (f.adaptSystem == null) {
+    ElMessage.warning("请先选择：适配体系（可点击适配体系旁💡按钮自动推荐）")
+    return
+  }
+  const emotion = f.emotionTemp, adapt = f.adaptSystem
+  let result = 50
+  if (adapt === 5) result = 0
+  else if (adapt === 3) result = emotion === 2 ? 30 : 40
+  else if (adapt === 2) result = emotion === 3 ? 50 : 60
+  else if (adapt === 1) result = emotion === 4 ? 70 : 80
+  else if (adapt === 4) result = emotion === 3 ? 50 : 60
+  dailyReviewFormData.planPositionLimit = result
+  ElMessage.success("已推荐计划仓位上限：" + result + "%")
+}
+
+// 联动5：止损/止盈推荐
+const recommendStopLossTakeProfit = () => {
+  const f = dailyReviewFormData
+  if (f.adaptSystem == null) {
+    ElMessage.warning("请先选择：适配体系（可点击适配体系旁💡按钮自动推荐）")
+    return
+  }
+  const adapt = f.adaptSystem
+  const map = { 1: [-3, 10], 2: [-5, 8], 3: [-7, 10], 4: [-10, 25], 5: [null, null] }
+  const [stopLoss, takeProfit] = map[adapt] || [null, null]
+  if (stopLoss == null) {
+    ElMessage.info("当前适配体系为空仓，无需设置止损止盈")
+    return
+  }
+  dailyReviewFormData.stopLossPct = stopLoss
+  dailyReviewFormData.takeProfitPct = takeProfit
+  ElMessage.success("已推荐止损" + stopLoss + "% / 止盈" + takeProfit + "%")
+}
+
+// 联动6：操作自评推荐
+const recommendSelfRating = () => {
+  const f = dailyReviewFormData
+  if (f.dailyProfitPct == null) {
+    ElMessage.warning("请先填报：当日盈亏%")
+    return
+  }
+  const profit = f.dailyProfitPct
+  const winRate = (f.tradeCount != null && f.tradeCount > 0 && f.winTradeCount != null) ? (f.winTradeCount / f.tradeCount * 100) : 50
+  let result = 3
+  if (profit > 2 && winRate > 60) result = 5
+  else if (profit > 0 && winRate >= 50) result = 4
+  else if (Math.abs(profit) <= 0.5) result = 3
+  else if (profit < 0 && winRate < 40) result = 2
+  else if (profit < -2) result = 1
+  dailyReviewFormData.operationSelfRating = result
+  ElMessage.success("已推荐操作自评：" + getDisplayText(result, reviewSelfRatingOptions.value))
+}
+
+// 智能填充：全链路推荐
+const smartFillAll = () => {
+  const f = dailyReviewFormData
+  const hasBase = [f.shChangePct, f.szChangePct, f.cybChangePct, f.limitUpCount, f.limitDownCount, f.riseCount, f.fallCount].filter(v => v != null).length
+  if (hasBase < 4) {
+    ElMessage.warning("请先填报基础市场数据（指数涨跌、涨跌停家数、涨跌家数等，至少4项），再使用智能填充")
+    return
+  }
+  recommendMarketStatus()
+  recommendEmotionTemp()
+  recommendAdaptSystem()
+  recommendPositionLimit()
+  recommendStopLossTakeProfit()
+  ElMessage.success("智能填充完成，请检查并调整推荐值")
+}
+
+const dailyReviewDialogVisible = ref(false)
+const dailyReviewDialogTitle = ref('')
+const dailyReviewFormRef = ref(null)
+const defaultDailyReviewForm = () => ({
+  id: null, reviewDate: new Date().toISOString().slice(0, 10),
+  shChangePct: null, szChangePct: null, cybChangePct: null, totalAmount: null, riseCount: null, fallCount: null, marketStatus: null,
+  limitUpCount: null, limitDownCount: null, continuousBoardCount: null, yesterdayPremiumPct: null, emotionTemp: null, northFlowAmount: null, brokenBoardCount: null, brokenBoardRate: null,
+  mainSector1: null, mainSector2: null, mainSector3: null, sectorLimitUpCount: null, leaderStockName: '', leaderStockCode: '', leaderLimitUpTime: null, leaderSealAmount: null, leaderContinuousBoard: null,
+  adaptSystem: null, planPositionLimit: 50, watchTargets: '', buyCondition: '', riskWarning: '', stopLossPct: null, takeProfitPct: null,
+  todayOperation: '', operationSelfRating: null, dailyProfitPct: null, positionProfitPct: null, tradeCount: null, winTradeCount: null,
+  experience: '', lesson: '', improvePoint: '', tomorrowFocus: '', remark: ''
+})
+const dailyReviewFormData = reactive(defaultDailyReviewForm())
+
+const addDailyReview = () => {
+  Object.assign(dailyReviewFormData, defaultDailyReviewForm())
+  dailyReviewDialogTitle.value = '添加每日复盘'
+  dailyReviewDialogVisible.value = true
+}
+const editDailyReview = (row) => {
+  Object.assign(dailyReviewFormData, defaultDailyReviewForm(), row)
+  dailyReviewDialogTitle.value = '编辑每日复盘'
+  dailyReviewDialogVisible.value = true
+}
+const dailyReviewDetailVisible = ref(false)
+const dailyReviewDetailData = ref(null)
+const viewDailyReviewDetail = (row) => {
+  dailyReviewDetailData.value = { ...row }
+  dailyReviewDetailVisible.value = true
+}
+const submitDailyReview = async () => {
+  if (!dailyReviewFormRef.value) return
+  await dailyReviewFormRef.value.validate(async (valid) => {
+    if (!valid) return
+    try {
+      const result = await SaveDailyReview(dailyReviewFormData)
+      if (result.code === 200) {
+        ElMessage.success("保存成功")
+        dailyReviewDialogVisible.value = false
+        fetchDailyReviewData()
+      } else { ElMessage.error(result.message || "保存失败") }
+    } catch (e) { ElMessage.error("保存每日复盘失败") }
+  })
+}
+const deleteDailyReview = (row) => {
+  ElMessageBox.confirm("确认删除该复盘记录？", "提示", { type: "warning" }).then(async () => {
+    const result = await DeleteDailyReviewById(row.id)
+    if (result.code === 200) { ElMessage.success("删除成功"); fetchDailyReviewData() }
+  }).catch(() => {})
+}
+const deleteDailyReviewAll = () => {
+  ElMessageBox.confirm("确认批量删除选中记录？", "提示", { type: "warning" }).then(async () => {
+    const ids = dailyReviewSelectedRows.value.map(r => r.id)
+    const result = await DeleteAllDailyReviewByIds(ids)
+    if (result.code === 200) { ElMessage.success("删除成功"); fetchDailyReviewData() }
+  }).catch(() => {})
+}
+
+// ==================== 交易记录管理 ====================
+const tradeRecordList = ref([])
+const tradeRecordTotal = ref(0)
+const tradeRecordPageParams = reactive({ page: 1, limit: 10 })
+const tradeRecordTimeArea = ref([])
+const tradeRecordSelectedRows = ref([])
+const tradeRecordQueryDto = reactive({ stockName: '', stockCode: '', tradeDirection: [], psychology: [], tradeTimeStart: null, tradeTimeEnd: null, followPlan: [], executeRating: [] })
+const handleTradeRecordSelectionChange = (selection) => { tradeRecordSelectedRows.value = selection }
+
+const fetchTradeRecordData = async () => {
+  try {
+    const result = await GetTradeRecordByConditionAndPage(tradeRecordPageParams.page, tradeRecordPageParams.limit, tradeRecordQueryDto)
+    if (result.code === 200) {
+      tradeRecordList.value = result.data.list || []
+      tradeRecordTotal.value = result.data.total || 0
+    }
+  } catch (e) { ElMessage.error("查询交易记录失败") }
+}
+const searchTradeRecordData = () => {
+  tradeRecordQueryDto.tradeTimeStart = tradeRecordTimeArea.value?.[0] || null
+  tradeRecordQueryDto.tradeTimeEnd = tradeRecordTimeArea.value?.[1] || null
+  tradeRecordPageParams.page = 1
+  fetchTradeRecordData()
+}
+const resetTradeRecordData = () => {
+  tradeRecordTimeArea.value = []
+  Object.assign(tradeRecordQueryDto, { stockName: '', stockCode: '', tradeDirection: [], psychology: [], tradeTimeStart: null, tradeTimeEnd: null, followPlan: [], executeRating: [] })
+  tradeRecordPageParams.page = 1
+  fetchTradeRecordData()
+}
+
+const tradeRecordDialogVisible = ref(false)
+const tradeRecordDialogTitle = ref('')
+const tradeRecordFormRef = ref(null)
+const defaultTradeRecordForm = () => ({
+  id: null, tradeDatetime: new Date().toISOString().slice(0, 19).replace('T', ' '),
+  stockName: '', stockCode: '', tradeDirection: null, tradePrice: null, tradeQuantity: null, tradeAmount: null, timeSlot: null,
+  marketStatus: null, stockPosition: null, stockChangePct: null,
+  psychology: null, emotionIntensity: 3, followPlan: null,
+  tradeReason: '', expectedProfitPct: null, stopLossPrice: null, takeProfitPrice: null,
+  profitPct: null, holdingDuration: null, executeRating: null, reflection: '', lesson: '',
+  reviewDate: null, remark: ''
+})
+const tradeRecordFormData = reactive(defaultTradeRecordForm())
+
+// ==================== 表单联动watch（必须在表单数据定义之后注册）====================
+// 炸板率自动计算：填完炸板家数+涨停家数后自动算
+watch([() => dailyReviewFormData.brokenBoardCount, () => dailyReviewFormData.limitUpCount], ([broken, limitUp]) => {
+  if (broken != null && limitUp != null && limitUp > 0) {
+    dailyReviewFormData.brokenBoardRate = Number((broken / limitUp * 100).toFixed(2))
+  }
+})
+// 方向1：交易记录录入时，交易时间变更自动带出关联复盘日期
+watch(() => tradeRecordFormData.tradeDatetime, (val) => {
+  if (val && val.length >= 10) {
+    tradeRecordFormData.reviewDate = val.substring(0, 10)
+  }
+})
+// 方向2：复盘日期变更时，自动查询当天交易汇总并回填
+watch(() => dailyReviewFormData.reviewDate, async (val) => {
+  if (!val) return
+  try {
+    const result = await StatTradeByReviewDate(val)
+    if (result.code === 200 && result.data) {
+      const d = result.data
+      const tradeCount = Number(d.tradeCount || 0)
+      if (tradeCount > 0) {
+        dailyReviewFormData.tradeCount = tradeCount
+        dailyReviewFormData.winTradeCount = Number(d.winTradeCount || 0)
+        dailyReviewFormData.dailyProfitPct = Number(Number(d.totalProfitPct || 0).toFixed(2))
+        ElMessage.success("已自动汇总" + val + "交易数据：" + tradeCount + "笔，盈利" + (d.winTradeCount || 0) + "笔")
+      }
+    }
+  } catch (e) { /* 静默失败 */ }
+})
+
+const addTradeRecord = () => {
+  Object.assign(tradeRecordFormData, defaultTradeRecordForm())
+  tradeRecordDialogTitle.value = '添加交易记录'
+  tradeRecordDialogVisible.value = true
+}
+const editTradeRecord = (row) => {
+  Object.assign(tradeRecordFormData, defaultTradeRecordForm(), row)
+  tradeRecordDialogTitle.value = '编辑交易记录'
+  tradeRecordDialogVisible.value = true
+}
+const tradeRecordDetailVisible = ref(false)
+const tradeRecordDetailData = ref(null)
+const viewTradeRecordDetail = (row) => {
+  tradeRecordDetailData.value = { ...row }
+  tradeRecordDetailVisible.value = true
+}
+const submitTradeRecord = async () => {
+  if (!tradeRecordFormRef.value) return
+  await tradeRecordFormRef.value.validate(async (valid) => {
+    if (!valid) return
+    try {
+      const result = await SaveTradeRecord(tradeRecordFormData)
+      if (result.code === 200) {
+        ElMessage.success("保存成功")
+        tradeRecordDialogVisible.value = false
+        fetchTradeRecordData()
+      } else { ElMessage.error(result.message || "保存失败") }
+    } catch (e) { ElMessage.error("保存交易记录失败") }
+  })
+}
+const deleteTradeRecord = (row) => {
+  ElMessageBox.confirm("确认删除该交易记录？", "提示", { type: "warning" }).then(async () => {
+    const result = await DeleteTradeRecordById(row.id)
+    if (result.code === 200) { ElMessage.success("删除成功"); fetchTradeRecordData() }
+  }).catch(() => {})
+}
+const deleteTradeRecordAll = () => {
+  ElMessageBox.confirm("确认批量删除选中记录？", "提示", { type: "warning" }).then(async () => {
+    const ids = tradeRecordSelectedRows.value.map(r => r.id)
+    const result = await DeleteAllTradeRecordByIds(ids)
+    if (result.code === 200) { ElMessage.success("删除成功"); fetchTradeRecordData() }
+  }).catch(() => {})
+}
+
+// ==================== 复盘分析管理 ====================
+const reviewReportRange = ref(30)
+const reviewReportData = ref({})
+// 图表ref
+const emotionChartRef = ref(null), marketStatusChartRef = ref(null), limitChartRef = ref(null), sectorChartRef = ref(null)
+const adaptSystemChartRef = ref(null), selfRatingChartRef = ref(null), dailyProfitChartRef = ref(null), northChartRef = ref(null)
+const psychologyChartRef = ref(null), psychologyProfitChartRef = ref(null), timeSlotChartRef = ref(null), directionChartRef = ref(null)
+const executeRatingChartRef = ref(null), planMatchChartRef = ref(null), stockChartRef = ref(null), profitVsCountChartRef = ref(null)
+const emotionVsWinChartRef = ref(null)
+
+
+const fetchReviewReportData = async () => {
+  const dto = {}
+  if (reviewReportRange.value > 0) {
+    const end = new Date()
+    const start = new Date(end.getTime() - reviewReportRange.value * 24 * 3600 * 1000)
+    dto.startTime = start.toISOString().slice(0, 10)
+    dto.endTime = end.toISOString().slice(0, 10)
+  }
+  try {
+    const result = await GetReviewReport(dto)
+    if (result.code === 200) {
+      reviewReportData.value = result.data || {}
+      nextTick(() => renderReviewCharts())
+    }
+  } catch (e) { ElMessage.error("查询复盘分析失败") }
+}
+
+// 通用图表初始化
+const initChart = (domRef, option) => {
+  if (!domRef.value) return null
+  const existing = echarts.getInstanceByDom(domRef.value)
+  if (existing) existing.dispose()
+  const inst = echarts.init(domRef.value, 'dark')
+  inst.setOption(option)
+  return inst
+}
+
+// 字典翻译辅助
+const dictText = (code, options) => getDisplayText(code, options)
+const buildPieData = (stats, options) => (stats || []).map(s => ({ name: dictText(s.code, options), value: s.count }))
+
+const renderReviewCharts = () => {
+  const d = reviewReportData.value
+  // 1.情绪温度趋势
+  initChart(emotionChartRef, {
+    tooltip: { trigger: 'axis', formatter: (p) => p[0].axisValue + '<br/>' + p.map(i => i.marker + i.seriesName + ': ' + dictText(i.value, reviewEmotionTempOptions.value)).join('<br/>') },
+    xAxis: { type: 'category', data: (d.emotionTrends || []).map(i => i.date) },
+    yAxis: { type: 'value', min: 0, max: 5, axisLabel: { formatter: (v) => dictText(v, reviewEmotionTempOptions.value) || v } },
+    series: [{ name: '情绪温度', type: 'line', data: (d.emotionTrends || []).map(i => i.score), smooth: true, markLine: { data: [{ yAxis: 2.5 }] } }]
+  })
+  // 2.市场状态分布
+  initChart(marketStatusChartRef, { tooltip: { trigger: 'item' }, legend: { bottom: 0 }, series: [{ type: 'pie', radius: ['40%','70%'], data: buildPieData(d.marketStatusStats, reviewMarketStatusOptions.value) }] })
+  // 3.涨停跌停趋势
+  initChart(limitChartRef, {
+    tooltip: { trigger: 'axis' }, legend: { data: ['涨停','跌停','连板'], bottom: 0 },
+    xAxis: { type: 'category', data: (d.limitTrends || []).map(i => i.date) }, yAxis: { type: 'value' },
+    series: [
+      { name: '涨停', type: 'bar', data: (d.limitTrends || []).map(i => i.limitUp) },
+      { name: '跌停', type: 'bar', data: (d.limitTrends || []).map(i => i.limitDown) },
+      { name: '连板', type: 'line', data: (d.limitTrends || []).map(i => i.continuousBoard), smooth: true }
+    ]
+  })
+  // 4.主线板块频次
+  initChart(sectorChartRef, {
+    tooltip: { trigger: 'axis' }, grid: { left: '15%' },
+    yAxis: { type: 'category', data: (d.sectorStats || []).map(i => dictText(i.code, reviewSectorOptions.value)) },
+    xAxis: { type: 'value' }, series: [{ type: 'bar', data: (d.sectorStats || []).map(i => i.count) }]
+  })
+  // 5.适配体系分布
+  initChart(adaptSystemChartRef, { tooltip: { trigger: 'item' }, legend: { bottom: 0 }, series: [{ type: 'pie', radius: '65%', data: buildPieData(d.adaptSystemStats, reviewAdaptSystemOptions.value) }] })
+  // 6.操作自评趋势
+  initChart(selfRatingChartRef, {
+    tooltip: { trigger: 'axis', formatter: (p) => p[0].axisValue + '<br/>' + p.map(i => i.marker + i.seriesName + ': ' + dictText(i.value, reviewSelfRatingOptions.value)).join('<br/>') },
+    xAxis: { type: 'category', data: (d.selfRatingTrends || []).map(i => i.date) },
+    yAxis: { type: 'value', min: 0, max: 5, axisLabel: { formatter: (v) => dictText(v, reviewSelfRatingOptions.value) || v } },
+    series: [{ name: '操作自评', type: 'line', data: (d.selfRatingTrends || []).map(i => i.rating), smooth: true }]
+  })
+  // 7.当日盈亏趋势
+  initChart(dailyProfitChartRef, {
+    tooltip: { trigger: 'axis' }, xAxis: { type: 'category', data: (d.dailyProfitTrends || []).map(i => i.date) }, yAxis: { type: 'value' },
+    series: [{ type: 'bar', data: (d.dailyProfitTrends || []).map(i => ({ value: i.profit, itemStyle: { color: i.profit > 0 ? '#F56C6C' : '#67C23A' } })) }]
+  })
+  // 8.北向资金趋势
+  initChart(northChartRef, {
+    tooltip: { trigger: 'axis' }, xAxis: { type: 'category', data: (d.northTrends || []).map(i => i.date) }, yAxis: { type: 'value' },
+    series: [{ type: 'line', data: (d.northTrends || []).map(i => i.amount), smooth: true, areaStyle: {} }]
+  })
+  // 9.心理状态分布
+  initChart(psychologyChartRef, { tooltip: { trigger: 'item' }, legend: { bottom: 0 }, series: [{ type: 'pie', radius: '65%', data: buildPieData(d.psychologyStats, tradePsychologyOptions.value) }] })
+  // 10.心理状态与盈亏关系
+  initChart(psychologyProfitChartRef, {
+    tooltip: { trigger: 'axis' }, xAxis: { type: 'category', data: (d.psychologyProfits || []).map(i => dictText(i.code, tradePsychologyOptions.value)), axisLabel: { rotate: 30 } }, yAxis: { type: 'value' },
+    series: [{ type: 'bar', data: (d.psychologyProfits || []).map(i => ({ value: Number(i.avgProfit).toFixed(2), itemStyle: { color: i.avgProfit > 0 ? '#F56C6C' : '#67C23A' } })) }]
+  })
+  // 11.交易时段分布
+  initChart(timeSlotChartRef, { tooltip: { trigger: 'item' }, legend: { bottom: 0 }, series: [{ type: 'pie', radius: '65%', data: buildPieData(d.timeSlotStats, tradeTimeSlotOptions.value) }] })
+  // 12.买卖方向统计
+  initChart(directionChartRef, {
+    tooltip: { trigger: 'axis' }, xAxis: { type: 'category', data: (d.directionStats || []).map(i => dictText(i.code, tradeDirectionOptions.value)) }, yAxis: { type: 'value' },
+    series: [{ type: 'bar', data: (d.directionStats || []).map(i => i.count) }]
+  })
+  // 13.执行评分趋势
+  initChart(executeRatingChartRef, {
+    tooltip: { trigger: 'axis', formatter: (p) => p[0].axisValue + '<br/>' + p.map(i => i.marker + i.seriesName + ': ' + dictText(i.value, tradeExecuteRatingOptions.value)).join('<br/>') },
+    xAxis: { type: 'category', data: (d.executeRatingTrends || []).map(i => i.date) },
+    yAxis: { type: 'value', min: 0, max: 5, axisLabel: { formatter: (v) => dictText(v, tradeExecuteRatingOptions.value) || v } },
+    series: [{ name: '执行评分', type: 'line', data: (d.executeRatingTrends || []).map(i => Number(i.rating).toFixed(2)), smooth: true }]
+  })
+  // 14.是否符合计划统计
+  initChart(planMatchChartRef, { tooltip: { trigger: 'item' }, legend: { bottom: 0 }, series: [{ type: 'pie', radius: '65%', data: buildPieData(d.planMatchStats, tradePlanMatchOptions.value) }] })
+  // 15.个股交易频次Top10
+  initChart(stockChartRef, {
+    tooltip: { trigger: 'axis' }, grid: { left: '15%' },
+    yAxis: { type: 'category', data: (d.stockStats || []).map(i => i.stockName) }, xAxis: { type: 'value' },
+    series: [{ type: 'bar', data: (d.stockStats || []).map(i => i.count) }]
+  })
+  // 16.每日盈亏vs交易笔数
+  initChart(profitVsCountChartRef, {
+    tooltip: { trigger: 'axis' }, legend: { data: ['盈亏%','交易笔数'], bottom: 0 },
+    xAxis: { type: 'category', data: (d.dailyProfitVsTradeCounts || []).map(i => i.date) },
+    yAxis: [{ type: 'value', name: '盈亏%' }, { type: 'value', name: '笔数' }],
+    series: [
+      { name: '盈亏%', type: 'line', data: (d.dailyProfitVsTradeCounts || []).map(i => Number(i.profit).toFixed(2)), smooth: true },
+      { name: '交易笔数', type: 'bar', yAxisIndex: 1, data: (d.dailyProfitVsTradeCounts || []).map(i => i.tradeCount) }
+    ]
+  })
+  // 17.情绪温度vs次日交易胜率
+  initChart(emotionVsWinChartRef, {
+    tooltip: {
+      trigger: 'axis',
+      formatter: (p) => {
+        let r = p[0].axisValue + '<br/>'
+        p.forEach(i => {
+          if (i.seriesName === '情绪温度') r += i.marker + i.seriesName + ': ' + dictText(i.value, reviewEmotionTempOptions.value) + '<br/>'
+          else r += i.marker + i.seriesName + ': ' + i.value + '%<br/>'
+        })
+        return r
+      }
+    },
+    legend: { data: ['情绪温度','次日胜率%'], bottom: 0 },
+    xAxis: { type: 'category', data: (d.emotionVsWinRates || []).map(i => i.date) },
+    yAxis: [
+      { type: 'value', name: '情绪', min: 0, max: 5, axisLabel: { formatter: (v) => dictText(v, reviewEmotionTempOptions.value) || v } },
+      { type: 'value', name: '胜率%', min: 0, max: 100 }
+    ],
+    series: [
+      { name: '情绪温度', type: 'bar', data: (d.emotionVsWinRates || []).map(i => i.emotion) },
+      { name: '次日胜率%', type: 'line', yAxisIndex: 1, data: (d.emotionVsWinRates || []).map(i => Number(i.winRate).toFixed(1)), smooth: true }
+    ]
+  })
+}
+
+// 监听tab切换，切到复盘分析时加载数据
+watch(activeTab, (val) => {
+  if (val === 'reviewAnalysis') {
+    if (!reviewReportData.value.reviewKpi) fetchReviewReportData()
+    else nextTick(() => renderReviewCharts())
+  }
+})
 
 //=========================================================
 // ==================== 预测模拟管理 ====================
@@ -3830,5 +4994,96 @@ const showExportDialog = () => {
   color: #b0b5bd;
   margin-top: 6px;
   font-style: italic;
+}
+
+/* ==================== 每日复盘/交易记录/复盘分析 样式 ==================== */
+.daily-review-div, .trade-record-div, .review-analysis-div {
+  padding: 10px;
+}
+
+.review-time-filter {
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.review-kpi-row {
+  margin-bottom: 12px;
+}
+
+.review-kpi-card {
+  background: linear-gradient(135deg, #2c3e50, #1a1a2e);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid #3a3a5c;
+}
+
+.review-kpi-card .kpi-label {
+  font-size: 13px;
+  color: #b0b5bd;
+  margin-bottom: 8px;
+}
+
+.review-kpi-card .kpi-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #e0e0e0;
+}
+
+.review-chart-card {
+  background: #1a1a2e;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #2a2a4c;
+}
+
+.review-chart-card .chart-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e0e0e0;
+  margin-bottom: 8px;
+  padding-left: 8px;
+  border-left: 3px solid #409EFF;
+}
+
+.review-chart-card .chart-box {
+  width: 100%;
+  height: 300px;
+}
+
+/* ==================== 复盘表单联动样式 ==================== */
+.ai-fill-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #e8f4ff, #f0f9ff);
+  border: 1px solid #d4e8fc;
+  border-radius: 8px;
+}
+
+.ai-fill-tip {
+  font-size: 12px;
+  color: #909399;
+}
+
+.linkage-field {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 4px;
+}
+
+.recommend-btn {
+  flex-shrink: 0;
+  padding: 2px 6px !important;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.auto-tag {
+  flex-shrink: 0;
 }
 </style>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.trialExecutionArea.mapper.DailyReviewMapper">
+
+    <!--  添加每日复盘  -->
+    <insert id="addDailyReview" useGeneratedKeys="true" keyProperty="id">
+        insert into t_trial_daily_review (
+            review_date,
+            sh_change_pct, sz_change_pct, cyb_change_pct, total_amount, rise_count, fall_count, market_status,
+            limit_up_count, limit_down_count, continuous_board_count, yesterday_premium_pct, emotion_temp, north_flow_amount, broken_board_count, broken_board_rate,
+            main_sector1, main_sector2, main_sector3, sector_limit_up_count, leader_stock_name, leader_stock_code, leader_limit_up_time, leader_seal_amount, leader_continuous_board,
+            adapt_system, plan_position_limit, watch_targets, buy_condition, risk_warning, stop_loss_pct, take_profit_pct,
+            today_operation, operation_self_rating, daily_profit_pct, position_profit_pct, trade_count, win_trade_count,
+            experience, lesson, improve_point, tomorrow_focus,
+            remark, owner, create_time
+        ) values (
+            #{reviewDate},
+            #{shChangePct}, #{szChangePct}, #{cybChangePct}, #{totalAmount}, #{riseCount}, #{fallCount}, #{marketStatus},
+            #{limitUpCount}, #{limitDownCount}, #{continuousBoardCount}, #{yesterdayPremiumPct}, #{emotionTemp}, #{northFlowAmount}, #{brokenBoardCount}, #{brokenBoardRate},
+            #{mainSector1}, #{mainSector2}, #{mainSector3}, #{sectorLimitUpCount}, #{leaderStockName}, #{leaderStockCode}, #{leaderLimitUpTime}, #{leaderSealAmount}, #{leaderContinuousBoard},
+            #{adaptSystem}, #{planPositionLimit}, #{watchTargets}, #{buyCondition}, #{riskWarning}, #{stopLossPct}, #{takeProfitPct},
+            #{todayOperation}, #{operationSelfRating}, #{dailyProfitPct}, #{positionProfitPct}, #{tradeCount}, #{winTradeCount},
+            #{experience}, #{lesson}, #{improvePoint}, #{tomorrowFocus},
+            #{remark}, #{owner}, now()
+        )
+    </insert>
+
+    <!--  修改每日复盘  -->
+    <update id="updateDailyReview">
+        update t_trial_daily_review t
+        <set>
+            <if test="reviewDate != null">review_date = #{reviewDate},</if>
+            <if test="shChangePct != null">sh_change_pct = #{shChangePct},</if>
+            <if test="szChangePct != null">sz_change_pct = #{szChangePct},</if>
+            <if test="cybChangePct != null">cyb_change_pct = #{cybChangePct},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="riseCount != null">rise_count = #{riseCount},</if>
+            <if test="fallCount != null">fall_count = #{fallCount},</if>
+            <if test="marketStatus != null">market_status = #{marketStatus},</if>
+            <if test="limitUpCount != null">limit_up_count = #{limitUpCount},</if>
+            <if test="limitDownCount != null">limit_down_count = #{limitDownCount},</if>
+            <if test="continuousBoardCount != null">continuous_board_count = #{continuousBoardCount},</if>
+            <if test="yesterdayPremiumPct != null">yesterday_premium_pct = #{yesterdayPremiumPct},</if>
+            <if test="emotionTemp != null">emotion_temp = #{emotionTemp},</if>
+            <if test="northFlowAmount != null">north_flow_amount = #{northFlowAmount},</if>
+            <if test="brokenBoardCount != null">broken_board_count = #{brokenBoardCount},</if>
+            <if test="brokenBoardRate != null">broken_board_rate = #{brokenBoardRate},</if>
+            <if test="mainSector1 != null">main_sector1 = #{mainSector1},</if>
+            <if test="mainSector2 != null">main_sector2 = #{mainSector2},</if>
+            <if test="mainSector3 != null">main_sector3 = #{mainSector3},</if>
+            <if test="sectorLimitUpCount != null">sector_limit_up_count = #{sectorLimitUpCount},</if>
+            <if test="leaderStockName != null">leader_stock_name = #{leaderStockName},</if>
+            <if test="leaderStockCode != null">leader_stock_code = #{leaderStockCode},</if>
+            <if test="leaderLimitUpTime != null">leader_limit_up_time = #{leaderLimitUpTime},</if>
+            <if test="leaderSealAmount != null">leader_seal_amount = #{leaderSealAmount},</if>
+            <if test="leaderContinuousBoard != null">leader_continuous_board = #{leaderContinuousBoard},</if>
+            <if test="adaptSystem != null">adapt_system = #{adaptSystem},</if>
+            <if test="planPositionLimit != null">plan_position_limit = #{planPositionLimit},</if>
+            <if test="watchTargets != null">watch_targets = #{watchTargets},</if>
+            <if test="buyCondition != null">buy_condition = #{buyCondition},</if>
+            <if test="riskWarning != null">risk_warning = #{riskWarning},</if>
+            <if test="stopLossPct != null">stop_loss_pct = #{stopLossPct},</if>
+            <if test="takeProfitPct != null">take_profit_pct = #{takeProfitPct},</if>
+            <if test="todayOperation != null">today_operation = #{todayOperation},</if>
+            <if test="operationSelfRating != null">operation_self_rating = #{operationSelfRating},</if>
+            <if test="dailyProfitPct != null">daily_profit_pct = #{dailyProfitPct},</if>
+            <if test="positionProfitPct != null">position_profit_pct = #{positionProfitPct},</if>
+            <if test="tradeCount != null">trade_count = #{tradeCount},</if>
+            <if test="winTradeCount != null">win_trade_count = #{winTradeCount},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="lesson != null">lesson = #{lesson},</if>
+            <if test="improvePoint != null">improve_point = #{improvePoint},</if>
+            <if test="tomorrowFocus != null">tomorrow_focus = #{tomorrowFocus},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = now()
+        </set>
+        where t.id = #{id}
+    </update>
+
+    <!--   根据ids批量删除  -->
+    <delete id="deleteAllDailyReviewByIds">
+        delete from t_trial_daily_review where id in
+        <foreach item="item" collection="ids" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--  条件查询每日复盘列表  -->
+    <select id="getDailyReviewByCondition"
+            resultType="com.xk.srhwzzqdn.model.entity.trialExecutionArea.DailyReview">
+        select t.* from t_trial_daily_review t
+        <where>
+            <if test="reviewDateStart != null and reviewDateStart != ''">
+                and t.review_date &gt;= #{reviewDateStart}
+            </if>
+            <if test="reviewDateEnd != null and reviewDateEnd != ''">
+                and t.review_date &lt;= #{reviewDateEnd}
+            </if>
+            <if test="marketStatus != null and marketStatus.size() > 0">
+                and t.market_status in
+                <foreach collection="marketStatus" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="emotionTemp != null and emotionTemp.size() > 0">
+                and t.emotion_temp in
+                <foreach collection="emotionTemp" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="adaptSystem != null and adaptSystem.size() > 0">
+                and t.adapt_system in
+                <foreach collection="adaptSystem" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="operationSelfRating != null and operationSelfRating.size() > 0">
+                and t.operation_self_rating in
+                <foreach collection="operationSelfRating" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        order by t.review_date desc
+    </select>
+</mapper>
