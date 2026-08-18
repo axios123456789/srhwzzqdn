@@ -36,3 +36,21 @@ export const DeleteAllDailyReviewByIds = ids => {
     data: ids,
   })
 }
+
+// AI生成复盘总结
+export const AiGenerateDailyReview = data => {
+  return request({
+    url: base_api + '/aiGenerate',
+    method: 'post',
+    data: data,
+  })
+}
+
+// AI分析关注标的
+export const AiAnalyzeTargets = data => {
+  return request({
+    url: base_api + '/aiAnalyzeTargets',
+    method: 'post',
+    data: data,
+  })
+}

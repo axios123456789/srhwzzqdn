@@ -10,3 +10,12 @@ export const GetReviewReport = data => {
     data: data,
   })
 }
+
+// AI生成复盘分析报告
+export const AiGenerateReviewReport = data => {
+  return request({
+    url: base_api + '/aiGenerate',
+    method: 'post',
+    data: data,
+  })
+}

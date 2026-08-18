@@ -151,7 +151,7 @@
         <where>
             t.profit_pct is not null
             <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="endTime != null and endTime != ''">            and t.trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
         </where>
     </select>
@@ -163,7 +163,7 @@
         <where>
             t.psychology is not null
             <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="endTime != null and endTime != ''">            and t.trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
         </where>
         group by t.psychology order by count desc
@@ -176,7 +176,7 @@
         <where>
             t.psychology is not null and t.profit_pct is not null
             <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="endTime != null and endTime != ''">            and t.trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
         </where>
         group by t.psychology order by avgProfit desc
@@ -189,7 +189,7 @@
         <where>
             t.time_slot is not null
             <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="endTime != null and endTime != ''">            and t.trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
         </where>
         group by t.time_slot order by count desc
@@ -202,7 +202,7 @@
         <where>
             t.trade_direction is not null
             <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="endTime != null and endTime != ''">            and t.trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
         </where>
         group by t.trade_direction order by count desc
@@ -215,7 +215,7 @@
         <where>
             t.execute_rating is not null
             <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="endTime != null and endTime != ''">            and t.trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
         </where>
         group by date_format(t.trade_datetime, '%Y-%m-%d') order by date asc
@@ -228,7 +228,7 @@
         <where>
             t.follow_plan is not null
             <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="endTime != null and endTime != ''">            and t.trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
         </where>
         group by t.follow_plan order by count desc
@@ -241,7 +241,7 @@
         <where>
             t.stock_code is not null
             <if test="startTime != null and startTime != ''">and t.trade_datetime &gt;= #{startTime}</if>
-            <if test="endTime != null and endTime != ''">and t.trade_datetime &lt;= #{endTime}</if>
+            <if test="endTime != null and endTime != ''">            and t.trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             <if test="owner != null and owner != ''">and t.owner = #{owner}</if>
         </where>
         group by t.stock_code, t.stock_name order by count desc limit 10
@@ -260,7 +260,7 @@
             from t_trial_trade_record
             <where>
                 <if test="startTime != null and startTime != ''">and trade_datetime &gt;= #{startTime}</if>
-                <if test="endTime != null and endTime != ''">and trade_datetime &lt;= #{endTime}</if>
+                <if test="endTime != null and endTime != ''">and trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             </where>
             group by date_format(trade_datetime, '%Y-%m-%d'), owner
         ) tc on tc.td = date_format(r.review_date, '%Y-%m-%d') and tc.owner = r.owner
@@ -285,7 +285,7 @@
             <where>
                 profit_pct is not null
                 <if test="startTime != null and startTime != ''">and trade_datetime &gt;= #{startTime}</if>
-                <if test="endTime != null and endTime != ''">and trade_datetime &lt;= #{endTime}</if>
+                <if test="endTime != null and endTime != ''">and trade_datetime &lt; DATE_ADD(#{endTime}, INTERVAL 1 DAY)</if>
             </where>
             group by date_format(date_add(trade_datetime, interval -1 day), '%Y-%m-%d'), owner
         ) wr on wr.td = date_format(r.review_date, '%Y-%m-%d') and wr.owner = r.owner

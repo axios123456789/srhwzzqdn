@@ -56,3 +56,15 @@ ai:
     endpoint: https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
     connect-timeout: 30000
     read-timeout: 60000
+  # 通用AI调用配置（AiCommonUtil使用）
+  # 切换模型只需修改此段，无需改代码
+  common:
+    enabled: true
+    api-type: Anthropic #OpenAI # openai（兼容DeepSeek/OpenAI/Moonshot/Zhipu等） | bailian（阿里云百炼）
+    api-key: sk-b994669dfb5b1f282876862cab1ae400f9f5a23d2996c08c263f5d5c37a7c319 #sk-1bcecc5741e92238426a5aa0111ee8fdf119358043ba56abecb19eb647851fae
+    endpoint: http://192.168.14.51:8080/v1/chat/completions
+    model: glm-5.2
+    temperature: 0.7
+    max-tokens: 4096
+    connect-timeout: 30000
+    read-timeout: 60000

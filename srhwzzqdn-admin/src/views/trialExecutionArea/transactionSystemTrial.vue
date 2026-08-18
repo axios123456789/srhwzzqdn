@@ -1072,6 +1072,10 @@
               <el-radio-button :label="90">近90天</el-radio-button>
               <el-radio-button :label="0">全部</el-radio-button>
             </el-radio-group>
+            <el-button type="primary" plain :loading="aiReportLoading" @click="aiGenerateReport" style="margin-left: 16px;">
+              <span v-if="!aiReportLoading">🤖 生成 AI 分析报告</span>
+              <span v-else>AI 生成中...</span>
+            </el-button>
           </div>
           <!-- KPI卡片 -->
           <el-row :gutter="12" class="review-kpi-row">
@@ -1126,6 +1130,16 @@
       </el-tab-pane>
     </el-tabs>
 
+    <!-- AI分析报告弹窗 -->
+    <el-dialog v-model="aiReportDialogVisible" title="🤖 AI 深度分析报告" width="70%" class="custom-dialog" :close-on-click-modal="false">
+      <div v-if="aiReportContent" class="ai-report-content" v-html="renderMarkdown(aiReportContent)"></div>
+      <el-empty v-else description="暂无报告内容" />
+      <template #footer>
+        <el-button @click="aiReportDialogVisible = false">关闭</el-button>
+        <el-button type="primary" @click="copyReport">复制报告</el-button>
+      </template>
+    </el-dialog>
+
     <!-- 每日复盘编辑对话框 -->
     <el-dialog v-model="dailyReviewDialogVisible" :title="dailyReviewDialogTitle" width="80%" class="custom-dialog enhanced-dialog" :close-on-click-modal="false">
       <el-form :model="dailyReviewFormData" ref="dailyReviewFormRef" label-width="120px" size="small">
@@ -1173,9 +1187,17 @@
           <el-col :span="8"><el-form-item label="计划仓位上限%"><div class="linkage-field"><el-slider v-model="dailyReviewFormData.planPositionLimit" :min="0" :max="100" show-input style="flex:1" /><el-button text type="primary" size="small" class="recommend-btn" @click="recommendPositionLimit">💡</el-button></div></el-form-item></el-col>
           <el-col :span="8"><el-form-item label="止损线%"><div class="linkage-field"><el-input-number v-model="dailyReviewFormData.stopLossPct" :precision="2" style="flex:1" /><el-button text type="primary" size="small" class="recommend-btn" @click="recommendStopLossTakeProfit">💡</el-button></div></el-form-item></el-col>
           <el-col :span="8"><el-form-item label="止盈线%"><div class="linkage-field"><el-input-number v-model="dailyReviewFormData.takeProfitPct" :precision="2" style="flex:1" /><el-button text type="primary" size="small" class="recommend-btn" @click="recommendStopLossTakeProfit">💡</el-button></div></el-form-item></el-col>
-          <el-col :span="24"><el-form-item label="关注标的"><el-input v-model="dailyReviewFormData.watchTargets" style="width:100%" placeholder="多个用逗号分隔" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="买入条件"><el-input v-model="dailyReviewFormData.buyCondition" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="风险预警"><el-input v-model="dailyReviewFormData.riskWarning" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="24"><el-form-item label="关注标的"><el-input v-model="dailyReviewFormData.watchTargets" style="width:100%" placeholder="多个用逗号分隔，如：万润股份002643、华电辽能600796" /></el-form-item></el-col>
+          <el-col :span="24">
+            <div style="margin-bottom: 8px;">
+              <el-button type="primary" plain size="small" :loading="aiTargetLoading" @click="aiAnalyzeTargets">
+                <span v-if="!aiTargetLoading">🤖 AI 分析标的（生成买入条件+风险预警）</span>
+                <span v-else>AI 分析中...</span>
+              </el-button>
+            </div>
+          </el-col>
+          <el-col :span="12"><el-form-item label="买入条件"><el-input v-model="dailyReviewFormData.buyCondition" type="textarea" :rows="3" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="风险预警"><el-input v-model="dailyReviewFormData.riskWarning" type="textarea" :rows="3" style="width:100%" /></el-form-item></el-col>
         </el-row>
         <el-divider content-position="left">持仓与自评</el-divider>
         <el-row :gutter="20">
@@ -1186,7 +1208,13 @@
           <el-col :span="6"><el-form-item label="盈利交易次数"><el-input-number v-model="dailyReviewFormData.winTradeCount" style="width:100%" /></el-form-item></el-col>
           <el-col :span="24"><el-form-item label="今日操作记录"><el-input v-model="dailyReviewFormData.todayOperation" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
         </el-row>
-        <el-divider content-position="left">总结反思</el-divider>
+        <el-divider content-position="left">
+          <span>总结反思</span>
+          <el-button type="primary" plain size="small" :loading="aiReviewLoading" @click="aiGenerateReviewSummary" style="margin-left: 12px;">
+            <span v-if="!aiReviewLoading">🤖 AI 生成总结</span>
+            <span v-else>AI 生成中...</span>
+          </el-button>
+        </el-divider>
         <el-row :gutter="20">
           <el-col :span="12"><el-form-item label="经验总结"><el-input v-model="dailyReviewFormData.experience" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
           <el-col :span="12"><el-form-item label="教训反思"><el-input v-model="dailyReviewFormData.lesson" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
@@ -1236,7 +1264,7 @@
         <el-divider content-position="left">结果与反思</el-divider>
         <el-row :gutter="20">
           <el-col :span="6"><el-form-item label="盈亏%"><el-input-number v-model="tradeRecordFormData.profitPct" :precision="2" style="width:100%" /></el-form-item></el-col>
-          <el-col :span="6"><el-form-item label="持仓时长(分)"><el-input-number v-model="tradeRecordFormData.holdingDuration" style="width:100%" /></el-form-item></el-col>
+          <el-col :span="6"><el-form-item label="持仓时长(天)"><el-input-number v-model="tradeRecordFormData.holdingDuration" style="width:100%" /></el-form-item></el-col>
           <el-col :span="6"><el-form-item label="执行评分"><el-select v-model="tradeRecordFormData.executeRating" style="width:100%" clearable><el-option v-for="item in tradeExecuteRatingOptions" :key="item.value" :label="item.text" :value="item.value" /></el-select></el-form-item></el-col>
           <el-col :span="6"><el-form-item label="关联复盘日期"><el-date-picker v-model="tradeRecordFormData.reviewDate" type="date" style="width:100%" value-format="YYYY-MM-DD" /></el-form-item></el-col>
           <el-col :span="12"><el-form-item label="反思总结"><el-input v-model="tradeRecordFormData.reflection" type="textarea" :rows="2" style="width:100%" /></el-form-item></el-col>
@@ -2293,9 +2321,9 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList, SaveTransactionRule, DeleteTransactionRuleById, DeleteAllTransactionRuleByIds } from "@/api/trialExecutionArea/transactionSystemTrial"
 import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, DeleteAllSimulateLedger, GetPredictionReport, GetPredictionDetailByCondition } from "@/api/trialExecutionArea/predictionSimulate"
-import { GetDailyReviewByConditionAndPage, SaveDailyReview, DeleteDailyReviewById, DeleteAllDailyReviewByIds } from "@/api/trialExecutionArea/dailyReview"
+import { GetDailyReviewByConditionAndPage, SaveDailyReview, DeleteDailyReviewById, DeleteAllDailyReviewByIds, AiGenerateDailyReview, AiAnalyzeTargets } from "@/api/trialExecutionArea/dailyReview"
 import { GetTradeRecordByConditionAndPage, SaveTradeRecord, DeleteTradeRecordById, DeleteAllTradeRecordByIds, StatTradeByReviewDate } from "@/api/trialExecutionArea/tradeRecord"
-import { GetReviewReport } from "@/api/trialExecutionArea/reviewAnalysis"
+import { GetReviewReport, AiGenerateReviewReport } from "@/api/trialExecutionArea/reviewAnalysis"
 import * as echarts from 'echarts'
 import { getDisplayText } from "@/utils/common"
 import { useExport } from "@/components/Export/hooks/useExport"
@@ -2788,6 +2816,75 @@ const defaultDailyReviewForm = () => ({
 })
 const dailyReviewFormData = reactive(defaultDailyReviewForm())
 
+// AI生成复盘总结
+const aiReviewLoading = ref(false)
+const aiGenerateReviewSummary = async () => {
+  aiReviewLoading.value = true
+  try {
+    const sectorParts = [dailyReviewFormData.mainSector1, dailyReviewFormData.mainSector2, dailyReviewFormData.mainSector3]
+      .filter(s => s != null)
+      .map(s => getDisplayText(s, reviewSectorOptions.value))
+      .join('、')
+    const payload = {
+      ...dailyReviewFormData,
+      marketStatusText: getDisplayText(dailyReviewFormData.marketStatus, reviewMarketStatusOptions.value),
+      emotionTempText: getDisplayText(dailyReviewFormData.emotionTemp, reviewEmotionTempOptions.value),
+      adaptSystemText: getDisplayText(dailyReviewFormData.adaptSystem, reviewAdaptSystemOptions.value),
+      selfRatingText: getDisplayText(dailyReviewFormData.operationSelfRating, reviewSelfRatingOptions.value),
+      sectorText: sectorParts || '未填写'
+    }
+    const result = await AiGenerateDailyReview(payload)
+    if (result.code === 200 && result.data) {
+      if (result.data.experience) dailyReviewFormData.experience = result.data.experience
+      if (result.data.lesson) dailyReviewFormData.lesson = result.data.lesson
+      if (result.data.improvePoint) dailyReviewFormData.improvePoint = result.data.improvePoint
+      if (result.data.tomorrowFocus) dailyReviewFormData.tomorrowFocus = result.data.tomorrowFocus
+      ElMessage.success("AI总结已生成，可编辑修改")
+    } else {
+      ElMessage.error(result.message || "AI生成失败")
+    }
+  } catch (e) {
+    ElMessage.error("AI生成失败：" + e.message)
+  } finally {
+    aiReviewLoading.value = false
+  }
+}
+
+// AI分析关注标的，生成买入条件+风险预警
+const aiTargetLoading = ref(false)
+const aiAnalyzeTargets = async () => {
+  if (!dailyReviewFormData.watchTargets || dailyReviewFormData.watchTargets.trim() === '') {
+    ElMessage.warning("请先填写关注标的")
+    return
+  }
+  aiTargetLoading.value = true
+  try {
+    const sectorParts = [dailyReviewFormData.mainSector1, dailyReviewFormData.mainSector2, dailyReviewFormData.mainSector3]
+      .filter(s => s != null)
+      .map(s => getDisplayText(s, reviewSectorOptions.value))
+      .join('、')
+    const payload = {
+      ...dailyReviewFormData,
+      marketStatusText: getDisplayText(dailyReviewFormData.marketStatus, reviewMarketStatusOptions.value),
+      emotionTempText: getDisplayText(dailyReviewFormData.emotionTemp, reviewEmotionTempOptions.value),
+      adaptSystemText: getDisplayText(dailyReviewFormData.adaptSystem, reviewAdaptSystemOptions.value),
+      sectorText: sectorParts || '未填写'
+    }
+    const result = await AiAnalyzeTargets(payload)
+    if (result.code === 200 && result.data) {
+      if (result.data.buyCondition) dailyReviewFormData.buyCondition = result.data.buyCondition
+      if (result.data.riskWarning) dailyReviewFormData.riskWarning = result.data.riskWarning
+      ElMessage.success("AI分析已生成买入条件和风险预警，可编辑修改")
+    } else {
+      ElMessage.error(result.message || "AI分析失败")
+    }
+  } catch (e) {
+    ElMessage.error("AI分析失败：" + e.message)
+  } finally {
+    aiTargetLoading.value = false
+  }
+}
+
 const addDailyReview = () => {
   Object.assign(dailyReviewFormData, defaultDailyReviewForm())
   dailyReviewDialogTitle.value = '添加每日复盘'
@@ -2978,6 +3075,54 @@ const fetchReviewReportData = async () => {
       nextTick(() => renderReviewCharts())
     }
   } catch (e) { ElMessage.error("查询复盘分析失败") }
+}
+
+// AI分析报告
+const aiReportLoading = ref(false)
+const aiReportDialogVisible = ref(false)
+const aiReportContent = ref('')
+const aiGenerateReport = async () => {
+  aiReportLoading.value = true
+  try {
+    const dto = {}
+    if (reviewReportRange.value > 0) {
+      const end = new Date()
+      const start = new Date(end.getTime() - reviewReportRange.value * 24 * 3600 * 1000)
+      dto.startTime = start.toISOString().slice(0, 10)
+      dto.endTime = end.toISOString().slice(0, 10)
+    }
+    const result = await AiGenerateReviewReport(dto)
+    if (result.code === 200 && result.data?.report) {
+      aiReportContent.value = result.data.report
+      aiReportDialogVisible.value = true
+      ElMessage.success("AI分析报告已生成")
+    } else {
+      ElMessage.error(result.message || "AI生成失败")
+    }
+  } catch (e) {
+    ElMessage.error("AI生成失败：" + e.message)
+  } finally {
+    aiReportLoading.value = false
+  }
+}
+// 简易Markdown渲染
+const renderMarkdown = (md) => {
+  if (!md) return ''
+  return md
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/^(?!<[hup])(.+)$/gm, '<p>$1</p>')
+    .replace(/<p><\/p>/g, '')
+}
+const copyReport = () => {
+  navigator.clipboard.writeText(aiReportContent.value).then(() => {
+    ElMessage.success("已复制到剪贴板")
+  }).catch(() => ElMessage.error("复制失败"))
 }
 
 // 通用图表初始化
@@ -5005,6 +5150,21 @@ const showExportDialog = () => {
   margin-bottom: 16px;
   text-align: center;
 }
+
+.ai-report-content {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 8px 16px;
+  line-height: 1.8;
+  color: #e0e0e0;
+}
+.ai-report-content h1 { font-size: 20px; color: #409EFF; margin: 16px 0 8px; border-bottom: 1px solid #3a3a5c; padding-bottom: 6px; }
+.ai-report-content h2 { font-size: 17px; color: #67C23A; margin: 14px 0 6px; }
+.ai-report-content h3 { font-size: 15px; color: #E6A23C; margin: 10px 0 4px; }
+.ai-report-content p { margin: 6px 0; }
+.ai-report-content ul { margin: 6px 0 6px 20px; }
+.ai-report-content li { margin: 3px 0; }
+.ai-report-content strong { color: #F56C6C; }
 
 .review-kpi-row {
   margin-bottom: 12px;
