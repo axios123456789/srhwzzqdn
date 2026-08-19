@@ -17,5 +17,6 @@ export const AiGenerateReviewReport = data => {
     url: base_api + '/aiGenerate',
     method: 'post',
     data: data,
+    timeout: 120000,
   })
 }

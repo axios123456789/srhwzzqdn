@@ -21307,3 +21307,322 @@ java.util.MissingFormatArgumentException: Format specifier '%s'
 2026-08-18 08:36:53 HikariPool-1 - Starting...
 2026-08-18 08:36:54 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@757f3212
 2026-08-18 08:36:54 HikariPool-1 - Start completed.
+2026-08-18 19:05:17 Failure in @ExceptionHandler com.xk.srhwzzqdn.service.exception.GlobalExceptionHandler#error()
+org.apache.catalina.connector.ClientAbortException: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:347)
+	at org.apache.catalina.connector.OutputBuffer.flushByteBuffer(OutputBuffer.java:780)
+	at org.apache.catalina.connector.OutputBuffer.append(OutputBuffer.java:683)
+	at org.apache.catalina.connector.OutputBuffer.writeBytes(OutputBuffer.java:382)
+	at org.apache.catalina.connector.OutputBuffer.write(OutputBuffer.java:360)
+	at org.apache.catalina.connector.CoyoteOutputStream.write(CoyoteOutputStream.java:96)
+	at org.springframework.util.StreamUtils$NonClosingOutputStream.write(StreamUtils.java:267)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator._flushBuffer(UTF8JsonGenerator.java:2203)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.flush(UTF8JsonGenerator.java:1197)
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1063)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483)
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:103)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:194)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:413)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:74)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:141)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1341)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1152)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1098)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:132)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:97)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:53)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:532)
+	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:118)
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1381)
+	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:764)
+	at org.apache.tomcat.util.net.SocketWrapperBase.writeBlocking(SocketWrapperBase.java:589)
+	at org.apache.tomcat.util.net.SocketWrapperBase.write(SocketWrapperBase.java:533)
+	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.doWrite(Http11OutputBuffer.java:540)
+	at org.apache.coyote.http11.filters.ChunkedOutputFilter.doWrite(ChunkedOutputFilter.java:110)
+	at org.apache.coyote.http11.Http11OutputBuffer.doWrite(Http11OutputBuffer.java:193)
+	at org.apache.coyote.Response.doWrite(Response.java:613)
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:334)
+	... 61 common frames omitted
+2026-08-18 19:05:42 null Unexpected exception during request: java.net.SocketException: Connection reset
+java.net.SocketException: Connection reset
+	at java.base/sun.nio.ch.SocketChannelImpl.throwConnectionReset(SocketChannelImpl.java:394)
+	at java.base/sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:426)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:256)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:357)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-08-18 19:05:42 Reconnecting, last destination was /127.0.0.1:6379
+2026-08-18 19:05:42 Cannot reconnect to [127.0.0.1/<unresolved>:6379]: Connection refused: getsockopt: /127.0.0.1:6379
+2026-08-18 19:44:48 Starting ManagerApplication using Java 17.0.17 with PID 5044 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-08-18 19:44:48 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-08-18 19:44:48 The following 1 profile is active: "dev"
+2026-08-18 19:44:49 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-08-18 19:44:49 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-08-18 19:44:49 Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
+2026-08-18 19:44:50 Tomcat initialized with port(s): 8400 (http)
+2026-08-18 19:44:50 Initializing ProtocolHandler ["http-nio-8400"]
+2026-08-18 19:44:50 Starting service [Tomcat]
+2026-08-18 19:44:50 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-08-18 19:44:50 Initializing Spring embedded WebApplicationContext
+2026-08-18 19:44:50 Root WebApplicationContext: initialization completed in 1611 ms
+2026-08-18 19:44:52 Starting ProtocolHandler ["http-nio-8400"]
+2026-08-18 19:44:52 Tomcat started on port(s): 8400 (http) with context path ''
+2026-08-18 19:44:52 Started ManagerApplication in 4.094 seconds (process running for 6.326)
+2026-08-18 19:45:43 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-18 19:45:43 Initializing Servlet 'dispatcherServlet'
+2026-08-18 19:45:43 Completed initialization in 0 ms
+2026-08-18 19:46:22 HikariPool-1 - Starting...
+2026-08-18 19:46:23 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@678519d4
+2026-08-18 19:46:23 HikariPool-1 - Start completed.
+2026-08-18 21:22:37 开始批量计算21个基金的平均业绩
+2026-08-18 21:22:39 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:39 基金260112新增净值数据11条
+2026-08-18 21:22:39 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:39 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-08-18 21:22:39 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:39 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:39 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:39 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:39 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:39 基金022403新增净值数据12条
+2026-08-18 21:22:40 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:40 基金460001新增净值数据12条
+2026-08-18 21:22:40 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:40 基金000218新增净值数据12条
+2026-08-18 21:22:40 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:40 基金010416新增净值数据12条
+2026-08-18 21:22:41 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:41 基金010415新增净值数据12条
+2026-08-18 21:22:41 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:41 基金005834新增净值数据11条
+2026-08-18 21:22:41 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:41 基金270023新增净值数据12条
+2026-08-18 21:22:41 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:41 基金003504新增净值数据12条
+2026-08-18 21:22:42 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:42 基金006567新增净值数据11条
+2026-08-18 21:22:42 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:42 基金000628新增净值数据12条
+2026-08-18 21:22:42 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:42 基金018257新增净值数据12条
+2026-08-18 21:22:42 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:42 基金675111新增净值数据12条
+2026-08-18 21:22:42 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:42 基金013107新增净值数据12条
+2026-08-18 21:22:43 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:43 基金016500新增净值数据12条
+2026-08-18 21:22:43 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:43 基金012920新增净值数据12条
+2026-08-18 21:22:43 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:43 基金018993新增净值数据12条
+2026-08-18 21:22:43 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:43 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 基金021528新增净值数据7条
+2026-08-18 21:22:43 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:43 基金000390新增净值数据12条
+2026-08-18 21:22:43 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:43 解析平均分失败，原始值：暂无数据，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 解析分数失败，原始值：null，设置为默认值 0
+2026-08-18 21:22:43 基金018816新增净值数据12条
+2026-08-18 21:22:44 解析到的资产类型: [净资产, 现金占净比, 债券占净比, 股票占净比]
+2026-08-18 21:22:44 基金539001新增净值数据12条
+2026-08-18 21:22:44 批量更新21个基金的平均业绩完成
+2026-08-18 21:44:02 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1493 bytes
+2026-08-18 21:44:08 Token消耗 | 输入: 356 | 输出: 346 | 总计: 702
+2026-08-18 21:44:08 AI调用成功 | 耗时=5874 ms | 响应长度=547 字符
+2026-08-18 22:03:14 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1502 bytes
+2026-08-18 22:03:29 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1493 bytes
+2026-08-18 22:03:35 Token消耗 | 输入: 356 | 输出: 273 | 总计: 629
+2026-08-18 22:03:35 AI调用成功 | 耗时=5632 ms | 响应长度=441 字符
+2026-08-18 22:03:37 Token消耗 | 输入: 328 | 输出: 1207 | 总计: 1535
+2026-08-18 22:03:37 AI调用成功 | 耗时=22339 ms | 响应长度=414 字符
+2026-08-18 22:03:37 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1502 bytes
+2026-08-18 22:04:09 Token消耗 | 输入: 328 | 输出: 895 | 总计: 1223
+2026-08-18 22:04:09 AI调用成功 | 耗时=31822 ms | 响应长度=367 字符
+2026-08-18 22:04:24 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1502 bytes
+2026-08-18 22:04:52 Token消耗 | 输入: 328 | 输出: 1304 | 总计: 1632
+2026-08-18 22:04:52 AI调用成功 | 耗时=27880 ms | 响应长度=396 字符
+2026-08-18 22:05:14 HikariPool-1 - Shutdown initiated...
+2026-08-18 22:05:14 HikariPool-1 - Shutdown completed.
+2026-08-18 22:05:17 Starting ManagerApplication using Java 17.0.17 with PID 26248 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-08-18 22:05:17 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-08-18 22:05:17 The following 1 profile is active: "dev"
+2026-08-18 22:05:18 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-08-18 22:05:18 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-08-18 22:05:18 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-08-18 22:05:18 Tomcat initialized with port(s): 8400 (http)
+2026-08-18 22:05:18 Initializing ProtocolHandler ["http-nio-8400"]
+2026-08-18 22:05:18 Starting service [Tomcat]
+2026-08-18 22:05:18 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-08-18 22:05:18 Initializing Spring embedded WebApplicationContext
+2026-08-18 22:05:18 Root WebApplicationContext: initialization completed in 1035 ms
+2026-08-18 22:05:20 Starting ProtocolHandler ["http-nio-8400"]
+2026-08-18 22:05:20 Tomcat started on port(s): 8400 (http) with context path ''
+2026-08-18 22:05:20 Started ManagerApplication in 2.865 seconds (process running for 3.407)
+2026-08-18 22:05:36 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-18 22:05:36 Initializing Servlet 'dispatcherServlet'
+2026-08-18 22:05:36 Completed initialization in 2 ms
+2026-08-18 22:05:36 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1502 bytes
+2026-08-18 22:05:59 Token消耗 | 输入: 328 | 输出: 1264 | 总计: 1592
+2026-08-18 22:05:59 AI调用成功 | 耗时=22650 ms | 响应长度=411 字符
+2026-08-18 22:06:21 HikariPool-1 - Starting...
+2026-08-18 22:06:22 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3f6966f6
+2026-08-18 22:06:22 HikariPool-1 - Start completed.
+2026-08-18 22:06:24 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1502 bytes
+2026-08-18 22:06:53 Token消耗 | 输入: 326 | 输出: 1699 | 总计: 2025
+2026-08-18 22:06:53 AI调用成功 | 耗时=29373 ms | 响应长度=392 字符
+2026-08-18 22:07:03 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1502 bytes
+2026-08-18 22:07:49 Token消耗 | 输入: 328 | 输出: 1020 | 总计: 1348
+2026-08-18 22:07:49 AI调用成功 | 耗时=45654 ms | 响应长度=327 字符
+2026-08-18 22:10:49 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1502 bytes
+2026-08-18 22:11:17 Token消耗 | 输入: 328 | 输出: 1178 | 总计: 1506
+2026-08-18 22:11:17 AI调用成功 | 耗时=28215 ms | 响应长度=383 字符
+2026-08-18 22:19:21 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1502 bytes
+2026-08-18 22:19:32 Token消耗 | 输入: 328 | 输出: 900 | 总计: 1228
+2026-08-18 22:19:32 AI调用成功 | 耗时=10503 ms | 响应长度=345 字符
+2026-08-18 22:27:50 调用AI服务 | type=anthropic | model=glm-5.2 | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=2027 bytes
+2026-08-18 22:28:02 Token消耗 | 输入: 482 | 输出: 845 | 总计: 1327
+2026-08-18 22:28:02 AI调用成功 | 耗时=12805 ms | 响应长度=408 字符
+2026-08-18 22:28:45 AI生成复盘分析报告失败
+java.util.MissingFormatArgumentException: Format specifier '%s'
+	at java.base/java.util.Formatter.format(Formatter.java:2688)
+	at java.base/java.util.Formatter.format(Formatter.java:2625)
+	at java.base/java.lang.String.format(String.java:4145)
+	at com.xk.srhwzzqdn.manager.util.AiPromptUtil.buildReviewReportPrompt(AiPromptUtil.java:54)
+	at com.xk.srhwzzqdn.manager.trialExecutionArea.controller.ReviewReportController.aiGenerate(ReviewReportController.java:59)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-08-18 22:31:06 HikariPool-1 - Shutdown initiated...
+2026-08-18 22:31:06 HikariPool-1 - Shutdown completed.
+2026-08-19 08:34:00 Starting ManagerApplication using Java 17.0.17 with PID 30616 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-08-19 08:34:00 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-08-19 08:34:00 The following 1 profile is active: "dev"
+2026-08-19 08:34:01 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-08-19 08:34:01 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-08-19 08:34:01 Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2026-08-19 08:34:01 Tomcat initialized with port(s): 8400 (http)
+2026-08-19 08:34:01 Initializing ProtocolHandler ["http-nio-8400"]
+2026-08-19 08:34:01 Starting service [Tomcat]
+2026-08-19 08:34:01 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-08-19 08:34:01 Initializing Spring embedded WebApplicationContext
+2026-08-19 08:34:01 Root WebApplicationContext: initialization completed in 1386 ms
+2026-08-19 08:34:03 Starting ProtocolHandler ["http-nio-8400"]
+2026-08-19 08:34:03 Tomcat started on port(s): 8400 (http) with context path ''
+2026-08-19 08:34:03 Started ManagerApplication in 3.424 seconds (process running for 4.939)
+2026-08-19 08:34:38 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-19 08:34:38 Initializing Servlet 'dispatcherServlet'
+2026-08-19 08:34:38 Completed initialization in 0 ms
+2026-08-19 08:34:58 HikariPool-1 - Starting...
+2026-08-19 08:34:59 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7331c7e4
+2026-08-19 08:34:59 HikariPool-1 - Start completed.

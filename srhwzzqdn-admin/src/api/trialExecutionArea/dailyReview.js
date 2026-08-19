@@ -43,6 +43,7 @@ export const AiGenerateDailyReview = data => {
     url: base_api + '/aiGenerate',
     method: 'post',
     data: data,
+    timeout: 60000,
   })
 }
 
@@ -52,5 +53,6 @@ export const AiAnalyzeTargets = data => {
     url: base_api + '/aiAnalyzeTargets',
     method: 'post',
     data: data,
+    timeout: 60000,
   })
 }
