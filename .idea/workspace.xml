@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-11">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-12">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -13,11 +13,20 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/tmp/3c3cc949-0264-40e8-a3f0-d8b1049244c9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/dailyReview.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/dailyReview.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/reviewAnalysis.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/reviewAnalysis.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/tmp/4789a092-f70c-4d63-81a3-bc8bb0b89c44" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/fundAsset.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/fundAsset.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-common/common-service/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-common/common-service/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-common/common-util/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/FundAssetServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/FundAssetServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/util/AiCommonUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/util/AiCommonUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/application-dev.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/FundAssetServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/FundAssetServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/AiCommonUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/AiCommonUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -520,14 +529,20 @@
       <workItem from="1786965468593" duration="1949000" />
       <workItem from="1787013304033" duration="2334000" />
       <workItem from="1787053451861" duration="1684000" />
-      <workItem from="1787099590415" duration="1044000" />
-    </task>
-    <task id="LOCAL-00109" summary="基金资产管理-15">
-      <created>1777731909087</created>
-      <option name="number" value="00109" />
-      <option name="presentableId" value="LOCAL-00109" />
-      <option name="project" value="LOCAL" />
-      <updated>1777731909087</updated>
+      <workItem from="1787099590415" duration="3192000" />
+      <workItem from="1787138664424" duration="715000" />
+      <workItem from="1787186099261" duration="1870000" />
+      <workItem from="1787223396113" duration="1245000" />
+      <workItem from="1787272336979" duration="1370000" />
+      <workItem from="1787308425956" duration="1682000" />
+      <workItem from="1787364396511" duration="9245000" />
+      <workItem from="1787391037968" duration="692000" />
+      <workItem from="1787449199153" duration="1850000" />
+      <workItem from="1787528739905" duration="809000" />
+      <workItem from="1787634732794" duration="1939000" />
+      <workItem from="1787701143881" duration="653000" />
+      <workItem from="1787735498407" duration="638000" />
+      <workItem from="1787790438208" duration="1316000" />
     </task>
     <task id="LOCAL-00110" summary="基金资产管理-16">
       <created>1777732964784</created>
@@ -865,7 +880,14 @@
       <option name="project" value="LOCAL" />
       <updated>1787023111435</updated>
     </task>
-    <option name="localTasksCounter" value="158" />
+    <task id="LOCAL-00158" summary="试验开展区-交易系统试验-12">
+      <created>1787100827727</created>
+      <option name="number" value="00158" />
+      <option name="presentableId" value="LOCAL-00158" />
+      <option name="project" value="LOCAL" />
+      <updated>1787100827727</updated>
+    </task>
+    <option name="localTasksCounter" value="159" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -884,7 +906,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="基金资产管理-38" />
     <MESSAGE value="基金资产管理-39" />
     <MESSAGE value="基金资产管理-40" />
     <MESSAGE value="基金资产管理-41" />
@@ -909,7 +930,8 @@
     <MESSAGE value="试验开展区-交易系统试验-09" />
     <MESSAGE value="试验开展区-交易系统试验-10" />
     <MESSAGE value="试验开展区-交易系统试验-11" />
-    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-11" />
+    <MESSAGE value="试验开展区-交易系统试验-12" />
+    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-12" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -150,7 +150,7 @@ public class AiCommonUtil {
         user.put("role", "user");
         user.put("content", userPrompt);
         messages.add(user);
-        return messages.toJavaList(JSONObject.class);
+        return JSON.parseArray(messages.toJSONString(), JSONObject.class);
     }
 
     /**

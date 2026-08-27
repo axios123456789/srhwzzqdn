@@ -11,7 +11,7 @@ export const GetFundBaseDataByCode = (fundCode) => {
   return request({
     url: `${base_api}/getFundBaseDataByCode/${fundCode}`,
     method: 'get',
-    timeout: 300000 // 设置5分钟超时，因为接口需要AI分析，耗时较长
+    timeout: 900000 // AI分析耗时较长，设置15分钟超时
   })
 }
 
@@ -429,8 +429,7 @@ export const GetPerformanceAnalysisByCondition = (params) => {
 export const AddFundImportData = (fundCode) => {
   return request({
     url: `${base_api}/addFundImportData/${fundCode}`,
-    method: 'post',
-    timeout: 300000 // 设置5分钟超时，因为接口需要获取外部数据，耗时较长
+    method: 'post'
   })
 }
 
@@ -442,7 +441,6 @@ export const AddFundImportData = (fundCode) => {
 export const CalculateAllFundPerformance = () => {
   return request({
     url: `${base_api}/calculateAllFundPerformance`,
-    method: 'post',
-    timeout: 600000 // 设置10分钟超时，因为需要批量获取所有基金数据，耗时较长
+    method: 'post'
   })
 }

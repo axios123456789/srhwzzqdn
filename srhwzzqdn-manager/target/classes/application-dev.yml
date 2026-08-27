@@ -61,9 +61,9 @@ ai:
   common:
     enabled: true
     api-type: Anthropic #OpenAI # openai（兼容DeepSeek/OpenAI/Moonshot/Zhipu等） | bailian（阿里云百炼）
-    api-key: sk-b994669dfb5b1f282876862cab1ae400f9f5a23d2996c08c263f5d5c37a7c319 #sk-1bcecc5741e92238426a5aa0111ee8fdf119358043ba56abecb19eb647851fae
+    api-key: sk-163c022d3f7986e6b3b0ae46ab320646be0b0ec7a8788917c2ba2a8b4dac9eef
     endpoint: http://192.168.14.51:8080/v1/chat/completions
-    model: glm-5.2
+    model: glm-latest
     temperature: 0.7
     max-tokens: 4096
     connect-timeout: 60000
