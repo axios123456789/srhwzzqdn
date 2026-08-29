@@ -75,6 +75,9 @@ public interface PredictionSimulateMapper {
     //按依据类型统计
     List<Map<String, Object>> statByBasisType(PredictionReportDto dto);
 
+    //按预测源统计
+    List<Map<String, Object>> statByPredictionSource(PredictionReportDto dto);
+
     //按预测情况统计
     List<Map<String, Object>> statBySituation(PredictionReportDto dto);
 

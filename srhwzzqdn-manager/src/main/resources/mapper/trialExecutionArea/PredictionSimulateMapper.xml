@@ -12,6 +12,7 @@
             prediction_content,
             prediction_basis,
             basis_type,
+            prediction_source,
             rise_fall_result,
             actual_content,
             result_analysis,
@@ -32,6 +33,7 @@
             #{predictionContent},
             #{predictionBasis},
             #{basisType},
+            #{predictionSource},
             #{riseFallResult},
             #{actualContent},
             #{resultAnalysis},
@@ -71,6 +73,9 @@
             </if>
             <if test="basisType != null and basisType != ''">
                 basis_type = #{basisType},
+            </if>
+            <if test="predictionSource != null">
+                prediction_source = #{predictionSource},
             </if>
             <if test="riseFallResult != null">
                 rise_fall_result = #{riseFallResult},
@@ -126,6 +131,7 @@
                t.prediction_content,
                t.prediction_basis,
                t.basis_type,
+               t.prediction_source,
                t.rise_fall_result,
                t.actual_content,
                t.result_analysis,
@@ -160,6 +166,7 @@
                 </foreach>
                 )
             </if>
+
             <if test="predictionTimeStart != null and predictionTimeStart != ''">
                 and t.prediction_time &gt;= #{predictionTimeStart}
             </if>
@@ -348,6 +355,38 @@
         order by bt.basis_type asc
     </select>
 
+    <!-- 按预测源统计 -->
+    <select id="statByPredictionSource" resultType="java.util.Map">
+        select t.prediction_source as predictionSource,
+               count(*) as count,
+               sum(case when t.prediction_result = 1 then 1 else 0 end) as successCount
+        from t_trial_prediction t
+        <where>
+            t.prediction_source is not null
+            <if test="startTime != null and startTime != ''">
+                and t.prediction_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null and endTime != ''">
+                and t.prediction_time &lt;= #{endTime}
+            </if>
+            <if test="basisType != null and basisType.size() > 0">
+                and (
+                <foreach collection="basisType" item="item" separator=" or ">
+                    FIND_IN_SET(#{item}, t.basis_type) &gt; 0
+                </foreach>
+                )
+            </if>
+            <if test="stockCode != null and stockCode != ''">
+                and t.stock_code like concat('%', #{stockCode}, '%')
+            </if>
+            <if test="owner != null and owner != ''">
+                and t.owner = #{owner}
+            </if>
+        </where>
+        group by t.prediction_source
+        order by t.prediction_source asc
+    </select>
+
     <!-- 按预测情况统计 -->
     <select id="statBySituation" resultType="java.util.Map">
         select t.prediction_situation as predictionSituation,
@@ -485,6 +524,7 @@
                t.prediction_content,
                t.prediction_basis,
                t.basis_type,
+               t.prediction_source,
                t.rise_fall_result,
                t.actual_content,
                t.result_analysis,
@@ -527,6 +567,9 @@
             </if>
             <if test="simulateOperation != null">
                 and t.simulate_operation = #{simulateOperation}
+            </if>
+            <if test="predictionSource != null">
+                and t.prediction_source = #{predictionSource}
             </if>
             <if test="month != null and month != ''">
                 and date_format(t.prediction_time, '%Y-%m') = #{month}

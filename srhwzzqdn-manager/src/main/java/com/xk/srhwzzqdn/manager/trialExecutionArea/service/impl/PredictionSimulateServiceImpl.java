@@ -167,6 +167,23 @@ public class PredictionSimulateServiceImpl implements PredictionSimulateService 
         }
         vo.setBasisTypeStats(basisTypeStats);
 
+        // 按预测源统计
+        List<Map<String, Object>> sourceRaw = predictionSimulateMapper.statByPredictionSource(dto);
+        List<PredictionReportVo.PredictionSourceStat> predictionSourceStats = new ArrayList<>();
+        for (Map<String, Object> map : sourceRaw) {
+            PredictionReportVo.PredictionSourceStat stat = new PredictionReportVo.PredictionSourceStat();
+            stat.setPredictionSource(((Number) map.get("predictionSource")).intValue());
+            stat.setCount(((Number) map.get("count")).intValue());
+            stat.setSuccessCount(((Number) map.get("successCount")).intValue());
+            if (stat.getCount() > 0) {
+                stat.setSuccessRate(new BigDecimal(stat.getSuccessCount()).divide(new BigDecimal(stat.getCount()), 4, RoundingMode.HALF_UP).multiply(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP));
+            } else {
+                stat.setSuccessRate(BigDecimal.ZERO);
+            }
+            predictionSourceStats.add(stat);
+        }
+        vo.setPredictionSourceStats(predictionSourceStats);
+
         // 按预测情况统计
         List<Map<String, Object>> situationRaw = predictionSimulateMapper.statBySituation(dto);
         List<PredictionReportVo.SituationStat> situationStats = new ArrayList<>();

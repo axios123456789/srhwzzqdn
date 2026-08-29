@@ -33,6 +33,9 @@ public class PredictionReportDto {
     @Schema(description = "模拟操作（1-买入 2-卖出），用于穿透明细")
     private Integer simulateOperation;
 
+    @Schema(description = "预测源（1-人工预测 2-智能预测），用于穿透明细")
+    private Integer predictionSource;
+
     @Schema(description = "月份（格式：YYYY-MM），用于穿透明细")
     private String month;
 

@@ -24,6 +24,9 @@ public class PredictionReportVo {
     @Schema(description = "按依据类型统计")
     private List<BasisTypeStat> basisTypeStats;
 
+    @Schema(description = "按预测源统计")
+    private List<PredictionSourceStat> predictionSourceStats;
+
     @Schema(description = "按预测情况统计")
     private List<SituationStat> situationStats;
 
@@ -41,6 +44,19 @@ public class PredictionReportVo {
     public static class BasisTypeStat {
         @Schema(description = "依据类型（逗号分隔字符串）")
         private String basisType;
+        @Schema(description = "总次数")
+        private Integer count;
+        @Schema(description = "成功次数")
+        private Integer successCount;
+        @Schema(description = "成功率")
+        private BigDecimal successRate;
+    }
+
+    @Data
+    @Schema(description = "预测源统计")
+    public static class PredictionSourceStat {
+        @Schema(description = "预测源：1-人工预测 2-智能预测")
+        private Integer predictionSource;
         @Schema(description = "总次数")
         private Integer count;
         @Schema(description = "成功次数")

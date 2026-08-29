@@ -20,6 +20,7 @@ public class PredictionSimulateDto {
     @Schema(description = "依据类型（多选查询，使用FIND_IN_SET匹配）")
     private List<String> basisType;
 
+
     @Schema(description = "预测时间（起）")
     private String predictionTimeStart;
 

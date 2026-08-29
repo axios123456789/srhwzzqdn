@@ -453,6 +453,7 @@
                 </el-col>
               </el-row>
               <el-row :gutter="20">
+
                 <el-col :span="12">
                   <el-form-item label="预测时间">
                     <el-date-picker
@@ -556,6 +557,14 @@
             <el-table-column prop="basisType" label="依据类型" align="center" min-width="120">
               <template #default="scope">
                 {{ getBasisTypeDisplay(scope.row.basisType) }}
+              </template>
+            </el-table-column>
+            <el-table-column prop="predictionSource" label="预测源" align="center" width="90">
+              <template #default="scope">
+                <el-tag v-if="scope.row.predictionSource" :type="scope.row.predictionSource === 1 ? 'info' : 'success'" size="small">
+                  {{ getDisplayText(scope.row.predictionSource, predictionSourceOptions) }}
+                </el-tag>
+                <span v-else>-</span>
               </template>
             </el-table-column>
             <el-table-column prop="predictionResult" label="预测结果" align="center" width="80">
@@ -751,8 +760,36 @@
             </el-col>
           </el-row>
 
-          <!-- 月度趋势 + 模拟操作统计 -->
+          <!-- 预测源统计 -->
           <el-row :gutter="16" style="margin-bottom: 20px;">
+            <el-col :span="12">
+              <div class="report-section">
+                <div class="detail-section-title">预测源统计</div>
+                <el-table :data="reportData.predictionSourceStats || []" border stripe size="small">
+                  <el-table-column prop="predictionSource" label="预测源" align="center">
+                    <template #default="scope">
+                      {{ getDisplayText(scope.row.predictionSource, predictionSourceOptions) }}
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="count" label="总次数" align="center">
+                    <template #default="scope">
+                      <el-link type="primary" :underline="false" @click="drillDown({ type: 'predictionSource', predictionSource: scope.row.predictionSource })">{{ scope.row.count }}</el-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="successCount" label="成功次数" align="center">
+                    <template #default="scope">
+                      <el-link type="primary" :underline="false" @click="drillDown({ type: 'predictionSource', predictionSource: scope.row.predictionSource, predictionResult: 1 })">{{ scope.row.successCount }}</el-link>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="successRate" label="成功率" align="center">
+                    <template #default="scope">
+                      <span :class="getRateClass(scope.row.successRate + '%')">{{ scope.row.successRate }}%</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </el-col>
+
             <el-col :span="12">
               <div class="report-section">
                 <div class="detail-section-title">月度预测准确率趋势</div>
@@ -776,7 +813,11 @@
                 </el-table>
               </div>
             </el-col>
-            <el-col :span="12">
+          </el-row>
+
+          <!-- 模拟操作盈亏统计 -->
+          <el-row :gutter="16" style="margin-bottom: 20px;">
+            <el-col :span="24">
               <div class="report-section">
                 <div class="detail-section-title">模拟操作盈亏统计</div>
                 <el-row :gutter="16" v-if="reportData.simulateTradeStat">
@@ -1538,6 +1579,12 @@
             <el-descriptions-item label="依据类型" :span="1">
               <el-tag type="warning" size="small">{{ getBasisTypeDisplay(predDetailData.basisType) }}</el-tag>
             </el-descriptions-item>
+            <el-descriptions-item label="预测源" :span="1">
+              <el-tag v-if="predDetailData.predictionSource" :type="predDetailData.predictionSource === 1 ? 'info' : 'success'" size="small">
+                {{ getDisplayText(predDetailData.predictionSource, predictionSourceOptions) }}
+              </el-tag>
+              <span v-else>-</span>
+            </el-descriptions-item>
           </el-descriptions>
         </div>
         <!-- 预测与结果区 -->
@@ -2148,6 +2195,13 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="12">
+              <el-form-item label="预测源" prop="predictionSource">
+                <el-select v-model="predFormData.predictionSource" style="width: 100%" placeholder="请选择预测源" clearable>
+                  <el-option v-for="item in predictionSourceOptions" :key="item.value" :label="item.text" :value="item.value" />
+                </el-select>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row :gutter="20">
             <el-col :span="24">
@@ -2378,18 +2432,15 @@ onMounted(() => {
   //3.加载预测模拟数据字典
   getRiseFallItem()
   getBasisTypeItem()
+  getPredictionSourceItem()
   getPredictionSituationItem()
   getPredictionResultItem()
   getSimulateOperationItem()
   getSimulateTradeStatusItem()
   getSimulateAssetTypeItem()
 
-  //2.调用查询数据接口
-  fetchData()
+  //2.加载默认标签页（交易规则）数据，其他标签页数据切换时懒加载
   fetchRuleData()
-  fetchLedgerData()
-  fetchPredData()
-  fetchReportData()
 
   //4.加载每日复盘/交易记录数据字典
   getReviewMarketStatusItem()
@@ -2403,10 +2454,6 @@ onMounted(() => {
   getTradePsychologyItem()
   getTradePlanMatchItem()
   getTradeExecuteRatingItem()
-
-  //5.加载每日复盘/交易记录数据
-  fetchDailyReviewData()
-  fetchTradeRecordData()
 });
 
 // ==================== 数据字典 ====================
@@ -2489,6 +2536,13 @@ const basisTypeOptions = ref([])
 const getBasisTypeItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_prediction_basis_type")
   basisTypeOptions.value = result.data || []
+}
+
+// 预测源选项
+const predictionSourceOptions = ref([])
+const getPredictionSourceItem = async () => {
+  const result = await GetKeyAndValueByType("t_trial_prediction_source")
+  predictionSourceOptions.value = result.data || []
 }
 
 // 依据类型多值显示：将逗号分隔字符串转为文字显示
@@ -3250,11 +3304,41 @@ const renderReviewCharts = () => {
   })
 }
 
-// 监听tab切换，切到复盘分析时加载数据
+// 各标签页数据是否已加载（懒加载，避免首屏一次性请求所有标签页数据）
+const tabDataLoaded = reactive({
+  trial: false,
+  prediction: false,
+  report: false,
+  dailyReview: false,
+  tradeRecord: false
+})
+
+// 监听tab切换，懒加载对应标签页数据
 watch(activeTab, (val) => {
   if (val === 'reviewAnalysis') {
     if (!reviewReportData.value.reviewKpi) fetchReviewReportData()
     else nextTick(() => renderReviewCharts())
+    return
+  }
+  if (tabDataLoaded[val]) return
+  tabDataLoaded[val] = true
+  switch (val) {
+    case 'trial':
+      fetchData()
+      break
+    case 'prediction':
+      fetchLedgerData()
+      fetchPredData()
+      break
+    case 'report':
+      fetchReportData()
+      break
+    case 'dailyReview':
+      fetchDailyReviewData()
+      break
+    case 'tradeRecord':
+      fetchTradeRecordData()
+      break
   }
 })
 
@@ -3271,6 +3355,7 @@ const predQueryDto = reactive({
   stockCode: '',
   riseFallPrediction: [],
   basisType: [],
+
   predictionTimeStart: null,
   predictionTimeEnd: null,
   predictionSituation: [],
@@ -3311,6 +3396,7 @@ const resetPredData = () => {
     stockCode: '',
     riseFallPrediction: [],
     basisType: [],
+
     predictionTimeStart: null,
     predictionTimeEnd: null,
     predictionSituation: [],
@@ -3341,6 +3427,7 @@ const predFormData = reactive({
   predictionContent: '',
   predictionBasis: '',
   basisType: [],
+  predictionSource: null,
   riseFallResult: null,
   actualContent: '',
   resultAnalysis: '',
@@ -3374,6 +3461,7 @@ const addPrediction = () => {
     predictionContent: '',
     predictionBasis: '',
     basisType: [],
+    predictionSource: null,
     riseFallResult: null,
     actualContent: '',
     resultAnalysis: '',
@@ -3701,6 +3789,7 @@ const drillQueryDto = reactive({
   predictionResult: null,
   predictionSituation: null,
   simulateOperation: null,
+  predictionSource: null,
   month: null,
   detailStockCode: null
 })
@@ -3715,6 +3804,7 @@ const drillDown = (params) => {
   drillQueryDto.predictionResult = params.predictionResult || null
   drillQueryDto.predictionSituation = params.predictionSituation || null
   drillQueryDto.simulateOperation = params.simulateOperation || null
+  drillQueryDto.predictionSource = params.predictionSource || null
   drillQueryDto.month = params.month || null
   drillQueryDto.detailStockCode = params.detailStockCode || null
 
@@ -3738,6 +3828,9 @@ const drillDown = (params) => {
   }
   if (params.type === 'trade' && params.simulateOperation) {
     titleParts.push('操作: ' + getDisplayText(params.simulateOperation, simulateOperationOptions.value))
+  }
+  if (params.type === 'predictionSource' && params.predictionSource) {
+    titleParts.push('预测源: ' + getDisplayText(params.predictionSource, predictionSourceOptions.value))
   }
   if (params.type === 'stock' && params.detailStockCode) {
     titleParts.push('股票: ' + params.detailStockCode)
