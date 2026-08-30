@@ -23986,3 +23986,81 @@ java.net.ConnectException: Connection timed out: getsockopt
 2026-08-29 21:30:18 HikariPool-1 - Starting...
 2026-08-29 21:30:18 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@30d76fc
 2026-08-29 21:30:18 HikariPool-1 - Start completed.
+2026-08-29 22:54:59 HikariPool-1 - Shutdown initiated...
+2026-08-29 22:54:59 HikariPool-1 - Shutdown completed.
+2026-08-29 22:55:13 Starting ManagerApplication using Java 17.0.17 with PID 34668 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-08-29 22:55:13 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-08-29 22:55:13 The following 1 profile is active: "dev"
+2026-08-29 22:55:14 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-08-29 22:55:14 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-08-29 22:55:14 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-08-29 22:55:15 Tomcat initialized with port(s): 8400 (http)
+2026-08-29 22:55:15 Initializing ProtocolHandler ["http-nio-8400"]
+2026-08-29 22:55:15 Starting service [Tomcat]
+2026-08-29 22:55:15 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-08-29 22:55:15 Initializing Spring embedded WebApplicationContext
+2026-08-29 22:55:15 Root WebApplicationContext: initialization completed in 2013 ms
+2026-08-29 22:55:17 Starting ProtocolHandler ["http-nio-8400"]
+2026-08-29 22:55:17 Tomcat started on port(s): 8400 (http) with context path ''
+2026-08-29 22:55:17 Started ManagerApplication in 5.6 seconds (process running for 6.971)
+2026-08-29 22:55:56 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-29 22:55:56 Initializing Servlet 'dispatcherServlet'
+2026-08-29 22:55:56 Completed initialization in 1 ms
+2026-08-29 22:59:34 HikariPool-1 - Starting...
+2026-08-29 22:59:34 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2db12a54
+2026-08-29 22:59:34 HikariPool-1 - Start completed.
+2026-08-29 22:59:48 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=2060 bytes
+2026-08-29 23:00:12 Token消耗 | 输入: 473 | 输出: 859 | 总计: 1332
+2026-08-29 23:00:12 AI调用成功 | 耗时=23575 ms | 响应长度=242 字符
+2026-08-29 23:07:26 HikariPool-1 - Shutdown initiated...
+2026-08-29 23:07:26 HikariPool-1 - Shutdown completed.
+2026-08-29 23:07:31 Starting ManagerApplication using Java 17.0.17 with PID 32712 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-08-29 23:07:31 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-08-29 23:07:31 The following 1 profile is active: "dev"
+2026-08-29 23:07:32 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-08-29 23:07:32 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-08-29 23:07:32 Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+2026-08-29 23:07:33 Tomcat initialized with port(s): 8400 (http)
+2026-08-29 23:07:33 Initializing ProtocolHandler ["http-nio-8400"]
+2026-08-29 23:07:33 Starting service [Tomcat]
+2026-08-29 23:07:33 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-08-29 23:07:33 Initializing Spring embedded WebApplicationContext
+2026-08-29 23:07:33 Root WebApplicationContext: initialization completed in 1794 ms
+2026-08-29 23:07:35 Starting ProtocolHandler ["http-nio-8400"]
+2026-08-29 23:07:35 Tomcat started on port(s): 8400 (http) with context path ''
+2026-08-29 23:07:35 Started ManagerApplication in 5.113 seconds (process running for 6.367)
+2026-08-29 23:07:49 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-29 23:07:49 Initializing Servlet 'dispatcherServlet'
+2026-08-29 23:07:49 Completed initialization in 2 ms
+2026-08-29 23:07:50 HikariPool-1 - Starting...
+2026-08-29 23:07:50 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6da9a918
+2026-08-29 23:07:51 HikariPool-1 - Start completed.
+2026-08-29 23:08:11 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=2060 bytes
+2026-08-29 23:08:32 Token消耗 | 输入: 473 | 输出: 780 | 总计: 1253
+2026-08-29 23:08:32 AI调用成功 | 耗时=21073 ms | 响应长度=255 字符
+2026-08-29 23:20:06 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=2060 bytes
+2026-08-29 23:20:30 Token消耗 | 输入: 473 | 输出: 713 | 总计: 1186
+2026-08-29 23:20:30 AI调用成功 | 耗时=23481 ms | 响应长度=274 字符
+2026-08-29 23:44:07 HikariPool-1 - Shutdown initiated...
+2026-08-29 23:44:07 HikariPool-1 - Shutdown completed.
+2026-08-30 10:06:05 Starting ManagerApplication using Java 17.0.17 with PID 14748 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-08-30 10:06:05 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-08-30 10:06:05 The following 1 profile is active: "dev"
+2026-08-30 10:06:07 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-08-30 10:06:07 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-08-30 10:06:07 Finished Spring Data repository scanning in 24 ms. Found 0 Redis repository interfaces.
+2026-08-30 10:06:08 Tomcat initialized with port(s): 8400 (http)
+2026-08-30 10:06:08 Initializing ProtocolHandler ["http-nio-8400"]
+2026-08-30 10:06:08 Starting service [Tomcat]
+2026-08-30 10:06:08 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-08-30 10:06:08 Initializing Spring embedded WebApplicationContext
+2026-08-30 10:06:08 Root WebApplicationContext: initialization completed in 2886 ms
+2026-08-30 10:06:11 Starting ProtocolHandler ["http-nio-8400"]
+2026-08-30 10:06:11 Tomcat started on port(s): 8400 (http) with context path ''
+2026-08-30 10:06:11 Started ManagerApplication in 7.176 seconds (process running for 10.223)
+2026-08-30 10:07:11 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-30 10:07:11 Initializing Servlet 'dispatcherServlet'
+2026-08-30 10:07:11 Completed initialization in 5 ms
+2026-08-30 10:07:18 HikariPool-1 - Starting...
+2026-08-30 10:07:18 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@60d116d7
+2026-08-30 10:07:18 HikariPool-1 - Start completed.

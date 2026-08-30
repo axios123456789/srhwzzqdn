@@ -91,3 +91,13 @@ export const GetPredictionDetailByCondition = (current, limit, queryDto) => {
     data: queryDto,
   })
 }
+
+// AI智能预测：根据股票名称+代码自动预测涨跌及内容
+export const AiPredict = data => {
+  return request({
+    url: base_api + '/aiPredict',
+    method: 'post',
+    data: data,
+    timeout: 900000,
+  })
+}

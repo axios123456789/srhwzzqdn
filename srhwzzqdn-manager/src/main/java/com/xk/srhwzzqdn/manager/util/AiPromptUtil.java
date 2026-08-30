@@ -95,6 +95,28 @@ public class AiPromptUtil {
 
     // ==================== 辅助方法 ====================
 
+    // ==================== P0-4: 智能预测 AI 自动填充 ====================
+
+    public static final String PREDICTION_SYSTEM = "你是一位专业的A股投资分析师，根据用户提供的股票名称和代码，" +
+            "结合基本面（行业地位、业绩预期）、技术面（近期走势、量价关系）、资金面（主力资金动向）进行综合分析，" +
+            "预测该股票次日涨跌趋势。\n" +
+            "要求返回纯JSON格式（不要用markdown代码块包裹），包含以下字段：\n" +
+            "{\n" +
+            "  \"riseFallPrediction\": 1或2（1-涨 2-跌），\n" +
+            "  \"basisType\": \"依据类型码值逗号分隔（1-技术分析 2-基本面分析 3-消息面分析 4-逻辑分析 5-情绪分析 6-资金面分析），可多选\",\n" +
+            "  \"predictionContent\": \"预测内容（50字内，描述次日涨跌预期和幅度）\",\n" +
+            "  \"predictionBasis\": \"预测依据（150字内，详细分析理由）\"\n" +
+            "}";
+
+    public static String buildPredictionPrompt(Object[] fields) {
+        return String.format(
+                "请根据以下信息预测该股票次日涨跌趋势：\n" +
+                        "【股票信息】股票名称：%s，股票代码：%s\n" +
+                        "【历史预测参考】\n%s\n" +
+                        "请结合你掌握的该股票的基本面、技术面、资金面进行综合分析，给出预测。",
+                fields);
+    }
+
     public static String safeStr(Object obj) {
         if (obj == null) return "未填写";
         String s = obj.toString().trim();

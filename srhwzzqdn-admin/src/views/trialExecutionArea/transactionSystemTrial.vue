@@ -2169,7 +2169,10 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="股票代码" prop="stockCode">
-                <el-input v-model="predFormData.stockCode" placeholder="请输入股票代码" />
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <el-input v-model="predFormData.stockCode" placeholder="请输入股票代码" style="flex: 1;" />
+                  <el-button type="primary" plain size="small" :loading="aiPredictLoading" @click="aiPredict">🤖 智能预测</el-button>
+                </div>
               </el-form-item>
             </el-col>
           </el-row>
@@ -2374,7 +2377,7 @@ import { ref, reactive, onMounted, onBeforeUnmount, nextTick, computed, watch } 
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList, SaveTransactionRule, DeleteTransactionRuleById, DeleteAllTransactionRuleByIds } from "@/api/trialExecutionArea/transactionSystemTrial"
-import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, DeleteAllSimulateLedger, GetPredictionReport, GetPredictionDetailByCondition } from "@/api/trialExecutionArea/predictionSimulate"
+import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, DeleteAllSimulateLedger, GetPredictionReport, GetPredictionDetailByCondition, AiPredict } from "@/api/trialExecutionArea/predictionSimulate"
 import { GetDailyReviewByConditionAndPage, SaveDailyReview, DeleteDailyReviewById, DeleteAllDailyReviewByIds, AiGenerateDailyReview, AiAnalyzeTargets } from "@/api/trialExecutionArea/dailyReview"
 import { GetTradeRecordByConditionAndPage, SaveTradeRecord, DeleteTradeRecordById, DeleteAllTradeRecordByIds, StatTradeByReviewDate } from "@/api/trialExecutionArea/tradeRecord"
 import { GetReviewReport, AiGenerateReviewReport } from "@/api/trialExecutionArea/reviewAnalysis"
@@ -3444,6 +3447,38 @@ const predFormRules = {
   stockName: [{ required: true, message: '请输入股票名称', trigger: 'blur' }],
   stockCode: [{ required: true, message: '请输入股票代码', trigger: 'blur' }],
   riseFallPrediction: [{ required: true, message: '请选择涨跌预测', trigger: 'change' }]
+}
+
+// AI智能预测：根据股票名称+代码自动填充涨跌预测/依据类型/预测内容/预测依据
+const aiPredictLoading = ref(false)
+const aiPredict = async () => {
+  if (!predFormData.stockName || !predFormData.stockCode) {
+    ElMessage.warning("请先填写股票名称和股票代码")
+    return
+  }
+  aiPredictLoading.value = true
+  try {
+    const result = await AiPredict({ stockName: predFormData.stockName, stockCode: predFormData.stockCode })
+    if (result.code === 200 && result.data) {
+      if (result.data.riseFallPrediction) predFormData.riseFallPrediction = result.data.riseFallPrediction
+      if (result.data.basisType) {
+        predFormData.basisType = result.data.basisType.split(',').filter(v => v).map(v => Number(v))
+      }
+      if (result.data.predictionContent) predFormData.predictionContent = result.data.predictionContent
+      if (result.data.predictionBasis) predFormData.predictionBasis = result.data.predictionBasis
+      const now = new Date()
+      const pad = (n) => String(n).padStart(2, '0')
+      predFormData.predictionTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
+      predFormData.predictionSource = 2
+      ElMessage.success("AI智能预测已生成，可编辑修改")
+    } else {
+      ElMessage.error(result.message || "AI预测失败")
+    }
+  } catch (e) {
+    ElMessage.error("AI预测失败：" + e.message)
+  } finally {
+    aiPredictLoading.value = false
+  }
 }
 
 const addPrediction = () => {

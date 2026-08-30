@@ -92,4 +92,8 @@ public interface PredictionSimulateMapper {
 
     //穿透明细查询：根据报表条件+穿透维度查询预测记录明细
     List<PredictionSimulate> getPredictionDetailByCondition(PredictionReportDto dto);
+
+    //查询最近的预测记录（用于AI智能预测参考）
+    @Select("select * from t_trial_prediction order by create_time desc limit #{param1}")
+    List<PredictionSimulate> getRecentPredictions(int limit);
 }
