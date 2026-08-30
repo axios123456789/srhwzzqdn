@@ -13,25 +13,9 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/dailyReview.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/dailyReview.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/predictionSimulate.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/predictionSimulate.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/reviewAnalysis.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/reviewAnalysis.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/PredictionSimulateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/PredictionSimulateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/PredictionSimulateMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/PredictionSimulateMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/util/AiPromptUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/util/AiPromptUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/PredictionSimulateMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/PredictionSimulateMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/PredictionSimulateServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/service/impl/PredictionSimulateServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/trialExecutionArea/PredictionSimulateMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/trialExecutionArea/PredictionSimulateMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/trialExecutionArea/PredictionReportDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/trialExecutionArea/PredictionReportDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/trialExecutionArea/PredictionSimulateDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/dto/trialExecutionArea/PredictionSimulateDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/trialExecutionArea/PredictionSimulate.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/trialExecutionArea/PredictionSimulate.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$BasisTypeStat.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$BasisTypeStat.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$MonthlyTrend.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$MonthlyTrend.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$SimulateTradeStat.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$SimulateTradeStat.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$SituationStat.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$SituationStat.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$StockStat.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo$StockStat.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/vo/trialExecutionArea/PredictionReportVo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/PredictionSimulateController.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/PredictionSimulateController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/AiPromptUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/AiPromptUtil.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -552,13 +536,7 @@
       <workItem from="1787877133951" duration="1860000" />
       <workItem from="1787916810357" duration="659000" />
       <workItem from="1787967393224" duration="10610000" />
-    </task>
-    <task id="LOCAL-00112" summary="基金资产管理-18">
-      <created>1777910050001</created>
-      <option name="number" value="00112" />
-      <option name="presentableId" value="LOCAL-00112" />
-      <option name="project" value="LOCAL" />
-      <updated>1777910050001</updated>
+      <workItem from="1788055497161" duration="3255000" />
     </task>
     <task id="LOCAL-00113" summary="基金资产管理-19">
       <created>1777910242828</created>
@@ -896,7 +874,14 @@
       <option name="project" value="LOCAL" />
       <updated>1788012393001</updated>
     </task>
-    <option name="localTasksCounter" value="161" />
+    <task id="LOCAL-00161" summary="试验开展区-交易系统试验-14">
+      <created>1788057358141</created>
+      <option name="number" value="00161" />
+      <option name="presentableId" value="LOCAL-00161" />
+      <option name="project" value="LOCAL" />
+      <updated>1788057358142</updated>
+    </task>
+    <option name="localTasksCounter" value="162" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

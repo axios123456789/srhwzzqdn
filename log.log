@@ -24064,3 +24064,31 @@ java.net.ConnectException: Connection timed out: getsockopt
 2026-08-30 10:07:18 HikariPool-1 - Starting...
 2026-08-30 10:07:18 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@60d116d7
 2026-08-30 10:07:18 HikariPool-1 - Start completed.
+2026-08-30 11:02:02 HikariPool-1 - Shutdown initiated...
+2026-08-30 11:02:02 HikariPool-1 - Shutdown completed.
+2026-08-30 11:02:28 Starting ManagerApplication using Java 17.0.17 with PID 1220 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-08-30 11:02:28 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-08-30 11:02:28 The following 1 profile is active: "dev"
+2026-08-30 11:02:29 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-08-30 11:02:29 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-08-30 11:02:29 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-08-30 11:02:29 Tomcat initialized with port(s): 8400 (http)
+2026-08-30 11:02:29 Initializing ProtocolHandler ["http-nio-8400"]
+2026-08-30 11:02:29 Starting service [Tomcat]
+2026-08-30 11:02:29 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-08-30 11:02:30 Initializing Spring embedded WebApplicationContext
+2026-08-30 11:02:30 Root WebApplicationContext: initialization completed in 1944 ms
+2026-08-30 11:02:32 Starting ProtocolHandler ["http-nio-8400"]
+2026-08-30 11:02:32 Tomcat started on port(s): 8400 (http) with context path ''
+2026-08-30 11:02:32 Started ManagerApplication in 5.295 seconds (process running for 6.923)
+2026-08-30 11:02:42 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-08-30 11:02:42 Initializing Servlet 'dispatcherServlet'
+2026-08-30 11:02:42 Completed initialization in 3 ms
+2026-08-30 11:02:43 HikariPool-1 - Starting...
+2026-08-30 11:02:43 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@466e46e7
+2026-08-30 11:02:43 HikariPool-1 - Start completed.
+2026-08-30 11:02:50 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=4072 bytes
+2026-08-30 11:03:16 Token消耗 | 输入: 956 | 输出: 1319 | 总计: 2275
+2026-08-30 11:03:16 AI调用成功 | 耗时=25325 ms | 响应长度=372 字符
+2026-08-30 11:08:37 HikariPool-1 - Shutdown initiated...
+2026-08-30 11:08:37 HikariPool-1 - Shutdown completed.
