@@ -167,17 +167,33 @@ public class PredictionSimulateController {
             String stockName = AiPromptUtil.safeStr(formData.get("stockName"));
             String stockCode = AiPromptUtil.safeStr(formData.get("stockCode"));
 
-            // 查询历史预测作为参考样例
-            List<PredictionSimulate> recentList = predictionSimulateMapper.getRecentPredictions(5);
+            // 查询该股票历史预测（含实际结果）作为参考
+            List<PredictionSimulate> stockHistory = predictionSimulateMapper.getPredictionsByStockCode(stockCode, 10);
             StringBuilder historyRef = new StringBuilder();
-            for (PredictionSimulate p : recentList) {
-                historyRef.append(String.format("股票：%s(%s)，预测：%s，内容：%s，依据：%s\n",
-                        p.getStockName(), p.getStockCode(),
-                        p.getRiseFallPrediction() != null && p.getRiseFallPrediction() == 1 ? "涨" : "跌",
-                        p.getPredictionContent(), p.getPredictionBasis()));
+            int correctCount = 0, hasResultCount = 0;
+            for (PredictionSimulate p : stockHistory) {
+                String predDir = p.getRiseFallPrediction() != null && p.getRiseFallPrediction() == 1 ? "涨" : "跌";
+                historyRef.append(String.format("预测时间：%s，预测：%s，内容：%s",
+                        p.getPredictionTime(), predDir, p.getPredictionContent()));
+                if (p.getRiseFallResult() != null) {
+                    hasResultCount++;
+                    String actualDir = p.getRiseFallResult() == 1 ? "涨" : "跌";
+                    boolean correct = p.getRiseFallPrediction() != null && p.getRiseFallPrediction().equals(p.getRiseFallResult());
+                    if (correct) correctCount++;
+                    historyRef.append(String.format("→实际：%s，预测%s", actualDir, correct ? "正确" : "错误"));
+                    if (p.getActualContent() != null && !p.getActualContent().isEmpty()) {
+                        historyRef.append("，实际内容：").append(p.getActualContent());
+                    }
+                    if (p.getResultAnalysis() != null && !p.getResultAnalysis().isEmpty()) {
+                        historyRef.append("，结果分析：").append(p.getResultAnalysis());
+                    }
+                }
+                historyRef.append("\n");
             }
             if (historyRef.length() == 0) {
-                historyRef.append("暂无历史预测记录");
+                historyRef.append("暂无该股票历史预测记录");
+            } else if (hasResultCount > 0) {
+                historyRef.insert(0, String.format("该股票历史预测准确率：%d/%d=%.1f%%\n", correctCount, hasResultCount, correctCount * 100.0 / hasResultCount));
             }
 
             String prompt = AiPromptUtil.buildPredictionPrompt(new Object[]{

@@ -96,4 +96,8 @@ public interface PredictionSimulateMapper {
     //查询最近的预测记录（用于AI智能预测参考）
     @Select("select * from t_trial_prediction order by create_time desc limit #{param1}")
     List<PredictionSimulate> getRecentPredictions(int limit);
+
+    //根据股票代码查询该股票的历史预测记录（含实际结果，用于AI预测参考）
+    @Select("select * from t_trial_prediction where stock_code = #{param1} order by prediction_time desc limit #{param2}")
+    List<PredictionSimulate> getPredictionsByStockCode(String stockCode, int limit);
 }
