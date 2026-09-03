@@ -1,0 +1,59 @@
+[     621ms] [WARNING] A parser-blocking, cross site (i.e. different eTLD+1) script, http://192.168.63.54:9001/cdn/libs/vue/default/lib/vue.min.js, is invoked via document.write. The network request for this script MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message. See https://www.chromestatus.com/feature/5718547946799104 for more details. @ http://192.168.63.54:9001/cdn/config/public.js:59
+[     621ms] [WARNING] A parser-blocking, cross site (i.e. different eTLD+1) script, http://192.168.63.54:9001/cdn/libs/vue/default/lib/vue.min.js, is invoked via document.write. The network request for this script MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message. See https://www.chromestatus.com/feature/5718547946799104 for more details. @ http://192.168.63.54:9001/cdn/config/public.js:59
+[     622ms] [WARNING] A parser-blocking, cross site (i.e. different eTLD+1) script, http://192.168.63.54:9001/cdn/libs/element-ui/default/lib/element-ui.js, is invoked via document.write. The network request for this script MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message. See https://www.chromestatus.com/feature/5718547946799104 for more details. @ http://192.168.63.54:9001/cdn/config/public.js:59
+[     622ms] [WARNING] A parser-blocking, cross site (i.e. different eTLD+1) script, http://192.168.63.54:9001/cdn/libs/theme/theme.js, is invoked via document.write. The network request for this script MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message. See https://www.chromestatus.com/feature/5718547946799104 for more details. @ http://192.168.63.54:9001/cdn/config/public.js:59
+[     622ms] [WARNING] A parser-blocking, cross site (i.e. different eTLD+1) script, http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js, is invoked via document.write. The network request for this script MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message. See https://www.chromestatus.com/feature/5718547946799104 for more details. @ http://192.168.63.54:9001/cdn/config/public.js:59
+[     623ms] [WARNING] A parser-blocking, cross site (i.e. different eTLD+1) script, http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js, is invoked via document.write. The network request for this script MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message. See https://www.chromestatus.com/feature/5718547946799104 for more details. @ http://192.168.63.54:9001/cdn/config/public.js:59
+[     624ms] [WARNING] A parser-blocking, cross site (i.e. different eTLD+1) script, http://192.168.63.54:9001//cdn/sgpssc/th-vue-business/default/lib/thVueBusiness.umd.min.js, is invoked via document.write. The network request for this script MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message. See https://www.chromestatus.com/feature/5718547946799104 for more details. @ http://192.168.63.54:9001/cdn/config/public.js:59
+[     624ms] [WARNING] A parser-blocking, cross site (i.e. different eTLD+1) script, http://192.168.63.54:9001/cdn/plantform/default/th-file-component/lib/file.js, is invoked via document.write. The network request for this script MAY be blocked by the browser in this or a future page load due to poor network connectivity. If blocked in this page load, it will be confirmed in a subsequent console message. See https://www.chromestatus.com/feature/5718547946799104 for more details. @ http://192.168.63.54:9001/cdn/config/public.js:59
+[    2642ms] [LOG] %c th-vue-component %c version: 2.1.7  background: #35495e; padding: 1px; border-radius: 3px 0 0 3px;  color: #fff background: #0D867F; padding: 1px; border-radius: 0 3px 3px 0;  color: #fff @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:327
+[    2886ms] [LOG] 本地时间同步成功，偏移量: -20138 ms @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:275
+[    4025ms] Uncaught TypeError: Cannot read properties of undefined (reading 'style')
+    at <anonymous> (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:362:36750)
+    at u (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:362:36698)
+    at s (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:362:35836)
+    at aea6 (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:362:36779)
+    at r (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:0:760)
+    at fb15 (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:477:2662143)
+    at r (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:0:760)
+    at 0 (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:0:2504)
+    at <anonymous> (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:0:2518)
+    at <anonymous> (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:0:234)
+    at <anonymous> (http://192.168.63.54:9001/cdn/plantform/default/th-render-component/lib/components/components.umd.min.js:0:247)
+[    4258ms] [INFO] %c⚛ th-vue-business %c 1.20.0 ⚛ Build time:2026-08-24 18:45:56  background: #606060; color: #fff; border-radius: 3px 0 0 3px; background: #1475B2; color: #fff; border-radius: 0 3px 3px 0; @ http://192.168.63.54:9001//cdn/sgpssc/th-vue-business/default/lib/thVueBusiness.umd.min.js:30
+[    4443ms] [LOG] [HMR] Waiting for update signal from WDS... @ webpack-internal:///./node_modules/webpack/hot/log.js:23
+[    4588ms] [WARNING] [vue-router] Duplicate named routes definition: { name: "电流曲线展示", path: "/gbdyhgltjCharts" } @ webpack-internal:///./node_modules/vue-router/dist/vue-router.esm.js:23
+[    4589ms] [WARNING] [vue-router] Duplicate named routes definition: { name: "电流曲线展示", path: "/mxdyhglqxCharts" } @ webpack-internal:///./node_modules/vue-router/dist/vue-router.esm.js:23
+[    4589ms] [WARNING] [vue-router] Duplicate named routes definition: { name: "用户电压合格率生成", path: "/mxdyzxtj" } @ webpack-internal:///./node_modules/vue-router/dist/vue-router.esm.js:23
+[    4589ms] [WARNING] [vue-router] Duplicate named routes definition: { name: "南供报表*频繁停电线路情况统计", path: "/pftdxlqktj" } @ webpack-internal:///./node_modules/vue-router/dist/vue-router.esm.js:23
+[    4590ms] [WARNING] [vue-router] Duplicate named routes definition: { name: "投诉工作单编辑", path: "/tsgzdbjDyzlxx" } @ webpack-internal:///./node_modules/vue-router/dist/vue-router.esm.js:23
+[    4590ms] [WARNING] [vue-router] Duplicate named routes definition: { name: "投诉工作单编辑", path: "/tsgzdbjPftdxx" } @ webpack-internal:///./node_modules/vue-router/dist/vue-router.esm.js:23
+[    4591ms] [WARNING] [vue-router] Duplicate named routes definition: { name: "用户电压合格率生成", path: "/userVoltageQualificationRateCreateData" } @ webpack-internal:///./node_modules/vue-router/dist/vue-router.esm.js:23
+[    4900ms] [ERROR] 获取基础参数初始化失败 TypeError: _api__WEBPACK_IMPORTED_MODULE_18__.default.fetchIsOpenPsrCenter is not a function
+    at eval (webpack-internal:///./src/store/modules/repair/repairOptions.js:660:68)
+    at Generator.eval (webpack-internal:///./node_modules/@babel/runtime/helpers/esm/regenerator.js:76:51)
+    at Generator.eval [as next] (webpack-internal:///./node_modules/@babel/runtime/helpers/esm/regeneratorDefine.js:13:21)
+    at asyncGeneratorStep (webpack-internal:///./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js:8:17)
+    at _next (webpack-internal:///./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js:22:9)
+    at eval (webpack-internal:///./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js:27:7)
+    at new Promise (<anonymous>)
+    at eval (webpack-internal:///./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js:19:12)
+    at Store.FetchIsOpenPsrCenter (webpack-internal:///./src/store/modules/repair/repairOptions.js:671:10)
+    at Array.wrappedActionHandler (webpack-internal:///./node_modules/vuex/dist/vuex.esm.js:860:23) @ webpack-internal:///./node_modules/cache-loader/dist/cjs.js?!./node_modules/babel-loader/lib/index.js!./node_modules/cache-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./src/App.vue?vue&type=script&lang=js:70
+[    4917ms] [LOG] 本地时间同步成功，偏移量: -20028 ms @ webpack-internal:///./node_modules/th-vue-component/src/utils/util.js:1006
+[    4940ms] [LOG] [跨标签页同步] 已初始化监听 @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:128
+[    4942ms] [LOG] code:null @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:128
+[    4942ms] [LOG] microAppCode:null @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:128
+[    4965ms] [WARNING] <meta name="apple-mobile-web-app-capable" content="yes"> is deprecated. Please include <meta name="mobile-web-app-capable" content="yes"> @ http://localhost:8083/#/login:0
+[    5094ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.63.54:9999/pms-rrcs/sysParam/getFault95598Param:0
+[    5097ms] [ERROR] 用户凭证已过期 @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:327
+[    5098ms] [LOG] [Crypto] 401 响应，清除加密会话并重试一次 @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:327
+[    5158ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.63.54:9999/sguap-portal/sguap/system/parameter/multiple/SYSTEM:0
+[    5160ms] [ERROR] 用户凭证已过期 @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:327
+[    5160ms] [LOG] [Crypto] 401 响应，清除加密会话并重试一次 @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:327
+[    5175ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.63.54:9999/pms-rrcs/sysParam/getFault95598Param:0
+[    5176ms] [ERROR] 用户凭证已过期 @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:327
+[    5177ms] [LOG] [Token锁] 401 且无有效登录态，跳过 token 刷新流程 @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:327
+[    5281ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://192.168.63.54:9999/sguap-portal/sguap/system/parameter/multiple/SYSTEM:0
+[    5282ms] [ERROR] 用户凭证已过期 @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:327
+[    5282ms] [LOG] [Token锁] 401 且无有效登录态，跳过 token 刷新流程 @ http://192.168.63.54:9001/cdn/om/th-vue-component/default/lib/thVueComponent.umd.min.js:327

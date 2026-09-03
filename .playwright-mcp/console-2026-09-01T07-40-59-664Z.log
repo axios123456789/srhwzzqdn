@@ -1,0 +1,16 @@
+[   84139ms] [LOG] [vite] connecting... @ http://localhost:3001/@vite/client:183
+[   84580ms] [LOG] [vite] connected. @ http://localhost:3001/@vite/client:211
+[   85183ms] [WARNING] You are running the esm-bundler build of vue-i18n. It is recommended to configure your bundler to explicitly replace feature flag globals with boolean literals to get proper tree-shaking in the final bundle. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:2577
+[   85283ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "test" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85283ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "system" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85283ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "memoryReceptionArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "memoryEngramRegion" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "knowledgeBuildArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "knowledgeExtractArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "firmWorldviewArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "futurePlanArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "assetControlArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "socialConnectionsArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "thoughtFlashArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "trialExecutionArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42
+[   85284ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "personalObservationArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=f30033ef:42

@@ -1,0 +1,181 @@
+- generic [ref=f5e2]:
+  - generic [ref=f5e162]:
+    - generic [ref=f5e163]:
+      - generic [ref=f5e164]:
+        - generic [ref=f5e166]:
+          - generic [ref=f5e167]: 单位
+          - generic [ref=f5e170]:
+            - textbox "请选择" [ref=f5e171] [cursor=pointer]: 全部
+            - generic: 
+        - generic [ref=f5e175]:
+          - generic [ref=f5e176]: 展示级别
+          - generic [ref=f5e179]:
+            - textbox "请选择" [ref=f5e180] [cursor=pointer]: 地市（区）
+            - generic: 
+        - generic [ref=f5e184]:
+          - generic [ref=f5e185]: 开始时间
+          - generic [ref=f5e187]:
+            - textbox [ref=f5e188]: 2026-09-01
+            - generic [ref=f5e189]: 
+        - generic [ref=f5e192]:
+          - generic [ref=f5e193]: 结束时间
+          - generic [ref=f5e195]:
+            - textbox [ref=f5e196]: 2026-09-01
+            - generic [ref=f5e197]: 
+        - generic [ref=f5e200]:
+          - generic [ref=f5e201]: 数据状态
+          - generic [ref=f5e204]:
+            - textbox "--请选择--" [ref=f5e205] [cursor=pointer]
+            - generic: 
+        - generic [ref=f5e209]:
+          - generic [ref=f5e210]: 事件序号
+          - textbox "--请输入--" [ref=f5e213]
+        - generic [ref=f5e215]:
+          - generic [ref=f5e216]: 线路名称
+          - textbox "--请输入--" [ref=f5e219]
+        - generic [ref=f5e221]:
+          - generic [ref=f5e222]: 是否已恢复
+          - generic [ref=f5e225]:
+            - textbox "--请选择--" [ref=f5e226] [cursor=pointer]
+            - generic: 
+        - generic [ref=f5e230]:
+          - generic [ref=f5e231]: 恢复人
+          - textbox "--请输入--" [ref=f5e234]
+      - generic [ref=f5e235]:
+        - button "查询" [ref=f5e236] [cursor=pointer]
+        - button "批量恢复" [ref=f5e237] [cursor=pointer]
+        - button "导出" [ref=f5e238] [cursor=pointer]
+    - generic [ref=f5e240]:
+      - table [ref=f5e242]:
+        - rowgroup [ref=f5e295]:
+          - row [ref=f5e296]:
+            - columnheader [ref=f5e297]
+            - columnheader [ref=f5e298]
+            - columnheader [ref=f5e299]
+            - columnheader "是否误报" [ref=f5e300]
+            - columnheader "误报时间" [ref=f5e302]
+            - columnheader "恢复时间" [ref=f5e304]
+            - columnheader "恢复人" [ref=f5e306]
+            - columnheader "事件序号" [ref=f5e308]
+            - columnheader "市公司" [ref=f5e310]
+            - columnheader "单位名称" [ref=f5e312]
+            - columnheader "供电所" [ref=f5e314]
+            - columnheader "数据状态" [ref=f5e316]
+            - columnheader "事件来源" [ref=f5e318]
+            - columnheader "停电范围类型" [ref=f5e320]
+            - columnheader "停电类型" [ref=f5e322]
+            - columnheader "剔除状态" [ref=f5e324]
+            - columnheader "上报状态" [ref=f5e326]
+            - columnheader "校验状态" [ref=f5e328]
+            - columnheader "修改状态" [ref=f5e330]
+            - columnheader "国网事件序号" [ref=f5e332]
+            - columnheader "变电站名称" [ref=f5e334]
+            - columnheader "线路名称" [ref=f5e336]
+            - columnheader "停电时间" [ref=f5e338]
+            - columnheader "送电时间" [ref=f5e340]
+            - columnheader "停电时长（小时）" [ref=f5e342]
+            - columnheader "线次数" [ref=f5e344]
+            - columnheader "户次数" [ref=f5e346]
+            - columnheader "中压时户数" [ref=f5e348]
+            - columnheader "低压时户数" [ref=f5e350]
+            - columnheader "少供电量" [ref=f5e352]
+            - columnheader "线路总线段数" [ref=f5e354]
+            - columnheader "线路总用户数" [ref=f5e356]
+            - columnheader "停电性质" [ref=f5e358]
+            - columnheader "忽略原因" [ref=f5e360]
+            - columnheader "责任原因" [ref=f5e362]
+            - columnheader "设备原因" [ref=f5e364]
+            - columnheader "技术原因" [ref=f5e366]
+            - columnheader "特殊分析" [ref=f5e368]
+            - columnheader "管理属性" [ref=f5e370]
+            - columnheader "是否重大事件日" [ref=f5e372]
+            - columnheader "公变停电台数" [ref=f5e374]
+            - columnheader "专变停电台数" [ref=f5e376]
+            - columnheader "关联停电信息发布" [ref=f5e378]
+            - columnheader "操作员" [ref=f5e380]
+            - columnheader "异常描述" [ref=f5e382]
+            - columnheader "下发时间" [ref=f5e384]
+            - columnheader "新增/入库时间" [ref=f5e386]
+            - columnheader "用户修改时间" [ref=f5e388]
+            - columnheader "系统操作时间" [ref=f5e390]
+            - columnheader "确认/忽略时间" [ref=f5e392]
+            - columnheader "备注" [ref=f5e394]
+      - generic [ref=f5e396]:
+        - table:
+          - rowgroup
+        - generic [ref=f5e397]: 暂无数据
+      - generic [ref=f5e399]:
+        - table [ref=f5e401]:
+          - rowgroup [ref=f5e454]:
+            - row "操作" [ref=f5e455]:
+              - columnheader [ref=f5e456]:
+                - generic [ref=f5e459] [cursor=pointer]:
+                  - checkbox [disabled]
+              - columnheader "操作" [ref=f5e461]
+              - columnheader [ref=f5e463]
+              - columnheader [ref=f5e464]
+              - columnheader [ref=f5e465]
+              - columnheader [ref=f5e466]
+              - columnheader [ref=f5e467]
+              - columnheader [ref=f5e468]
+              - columnheader [ref=f5e469]
+              - columnheader [ref=f5e470]
+              - columnheader [ref=f5e471]
+              - columnheader [ref=f5e472]
+              - columnheader [ref=f5e473]
+              - columnheader [ref=f5e474]
+              - columnheader [ref=f5e475]
+              - columnheader [ref=f5e476]
+              - columnheader [ref=f5e477]
+              - columnheader [ref=f5e478]
+              - columnheader [ref=f5e479]
+              - columnheader [ref=f5e480]
+              - columnheader [ref=f5e481]
+              - columnheader [ref=f5e482]
+              - columnheader [ref=f5e483]
+              - columnheader [ref=f5e484]
+              - columnheader [ref=f5e485]
+              - columnheader [ref=f5e486]
+              - columnheader [ref=f5e487]
+              - columnheader [ref=f5e488]
+              - columnheader [ref=f5e489]
+              - columnheader [ref=f5e490]
+              - columnheader [ref=f5e491]
+              - columnheader [ref=f5e492]
+              - columnheader [ref=f5e493]
+              - columnheader [ref=f5e494]
+              - columnheader [ref=f5e495]
+              - columnheader [ref=f5e496]
+              - columnheader [ref=f5e497]
+              - columnheader [ref=f5e498]
+              - columnheader [ref=f5e499]
+              - columnheader [ref=f5e500]
+              - columnheader [ref=f5e501]
+              - columnheader [ref=f5e502]
+              - columnheader [ref=f5e503]
+              - columnheader [ref=f5e504]
+              - columnheader [ref=f5e505]
+              - columnheader [ref=f5e506]
+              - columnheader [ref=f5e507]
+              - columnheader [ref=f5e508]
+              - columnheader [ref=f5e509]
+              - columnheader [ref=f5e510]
+              - columnheader [ref=f5e511]
+        - generic [ref=f5e512]:
+          - table:
+            - rowgroup
+    - generic [ref=f5e514]:
+      - generic [ref=f5e515]: 共 0 条
+      - generic [ref=f5e518]:
+        - textbox "请选择" [ref=f5e519] [cursor=pointer]: 50条/页
+        - generic: 
+      - button "" [disabled] [ref=f5e522]
+      - list [ref=f5e524]:
+        - listitem [ref=f5e525]: "1"
+      - button "" [disabled] [ref=f5e526]
+      - generic [ref=f5e528]:
+        - text: 前往
+        - spinbutton [ref=f5e530]: "1"
+        - text: 页
+    - text:  
+  - generic:   

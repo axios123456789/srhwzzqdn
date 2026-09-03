@@ -1,0 +1,73 @@
+- generic [ref=f5e2]:
+  - generic [ref=f5e8]:
+    - complementary [ref=f5e9]:
+      - generic [ref=f5e10]: 单位目录
+      - tree [ref=f5e11]:
+        - generic [ref=f5e12]: 暂无数据
+    - main [ref=f5e14]:
+      - generic [ref=f5e15]:
+        - generic [ref=f5e16]: 查询条件
+        - generic [ref=f5e19]:
+          - generic [ref=f5e20]:
+            - generic [ref=f5e22]:
+              - generic [ref=f5e23]: 变电站名称
+              - textbox "请输入变电站名称" [ref=f5e26]
+            - generic [ref=f5e28]:
+              - generic [ref=f5e29]: 电压等级
+              - generic [ref=f5e32]:
+                - textbox "请选择电压等级" [ref=f5e33] [cursor=pointer]
+                - generic: 
+            - generic [ref=f5e37]:
+              - generic [ref=f5e38]: 统计类型
+              - generic [ref=f5e41]:
+                - textbox "请选择" [ref=f5e42] [cursor=pointer]
+                - generic: 
+            - generic [ref=f5e45]: 
+          - generic [ref=f5e46]:
+            - button "统计" [ref=f5e47] [cursor=pointer]
+            - button "查询" [ref=f5e48] [cursor=pointer]
+            - button "重置" [ref=f5e49] [cursor=pointer]
+            - button " 导出" [ref=f5e50] [cursor=pointer]:
+              - generic [ref=f5e51]: 
+              - text: 导出
+            - button "电压等级" [ref=f5e52] [cursor=pointer]
+            - button "所属地市" [ref=f5e53] [cursor=pointer]
+            - button "主变台数" [ref=f5e54] [cursor=pointer]
+            - button "电容器组数" [ref=f5e55] [cursor=pointer]
+            - button "电抗器" [ref=f5e56] [cursor=pointer]
+      - generic [ref=f5e58]:
+        - table [ref=f5e60]:
+          - rowgroup [ref=f5e75]:
+            - row [ref=f5e76]:
+              - columnheader "源端系统" [ref=f5e77] [cursor=pointer]
+              - columnheader "单位" [ref=f5e82] [cursor=pointer]
+              - columnheader "变电站名称" [ref=f5e87] [cursor=pointer]
+              - columnheader "电压等级" [ref=f5e92] [cursor=pointer]
+              - columnheader "主变台数" [ref=f5e97] [cursor=pointer]
+              - columnheader "电容器组数" [ref=f5e102] [cursor=pointer]
+              - columnheader "电抗器" [ref=f5e107] [cursor=pointer]
+              - columnheader "10kV电抗器数量" [ref=f5e112] [cursor=pointer]
+              - columnheader "35kV电抗器数量" [ref=f5e117] [cursor=pointer]
+              - columnheader "110kV电抗器数量" [ref=f5e122] [cursor=pointer]
+              - columnheader "220kV电抗器数量" [ref=f5e127] [cursor=pointer]
+              - columnheader "500kV电抗器数量" [ref=f5e132] [cursor=pointer]
+              - columnheader "合计" [ref=f5e137] [cursor=pointer]
+        - generic [ref=f5e142]:
+          - table:
+            - rowgroup
+          - generic [ref=f5e143]: 暂无数据
+      - generic [ref=f5e145]:
+        - generic [ref=f5e146]: 共 0 条
+        - generic [ref=f5e149]:
+          - textbox "请选择" [ref=f5e150] [cursor=pointer]: 200条/页
+          - generic: 
+        - button "" [disabled] [ref=f5e153]
+        - list [ref=f5e155]:
+          - listitem [ref=f5e156]: "1"
+        - button "" [disabled] [ref=f5e157]
+        - generic [ref=f5e159]:
+          - text: 前往
+          - spinbutton [ref=f5e161]: "1"
+          - text: 页
+    - text:  
+  - generic:   

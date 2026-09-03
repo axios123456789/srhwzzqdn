@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.manager.trialExecutionArea.service.DailyReviewService;
 import com.xk.srhwzzqdn.manager.util.AiCommonUtil;
 import com.xk.srhwzzqdn.manager.util.AiPromptUtil;
+import com.xk.srhwzzqdn.manager.util.StockQuoteUtil;
 import com.xk.srhwzzqdn.model.dto.trialExecutionArea.DailyReviewDto;
 import com.xk.srhwzzqdn.model.entity.trialExecutionArea.DailyReview;
 import com.xk.srhwzzqdn.model.vo.common.Result;
@@ -183,6 +184,21 @@ public class DailyReviewController {
         } catch (Exception e) {
             logger.error("AI分析关注标的失败", e);
             return Result.build(null, 500, "AI分析失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取当日大盘实时数据（3大指数涨跌幅+两市成交额+涨跌家数统计）
+     * 用于每日复盘表单自动填充
+     */
+    @GetMapping("/fetchRealtimeMarketData")
+    public Result fetchRealtimeMarketData() {
+        try {
+            JSONObject data = StockQuoteUtil.getMarketOverview();
+            return Result.build(data, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("获取大盘实时数据失败", e);
+            return Result.build(null, 500, "获取实时数据失败：" + e.getMessage());
         }
     }
 

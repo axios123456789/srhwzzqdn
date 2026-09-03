@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-15">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-16">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -13,11 +13,15 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/tmp/36c39bb0-68fe-4195-acd4-fd5877704cfc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/dailyReview.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/trialExecutionArea/dailyReview.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/DailyReviewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/DailyReviewController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/PredictionSimulateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/PredictionSimulateController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/PredictionSimulateMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/trialExecutionArea/mapper/PredictionSimulateMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/util/AiPromptUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/util/AiPromptUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/DailyReviewController.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/DailyReviewController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/PredictionSimulateController.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/PredictionSimulateController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/AiPromptUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/AiPromptUtil.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -538,14 +542,15 @@
       <workItem from="1787877133951" duration="1860000" />
       <workItem from="1787916810357" duration="659000" />
       <workItem from="1787967393224" duration="10610000" />
-      <workItem from="1788055497161" duration="7253000" />
-    </task>
-    <task id="LOCAL-00114" summary="基金资产管理-20">
-      <created>1777987963683</created>
-      <option name="number" value="00114" />
-      <option name="presentableId" value="LOCAL-00114" />
-      <option name="project" value="LOCAL" />
-      <updated>1777987963683</updated>
+      <workItem from="1788055497161" duration="8420000" />
+      <workItem from="1788136135278" duration="2013000" />
+      <workItem from="1788175720098" duration="708000" />
+      <workItem from="1788222720321" duration="1950000" />
+      <workItem from="1788262489965" duration="2171000" />
+      <workItem from="1788308975893" duration="145000" />
+      <workItem from="1788309250982" duration="993000" />
+      <workItem from="1788347804433" duration="658000" />
+      <workItem from="1788395589586" duration="423000" />
     </task>
     <task id="LOCAL-00115" summary="基金资产管理-21">
       <created>1778150821239</created>
@@ -883,7 +888,14 @@
       <option name="project" value="LOCAL" />
       <updated>1788085065903</updated>
     </task>
-    <option name="localTasksCounter" value="163" />
+    <task id="LOCAL-00163" summary="试验开展区-交易系统试验-16">
+      <created>1788092192438</created>
+      <option name="number" value="00163" />
+      <option name="presentableId" value="LOCAL-00163" />
+      <option name="project" value="LOCAL" />
+      <updated>1788092192438</updated>
+    </task>
+    <option name="localTasksCounter" value="164" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -902,7 +914,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="基金资产管理-42" />
     <MESSAGE value="基金资产管理-43" />
     <MESSAGE value="基金资产管理-44" />
     <MESSAGE value="基金资产管理-45" />
@@ -927,7 +938,8 @@
     <MESSAGE value="试验开展区-交易系统试验-13" />
     <MESSAGE value="试验开展区-交易系统试验-14" />
     <MESSAGE value="试验开展区-交易系统试验-15" />
-    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-15" />
+    <MESSAGE value="试验开展区-交易系统试验-16" />
+    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-16" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

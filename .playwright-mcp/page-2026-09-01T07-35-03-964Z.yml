@@ -1,0 +1,131 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - table [ref=e6]:
+      - rowgroup [ref=e7]:
+        - row [ref=e401]:
+          - cell "单位" [ref=e9]
+          - cell [ref=e402]:
+            - generic [ref=e11]:
+              - textbox [ref=e403]: 全部
+              - link [ref=e14] [cursor=pointer]:
+                - /url: javascript:void(0)
+          - cell "展示级别" [ref=e15]
+          - cell [ref=e404]:
+            - generic [ref=e17]:
+              - textbox [ref=e405] [cursor=pointer]: 地市（区）
+              - link [ref=e20] [cursor=pointer]:
+                - /url: javascript:void(0)
+          - cell "开始时间" [ref=e21]
+          - cell [ref=e22]:
+            - generic [ref=e23]:
+              - textbox [ref=e25]: 2026-09-01
+              - link [ref=e26] [cursor=pointer]:
+                - /url: javascript:void(0)
+          - cell "结束时间" [ref=e27]
+          - cell [ref=e28]:
+            - generic [ref=e29]:
+              - textbox [ref=e31]: 2026-09-01
+              - link [ref=e32] [cursor=pointer]:
+                - /url: javascript:void(0)
+          - cell "数据状态" [ref=e33]
+          - cell [ref=e34]:
+            - generic [ref=e35]:
+              - textbox [ref=e37] [cursor=pointer]: "--请选择--"
+              - link [ref=e38] [cursor=pointer]:
+                - /url: javascript:void(0)
+              - generic "清空值"
+        - row [ref=e39]:
+          - cell "事件序号" [ref=e40]
+          - cell [ref=e41]:
+            - textbox [ref=e44]: "--请输入--"
+          - cell "线路名称" [ref=e45]
+          - cell [ref=e46]:
+            - textbox [ref=e49]: "--请输入--"
+          - cell "是否已恢复" [ref=e50]
+          - cell [ref=e51]:
+            - generic [ref=e52]:
+              - textbox [ref=e54] [cursor=pointer]: "--请选择--"
+              - link [ref=e55] [cursor=pointer]:
+                - /url: javascript:void(0)
+              - generic "清空值"
+          - cell "恢复人" [ref=e56]
+          - cell [ref=e57]:
+            - textbox [ref=e60]: "--请输入--"
+        - row [ref=e61]:
+          - cell [ref=e62]:
+            - generic [ref=e63]:
+              - button "查询" [ref=e65] [cursor=pointer]
+              - button "批量恢复" [ref=e67] [cursor=pointer]
+              - button "导出" [ref=e69] [cursor=pointer]
+        - row
+    - generic:
+      - img "隐藏查询区"
+  - generic [ref=e70]:
+    - table [ref=e72]:
+      - rowgroup [ref=e73]:
+        - row "操作 是否误报 误报时间 恢复时间 恢复人 事件序号 市公司 单位名称 供电所 数据状态 事件来源 停电范围类型 停电类型 剔除状态 上报状态 校验状态 修改状态 国网事件序号 变电站名称 线路名称 停电时间 送电时间 停电时长（小时） 线次数 户次数 中压时户数 低压时户数 少供电量 线路总线段数 线路总用户数 停电性质 忽略原因 责任原因 设备原因 技术原因 特殊分析 管理属性 是否重大事件日 公变停电台数 专变停电台数 关联停电信息发布 操作员 异常描述 下发时间 新增/入库时间 用户修改时间 系统操作时间 确认/忽略时间 备注" [ref=e74]:
+          - cell [ref=e75]
+          - cell [ref=e77]:
+            - generic [ref=e79] [cursor=pointer]
+          - cell "操作" [ref=e80]
+          - cell "是否误报" [ref=e85]
+          - cell "误报时间" [ref=e90]
+          - cell "恢复时间" [ref=e95]
+          - cell "恢复人" [ref=e100]
+          - cell "事件序号" [ref=e105]
+          - cell "市公司" [ref=e110]
+          - cell "单位名称" [ref=e115]
+          - cell "供电所" [ref=e120]
+          - cell "数据状态" [ref=e125]
+          - cell "事件来源" [ref=e130]
+          - cell "停电范围类型" [ref=e135]
+          - cell "停电类型" [ref=e140]
+          - cell "剔除状态" [ref=e145]
+          - cell "上报状态" [ref=e150]
+          - cell "校验状态" [ref=e155]
+          - cell "修改状态" [ref=e160]
+          - cell "国网事件序号" [ref=e165]
+          - cell "变电站名称" [ref=e170]
+          - cell "线路名称" [ref=e175]
+          - cell "停电时间" [ref=e180]
+          - cell "送电时间" [ref=e185]
+          - cell "停电时长（小时）" [ref=e190]
+          - cell "线次数" [ref=e195]
+          - cell "户次数" [ref=e200]
+          - cell "中压时户数" [ref=e205]
+          - cell "低压时户数" [ref=e210]
+          - cell "少供电量" [ref=e215]
+          - cell "线路总线段数" [ref=e220]
+          - cell "线路总用户数" [ref=e225]
+          - cell "停电性质" [ref=e230]
+          - cell "忽略原因" [ref=e235]
+          - cell "责任原因" [ref=e240]
+          - cell "设备原因" [ref=e245]
+          - cell "技术原因" [ref=e250]
+          - cell "特殊分析" [ref=e255]
+          - cell "管理属性" [ref=e260]
+          - cell "是否重大事件日" [ref=e265]
+          - cell "公变停电台数" [ref=e270]
+          - cell "专变停电台数" [ref=e275]
+          - cell "关联停电信息发布" [ref=e280]
+          - cell "操作员" [ref=e285]
+          - cell "异常描述" [ref=e290]
+          - cell "下发时间" [ref=e295]
+          - cell "新增/入库时间" [ref=e300]
+          - cell "用户修改时间" [ref=e305]
+          - cell "系统操作时间" [ref=e310]
+          - cell "确认/忽略时间" [ref=e315]
+          - cell "备注" [ref=e320]
+    - table [ref=e326]:
+      - rowgroup [ref=e379]
+  - generic [ref=e382]:
+    - generic [ref=e383] [cursor=pointer]: 共 0 条
+    - generic [ref=e384]:
+      - textbox [ref=e386] [cursor=pointer]: "50"
+      - link [ref=e387] [cursor=pointer]:
+        - /url: javascript:void(0)
+    - generic [ref=e389] [cursor=pointer]: "1"
+    - generic [ref=e392] [cursor=pointer]: 前往
+    - textbox [ref=e395]: "1"
+    - generic [ref=e396] [cursor=pointer]: 页
+  - generic [ref=e397] [cursor=pointer]: 

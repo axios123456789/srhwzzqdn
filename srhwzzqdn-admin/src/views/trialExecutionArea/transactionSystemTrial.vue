@@ -60,6 +60,7 @@
       </div>
       <el-table
         :data="filteredRuleList"
+        v-loading="ruleLoading"
         style="width: 100%"
         :height="ruleTableHeight"
         ref="ruleTable"
@@ -248,6 +249,7 @@
       <!-- 数据表格 -->
       <el-table
         :data="list"
+        v-loading="listLoading"
         style="width: 100%"
         height="450"
         ref="multipleTable"
@@ -334,7 +336,7 @@
         style="margin-top: 30px"
         v-model:current-page="pageParams.page"
         v-model:page-size="pageParams.limit"
-        :page-sizes="[10, 20, 50, 100]"
+        :page-sizes="PAGE_SIZES"
         @size-change="fetchData"
         @current-change="fetchData"
         layout="total, sizes, prev, pager, next"
@@ -513,6 +515,7 @@
           <!-- 预测模拟数据表格 -->
           <el-table
             :data="predList"
+            v-loading="predLoading"
             style="width: 100%"
             height="300"
             ref="predTable"
@@ -616,7 +619,7 @@
             style="margin-top: 15px"
             v-model:current-page="predPageParams.page"
             v-model:page-size="predPageParams.limit"
-            :page-sizes="[10, 20, 50, 100]"
+            :page-sizes="PAGE_SIZES"
             @size-change="fetchPredData"
             @current-change="fetchPredData"
             layout="total, sizes, prev, pager, next"
@@ -949,7 +952,7 @@
               批量删除
             </el-button>
           </div>
-          <el-table :data="dailyReviewList" style="width: 100%" height="500" border stripe size="small" @selection-change="handleDailyReviewSelectionChange">
+          <el-table :data="dailyReviewList" v-loading="dailyReviewLoading" style="width: 100%" height="500" border stripe size="small" @selection-change="handleDailyReviewSelectionChange">
             <el-table-column type="selection" width="40" align="center" />
             <el-table-column label="操作" align="center" fixed="left" width="240" #default="scope">
               <el-button type="info" size="small" @click="viewDailyReviewDetail(scope.row)"><el-icon><View /></el-icon>查看</el-button>
@@ -991,7 +994,7 @@
               <template #default="scope">{{ getDisplayText(scope.row.operationSelfRating, reviewSelfRatingOptions) }}</template>
             </el-table-column>
           </el-table>
-          <el-pagination style="margin-top: 15px" v-model:current-page="dailyReviewPageParams.page" v-model:page-size="dailyReviewPageParams.limit" :page-sizes="[10,20,50]" @size-change="fetchDailyReviewData" @current-change="fetchDailyReviewData" layout="total, sizes, prev, pager, next" :total="dailyReviewTotal" />
+          <el-pagination style="margin-top: 15px" v-model:current-page="dailyReviewPageParams.page" v-model:page-size="dailyReviewPageParams.limit" :page-sizes="PAGE_SIZES" @size-change="fetchDailyReviewData" @current-change="fetchDailyReviewData" layout="total, sizes, prev, pager, next" :total="dailyReviewTotal" />
         </div>
       </el-tab-pane>
 
@@ -1064,7 +1067,7 @@
             <el-button type="success" size="small" @click="addTradeRecord"><el-icon><DocumentAdd /></el-icon>添加交易记录</el-button>
             <el-button type="danger" size="small" @click="deleteTradeRecordAll" :disabled="tradeRecordSelectedRows.length === 0"><el-icon><Delete /></el-icon>批量删除</el-button>
           </div>
-          <el-table :data="tradeRecordList" style="width: 100%" height="400" border stripe size="small" @selection-change="handleTradeRecordSelectionChange">
+          <el-table :data="tradeRecordList" v-loading="tradeRecordLoading" style="width: 100%" height="400" border stripe size="small" @selection-change="handleTradeRecordSelectionChange">
             <el-table-column type="selection" width="40" align="center" />
             <el-table-column label="操作" align="center" fixed="left" width="240" #default="scope">
               <el-button type="info" size="small" @click="viewTradeRecordDetail(scope.row)"><el-icon><View /></el-icon>查看</el-button>
@@ -1099,7 +1102,7 @@
             </el-table-column>
             <el-table-column prop="tradeReason" label="交易理由" align="center" min-width="120" show-overflow-tooltip />
           </el-table>
-          <el-pagination style="margin-top: 15px" v-model:current-page="tradeRecordPageParams.page" v-model:page-size="tradeRecordPageParams.limit" :page-sizes="[10,20,50]" @size-change="fetchTradeRecordData" @current-change="fetchTradeRecordData" layout="total, sizes, prev, pager, next" :total="tradeRecordTotal" />
+          <el-pagination style="margin-top: 15px" v-model:current-page="tradeRecordPageParams.page" v-model:page-size="tradeRecordPageParams.limit" :page-sizes="PAGE_SIZES" @size-change="fetchTradeRecordData" @current-change="fetchTradeRecordData" layout="total, sizes, prev, pager, next" :total="tradeRecordTotal" />
         </div>
       </el-tab-pane>
 
@@ -1186,7 +1189,8 @@
       <el-form :model="dailyReviewFormData" ref="dailyReviewFormRef" label-width="120px" size="small">
         <div class="ai-fill-bar">
           <el-button type="primary" plain size="small" @click="smartFillAll"><el-icon><MagicStick /></el-icon> 智能填充</el-button>
-          <span class="ai-fill-tip">根据基础数据自动推荐：市场状态 → 情绪温度 → 适配体系 → 仓位/止损止盈</span>
+          <el-button type="success" plain size="small" :loading="marketDataLoading" @click="fetchMarketData"><el-icon><Download /></el-icon> 获取实时数据</el-button>
+          <span class="ai-fill-tip">获取当日大盘实时数据自动填充涨跌/成交额/涨跌家数；智能填充根据基础数据推荐市场状态→情绪温度→适配体系→仓位/止损止盈</span>
         </div>
         <el-divider content-position="left">大盘环境</el-divider>
         <el-row :gutter="20">
@@ -1464,6 +1468,7 @@
     >
       <el-table
         :data="drillDetailList"
+        v-loading="drillLoading"
         style="width: 100%"
         height="450"
         border
@@ -1546,7 +1551,7 @@
         style="margin-top: 20px"
         v-model:current-page="drillPageParams.page"
         v-model:page-size="drillPageParams.limit"
-        :page-sizes="[10, 20, 50, 100]"
+        :page-sizes="PAGE_SIZES"
         @size-change="fetchDrillDetailData"
         @current-change="fetchDrillDetailData"
         layout="total, sizes, prev, pager, next"
@@ -2378,13 +2383,17 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { GetKeyAndValueByType } from "@/api/sysDict"
 import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList, SaveTransactionRule, DeleteTransactionRuleById, DeleteAllTransactionRuleByIds } from "@/api/trialExecutionArea/transactionSystemTrial"
 import { GetPredictionByConditionAndPage, SavePrediction, DeletePredictionById, DeleteAllPredictionByIds, GetSimulateLedgerList, SaveSimulateLedger, DeleteSimulateLedgerById, DeleteAllSimulateLedger, GetPredictionReport, GetPredictionDetailByCondition, AiPredict } from "@/api/trialExecutionArea/predictionSimulate"
-import { GetDailyReviewByConditionAndPage, SaveDailyReview, DeleteDailyReviewById, DeleteAllDailyReviewByIds, AiGenerateDailyReview, AiAnalyzeTargets } from "@/api/trialExecutionArea/dailyReview"
+import { GetDailyReviewByConditionAndPage, SaveDailyReview, DeleteDailyReviewById, DeleteAllDailyReviewByIds, AiGenerateDailyReview, AiAnalyzeTargets, FetchRealtimeMarketData } from "@/api/trialExecutionArea/dailyReview"
 import { GetTradeRecordByConditionAndPage, SaveTradeRecord, DeleteTradeRecordById, DeleteAllTradeRecordByIds, StatTradeByReviewDate } from "@/api/trialExecutionArea/tradeRecord"
 import { GetReviewReport, AiGenerateReviewReport } from "@/api/trialExecutionArea/reviewAnalysis"
 import * as echarts from 'echarts'
 import { getDisplayText } from "@/utils/common"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
+
+// ==================== 通用常量 ====================
+const PAGE_SIZES = [10, 20, 50, 100]  // 分页每页条数选项
+const DEBOUNCE_DELAY = 300            // 防抖延迟(ms)
 
 // ==================== 标签页 ====================
 const activeTab = ref('rule')
@@ -2394,7 +2403,9 @@ const ruleTableHeight = ref(320)
 
 const calcRuleTableHeight = () => {
   nextTick(() => {
-    const occupiedHeight = 68 + 44 + 50 + 56 + 30 + 10
+    // 占用高度明细：页头68 + 标签头44 + 规则操作栏50 + 规则筛选56 + 分页30 + 内边距10
+    const HEADER_H = 68, TABS_H = 44, TOOLBAR_H = 50, SEARCH_H = 56, PAGINATION_H = 30, PADDING = 10
+    const occupiedHeight = HEADER_H + TABS_H + TOOLBAR_H + SEARCH_H + PAGINATION_H + PADDING
     const availableHeight = window.innerHeight - occupiedHeight
     ruleTableHeight.value = Math.max(availableHeight, 200)
   })
@@ -2422,66 +2433,59 @@ onBeforeUnmount(() => {
 onMounted(() => {
   //0.计算规则表格高度
   calcRuleTableHeight()
-  //1.加载数据字典
-  getTradeTypeItem()
-  getPlanTypeItem()
-  getTradeStatusItem()
-  getTradeResultItem()
-  getTradeFailTypeItem()
-  getIsUsePlanItem()
-  getRuleStatusItem()
-  getRuleTypeItem()
 
-  //3.加载预测模拟数据字典
-  getRiseFallItem()
-  getBasisTypeItem()
-  getPredictionSourceItem()
-  getPredictionSituationItem()
-  getPredictionResultItem()
-  getSimulateOperationItem()
-  getSimulateTradeStatusItem()
-  getSimulateAssetTypeItem()
+  //1.加载数据字典（批量并发；含特殊补全项的由专用函数处理）
+  Promise.all([
+    // 交易类型相关
+    loadDict('t_trial_transaction_type', tradeTypeOptions),
+    loadDict('t_trial_plan_type', planTypeOptions),
+    loadDict('t_trial_transaction_status', tradeStatusOptions),
+    getTradeResultItem(),
+    loadDict('t_trade_fail_type', tradeFailTypeOptions),
+    // 规则相关
+    getRuleStatusItem(),
+    loadDict('t_trial_rule_type', ruleTypeOptions),
+    // 预测模拟相关
+    loadDict('t_trial_prediction_rise_fall', riseFallOptions),
+    loadDict('t_trial_prediction_basis_type', basisTypeOptions),
+    loadDict('t_trial_prediction_source', predictionSourceOptions),
+    loadDict('t_trial_prediction_situation', predictionSituationOptions),
+    loadDict('t_trial_prediction_result', predictionResultOptions),
+    loadDict('t_trial_simulate_operation', simulateOperationOptions),
+    loadDict('t_trial_simulate_trade_status', simulateTradeStatusOptions),
+    loadDict('t_trial_simulate_asset_type', simulateAssetTypeOptions),
+    // 每日复盘/交易记录相关
+    loadDict('t_trial_review_market_status', reviewMarketStatusOptions),
+    loadDict('t_trial_review_emotion_temp', reviewEmotionTempOptions),
+    loadDict('t_trial_review_sector', reviewSectorOptions),
+    loadDict('t_trial_review_adapt_system', reviewAdaptSystemOptions),
+    loadDict('t_trial_review_self_rating', reviewSelfRatingOptions),
+    loadDict('t_trial_trade_direction', tradeDirectionOptions),
+    loadDict('t_trial_trade_time_slot', tradeTimeSlotOptions),
+    loadDict('t_trial_trade_position', tradePositionOptions),
+    loadDict('t_trial_trade_psychology', tradePsychologyOptions),
+    loadDict('t_trial_trade_plan_match', tradePlanMatchOptions),
+    loadDict('t_trial_trade_execute_rating', tradeExecuteRatingOptions)
+  ]).catch(err => console.error('字典加载失败:', err))
 
   //2.加载默认标签页（交易规则）数据，其他标签页数据切换时懒加载
   fetchRuleData()
-
-  //4.加载每日复盘/交易记录数据字典
-  getReviewMarketStatusItem()
-  getReviewEmotionTempItem()
-  getReviewSectorItem()
-  getReviewAdaptSystemItem()
-  getReviewSelfRatingItem()
-  getTradeDirectionItem()
-  getTradeTimeSlotItem()
-  getTradePositionItem()
-  getTradePsychologyItem()
-  getTradePlanMatchItem()
-  getTradeExecuteRatingItem()
 });
 
 // ==================== 数据字典 ====================
+// 通用字典加载工具：并发加载简单字典（含特殊补全项的由专用函数处理）
+const loadDict = async (tableName, optionsRef) => {
+  const result = await GetKeyAndValueByType(tableName)
+  optionsRef.value = result.data || []
+}
+
 // 交易类型选项
 const tradeTypeOptions = ref([])
-const getTradeTypeItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_transaction_type")
-  tradeTypeOptions.value = result.data || []
-}
-
 // 计划类型选项
 const planTypeOptions = ref([])
-const getPlanTypeItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_plan_type")
-  planTypeOptions.value = result.data || []
-}
-
 // 交易状态选项
 const tradeStatusOptions = ref([])
-const getTradeStatusItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_transaction_status")
-  tradeStatusOptions.value = result.data || []
-}
-
-// 交易结果选项
+// 交易结果选项（特殊：补"失败"项）
 const tradeResultOptions = ref([])
 const getTradeResultItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_transaction_result")
@@ -2491,24 +2495,17 @@ const getTradeResultItem = async () => {
   }
   tradeResultOptions.value = data
 }
-
 // 交易失败类型选项
 const tradeFailTypeOptions = ref([])
-const getTradeFailTypeItem = async () => {
-  const result = await GetKeyAndValueByType("t_trade_fail_type")
-  tradeFailTypeOptions.value = result.data || []
-}
 
 // 是否触发计划选项（前端写死，不使用数据字典）
 const isUsePlanOptions = ref([
   { value: 1, text: '是' },
   { value: 0, text: '否' }
 ])
-const getIsUsePlanItem = () => {
-  // 前端写死，无需请求字典
-}
 
-// 规则状态选项
+
+// 规则状态选项（特殊：补"作废"项）
 const ruleStatusOptions = ref([])
 const getRuleStatusItem = async () => {
   const result = await GetKeyAndValueByType("t_trial_rule_status")
@@ -2518,35 +2515,16 @@ const getRuleStatusItem = async () => {
   }
   ruleStatusOptions.value = data
 }
-
 // 规则类型选项
 const ruleTypeOptions = ref([])
-const getRuleTypeItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_rule_type")
-  ruleTypeOptions.value = result.data || []
-}
 
 // ==================== 预测模拟数据字典 ====================
 // 涨跌预测选项
 const riseFallOptions = ref([])
-const getRiseFallItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_prediction_rise_fall")
-  riseFallOptions.value = result.data || []
-}
-
 // 依据类型选项
 const basisTypeOptions = ref([])
-const getBasisTypeItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_prediction_basis_type")
-  basisTypeOptions.value = result.data || []
-}
-
 // 预测源选项
 const predictionSourceOptions = ref([])
-const getPredictionSourceItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_prediction_source")
-  predictionSourceOptions.value = result.data || []
-}
 
 // 依据类型多值显示：将逗号分隔字符串转为文字显示
 const getBasisTypeDisplay = (basisType) => {
@@ -2562,62 +2540,27 @@ const getBasisTypeDisplay = (basisType) => {
 
 // 预测情况选项
 const predictionSituationOptions = ref([])
-const getPredictionSituationItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_prediction_situation")
-  predictionSituationOptions.value = result.data || []
-}
-
 // 预测结果选项
 const predictionResultOptions = ref([])
-const getPredictionResultItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_prediction_result")
-  predictionResultOptions.value = result.data || []
-}
-
 // 模拟操作选项
 const simulateOperationOptions = ref([])
-const getSimulateOperationItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_simulate_operation")
-  simulateOperationOptions.value = result.data || []
-}
-
 // 模拟交易状态选项
 const simulateTradeStatusOptions = ref([])
-const getSimulateTradeStatusItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_simulate_trade_status")
-  simulateTradeStatusOptions.value = result.data || []
-}
-
 // 台账资产类型选项
 const simulateAssetTypeOptions = ref([])
-const getSimulateAssetTypeItem = async () => {
-  const result = await GetKeyAndValueByType("t_trial_simulate_asset_type")
-  simulateAssetTypeOptions.value = result.data || []
-}
 
 // ==================== 每日复盘/交易记录 数据字典 ====================
 const reviewMarketStatusOptions = ref([])
-const getReviewMarketStatusItem = async () => { reviewMarketStatusOptions.value = (await GetKeyAndValueByType("t_trial_review_market_status")).data || [] }
 const reviewEmotionTempOptions = ref([])
-const getReviewEmotionTempItem = async () => { reviewEmotionTempOptions.value = (await GetKeyAndValueByType("t_trial_review_emotion_temp")).data || [] }
 const reviewSectorOptions = ref([])
-const getReviewSectorItem = async () => { reviewSectorOptions.value = (await GetKeyAndValueByType("t_trial_review_sector")).data || [] }
 const reviewAdaptSystemOptions = ref([])
-const getReviewAdaptSystemItem = async () => { reviewAdaptSystemOptions.value = (await GetKeyAndValueByType("t_trial_review_adapt_system")).data || [] }
 const reviewSelfRatingOptions = ref([])
-const getReviewSelfRatingItem = async () => { reviewSelfRatingOptions.value = (await GetKeyAndValueByType("t_trial_review_self_rating")).data || [] }
 const tradeDirectionOptions = ref([])
-const getTradeDirectionItem = async () => { tradeDirectionOptions.value = (await GetKeyAndValueByType("t_trial_trade_direction")).data || [] }
 const tradeTimeSlotOptions = ref([])
-const getTradeTimeSlotItem = async () => { tradeTimeSlotOptions.value = (await GetKeyAndValueByType("t_trial_trade_time_slot")).data || [] }
 const tradePositionOptions = ref([])
-const getTradePositionItem = async () => { tradePositionOptions.value = (await GetKeyAndValueByType("t_trial_trade_position")).data || [] }
 const tradePsychologyOptions = ref([])
-const getTradePsychologyItem = async () => { tradePsychologyOptions.value = (await GetKeyAndValueByType("t_trial_trade_psychology")).data || [] }
 const tradePlanMatchOptions = ref([])
-const getTradePlanMatchItem = async () => { tradePlanMatchOptions.value = (await GetKeyAndValueByType("t_trial_trade_plan_match")).data || [] }
 const tradeExecuteRatingOptions = ref([])
-const getTradeExecuteRatingItem = async () => { tradeExecuteRatingOptions.value = (await GetKeyAndValueByType("t_trial_trade_execute_rating")).data || [] }
 
 // 情绪温度标签类型
 const getEmotionTagType = (val) => {
@@ -2634,7 +2577,9 @@ const dailyReviewSelectedRows = ref([])
 const dailyReviewQueryDto = reactive({ reviewDateStart: null, reviewDateEnd: null, marketStatus: [], emotionTemp: [], adaptSystem: [] })
 const handleDailyReviewSelectionChange = (selection) => { dailyReviewSelectedRows.value = selection }
 
+const dailyReviewLoading = ref(false)
 const fetchDailyReviewData = async () => {
+  dailyReviewLoading.value = true
   try {
     const result = await GetDailyReviewByConditionAndPage(dailyReviewPageParams.page, dailyReviewPageParams.limit, dailyReviewQueryDto)
     if (result.code === 200) {
@@ -2642,6 +2587,7 @@ const fetchDailyReviewData = async () => {
       dailyReviewTotal.value = result.data.total || 0
     }
   } catch (e) { ElMessage.error("查询每日复盘失败") }
+  finally { dailyReviewLoading.value = false }
 }
 const searchDailyReviewData = () => {
   dailyReviewQueryDto.reviewDateStart = dailyReviewTimeArea.value?.[0] || null
@@ -2873,6 +2819,33 @@ const defaultDailyReviewForm = () => ({
 })
 const dailyReviewFormData = reactive(defaultDailyReviewForm())
 
+// 获取当日大盘实时数据并自动填充表单
+const marketDataLoading = ref(false)
+const fetchMarketData = async () => {
+  marketDataLoading.value = true
+  try {
+    const result = await FetchRealtimeMarketData()
+    if (result.code === 200 && result.data) {
+      const d = result.data
+      if (d.shChangePct != null) dailyReviewFormData.shChangePct = d.shChangePct
+      if (d.szChangePct != null) dailyReviewFormData.szChangePct = d.szChangePct
+      if (d.cybChangePct != null) dailyReviewFormData.cybChangePct = d.cybChangePct
+      if (d.totalAmount != null) dailyReviewFormData.totalAmount = d.totalAmount
+      if (d.riseCount != null) dailyReviewFormData.riseCount = d.riseCount
+      if (d.fallCount != null) dailyReviewFormData.fallCount = d.fallCount
+      if (d.limitUpCount != null) dailyReviewFormData.limitUpCount = d.limitUpCount
+      if (d.limitDownCount != null) dailyReviewFormData.limitDownCount = d.limitDownCount
+      ElMessage.success("实时数据已获取并填充")
+    } else {
+      ElMessage.error(result.message || "获取实时数据失败")
+    }
+  } catch (e) {
+    ElMessage.error("获取实时数据失败：" + e.message)
+  } finally {
+    marketDataLoading.value = false
+  }
+}
+
 // AI生成复盘总结
 const aiReviewLoading = ref(false)
 const aiGenerateReviewSummary = async () => {
@@ -2995,7 +2968,9 @@ const tradeRecordSelectedRows = ref([])
 const tradeRecordQueryDto = reactive({ stockName: '', stockCode: '', tradeDirection: [], psychology: [], tradeTimeStart: null, tradeTimeEnd: null, followPlan: [], executeRating: [] })
 const handleTradeRecordSelectionChange = (selection) => { tradeRecordSelectedRows.value = selection }
 
+const tradeRecordLoading = ref(false)
 const fetchTradeRecordData = async () => {
+  tradeRecordLoading.value = true
   try {
     const result = await GetTradeRecordByConditionAndPage(tradeRecordPageParams.page, tradeRecordPageParams.limit, tradeRecordQueryDto)
     if (result.code === 200) {
@@ -3003,6 +2978,7 @@ const fetchTradeRecordData = async () => {
       tradeRecordTotal.value = result.data.total || 0
     }
   } catch (e) { ElMessage.error("查询交易记录失败") }
+  finally { tradeRecordLoading.value = false }
 }
 const searchTradeRecordData = () => {
   tradeRecordQueryDto.tradeTimeStart = tradeRecordTimeArea.value?.[0] || null
@@ -3044,22 +3020,26 @@ watch(() => tradeRecordFormData.tradeDatetime, (val) => {
     tradeRecordFormData.reviewDate = val.substring(0, 10)
   }
 })
-// 方向2：复盘日期变更时，自动查询当天交易汇总并回填
-watch(() => dailyReviewFormData.reviewDate, async (val) => {
+// 方向2：复盘日期变更时，自动查询当天交易汇总并回填（300ms防抖避免快速切换日期频繁请求）
+let reviewDateDebounceTimer = null
+watch(() => dailyReviewFormData.reviewDate, (val) => {
   if (!val) return
-  try {
-    const result = await StatTradeByReviewDate(val)
-    if (result.code === 200 && result.data) {
-      const d = result.data
-      const tradeCount = Number(d.tradeCount || 0)
-      if (tradeCount > 0) {
-        dailyReviewFormData.tradeCount = tradeCount
-        dailyReviewFormData.winTradeCount = Number(d.winTradeCount || 0)
-        dailyReviewFormData.dailyProfitPct = Number(Number(d.totalProfitPct || 0).toFixed(2))
-        ElMessage.success("已自动汇总" + val + "交易数据：" + tradeCount + "笔，盈利" + (d.winTradeCount || 0) + "笔")
+  if (reviewDateDebounceTimer) clearTimeout(reviewDateDebounceTimer)
+  reviewDateDebounceTimer = setTimeout(async () => {
+    try {
+      const result = await StatTradeByReviewDate(val)
+      if (result.code === 200 && result.data) {
+        const d = result.data
+        const tradeCount = Number(d.tradeCount || 0)
+        if (tradeCount > 0) {
+          dailyReviewFormData.tradeCount = tradeCount
+          dailyReviewFormData.winTradeCount = Number(d.winTradeCount || 0)
+          dailyReviewFormData.dailyProfitPct = Number(Number(d.totalProfitPct || 0).toFixed(2))
+          ElMessage.success("已自动汇总" + val + "交易数据：" + tradeCount + "笔，盈利" + (d.winTradeCount || 0) + "笔")
+        }
       }
-    }
-  } catch (e) { /* 静默失败 */ }
+    } catch (e) { console.error('自动汇总交易数据失败:', e) }
+  }, DEBOUNCE_DELAY)
 })
 
 const addTradeRecord = () => {
@@ -3117,6 +3097,7 @@ const executeRatingChartRef = ref(null), planMatchChartRef = ref(null), stockCha
 const emotionVsWinChartRef = ref(null)
 
 
+const reviewReportLoading = ref(false)
 const fetchReviewReportData = async () => {
   const dto = {}
   if (reviewReportRange.value > 0) {
@@ -3125,6 +3106,7 @@ const fetchReviewReportData = async () => {
     dto.startTime = start.toISOString().slice(0, 10)
     dto.endTime = end.toISOString().slice(0, 10)
   }
+  reviewReportLoading.value = true
   try {
     const result = await GetReviewReport(dto)
     if (result.code === 200) {
@@ -3132,6 +3114,7 @@ const fetchReviewReportData = async () => {
       nextTick(() => renderReviewCharts())
     }
   } catch (e) { ElMessage.error("查询复盘分析失败") }
+  finally { reviewReportLoading.value = false }
 }
 
 // AI分析报告
@@ -3368,7 +3351,9 @@ const predQueryDto = reactive({
 })
 
 // 获取预测模拟数据
+const predLoading = ref(false)
 const fetchPredData = async () => {
+  predLoading.value = true
   try {
     const result = await GetPredictionByConditionAndPage(predPageParams.page, predPageParams.limit, predQueryDto)
     if (result.code === 200) {
@@ -3381,6 +3366,7 @@ const fetchPredData = async () => {
   } catch (error) {
     ElMessage.error("查询预测模拟数据失败")
   }
+  finally { predLoading.value = false }
 }
 
 // 搜索预测模拟
@@ -3467,8 +3453,9 @@ const aiPredict = async () => {
       if (result.data.predictionContent) predFormData.predictionContent = result.data.predictionContent
       if (result.data.predictionBasis) predFormData.predictionBasis = result.data.predictionBasis
       const now = new Date()
+      const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
       const pad = (n) => String(n).padStart(2, '0')
-      predFormData.predictionTime = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
+      predFormData.predictionTime = `${tomorrow.getFullYear()}-${pad(tomorrow.getMonth() + 1)}-${pad(tomorrow.getDate())} 15:00:00`
       predFormData.predictionSource = 2
       ElMessage.success("AI智能预测已生成，可编辑修改")
     } else {
@@ -3618,7 +3605,9 @@ const viewPredDetail = (row) => {
 // ==================== 模拟台账 ====================
 const ledgerList = ref([])
 
+const ledgerLoading = ref(false)
 const fetchLedgerData = async () => {
+  ledgerLoading.value = true
   try {
     const result = await GetSimulateLedgerList()
     if (result.code === 200) {
@@ -3626,7 +3615,9 @@ const fetchLedgerData = async () => {
     }
   } catch (error) {
     // 台账数据加载失败不影响页面
+    console.error('台账数据加载失败:', error)
   }
+  finally { ledgerLoading.value = false }
 }
 
 // 初始化账户
@@ -3784,9 +3775,11 @@ const reportDto = reactive({
 })
 const reportData = ref({})
 
+const reportLoading = ref(false)
 const fetchReportData = async () => {
   reportDto.startTime = reportTimeArea.value && reportTimeArea.value.length > 0 ? reportTimeArea.value[0] : null
   reportDto.endTime = reportTimeArea.value && reportTimeArea.value.length > 0 ? reportTimeArea.value[1] : null
+  reportLoading.value = true
   try {
     const result = await GetPredictionReport(reportDto)
     if (result.code === 200) {
@@ -3797,6 +3790,7 @@ const fetchReportData = async () => {
   } catch (error) {
     ElMessage.error("查询报表失败")
   }
+  finally { reportLoading.value = false }
 }
 
 const resetReportData = () => {
@@ -3881,7 +3875,9 @@ const drillDown = (params) => {
 }
 
 // 获取穿透明细数据
+const drillLoading = ref(false)
 const fetchDrillDetailData = async () => {
+  drillLoading.value = true
   try {
     const result = await GetPredictionDetailByCondition(drillPageParams.page, drillPageParams.limit, drillQueryDto)
     if (result.code === 200) {
@@ -3894,6 +3890,7 @@ const fetchDrillDetailData = async () => {
   } catch (error) {
     ElMessage.error("查询穿透明细失败")
   }
+  finally { drillLoading.value = false }
 }
 
 //=========================================================
@@ -3967,13 +3964,17 @@ const resetRuleData = () => {
 }
 
 // 获取规则数据
+const ruleLoading = ref(false)
 const fetchRuleData = async () => {
+  ruleLoading.value = true
   try {
     const result = await GetTransactionRuleList()
     ruleList.value = result.data || []
   } catch (error) {
     // 规则数据加载失败不影响页面
+    console.error('规则数据加载失败:', error)
   }
+  finally { ruleLoading.value = false }
 }
 
 // 规则选择变化
@@ -4130,7 +4131,9 @@ const queryDto = reactive({
 })
 
 // 获取数据
+const listLoading = ref(false)
 const fetchData = async () => {
+  listLoading.value = true
   try {
     const result = await GetTransactionSystemTrialByConditionAndPage(pageParams.page, pageParams.limit, queryDto)
     if (result.code === 200) {
@@ -4143,6 +4146,7 @@ const fetchData = async () => {
   } catch (error) {
     ElMessage.error("查询失败")
   }
+  finally { listLoading.value = false }
 }
 
 // 搜索
@@ -4938,7 +4942,7 @@ const showExportDialog = () => {
   transform: translateY(0) scale(0.98);
 }
 /* 表格内按钮美化 */
-/deep/ .el-table .el-button {
+:deep(.el-table .el-button) {
   border-radius: 6px;
   padding: 6px 12px;
   font-size: 12px;
@@ -4948,40 +4952,40 @@ const showExportDialog = () => {
   border: none;
 }
 
-/deep/ .el-table .el-button--primary {
+:deep(.el-table .el-button--primary) {
   background: linear-gradient(135deg, #409eff 0%, #66b1ff 100%);
   box-shadow: 0 2px 6px rgba(64, 158, 255, 0.3);
 }
 
-/deep/ .el-table .el-button--primary:hover {
+:deep(.el-table .el-button--primary:hover) {
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 4px 10px rgba(64, 158, 255, 0.4);
   background: linear-gradient(135deg, #337ecc 0%, #529ce3 100%);
 }
 
-/deep/ .el-table .el-button--danger {
+:deep(.el-table .el-button--danger) {
   background: linear-gradient(135deg, #F56C6C 0%, #f78989 100%);
   box-shadow: 0 2px 6px rgba(245, 108, 108, 0.3);
 }
 
-/deep/ .el-table .el-button--danger:hover {
+:deep(.el-table .el-button--danger:hover) {
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 4px 10px rgba(245, 108, 108, 0.4);
   background: linear-gradient(135deg, #d84646 0%, #f06b6b 100%);
 }
 
-/deep/ .el-table .el-button--info {
+:deep(.el-table .el-button--info) {
   background: linear-gradient(135deg, #909399 0%, #a6a9ad 100%);
   box-shadow: 0 2px 6px rgba(144, 147, 153, 0.3);
 }
 
-/deep/ .el-table .el-button--info:hover {
+:deep(.el-table .el-button--info:hover) {
   transform: translateY(-2px) scale(1.05);
   box-shadow: 0 4px 10px rgba(144, 147, 153, 0.4);
   background: linear-gradient(135deg, #73767a 0%, #8d9094 100%);
 }
 
-/deep/ .el-table .el-button:active {
+:deep(.el-table .el-button:active) {
   transform: translateY(0) scale(0.95);
 }
 
@@ -5025,27 +5029,27 @@ const showExportDialog = () => {
 }
 
 /* 表格样式 */
-/deep/ .el-table {
+:deep(.el-table) {
   background-color: #ffffff;
 }
 
-/deep/ .el-table th {
+:deep(.el-table th) {
   background: #fafbfc;
   color: #2c3e50;
   font-weight: 600;
   font-size: 14px;
 }
 
-/deep/ .el-table td {
+:deep(.el-table td) {
   font-size: 14px;
   background-color: #ffffff;
 }
 
-/deep/ .el-table--striped .el-table__body tr.el-table__row--striped td {
+:deep(.el-table--striped .el-table__body tr.el-table__row--striped td) {
   background-color: #fafbfc;
 }
 
-/deep/ .el-table__body tr:hover > td {
+:deep(.el-table__body tr:hover > td) {
   background-color: #e6f7ff !important;
 }
 /* 对话框样式 */
@@ -5122,12 +5126,12 @@ const showExportDialog = () => {
 }
 
 /* 分页组件样式 */
-/deep/ .el-pagination {
+:deep(.el-pagination) {
   justify-content: center;
 }
 
-/deep/ .el-pagination button,
-/deep/ .el-pagination .el-pager li {
+:deep(.el-pagination button),
+:deep(.el-pagination .el-pager li) {
   background-color: rgba(255, 255, 255, 0.9);
 }
 

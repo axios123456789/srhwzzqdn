@@ -1,0 +1,3 @@
+[   36420ms] [LOG] [vite] connecting... @ http://localhost:3001/@vite/client:183
+[   36986ms] [LOG] [vite] connected. @ http://localhost:3001/@vite/client:211
+[   38995ms] [WARNING] You are running the esm-bundler build of vue-i18n. It is recommended to configure your bundler to explicitly replace feature flag globals with boolean literals to get proper tree-shaking in the final bundle. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:2577

@@ -7,6 +7,7 @@ import com.xk.srhwzzqdn.manager.trialExecutionArea.mapper.PredictionSimulateMapp
 import com.xk.srhwzzqdn.manager.trialExecutionArea.service.PredictionSimulateService;
 import com.xk.srhwzzqdn.manager.util.AiCommonUtil;
 import com.xk.srhwzzqdn.manager.util.AiPromptUtil;
+import com.xk.srhwzzqdn.manager.util.StockQuoteUtil;
 import com.xk.srhwzzqdn.model.dto.trialExecutionArea.PredictionReportDto;
 import com.xk.srhwzzqdn.model.dto.trialExecutionArea.PredictionSimulateDto;
 import com.xk.srhwzzqdn.model.entity.trialExecutionArea.PredictionSimulate;
@@ -196,8 +197,11 @@ public class PredictionSimulateController {
                 historyRef.insert(0, String.format("该股票历史预测准确率：%d/%d=%.1f%%\n", correctCount, hasResultCount, correctCount * 100.0 / hasResultCount));
             }
 
+            // 获取当日实时行情数据（报价+K线+资金流向），注入提示词供AI分析
+            String realtimeData = StockQuoteUtil.getRealtimeMarketData(stockCode);
+
             String prompt = AiPromptUtil.buildPredictionPrompt(new Object[]{
-                    stockName, stockCode, historyRef.toString()
+                    stockName, stockCode, historyRef.toString(), realtimeData
             });
 
             String aiResult = aiCommonUtil.callWithSystem(AiPromptUtil.PREDICTION_SYSTEM, prompt);

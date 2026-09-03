@@ -1,0 +1,401 @@
+[    1974ms] [WARNING] [intlify] Not found '大脑管理' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1974ms] [WARNING] [intlify] Fall back to translate '大脑管理' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1975ms] [WARNING] [intlify] Not found '大脑管理' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1979ms] [WARNING] [intlify] Not found '账号管理' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1979ms] [WARNING] [intlify] Fall back to translate '账号管理' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1980ms] [WARNING] [intlify] Not found '账号管理' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1981ms] [WARNING] [intlify] Not found '角色管理' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1981ms] [WARNING] [intlify] Fall back to translate '角色管理' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1982ms] [WARNING] [intlify] Not found '角色管理' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1983ms] [WARNING] [intlify] Not found '大脑结构管理' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1983ms] [WARNING] [intlify] Fall back to translate '大脑结构管理' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1984ms] [WARNING] [intlify] Not found '大脑结构管理' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1985ms] [WARNING] [intlify] Not found '大脑字典' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1985ms] [WARNING] [intlify] Fall back to translate '大脑字典' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1986ms] [WARNING] [intlify] Not found '大脑字典' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1988ms] [WARNING] [intlify] Not found '记忆接收区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1989ms] [WARNING] [intlify] Fall back to translate '记忆接收区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1989ms] [WARNING] [intlify] Not found '记忆接收区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1992ms] [WARNING] [intlify] Not found '原始记忆接入' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1992ms] [WARNING] [intlify] Fall back to translate '原始记忆接入' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1993ms] [WARNING] [intlify] Not found '原始记忆接入' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1994ms] [WARNING] [intlify] Not found '工作记忆接入' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1995ms] [WARNING] [intlify] Fall back to translate '工作记忆接入' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1995ms] [WARNING] [intlify] Not found '工作记忆接入' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1996ms] [WARNING] [intlify] Not found '生活记忆接入' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1997ms] [WARNING] [intlify] Fall back to translate '生活记忆接入' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1997ms] [WARNING] [intlify] Not found '生活记忆接入' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1998ms] [WARNING] [intlify] Not found '娱乐记忆接入' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1998ms] [WARNING] [intlify] Fall back to translate '娱乐记忆接入' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    1999ms] [WARNING] [intlify] Not found '娱乐记忆接入' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2000ms] [WARNING] [intlify] Not found '交际记忆接入' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2000ms] [WARNING] [intlify] Fall back to translate '交际记忆接入' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2001ms] [WARNING] [intlify] Not found '交际记忆接入' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2002ms] [WARNING] [intlify] Not found '学习记忆接入' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2003ms] [WARNING] [intlify] Fall back to translate '学习记忆接入' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2003ms] [WARNING] [intlify] Not found '学习记忆接入' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2005ms] [WARNING] [intlify] Not found '记忆铭纂区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2005ms] [WARNING] [intlify] Fall back to translate '记忆铭纂区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2006ms] [WARNING] [intlify] Not found '记忆铭纂区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2008ms] [WARNING] [intlify] Not found '原始记忆铭纂' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2009ms] [WARNING] [intlify] Fall back to translate '原始记忆铭纂' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2009ms] [WARNING] [intlify] Not found '原始记忆铭纂' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2010ms] [WARNING] [intlify] Not found '工作记忆铭纂' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2011ms] [WARNING] [intlify] Fall back to translate '工作记忆铭纂' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2011ms] [WARNING] [intlify] Not found '工作记忆铭纂' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2012ms] [WARNING] [intlify] Not found '生活记忆铭纂' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2013ms] [WARNING] [intlify] Fall back to translate '生活记忆铭纂' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2013ms] [WARNING] [intlify] Not found '生活记忆铭纂' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2014ms] [WARNING] [intlify] Not found '娱乐记忆铭纂' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2015ms] [WARNING] [intlify] Fall back to translate '娱乐记忆铭纂' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2015ms] [WARNING] [intlify] Not found '娱乐记忆铭纂' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2016ms] [WARNING] [intlify] Not found '交际记忆铭纂' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2017ms] [WARNING] [intlify] Fall back to translate '交际记忆铭纂' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2017ms] [WARNING] [intlify] Not found '交际记忆铭纂' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2019ms] [WARNING] [intlify] Not found '学习记忆铭纂' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2019ms] [WARNING] [intlify] Fall back to translate '学习记忆铭纂' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2020ms] [WARNING] [intlify] Not found '学习记忆铭纂' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2021ms] [WARNING] [intlify] Not found '知识构建区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2022ms] [WARNING] [intlify] Fall back to translate '知识构建区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2022ms] [WARNING] [intlify] Not found '知识构建区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2025ms] [WARNING] [intlify] Not found '常识知识构建' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2026ms] [WARNING] [intlify] Fall back to translate '常识知识构建' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2026ms] [WARNING] [intlify] Not found '常识知识构建' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2027ms] [WARNING] [intlify] Not found '工作知识构建' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2028ms] [WARNING] [intlify] Fall back to translate '工作知识构建' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2028ms] [WARNING] [intlify] Not found '工作知识构建' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2029ms] [WARNING] [intlify] Not found '交际知识构建' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2029ms] [WARNING] [intlify] Fall back to translate '交际知识构建' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2030ms] [WARNING] [intlify] Not found '交际知识构建' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2031ms] [WARNING] [intlify] Not found '文化知识构建' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2031ms] [WARNING] [intlify] Fall back to translate '文化知识构建' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2031ms] [WARNING] [intlify] Not found '文化知识构建' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2033ms] [WARNING] [intlify] Not found '旁通知识构建' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2033ms] [WARNING] [intlify] Fall back to translate '旁通知识构建' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2033ms] [WARNING] [intlify] Not found '旁通知识构建' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2035ms] [WARNING] [intlify] Not found '知识提取区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2035ms] [WARNING] [intlify] Fall back to translate '知识提取区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2036ms] [WARNING] [intlify] Not found '知识提取区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2038ms] [WARNING] [intlify] Not found '常识知识提取' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2039ms] [WARNING] [intlify] Fall back to translate '常识知识提取' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2039ms] [WARNING] [intlify] Not found '常识知识提取' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2041ms] [WARNING] [intlify] Not found '工作知识提取' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2041ms] [WARNING] [intlify] Fall back to translate '工作知识提取' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2042ms] [WARNING] [intlify] Not found '工作知识提取' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2043ms] [WARNING] [intlify] Not found '交际知识提取' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2043ms] [WARNING] [intlify] Fall back to translate '交际知识提取' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2044ms] [WARNING] [intlify] Not found '交际知识提取' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2045ms] [WARNING] [intlify] Not found '文化知识提取' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2045ms] [WARNING] [intlify] Fall back to translate '文化知识提取' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2046ms] [WARNING] [intlify] Not found '文化知识提取' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2047ms] [WARNING] [intlify] Not found '旁通知识提取' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2048ms] [WARNING] [intlify] Fall back to translate '旁通知识提取' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2048ms] [WARNING] [intlify] Not found '旁通知识提取' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2050ms] [WARNING] [intlify] Not found '三观稳固区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2050ms] [WARNING] [intlify] Fall back to translate '三观稳固区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2051ms] [WARNING] [intlify] Not found '三观稳固区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2053ms] [WARNING] [intlify] Not found '精神拓扑构建' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2054ms] [WARNING] [intlify] Fall back to translate '精神拓扑构建' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2054ms] [WARNING] [intlify] Not found '精神拓扑构建' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2059ms] [WARNING] [intlify] Not found '三观聚类分析' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2059ms] [WARNING] [intlify] Fall back to translate '三观聚类分析' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2060ms] [WARNING] [intlify] Not found '三观聚类分析' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2061ms] [WARNING] [intlify] Not found '未来规划区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2062ms] [WARNING] [intlify] Fall back to translate '未来规划区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2062ms] [WARNING] [intlify] Not found '未来规划区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2064ms] [WARNING] [intlify] Not found '职业发展规划' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2065ms] [WARNING] [intlify] Fall back to translate '职业发展规划' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2065ms] [WARNING] [intlify] Not found '职业发展规划' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2067ms] [WARNING] [intlify] Not found '学习成长规划' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2067ms] [WARNING] [intlify] Fall back to translate '学习成长规划' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2068ms] [WARNING] [intlify] Not found '学习成长规划' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2069ms] [WARNING] [intlify] Not found '生活管理规划' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2070ms] [WARNING] [intlify] Fall back to translate '生活管理规划' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2070ms] [WARNING] [intlify] Not found '生活管理规划' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2072ms] [WARNING] [intlify] Not found '财务金融规划' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2072ms] [WARNING] [intlify] Fall back to translate '财务金融规划' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2072ms] [WARNING] [intlify] Not found '财务金融规划' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2074ms] [WARNING] [intlify] Not found '人际关系规划' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2075ms] [WARNING] [intlify] Fall back to translate '人际关系规划' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2075ms] [WARNING] [intlify] Not found '人际关系规划' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2077ms] [WARNING] [intlify] Not found '资产管制区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2077ms] [WARNING] [intlify] Fall back to translate '资产管制区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2077ms] [WARNING] [intlify] Not found '资产管制区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2079ms] [WARNING] [intlify] Not found '资产台账管理' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2080ms] [WARNING] [intlify] Fall back to translate '资产台账管理' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2080ms] [WARNING] [intlify] Not found '资产台账管理' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2082ms] [WARNING] [intlify] Not found '资产记账' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2082ms] [WARNING] [intlify] Fall back to translate '资产记账' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2083ms] [WARNING] [intlify] Not found '资产记账' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2084ms] [WARNING] [intlify] Not found '基金资产管理' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2084ms] [WARNING] [intlify] Fall back to translate '基金资产管理' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2084ms] [WARNING] [intlify] Not found '基金资产管理' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2086ms] [WARNING] [intlify] Not found '资产聚类分析' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2086ms] [WARNING] [intlify] Fall back to translate '资产聚类分析' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2087ms] [WARNING] [intlify] Not found '资产聚类分析' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2089ms] [WARNING] [intlify] Not found '人脉交际区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2089ms] [WARNING] [intlify] Fall back to translate '人脉交际区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2090ms] [WARNING] [intlify] Not found '人脉交际区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2092ms] [WARNING] [intlify] Not found '缘系人信息' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2092ms] [WARNING] [intlify] Fall back to translate '缘系人信息' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2093ms] [WARNING] [intlify] Not found '缘系人信息' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2094ms] [WARNING] [intlify] Not found '人际交流事件' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2094ms] [WARNING] [intlify] Fall back to translate '人际交流事件' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2094ms] [WARNING] [intlify] Not found '人际交流事件' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2095ms] [WARNING] [intlify] Not found '人格拓扑测绘' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2096ms] [WARNING] [intlify] Fall back to translate '人格拓扑测绘' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2096ms] [WARNING] [intlify] Not found '人格拓扑测绘' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2097ms] [WARNING] [intlify] Not found '想法闪停区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2098ms] [WARNING] [intlify] Fall back to translate '想法闪停区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2098ms] [WARNING] [intlify] Not found '想法闪停区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2099ms] [WARNING] [intlify] Not found '闪停光域' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2100ms] [WARNING] [intlify] Fall back to translate '闪停光域' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2100ms] [WARNING] [intlify] Not found '闪停光域' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2101ms] [WARNING] [intlify] Not found '闪停暗房' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2102ms] [WARNING] [intlify] Fall back to translate '闪停暗房' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2102ms] [WARNING] [intlify] Not found '闪停暗房' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2103ms] [WARNING] [intlify] Not found '闪停思维云图' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2104ms] [WARNING] [intlify] Fall back to translate '闪停思维云图' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2104ms] [WARNING] [intlify] Not found '闪停思维云图' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2105ms] [WARNING] [intlify] Not found '试验开展区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2105ms] [WARNING] [intlify] Fall back to translate '试验开展区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2106ms] [WARNING] [intlify] Not found '试验开展区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2107ms] [WARNING] [intlify] Not found '生活试验开展' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2108ms] [WARNING] [intlify] Fall back to translate '生活试验开展' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2108ms] [WARNING] [intlify] Not found '生活试验开展' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2110ms] [WARNING] [intlify] Not found '商业试验开展' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2110ms] [WARNING] [intlify] Fall back to translate '商业试验开展' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2110ms] [WARNING] [intlify] Not found '商业试验开展' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2111ms] [WARNING] [intlify] Not found '人性试验开展' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2112ms] [WARNING] [intlify] Fall back to translate '人性试验开展' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2112ms] [WARNING] [intlify] Not found '人性试验开展' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2113ms] [WARNING] [intlify] Not found '旁通试验开展' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2113ms] [WARNING] [intlify] Fall back to translate '旁通试验开展' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2114ms] [WARNING] [intlify] Not found '旁通试验开展' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2114ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2115ms] [WARNING] [intlify] Fall back to translate '交易系统试验' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2115ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2116ms] [WARNING] [intlify] Not found '个人观测区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2116ms] [WARNING] [intlify] Fall back to translate '个人观测区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2117ms] [WARNING] [intlify] Not found '个人观测区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2118ms] [WARNING] [intlify] Not found '基本情况观测' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2118ms] [WARNING] [intlify] Fall back to translate '基本情况观测' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2119ms] [WARNING] [intlify] Not found '基本情况观测' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2120ms] [WARNING] [intlify] Not found '精神层面观测' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2121ms] [WARNING] [intlify] Fall back to translate '精神层面观测' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2121ms] [WARNING] [intlify] Not found '精神层面观测' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2122ms] [WARNING] [intlify] Not found '知识层面观测' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2123ms] [WARNING] [intlify] Fall back to translate '知识层面观测' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2123ms] [WARNING] [intlify] Not found '知识层面观测' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2124ms] [WARNING] [intlify] Not found '资产动态观测' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2125ms] [WARNING] [intlify] Fall back to translate '资产动态观测' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2125ms] [WARNING] [intlify] Not found '资产动态观测' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2126ms] [WARNING] [intlify] Not found '人际关系观测' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2127ms] [WARNING] [intlify] Fall back to translate '人际关系观测' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2127ms] [WARNING] [intlify] Not found '人际关系观测' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2132ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2133ms] [WARNING] [intlify] Fall back to translate '交易系统试验' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2133ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2135ms] [WARNING] [intlify] Not found '首页' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2136ms] [WARNING] [intlify] Fall back to translate '首页' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2136ms] [WARNING] [intlify] Not found '首页' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2137ms] [WARNING] [intlify] Not found '试验开展区' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2137ms] [WARNING] [intlify] Fall back to translate '试验开展区' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2138ms] [WARNING] [intlify] Not found '试验开展区' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2138ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2138ms] [WARNING] [intlify] Fall back to translate '交易系统试验' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2138ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2160ms] [WARNING] ElementPlusError: [el-dialog] [Attribute] custom-class is about to be deprecated in version 2.3.0, please use class instead.
+For more detail, please visit: https://element-plus.org/en-US/component/dialog.html#attributes
+
+    at debugWarn (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333:37)
+    at watch.immediate (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9906:7)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18)
+    at callWithAsyncErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1358:17)
+    at job (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2619:9)
+    at doWatch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2652:7)
+    at watch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2529:10)
+    at useDeprecated (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9904:3)
+    at setup (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:27767:5)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18) @ http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333
+[    2177ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2177ms] [WARNING] [intlify] Fall back to translate '交易系统试验' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2177ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2240ms] [WARNING] ElementPlusError: [props] [API] type.text is about to be deprecated in version 3.0.0, please use link instead.
+For more detail, please visit: https://element-plus.org/en-US/component/button.html#button-attributes
+
+    at debugWarn (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333:37)
+    at watch.immediate (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9906:7)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18)
+    at callWithAsyncErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1358:17)
+    at job (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2619:9)
+    at doWatch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2652:7)
+    at watch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2529:10)
+    at useDeprecated (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9904:3)
+    at setup (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:16958:5)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18) @ http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333
+[    2815ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2816ms] [WARNING] [intlify] Fall back to translate '交易系统试验' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2816ms] [WARNING] [intlify] Not found '交易系统试验' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=f30033ef:59
+[    2867ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:3001/src/assets/memory/background.gif:0
+[    4810ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:9000/srhwzzqdn-bucket/20250615/26e0e467b68145078ea3e3308de0fefd%E4%B8%BB%E8%A7%92%E8%90%A7%E9%BA%9F.png:0
+[  242977ms] [LOG] [vite] hot updated: /src/views/trialExecutionArea/transactionSystemTrial.vue @ http://localhost:3001/@vite/client:463
+[  243184ms] [WARNING] ElementPlusError: [props] [API] type.text is about to be deprecated in version 3.0.0, please use link instead.
+For more detail, please visit: https://element-plus.org/en-US/component/button.html#button-attributes
+
+    at debugWarn (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333:37)
+    at watch.immediate (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9906:7)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18)
+    at callWithAsyncErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1358:17)
+    at job (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2619:9)
+    at doWatch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2652:7)
+    at watch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2529:10)
+    at useDeprecated (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9904:3)
+    at setup (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:16958:5)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18) @ http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333
+[  902937ms] [LOG] [vite] hot updated: /src/views/trialExecutionArea/transactionSystemTrial.vue @ http://localhost:3001/@vite/client:463
+[  903116ms] [WARNING] ElementPlusError: [props] [API] type.text is about to be deprecated in version 3.0.0, please use link instead.
+For more detail, please visit: https://element-plus.org/en-US/component/button.html#button-attributes
+
+    at debugWarn (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333:37)
+    at watch.immediate (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9906:7)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18)
+    at callWithAsyncErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1358:17)
+    at job (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2619:9)
+    at doWatch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2652:7)
+    at watch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2529:10)
+    at useDeprecated (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9904:3)
+    at setup (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:16958:5)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18) @ http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333
+[  904800ms] [LOG] [vite] hot updated: /src/views/trialExecutionArea/transactionSystemTrial.vue @ http://localhost:3001/@vite/client:463
+[  904939ms] [WARNING] ElementPlusError: [props] [API] type.text is about to be deprecated in version 3.0.0, please use link instead.
+For more detail, please visit: https://element-plus.org/en-US/component/button.html#button-attributes
+
+    at debugWarn (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333:37)
+    at watch.immediate (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9906:7)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18)
+    at callWithAsyncErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1358:17)
+    at job (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2619:9)
+    at doWatch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2652:7)
+    at watch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2529:10)
+    at useDeprecated (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9904:3)
+    at setup (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:16958:5)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18) @ http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333
+[ 1310642ms] [LOG] [vite] hot updated: /src/views/trialExecutionArea/transactionSystemTrial.vue @ http://localhost:3001/@vite/client:463
+[ 1310861ms] [WARNING] ElementPlusError: [props] [API] type.text is about to be deprecated in version 3.0.0, please use link instead.
+For more detail, please visit: https://element-plus.org/en-US/component/button.html#button-attributes
+
+    at debugWarn (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333:37)
+    at watch.immediate (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9906:7)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18)
+    at callWithAsyncErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1358:17)
+    at job (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2619:9)
+    at doWatch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2652:7)
+    at watch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2529:10)
+    at useDeprecated (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9904:3)
+    at setup (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:16958:5)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18) @ http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333
+[ 1312261ms] [LOG] [vite] hot updated: /src/views/trialExecutionArea/transactionSystemTrial.vue @ http://localhost:3001/@vite/client:463
+[ 1312427ms] [WARNING] ElementPlusError: [props] [API] type.text is about to be deprecated in version 3.0.0, please use link instead.
+For more detail, please visit: https://element-plus.org/en-US/component/button.html#button-attributes
+
+    at debugWarn (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333:37)
+    at watch.immediate (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9906:7)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18)
+    at callWithAsyncErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1358:17)
+    at job (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2619:9)
+    at doWatch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2652:7)
+    at watch (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:2529:10)
+    at useDeprecated (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9904:3)
+    at setup (http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:16958:5)
+    at callWithErrorHandling (http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1350:18) @ http://localhost:3001/node_modules/.vite/deps/element-plus.js?v=f30033ef:9333
+[ 1335579ms] [WARNING] [Vue warn]: Invalid prop: validation failed for prop "type". Expected one of ["success", "info", "warning", "danger", ""], got value "primary". 
+  at <ElTag type="primary" size="small" > 
+  at <ElTableBody context= {uid: 12762, vnode: Object, type: Object, parent: Object, appContext: Object} highlight=false row-class-name=undefined  ... > 
+  at <ElScrollbar ref="scrollBarRef" view-style= {display: inline-block, verticalAlign: middle} wrap-style= {height: 100%}  ... > 
+  at <ElTable data= [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] style= {width: 100%} height="500"  ... > 
+  at <ElTabPane label="每日复盘" name="dailyReview" > 
+  at <ElTabs modelValue="dailyReview" onUpdate:modelValue=fn class="main-tabs" > 
+  at <TransactionSystemTrial onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > key="/transactionSystemTrial" > 
+  at <KeepAlive include= [] > 
+  at <RouterView> 
+  at <Index> 
+  at <Layout onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > > 
+  at <RouterView> 
+  at <ElConfigProvider locale= {name: zh-cn, el: Object} > 
+  at <App> @ http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1248
+[ 1335581ms] [WARNING] [Vue warn]: Invalid prop: custom validator check failed for prop "type". 
+  at <ElTag type="primary" size="small" > 
+  at <ElTableBody context= {uid: 12762, vnode: Object, type: Object, parent: Object, appContext: Object} highlight=false row-class-name=undefined  ... > 
+  at <ElScrollbar ref="scrollBarRef" view-style= {display: inline-block, verticalAlign: middle} wrap-style= {height: 100%}  ... > 
+  at <ElTable data= [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] style= {width: 100%} height="500"  ... > 
+  at <ElTabPane label="每日复盘" name="dailyReview" > 
+  at <ElTabs modelValue="dailyReview" onUpdate:modelValue=fn class="main-tabs" > 
+  at <TransactionSystemTrial onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > key="/transactionSystemTrial" > 
+  at <KeepAlive include= [] > 
+  at <RouterView> 
+  at <Index> 
+  at <Layout onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > > 
+  at <RouterView> 
+  at <ElConfigProvider locale= {name: zh-cn, el: Object} > 
+  at <App> @ http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1248
+[ 1335640ms] [WARNING] [Vue warn]: Invalid prop: validation failed for prop "type". Expected one of ["success", "info", "warning", "danger", ""], got value "primary". 
+  at <ElTag type="primary" size="small" > 
+  at <ElTableBody context= {uid: 12762, vnode: Object, type: Object, parent: Object, appContext: Object} highlight=false row-class-name=undefined  ... > 
+  at <ElScrollbar ref="scrollBarRef" view-style= {display: inline-block, verticalAlign: middle} wrap-style= {height: 100%}  ... > 
+  at <ElTable data= [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] style= {width: 100%} height="500"  ... > 
+  at <ElTabPane label="每日复盘" name="dailyReview" > 
+  at <ElTabs modelValue="dailyReview" onUpdate:modelValue=fn class="main-tabs" > 
+  at <TransactionSystemTrial onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > key="/transactionSystemTrial" > 
+  at <KeepAlive include= [] > 
+  at <RouterView> 
+  at <Index> 
+  at <Layout onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > > 
+  at <RouterView> 
+  at <ElConfigProvider locale= {name: zh-cn, el: Object} > 
+  at <App> @ http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1248
+[ 1335641ms] [WARNING] [Vue warn]: Invalid prop: custom validator check failed for prop "type". 
+  at <ElTag type="primary" size="small" > 
+  at <ElTableBody context= {uid: 12762, vnode: Object, type: Object, parent: Object, appContext: Object} highlight=false row-class-name=undefined  ... > 
+  at <ElScrollbar ref="scrollBarRef" view-style= {display: inline-block, verticalAlign: middle} wrap-style= {height: 100%}  ... > 
+  at <ElTable data= [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] style= {width: 100%} height="500"  ... > 
+  at <ElTabPane label="每日复盘" name="dailyReview" > 
+  at <ElTabs modelValue="dailyReview" onUpdate:modelValue=fn class="main-tabs" > 
+  at <TransactionSystemTrial onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > key="/transactionSystemTrial" > 
+  at <KeepAlive include= [] > 
+  at <RouterView> 
+  at <Index> 
+  at <Layout onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > > 
+  at <RouterView> 
+  at <ElConfigProvider locale= {name: zh-cn, el: Object} > 
+  at <App> @ http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1248
+[ 1336325ms] [WARNING] [Vue warn]: Invalid prop: validation failed for prop "type". Expected one of ["success", "info", "warning", "danger", ""], got value "primary". 
+  at <ElTag type="primary" size="small" > 
+  at <ElTableBody context= {uid: 12762, vnode: Object, type: Object, parent: Object, appContext: Object} highlight=false row-class-name=undefined  ... > 
+  at <ElScrollbar ref="scrollBarRef" view-style= {display: inline-block, verticalAlign: middle} wrap-style= {height: 100%}  ... > 
+  at <ElTable data= [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] style= {width: 100%} height="500"  ... > 
+  at <ElTabPane label="每日复盘" name="dailyReview" > 
+  at <ElTabs modelValue="tradeRecord" onUpdate:modelValue=fn class="main-tabs" > 
+  at <TransactionSystemTrial onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > key="/transactionSystemTrial" > 
+  at <KeepAlive include= [] > 
+  at <RouterView> 
+  at <Index> 
+  at <Layout onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > > 
+  at <RouterView> 
+  at <ElConfigProvider locale= {name: zh-cn, el: Object} > 
+  at <App> @ http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1248
+[ 1336326ms] [WARNING] [Vue warn]: Invalid prop: custom validator check failed for prop "type". 
+  at <ElTag type="primary" size="small" > 
+  at <ElTableBody context= {uid: 12762, vnode: Object, type: Object, parent: Object, appContext: Object} highlight=false row-class-name=undefined  ... > 
+  at <ElScrollbar ref="scrollBarRef" view-style= {display: inline-block, verticalAlign: middle} wrap-style= {height: 100%}  ... > 
+  at <ElTable data= [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] style= {width: 100%} height="500"  ... > 
+  at <ElTabPane label="每日复盘" name="dailyReview" > 
+  at <ElTabs modelValue="tradeRecord" onUpdate:modelValue=fn class="main-tabs" > 
+  at <TransactionSystemTrial onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > key="/transactionSystemTrial" > 
+  at <KeepAlive include= [] > 
+  at <RouterView> 
+  at <Index> 
+  at <Layout onVnodeUnmounted=fn<onVnodeUnmounted> ref=Ref< Proxy(Object) > > 
+  at <RouterView> 
+  at <ElConfigProvider locale= {name: zh-cn, el: Object} > 
+  at <App> @ http://localhost:3001/node_modules/.vite/deps/chunk-R7DEWAWQ.js?v=f30033ef:1248

@@ -1,0 +1,12 @@
+[   77887ms] [LOG]  微服务平台鉴权失败:undefined @ http://localhost:8081/sgpms/mx/scripts/auth/Permission.js:186
+[   78624ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:8081/sgpms/mx/scripts/lib/jquery.js:3
+[   78661ms] [LOG]  微服务平台鉴权失败:undefined @ http://localhost:8081/sgpms/mx/scripts/auth/Permission.js:186
+[   78861ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:8081/sgpms/mx/scripts/lib/jquery.js:3
+[   78874ms] [LOG]  微服务平台鉴权失败:undefined @ http://localhost:8081/sgpms/mx/scripts/auth/Permission.js:186
+[   79079ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:8081/sgpms/mx/scripts/lib/jquery.js:3
+[   79109ms] [LOG]  微服务平台鉴权失败:undefined @ http://localhost:8081/sgpms/mx/scripts/auth/Permission.js:186
+[   79251ms] [ERROR] Failed to load resource: the server responded with a status of 401 (Unauthorized) @ http://localhost:8081/sgpms/mx/scripts/lib/jquery.js:3
+[   79864ms] [LOG]  微服务平台鉴权失败:undefined @ http://localhost:8081/sgpms/mx/scripts/auth/Permission.js:186
+[   80069ms] [LOG]  微服务平台鉴权失败:undefined @ http://localhost:8081/sgpms/mx/scripts/auth/Permission.js:186
+[   80148ms] [LOG] 初始化MX主题失败:TypeError: Cannot set properties of undefined (setting 'href') @ http://localhost:8081/sgpms/mx/scripts/lib/jquery-mx.js:14
+[   81151ms] [LOG]  微服务平台鉴权失败:undefined @ http://localhost:8081/sgpms/mx/scripts/auth/Permission.js:186

@@ -1,0 +1,32 @@
+- generic [active]:
+  - generic:
+    - generic:
+      - generic:
+        - img "background"
+      - generic:
+        - generic:
+          - heading "私人化外置增强大脑" [level=1]
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - textbox "外置大脑账号": xk123456789
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - textbox "连接密码": "123456"
+                  - generic [ref=e11] [cursor=pointer]
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - textbox "请输入大脑连接验证码"
+          - generic:
+            - generic:
+              - button "连接大脑"
+          - generic: 还未创建属于自己的外置大脑账号，注册一个？
+      - generic:
+        - generic:
+          - button

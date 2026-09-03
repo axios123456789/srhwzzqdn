@@ -56,3 +56,11 @@ export const AiAnalyzeTargets = data => {
     timeout: 900000,
   })
 }
+
+// 获取当日大盘实时数据（3大指数+涨跌家数统计）
+export const FetchRealtimeMarketData = () => {
+  return request({
+    url: base_api + '/fetchRealtimeMarketData',
+    method: 'get',
+  })
+}
