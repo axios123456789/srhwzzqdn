@@ -65,6 +65,6 @@ ai:
     endpoint: http://192.168.14.51:8080/v1/chat/completions
     model: glm-latest
     temperature: 0.7
-    max-tokens: 4096
+    max-tokens: 16384
     connect-timeout: 60000
     read-timeout: 900000
