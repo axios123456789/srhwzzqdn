@@ -263,10 +263,20 @@ public class AiCommonUtil {
                 printUsage(respJson.getJSONObject("usage"), "prompt_tokens", "completion_tokens", "total_tokens");
             }
             if (choices == null || choices.isEmpty()) { logger.warn("响应未找到choices字段"); return ""; }
-            JSONObject message = choices.getJSONObject(0).getJSONObject("message");
+            JSONObject choice0 = choices.getJSONObject(0);
+            JSONObject message = choice0.getJSONObject("message");
             if (message == null) { logger.warn("响应未找到message字段"); return ""; }
             String content = message.getString("content");
-            return content != null ? content : "";
+            if (content == null) content = "";
+            if (content.trim().isEmpty()) {
+                String reasoning = message.getString("reasoning_content");
+                if (reasoning != null && !reasoning.trim().isEmpty()) {
+                    logger.warn("content为空，回退使用reasoning_content | reasoning长度={} | finish_reason={}", reasoning.length(), choice0.getString("finish_reason"));
+                    return reasoning;
+                }
+                logger.warn("content和reasoning_content均为空 | finish_reason={} | messageKeys={}", choice0.getString("finish_reason"), message.keySet());
+            }
+            return content;
         } catch (Exception e) {
             logger.error("解析AI响应失败 | 原始响应前200字符: {}",
                     responseBody != null && responseBody.length() > 200 ? responseBody.substring(0, 200) : responseBody, e);

@@ -1175,12 +1175,17 @@
     </el-tabs>
 
     <!-- AI分析报告弹窗 -->
-    <el-dialog v-model="aiReportDialogVisible" title="🤖 AI 深度分析报告" width="70%" class="custom-dialog" :close-on-click-modal="false">
+    <el-dialog v-model="aiReportDialogVisible" title="🤖 AI 交易诊断报告" width="70%" class="custom-dialog" :close-on-click-modal="false">
+      <div class="ai-report-meta" v-if="aiReportContent">
+        <span>📊 数据范围：最近 {{ reviewReportRange }} 天</span>
+        <span>🕐 生成时间：{{ aiReportGenerateTime }}</span>
+      </div>
       <div v-if="aiReportContent" class="ai-report-content" v-html="renderMarkdown(aiReportContent)"></div>
       <el-empty v-else description="暂无报告内容" />
       <template #footer>
         <el-button @click="aiReportDialogVisible = false">关闭</el-button>
         <el-button type="primary" @click="copyReport">复制报告</el-button>
+        <el-button type="success" @click="downloadReport"><el-icon><Download /></el-icon> 下载Markdown</el-button>
       </template>
     </el-dialog>
 
@@ -1189,8 +1194,8 @@
       <el-form :model="dailyReviewFormData" ref="dailyReviewFormRef" label-width="120px" size="small">
         <div class="ai-fill-bar">
           <el-button type="primary" plain size="small" @click="smartFillAll"><el-icon><MagicStick /></el-icon> 智能填充</el-button>
-          <el-button type="success" plain size="small" :loading="marketDataLoading" @click="fetchMarketData"><el-icon><Download /></el-icon> 获取实时数据</el-button>
-          <span class="ai-fill-tip">获取当日大盘实时数据自动填充涨跌/成交额/涨跌家数；智能填充根据基础数据推荐市场状态→情绪温度→适配体系→仓位/止损止盈</span>
+          <el-button type="success" plain size="small" :loading="marketDataLoading" @click="fetchMarketData"><el-icon><Download /></el-icon> 获取市场数据</el-button>
+          <span class="ai-fill-tip">按复盘日期获取对应交易日市场数据自动填充涨跌/成交额/涨跌家数；智能填充根据基础数据推荐市场状态→情绪温度→适配体系→仓位/止损止盈</span>
         </div>
         <el-divider content-position="left">大盘环境</el-divider>
         <el-row :gutter="20">
@@ -2819,12 +2824,16 @@ const defaultDailyReviewForm = () => ({
 })
 const dailyReviewFormData = reactive(defaultDailyReviewForm())
 
-// 获取当日大盘实时数据并自动填充表单
+// 获取复盘日期对应交易日的市场数据并自动填充表单
 const marketDataLoading = ref(false)
 const fetchMarketData = async () => {
+  if (!dailyReviewFormData.reviewDate) {
+    ElMessage.warning("请先选择复盘日期")
+    return
+  }
   marketDataLoading.value = true
   try {
-    const result = await FetchRealtimeMarketData()
+    const result = await FetchRealtimeMarketData(dailyReviewFormData.reviewDate)
     if (result.code === 200 && result.data) {
       const d = result.data
       if (d.shChangePct != null) dailyReviewFormData.shChangePct = d.shChangePct
@@ -2835,12 +2844,18 @@ const fetchMarketData = async () => {
       if (d.fallCount != null) dailyReviewFormData.fallCount = d.fallCount
       if (d.limitUpCount != null) dailyReviewFormData.limitUpCount = d.limitUpCount
       if (d.limitDownCount != null) dailyReviewFormData.limitDownCount = d.limitDownCount
-      ElMessage.success("实时数据已获取并填充")
+      if (d.actualDate && d.actualDate !== dailyReviewFormData.reviewDate) {
+        ElMessage.warning("复盘日为非交易日，已填充最近交易日 " + d.actualDate + " 的市场数据")
+      } else if (d.riseCount == null || d.fallCount == null) {
+        ElMessage.success("已获取 " + dailyReviewFormData.reviewDate + " 市场数据并填充（上涨/下跌家数暂无历史数据源，请手动填写）")
+      } else {
+        ElMessage.success("已获取 " + dailyReviewFormData.reviewDate + " 市场数据并填充")
+      }
     } else {
-      ElMessage.error(result.message || "获取实时数据失败")
+      ElMessage.error(result.message || "获取市场数据失败")
     }
   } catch (e) {
-    ElMessage.error("获取实时数据失败：" + e.message)
+    ElMessage.error("获取市场数据失败：" + e.message)
   } finally {
     marketDataLoading.value = false
   }
@@ -3121,6 +3136,7 @@ const fetchReviewReportData = async () => {
 const aiReportLoading = ref(false)
 const aiReportDialogVisible = ref(false)
 const aiReportContent = ref('')
+const aiReportGenerateTime = ref('')
 const aiGenerateReport = async () => {
   aiReportLoading.value = true
   try {
@@ -3134,6 +3150,7 @@ const aiGenerateReport = async () => {
     const result = await AiGenerateReviewReport(dto)
     if (result.code === 200 && result.data?.report) {
       aiReportContent.value = result.data.report
+      aiReportGenerateTime.value = new Date().toLocaleString('zh-CN')
       aiReportDialogVisible.value = true
       ElMessage.success("AI分析报告已生成")
     } else {
@@ -3145,25 +3162,62 @@ const aiGenerateReport = async () => {
     aiReportLoading.value = false
   }
 }
-// 简易Markdown渲染
+// Markdown渲染（支持标题/加粗/列表/引用/代码/分割线/行内代码）
 const renderMarkdown = (md) => {
   if (!md) return ''
-  return md
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    .replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/^(?!<[hup])(.+)$/gm, '<p>$1</p>')
-    .replace(/<p><\/p>/g, '')
+  const escapeHtml = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  // 先按行处理块级元素
+  const lines = md.split('\n')
+  let html = ''
+  let inUl = false, inOl = false, inQuote = false, inCode = false
+  const closeLists = () => { if (inUl) { html += '</ul>'; inUl = false } if (inOl) { html += '</ol>'; inOl = false } }
+  const closeQuote = () => { if (inQuote) { html += '</blockquote>'; inQuote = false } }
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i]
+    // 代码块
+    if (line.trim().startsWith('```')) { closeLists(); closeQuote(); if (inCode) { html += '</code></pre>'; inCode = false } else { html += '<pre><code>'; inCode = true } continue }
+    if (inCode) { html += escapeHtml(line) + '\n'; continue }
+    // 标题
+    let m = line.match(/^### (.+)$/); if (m) { closeLists(); closeQuote(); html += `<h3>${inline(m[1])}</h3>`; continue }
+    m = line.match(/^## (.+)$/); if (m) { closeLists(); closeQuote(); html += `<h2>${inline(m[1])}</h2>`; continue }
+    m = line.match(/^# (.+)$/); if (m) { closeLists(); closeQuote(); html += `<h1>${inline(m[1])}</h1>`; continue }
+    // 分割线
+    if (/^---+\s*$/.test(line)) { closeLists(); closeQuote(); html += '<hr/>'; continue }
+    // 引用
+    m = line.match(/^> (.+)$/); if (m) { closeLists(); if (!inQuote) { html += '<blockquote>'; inQuote = true } html += `<p>${inline(m[1])}</p>`; continue }
+    // 无序列表
+    m = line.match(/^- (.+)$/); if (m) { closeQuote(); if (inOl) { html += '</ol>'; inOl = false } if (!inUl) { html += '<ul>'; inUl = true } html += `<li>${inline(m[1])}</li>`; continue }
+    // 有序列表
+    m = line.match(/^\d+\. (.+)$/); if (m) { closeQuote(); if (inUl) { html += '</ul>'; inUl = false } if (!inOl) { html += '<ol>'; inOl = true } html += `<li>${inline(m[1])}</li>`; continue }
+    // 空行
+    if (line.trim() === '') { closeLists(); closeQuote(); continue }
+    // 普通段落
+    closeLists(); closeQuote(); html += `<p>${inline(line)}</p>`
+  }
+  closeLists(); closeQuote(); if (inCode) html += '</code></pre>'
+  function inline(s) {
+    return escapeHtml(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/`(.+?)`/g, '<code>$1</code>')
+  }
+  return html
 }
 const copyReport = () => {
   navigator.clipboard.writeText(aiReportContent.value).then(() => {
     ElMessage.success("已复制到剪贴板")
   }).catch(() => ElMessage.error("复制失败"))
 }
+const downloadReport = () => {
+  if (!aiReportContent.value) return
+  const header = `# AI 交易诊断报告\n\n> 数据范围：最近 ${reviewReportRange.value} 天\n> 生成时间：${aiReportGenerateTime.value}\n\n---\n\n`
+  const blob = new Blob([header + aiReportContent.value], { type: 'text/markdown;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `AI交易诊断报告_${new Date().toISOString().slice(0, 10)}.md`
+  a.click()
+  URL.revokeObjectURL(url)
+  ElMessage.success("报告已下载")
+}
+
 
 // 通用图表初始化
 const initChart = (domRef, option) => {
@@ -5283,20 +5337,38 @@ const showExportDialog = () => {
   text-align: center;
 }
 
+.ai-report-meta {
+  display: flex;
+  gap: 24px;
+  padding: 8px 16px;
+  margin-bottom: 4px;
+  background: rgba(64, 158, 255, 0.08);
+  border-radius: 4px;
+  color: #909399;
+  font-size: 13px;
+}
 .ai-report-content {
   max-height: 60vh;
   overflow-y: auto;
-  padding: 8px 16px;
-  line-height: 1.8;
+  padding: 12px 16px;
+  line-height: 1.85;
   color: #e0e0e0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
 }
-.ai-report-content h1 { font-size: 20px; color: #409EFF; margin: 16px 0 8px; border-bottom: 1px solid #3a3a5c; padding-bottom: 6px; }
-.ai-report-content h2 { font-size: 17px; color: #67C23A; margin: 14px 0 6px; }
-.ai-report-content h3 { font-size: 15px; color: #E6A23C; margin: 10px 0 4px; }
-.ai-report-content p { margin: 6px 0; }
-.ai-report-content ul { margin: 6px 0 6px 20px; }
-.ai-report-content li { margin: 3px 0; }
-.ai-report-content strong { color: #F56C6C; }
+
+.ai-report-content h1 { font-size: 20px; color: #409EFF; margin: 18px 0 10px; border-bottom: 1px solid #3a3a5c; padding-bottom: 6px; }
+.ai-report-content h2 { font-size: 17px; color: #67C23A; margin: 16px 0 8px; padding-left: 8px; border-left: 3px solid #67C23A; }
+.ai-report-content h3 { font-size: 15px; color: #E6A23C; margin: 12px 0 6px; }
+.ai-report-content p { margin: 8px 0; }
+.ai-report-content ul, .ai-report-content ol { margin: 8px 0 8px 22px; }
+.ai-report-content li { margin: 4px 0; }
+.ai-report-content strong { color: #F56C6C; font-weight: 600; }
+.ai-report-content code { background: #2d2d44; color: #E6A23C; padding: 1px 5px; border-radius: 3px; font-size: 13px; }
+.ai-report-content pre { background: #1e1e2e; padding: 10px 12px; border-radius: 4px; overflow-x: auto; margin: 8px 0; }
+.ai-report-content pre code { background: none; color: #e0e0e0; padding: 0; }
+.ai-report-content blockquote { border-left: 3px solid #409EFF; padding: 4px 12px; margin: 8px 0; color: #b0b0b0; background: rgba(64, 158, 255, 0.05); border-radius: 0 4px 4px 0; }
+.ai-report-content hr { border: none; border-top: 1px dashed #3a3a5c; margin: 14px 0; }
 
 .review-kpi-row {
   margin-bottom: 12px;

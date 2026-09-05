@@ -188,17 +188,23 @@ public class DailyReviewController {
     }
 
     /**
-     * 获取当日大盘实时数据（3大指数涨跌幅+两市成交额+涨跌家数统计）
+     * 获取市场数据（3大指数涨跌幅+两市成交额+涨跌家数统计）
+     * 不传date：获取当天实时数据；传date（yyyy-MM-dd）：获取复盘日期对应交易日的数据
      * 用于每日复盘表单自动填充
      */
     @GetMapping("/fetchRealtimeMarketData")
-    public Result fetchRealtimeMarketData() {
+    public Result fetchRealtimeMarketData(@RequestParam(value = "date", required = false) String date) {
         try {
-            JSONObject data = StockQuoteUtil.getMarketOverview();
+            JSONObject data;
+            if (date == null || date.trim().isEmpty()) {
+                data = StockQuoteUtil.getMarketOverview();
+            } else {
+                data = StockQuoteUtil.getMarketOverviewByDate(date.trim());
+            }
             return Result.build(data, ResultCodeEnum.SUCCESS);
         } catch (Exception e) {
-            logger.error("获取大盘实时数据失败", e);
-            return Result.build(null, 500, "获取实时数据失败：" + e.getMessage());
+            logger.error("获取大盘数据失败", e);
+            return Result.build(null, 500, "获取市场数据失败：" + e.getMessage());
         }
     }
 

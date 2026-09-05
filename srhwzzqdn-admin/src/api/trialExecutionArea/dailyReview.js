@@ -57,10 +57,12 @@ export const AiAnalyzeTargets = data => {
   })
 }
 
-// 获取当日大盘实时数据（3大指数+涨跌家数统计）
-export const FetchRealtimeMarketData = () => {
+// 获取大盘市场数据（3大指数+涨跌家数统计）
+// 传入date（yyyy-MM-dd）则获取该日期对应交易日的数据，不传获取当天实时数据
+export const FetchRealtimeMarketData = date => {
+  const query = date ? '?date=' + date : ''
   return request({
-    url: base_api + '/fetchRealtimeMarketData',
+    url: base_api + '/fetchRealtimeMarketData' + query,
     method: 'get',
   })
 }

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 
 /**
  * 股票实时行情数据获取工具
@@ -230,8 +231,22 @@ public class StockQuoteUtil {
         } else {
             result.put("totalAmount", null);
         }
-        // 涨跌家数统计：通过 clist 接口获取所有A股涨跌幅
-        int riseCount = 0, fallCount = 0, limitUpCount = 0, limitDownCount = 0;
+        // 涨跌家数统计（实时）
+        result.putAll(fetchRiseFallCountRealtime());
+        // 涨停/跌停家数（涨停池/跌停池接口，数据更准确）
+        String todayYyyymmdd = LocalDate.now().toString().replace("-", "");
+        result.put("limitUpCount", fetchTopicPoolCount("ZTPool", todayYyyymmdd));
+        result.put("limitDownCount", fetchTopicPoolCount("DTPool", todayYyyymmdd));
+        return result;
+    }
+
+    /**
+     * 实时涨跌家数统计
+     * clist 接口 fltt=2 时 f3 已是百分比数值（如 5.23），无需再除以100
+     */
+    private static JSONObject fetchRiseFallCountRealtime() {
+        JSONObject stat = new JSONObject();
+        int riseCount = 0, fallCount = 0;
         String clistUrl = "http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2" +
                 "&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f3";
         String body = httpGet(clistUrl);
@@ -244,13 +259,9 @@ public class StockQuoteUtil {
                     if (diff != null) {
                         for (int i = 0; i < diff.size(); i++) {
                             JSONObject item = diff.getJSONObject(i);
-                            BigDecimal pct = new BigDecimal(item.get("f3").toString())
-                                    .divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP);
-                            double p = pct.doubleValue();
+                            double p = Double.parseDouble(item.get("f3").toString());
                             if (p > 0) riseCount++;
                             else if (p < 0) fallCount++;
-                            if (p >= 9.9) limitUpCount++;
-                            else if (p <= -9.9) limitDownCount++;
                         }
                     }
                 }
@@ -258,10 +269,121 @@ public class StockQuoteUtil {
                 logger.error("解析涨跌家数统计失败", e);
             }
         }
-        result.put("riseCount", riseCount);
-        result.put("fallCount", fallCount);
-        result.put("limitUpCount", limitUpCount);
-        result.put("limitDownCount", limitDownCount);
+        stat.put("riseCount", riseCount);
+        stat.put("fallCount", fallCount);
+        return stat;
+    }
+
+    /**
+     * 获取指定日期涨停/跌停家数（东方财富涨停池/跌停池接口，支持历史日期）
+     * @param poolType ZTPool=涨停池，DTPool=跌停池
+     * @param yyyymmdd 日期（yyyyMMdd）
+     * @return 家数，获取失败返回 null
+     */
+    private static Integer fetchTopicPoolCount(String poolType, String yyyymmdd) {
+        String url = "http://push2ex.eastmoney.com/getTopic" + poolType +
+                "?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=1&sort=fbt%3Aasc&date=" + yyyymmdd;
+        String body = httpGet(url);
+        if (body == null) return null;
+        try {
+            JSONObject json = JSON.parseObject(body);
+            JSONObject d = json.getJSONObject("data");
+            if (d == null) return null;
+            return d.getInteger("tc");
+        } catch (Exception e) {
+            logger.error("解析涨停/跌停池失败: {}", poolType, e);
+            return null;
+        }
+    }
+
+    /**
+     * 按日期获取A股大盘概览（每日复盘用）
+     * 指数涨跌幅/成交额：东方财富日K线历史接口，定位复盘日期或其之前最近交易日
+     * 涨停/跌停家数：涨停池/跌停池接口（支持历史日期）
+     * 上涨/下跌家数：仅复盘日为当天时可实时统计，历史日期无公开数据源返回 null（前端不覆盖）
+     * 返回额外字段 actualDate：实际数据日期（复盘日为非交易日时为最近一个交易日）
+     */
+    public static JSONObject getMarketOverviewByDate(String dateStr) {
+        JSONObject result = new JSONObject();
+        LocalDate targetDate;
+        try {
+            targetDate = LocalDate.parse(dateStr);
+        } catch (Exception e) {
+            targetDate = LocalDate.now();
+        }
+        // 未来日期按当天处理
+        if (targetDate.isAfter(LocalDate.now())) {
+            targetDate = LocalDate.now();
+        }
+        String target = targetDate.toString();
+        // 3大指数按日期取K线涨跌幅与成交额（首个定位成功的指数确定实际交易日）
+        fetchIndexDataByDate(result, "1.000001", target, "shChangePct", "shAmount");
+        fetchIndexDataByDate(result, "0.399001", target, "szChangePct", "szAmount");
+        fetchIndexDataByDate(result, "0.399006", target, "cybChangePct", null);
+        // 两市成交额合计（亿元）
+        Double shAmount = result.getDouble("shAmount");
+        Double szAmount = result.getDouble("szAmount");
+        if (shAmount != null && szAmount != null) {
+            result.put("totalAmount", new BigDecimal(shAmount + szAmount).setScale(2, RoundingMode.HALF_UP).doubleValue());
+        } else {
+            result.put("totalAmount", null);
+        }
+        result.remove("shAmount");
+        result.remove("szAmount");
+        // 涨停/跌停家数（按目标日期）
+        String yyyymmdd = target.replace("-", "");
+        result.put("limitUpCount", fetchTopicPoolCount("ZTPool", yyyymmdd));
+        result.put("limitDownCount", fetchTopicPoolCount("DTPool", yyyymmdd));
+        // 上涨/下跌家数：仅当天可实时统计
+        if (target.equals(LocalDate.now().toString())) {
+            result.putAll(fetchRiseFallCountRealtime());
+        } else {
+            result.put("riseCount", null);
+            result.put("fallCount", null);
+        }
+        // 实际交易日兜底（所有指数K线定位失败时）
+        if (!result.containsKey("actualDate")) {
+            result.put("actualDate", target);
+        }
         return result;
+    }
+
+    /**
+     * 从日K线定位目标日期（或其之前最近交易日），填充指数涨跌幅(f59)与成交额(f57)
+     * 首次定位成功时将实际交易日写入 result.actualDate
+     * klines 每根格式：[0]日期 [1]开盘 [2]收盘 [3]最高 [4]最低 [5]成交量 [6]成交额 [7]振幅 [8]涨跌幅
+     */
+    private static void fetchIndexDataByDate(JSONObject result, String secid, String target, String pctKey, String amountKey) {
+        String url = KLINE_URL + "?secid=" + secid +
+                "&klt=101&fqt=1&end=20500101&lmt=80" +
+                "&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59";
+        String body = httpGet(url);
+        if (body == null) return;
+        try {
+            JSONObject json = JSON.parseObject(body);
+            JSONObject d = json.getJSONObject("data");
+            if (d == null) return;
+            JSONArray klines = d.getJSONArray("klines");
+            if (klines == null || klines.isEmpty()) return;
+            // 定位日期 <= target 的最后一根K线
+            int idx = -1;
+            for (int i = 0; i < klines.size(); i++) {
+                String kDate = klines.getString(i).split(",")[0];
+                if (kDate.compareTo(target) <= 0) idx = i;
+                else break;
+            }
+            if (idx < 0) return;
+            String[] cur = klines.getString(idx).split(",");
+            if (!result.containsKey("actualDate")) {
+                result.put("actualDate", cur[0]);
+            }
+            result.put(pctKey, new BigDecimal(cur[8]).setScale(2, RoundingMode.HALF_UP).doubleValue());
+            if (amountKey != null) {
+                result.put(amountKey, new BigDecimal(cur[6])
+                        .divide(new BigDecimal("100000000"), 2, RoundingMode.HALF_UP).doubleValue());
+            }
+        } catch (Exception e) {
+            logger.error("按日期解析指数K线失败: {}", secid, e);
+        }
     }
 }
