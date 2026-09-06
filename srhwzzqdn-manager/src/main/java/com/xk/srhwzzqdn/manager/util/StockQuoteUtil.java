@@ -87,8 +87,8 @@ public class StockQuoteUtil {
             sb.append("股票名称：").append(d.getString("f58")).append("\n");
             sb.append("股票代码：").append(d.getString("f57")).append("\n");
             sb.append("最新价：").append(div100(d.get("f43"))).append(" 元\n");
-            sb.append("涨跌额：").append(div100(d.get("f170"))).append(" 元\n");
-            sb.append("涨跌幅：").append(div100(d.get("f169"))).append("%\n");
+            sb.append("涨跌额：").append(div100(d.get("f169"))).append(" 元\n");
+            sb.append("涨跌幅：").append(div100(d.get("f170"))).append("%\n");
             sb.append("今开：").append(div100(d.get("f46"))).append(" 元\n");
             sb.append("最高：").append(div100(d.get("f44"))).append(" 元\n");
             sb.append("最低：").append(div100(d.get("f45"))).append(" 元\n");

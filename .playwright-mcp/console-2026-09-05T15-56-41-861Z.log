@@ -1,0 +1,2 @@
+[      12ms] [WARNING] [Vue Router warn]: uncaught error during route navigation: @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[      12ms] [ERROR] TypeError: Failed to fetch dynamically imported module: http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:2334

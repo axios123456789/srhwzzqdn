@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-18">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="试验开展区-交易系统试验-19">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/trialExecutionArea/transactionSystemTrial.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/ReviewReportController.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/trialExecutionArea/controller/ReviewReportController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/AiCommonUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/util/AiCommonUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/router/modules/assetControlArea.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/router/modules/assetControlArea.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/util/StockQuoteUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/util/StockQuoteUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -539,13 +539,7 @@
       <workItem from="1788309250982" duration="993000" />
       <workItem from="1788347804433" duration="658000" />
       <workItem from="1788395589586" duration="423000" />
-    </task>
-    <task id="LOCAL-00116" summary="基金资产管理-22">
-      <created>1778161989390</created>
-      <option name="number" value="00116" />
-      <option name="presentableId" value="LOCAL-00116" />
-      <option name="project" value="LOCAL" />
-      <updated>1778161989390</updated>
+      <workItem from="1788658401482" duration="1923000" />
     </task>
     <task id="LOCAL-00117" summary="基金资产管理-23">
       <created>1778338946030</created>
@@ -883,7 +877,14 @@
       <option name="project" value="LOCAL" />
       <updated>1788603137382</updated>
     </task>
-    <option name="localTasksCounter" value="165" />
+    <task id="LOCAL-00165" summary="试验开展区-交易系统试验-19">
+      <created>1788614875834</created>
+      <option name="number" value="00165" />
+      <option name="presentableId" value="LOCAL-00165" />
+      <option name="project" value="LOCAL" />
+      <updated>1788614875834</updated>
+    </task>
+    <option name="localTasksCounter" value="166" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -902,7 +903,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="基金资产管理-44" />
     <MESSAGE value="基金资产管理-45" />
     <MESSAGE value="基金资产管理-46" />
     <MESSAGE value="基金资产管理-47" />
@@ -927,7 +927,8 @@
     <MESSAGE value="试验开展区-交易系统试验-15" />
     <MESSAGE value="试验开展区-交易系统试验-16" />
     <MESSAGE value="试验开展区-交易系统试验-18" />
-    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-18" />
+    <MESSAGE value="试验开展区-交易系统试验-19" />
+    <option name="LAST_COMMIT_MESSAGE" value="试验开展区-交易系统试验-19" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

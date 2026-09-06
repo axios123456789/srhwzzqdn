@@ -7,6 +7,8 @@ const assetClusteringAnalysis = () =>
   import('@/views/assetControlArea/assetClusteringAnalysis.vue')
 const fundAssetManagement = () =>
   import('@/views/assetControlArea/fundAssetManagement.vue')
+const stockAssetManagement = () =>
+  import('@/views/assetControlArea/stockAssetManagement.vue')
 
 // 导出该组件
 export default [
@@ -48,6 +50,16 @@ export default [
         },
         //基金资产管理图标
         icon: 'finished',
+        hidden: false,
+      },
+      {
+        path: '/stockAssetManagement',
+        name: 'stockAssetManagement',
+        component: stockAssetManagement,
+        meta: {
+          title: '股票资产管理',
+        },
+        icon: 'Histogram',
         hidden: false,
       },
       {

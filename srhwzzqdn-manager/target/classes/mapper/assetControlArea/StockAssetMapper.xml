@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.assetControlArea.mapper.StockAssetMapper">
+
+    <insert id="addStockBasic">
+        insert into t_stock_basic(
+            stock_code, stock_name, market, industry, sector, concept_sectors, list_date,
+            total_shares, circ_shares, total_market_cap, circ_market_cap,
+            pe_static, pe_dynamic, pe_ttm, pb_ratio, ps_ratio, dividend_yield, peg_ratio, ev_ebitda,
+            last_price, change_pct, change_amount, turnover_rate, volume_ratio, amplitude,
+            bid_ratio, bid_diff, inner_volume, outer_volume, turnover, volume,
+            legal_rep, general_manager, registered_addr, office_addr, company_desc, business_scope, main_business,
+            create_time, create_by
+        ) values (
+            #{stockCode}, #{stockName}, #{market}, #{industry}, #{sector}, #{conceptSectors}, #{listDate},
+            #{totalShares}, #{circShares}, #{totalMarketCap}, #{circMarketCap},
+            #{peStatic}, #{peDynamic}, #{peTtm}, #{pbRatio}, #{psRatio}, #{dividendYield}, #{pegRatio}, #{evEbitda},
+            #{lastPrice}, #{changePct}, #{changeAmount}, #{turnoverRate}, #{volumeRatio}, #{amplitude},
+            #{bidRatio}, #{bidDiff}, #{innerVolume}, #{outerVolume}, #{turnover}, #{volume},
+            #{legalRep}, #{generalManager}, #{registeredAddr}, #{officeAddr}, #{companyDesc}, #{businessScope}, #{mainBusiness},
+            now(), #{createBy}
+        )
+    </insert>
+
+    <update id="updateStockBasic">
+        update t_stock_basic set
+            stock_name=#{stockName}, market=#{market}, industry=#{industry}, sector=#{sector},
+            concept_sectors=#{conceptSectors}, list_date=#{listDate},
+            total_shares=#{totalShares}, circ_shares=#{circShares},
+            total_market_cap=#{totalMarketCap}, circ_market_cap=#{circMarketCap},
+            pe_static=#{peStatic}, pe_dynamic=#{peDynamic}, pe_ttm=#{peTtm},
+            pb_ratio=#{pbRatio}, ps_ratio=#{psRatio}, dividend_yield=#{dividendYield},
+            peg_ratio=#{pegRatio}, ev_ebitda=#{evEbitda},
+            last_price=#{lastPrice}, change_pct=#{changePct}, change_amount=#{changeAmount},
+            turnover_rate=#{turnoverRate}, volume_ratio=#{volumeRatio}, amplitude=#{amplitude},
+            bid_ratio=#{bidRatio}, bid_diff=#{bidDiff}, inner_volume=#{innerVolume},
+            outer_volume=#{outerVolume}, turnover=#{turnover}, volume=#{volume},
+            legal_rep=#{legalRep}, general_manager=#{generalManager},
+            registered_addr=#{registeredAddr}, office_addr=#{officeAddr},
+            company_desc=#{companyDesc}, business_scope=#{businessScope}, main_business=#{mainBusiness},
+            update_time=now(), update_by=#{updateBy}
+        where stock_code=#{stockCode}
+    </update>
+
+    <!-- 实时刷新专用：只更新行情相关字段，避免覆盖行业/公司信息等 -->
+    <update id="updateStockRealtime">
+        update t_stock_basic set
+            stock_name=#{stockName},
+            total_shares=#{totalShares}, circ_shares=#{circShares},
+            total_market_cap=#{totalMarketCap}, circ_market_cap=#{circMarketCap},
+            pe_static=#{peStatic}, pe_dynamic=#{peDynamic}, pe_ttm=#{peTtm},
+            pb_ratio=#{pbRatio},
+            last_price=#{lastPrice}, change_pct=#{changePct}, change_amount=#{changeAmount},
+            turnover_rate=#{turnoverRate}, volume_ratio=#{volumeRatio}, amplitude=#{amplitude},
+            turnover=#{turnover}, volume=#{volume},
+            update_time=now(), update_by=#{updateBy}
+        where stock_code=#{stockCode}
+    </update>
+
+    <select id="getStockListByCondition" resultType="com.xk.srhwzzqdn.model.entity.assetControl.StockBasic">
+        select * from t_stock_basic where 1=1
+        <if test="stockName != null and stockName != ''">
+            and stock_name like concat('%', #{stockName}, '%')
+        </if>
+        <if test="stockCode != null and stockCode != ''">
+            and stock_code like concat('%', #{stockCode}, '%')
+        </if>
+        <if test="industry != null and industry != ''">
+            and industry like concat('%', #{industry}, '%')
+        </if>
+        <if test="market != null">
+            and market = #{market}
+        </if>
+        order by ifnull(update_time, create_time) desc
+    </select>
+
+    <insert id="batchAddStockKline">
+        insert into t_stock_kline(
+            stock_code, trade_date, kline_type, open_price, close_price, high_price, low_price,
+            volume, turnover, amplitude, change_pct, change_amount, turnover_rate, create_time
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.stockCode}, #{item.tradeDate}, #{item.klineType}, #{item.openPrice}, #{item.closePrice},
+             #{item.highPrice}, #{item.lowPrice}, #{item.volume}, #{item.turnover}, #{item.amplitude},
+             #{item.changePct}, #{item.changeAmount}, #{item.turnoverRate}, now())
+        </foreach>
+    </insert>
+
+    <insert id="batchAddStockFinance">
+        insert into t_stock_finance(
+            stock_code, report_date, revenue, revenue_yoy, operating_profit, net_profit, net_profit_yoy,
+            deduct_net_profit, total_assets, total_liabilities, total_equity, accounts_receivable,
+            inventory, prepayment, goodwill, intangible_assets, fixed_assets, construction_in_progress,
+            short_term_loan, long_term_loan, accounts_payable, advance_receipts,
+            operating_cash_flow, investing_cash_flow, financing_cash_flow, free_cash_flow,
+            gross_margin, net_margin, roe, roa, roic, debt_ratio, current_ratio, quick_ratio,
+            eps, bps, cashflow_per_share, revenue_growth_1y, profit_growth_1y, asset_growth, equity_growth,
+            create_time
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.stockCode}, #{item.reportDate}, #{item.revenue}, #{item.revenueYoy}, #{item.operatingProfit},
+             #{item.netProfit}, #{item.netProfitYoy}, #{item.deductNetProfit}, #{item.totalAssets},
+             #{item.totalLiabilities}, #{item.totalEquity}, #{item.accountsReceivable}, #{item.inventory},
+             #{item.prepayment}, #{item.goodwill}, #{item.intangibleAssets}, #{item.fixedAssets},
+             #{item.constructionInProgress}, #{item.shortTermLoan}, #{item.longTermLoan},
+             #{item.accountsPayable}, #{item.advanceReceipts}, #{item.operatingCashFlow},
+             #{item.investingCashFlow}, #{item.financingCashFlow}, #{item.freeCashFlow},
+             #{item.grossMargin}, #{item.netMargin}, #{item.roe}, #{item.roa}, #{item.roic},
+             #{item.debtRatio}, #{item.currentRatio}, #{item.quickRatio}, #{item.eps}, #{item.bps},
+             #{item.cashflowPerShare}, #{item.revenueGrowth1y}, #{item.profitGrowth1y},
+             #{item.assetGrowth}, #{item.equityGrowth}, now())
+        </foreach>
+    </insert>
+
+    <insert id="batchAddStockCapitalFlow">
+        insert into t_stock_capital_flow(
+            stock_code, trade_date, main_net_inflow, main_net_pct, super_large_net,
+            super_large_inflow, super_large_outflow, large_net, large_inflow, large_outflow,
+            medium_net, small_net, main_3d, main_5d, main_10d, main_20d, flow_level, create_time
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.stockCode}, #{item.tradeDate}, #{item.mainNetInflow}, #{item.mainNetPct},
+             #{item.superLargeNet}, #{item.superLargeInflow}, #{item.superLargeOutflow},
+             #{item.largeNet}, #{item.largeInflow}, #{item.largeOutflow}, #{item.mediumNet},
+             #{item.smallNet}, #{item.main3d}, #{item.main5d}, #{item.main10d}, #{item.main20d},
+             #{item.flowLevel}, now())
+        </foreach>
+    </insert>
+
+</mapper>

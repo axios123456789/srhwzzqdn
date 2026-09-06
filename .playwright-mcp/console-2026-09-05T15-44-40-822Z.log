@@ -1,0 +1,66 @@
+[     449ms] [LOG] [vite] connecting... @ http://localhost:3001/@vite/client:183
+[     644ms] [WARNING] You are running the esm-bundler build of vue-i18n. It is recommended to configure your bundler to explicitly replace feature flag globals with boolean literals to get proper tree-shaking in the final bundle. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=ab2b3089:2577
+[     763ms] [LOG] [vite] connected. @ http://localhost:3001/@vite/client:211
+[    7821ms] [WARNING] [intlify] Not found 'login.logging' key in 'zh-cn' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=ab2b3089:59
+[    7822ms] [WARNING] [intlify] Fall back to translate 'login.logging' key with 'zh' locale. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=ab2b3089:59
+[    7822ms] [WARNING] [intlify] Not found 'login.logging' key in 'zh' locale messages. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=ab2b3089:59
+[    7930ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "test" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7931ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "system" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7931ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "memoryReceptionArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7931ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "memoryEngramRegion" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7932ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "knowledgeBuildArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7932ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "knowledgeExtractArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7932ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "firmWorldviewArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7932ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "futurePlanArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7932ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "assetControlArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7932ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "socialConnectionsArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7933ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "thoughtFlashArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7933ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "trialExecutionArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    7933ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "personalObservationArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    9493ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue:0
+[    9506ms] Failed to fetch dynamically imported module: http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue
+[    9616ms] [WARNING] [Vue Router warn]: uncaught error during route navigation: @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[    9616ms] [ERROR] TypeError: Failed to fetch dynamically imported module: http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:2334
+[   70247ms] [LOG] [vite] connecting... @ http://localhost:3001/@vite/client:183
+[   70455ms] [WARNING] You are running the esm-bundler build of vue-i18n. It is recommended to configure your bundler to explicitly replace feature flag globals with boolean literals to get proper tree-shaking in the final bundle. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=ab2b3089:2577
+[   70541ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "test" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70541ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "system" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70541ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "memoryReceptionArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "memoryEngramRegion" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "knowledgeBuildArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "knowledgeExtractArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "firmWorldviewArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "futurePlanArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "assetControlArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "socialConnectionsArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "thoughtFlashArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "trialExecutionArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70542ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "personalObservationArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   70554ms] [LOG] [vite] connected. @ http://localhost:3001/@vite/client:211
+[   71851ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue:0
+[   71854ms] Failed to fetch dynamically imported module: http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue
+[   71924ms] [WARNING] [Vue Router warn]: uncaught error during route navigation: @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[   71924ms] [ERROR] TypeError: Failed to fetch dynamically imported module: http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:2334
+[   71924ms] [WARNING] [Vue Router warn]: Unexpected error when starting the router: TypeError: Failed to fetch dynamically imported module: http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  198909ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue:0
+[  693540ms] [LOG] [vite] connecting... @ http://localhost:3001/@vite/client:183
+[  693723ms] [WARNING] You are running the esm-bundler build of vue-i18n. It is recommended to configure your bundler to explicitly replace feature flag globals with boolean literals to get proper tree-shaking in the final bundle. @ http://localhost:3001/node_modules/.vite/deps/vue-i18n.js?v=ab2b3089:2577
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "test" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "system" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "memoryReceptionArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "memoryEngramRegion" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "knowledgeBuildArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "knowledgeExtractArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "firmWorldviewArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "futurePlanArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "assetControlArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "socialConnectionsArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "thoughtFlashArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "trialExecutionArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  693801ms] [WARNING] [Vue Router warn]: Cannot remove non-existent route "personalObservationArea" @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  695532ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue:0
+[  695535ms] Failed to fetch dynamically imported module: http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue
+[  695569ms] [LOG] [vite] connected. @ http://localhost:3001/@vite/client:211
+[  695680ms] [WARNING] [Vue Router warn]: uncaught error during route navigation: @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42
+[  695680ms] [ERROR] TypeError: Failed to fetch dynamically imported module: http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:2334
+[  695681ms] [WARNING] [Vue Router warn]: Unexpected error when starting the router: TypeError: Failed to fetch dynamically imported module: http://localhost:3001/src/views/assetControlArea/stockAssetManagement.vue @ http://localhost:3001/node_modules/.vite/deps/vue-router.js?v=ab2b3089:42

@@ -12,6 +12,7 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\c
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\system\SysPersonSchoolInfo.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\assetControl\AssetStructureGroupVo.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\trialExecutionArea\TransactionSystemTrialDto.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\StockFinance.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\memoryReceptionArea\WorkMemoryDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\memoryReceptionArea\LearnMemory.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\SysUserDto.java
@@ -22,6 +23,7 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\c
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\FundNav.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\assetControl\TransactionAmountGroup.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\system\SysUserRole.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\StockCapitalFlow.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\system\LoginVo.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\DistributeMenuDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\FundManagerAnalysis.java
@@ -34,6 +36,7 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\c
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\LoginDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\trialExecutionArea\ReviewReportDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\DistributeRoleDto.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\StockKline.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\assetControl\PerformanceAnalysisVo.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\system\SysMenu.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\trialExecutionArea\TradeRecordDto.java
@@ -46,6 +49,7 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\c
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\RegisterDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\memoryReceptionArea\CommunicateMemoryDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\SysDictDto.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\StockBasic.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\FundHolding.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\memoryReceptionArea\AssociativeMemory.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\memoryReceptionArea\LifeMemory.java
@@ -64,6 +68,7 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\c
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\system\SysCommConfig.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\trialExecutionArea\PredictionSimulate.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\trialExecutionArea\PredictionSimulateDto.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\assetControl\StockQueryDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\common\ResultCodeEnum.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\system\SysRole.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\trialExecutionArea\ReviewReportVo.java
