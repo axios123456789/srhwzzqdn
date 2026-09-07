@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/superBrain/assetControl/stockAsset")
@@ -102,6 +103,67 @@ public class StockAssetController {
         } catch (Exception e) {
             logger.error("获取资金流向数据失败", e);
             return Result.build(null, 500, "获取资金流向数据失败");
+        }
+    }
+
+    @GetMapping("/getStockNews/{stockCode}/{limit}")
+    public Result getStockNews(@PathVariable String stockCode, @PathVariable Integer limit) {
+        try {
+            List<StockNews> list = stockAssetService.getStockNews(stockCode, limit);
+            return Result.build(list, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("获取消息面数据失败", e);
+            return Result.build(null, 500, "获取消息面数据失败");
+        }
+    }
+
+    @GetMapping("/getStockHolderNum/{stockCode}/{limit}")
+    public Result getStockHolderNum(@PathVariable String stockCode, @PathVariable Integer limit) {
+        try {
+            List<StockHolderNum> list = stockAssetService.getStockHolderNum(stockCode, limit);
+            return Result.build(list, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("获取股东人数数据失败", e);
+            return Result.build(null, 500, "获取股东人数数据失败");
+        }
+    }
+
+    @GetMapping("/refreshStockNews/{stockCode}")
+    public Result refreshStockNews(@PathVariable String stockCode) {
+        try {
+            String result = stockAssetService.refreshStockNews(stockCode);
+            return Result.build(result, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("刷新消息面数据失败", e);
+            return Result.build(null, 500, "刷新消息面数据失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 单只股票实时刷新：行情估值/K线/资金流/财务/消息
+     */
+    @GetMapping("/refreshStockRealtime/{stockCode}")
+    public Result refreshStockRealtime(@PathVariable String stockCode) {
+        try {
+            String result = stockAssetService.refreshStockRealtime(stockCode);
+            return Result.build(result, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("单只股票实时刷新失败", e);
+            return Result.build(null, 500, "单只股票实时刷新失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * AI 综合分析：规则评分 + AI 多维度分析（基本面/技术面/资金面/消息面/板块联动）
+     */
+    @GetMapping("/analyzeStock/{stockCode}")
+    public Result analyzeStock(@PathVariable String stockCode) {
+        try {
+            Map<String, Object> result = stockAssetService.analyzeStock(stockCode);
+            return Result.build(result, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("AI综合分析失败", e);
+            return Result.build(null, 500, "AI综合分析失败：" + e.getMessage());
         }
     }
 

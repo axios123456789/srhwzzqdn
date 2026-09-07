@@ -34,8 +34,29 @@ export const GetStockFinance = (stockCode, limit) => {
   return request({ url: `${base_api}/getStockFinance/${stockCode}/${limit}`, method: 'get' });
 };
 
+export const GetStockHolderNum = (stockCode, limit) => {
+  return request({ url: `${base_api}/getStockHolderNum/${stockCode}/${limit}`, method: 'get' });
+};
+
 export const GetStockCapitalFlow = (stockCode, limit) => {
   return request({ url: `${base_api}/getStockCapitalFlow/${stockCode}/${limit}`, method: 'get' });
+};
+
+export const GetStockNews = (stockCode, limit) => {
+  return request({ url: `${base_api}/getStockNews/${stockCode}/${limit}`, method: 'get' });
+};
+
+export const RefreshStockNews = (stockCode) => {
+  return request({ url: `${base_api}/refreshStockNews/${stockCode}`, method: 'get', timeout: 120000 });
+};
+
+export const RefreshStockRealtime = (stockCode) => {
+  return request({ url: `${base_api}/refreshStockRealtime/${stockCode}`, method: 'get', timeout: 120000 });
+};
+
+export const AnalyzeStock = (stockCode) => {
+  // AI 综合分析耗时较长，单独放宽超时
+  return request({ url: `${base_api}/analyzeStock/${stockCode}`, method: 'get', timeout: 300000 });
 };
 
 export const UpdateStockBasic = (data) => {

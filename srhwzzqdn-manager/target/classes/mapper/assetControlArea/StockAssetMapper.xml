@@ -42,14 +42,15 @@
         where stock_code=#{stockCode}
     </update>
 
-    <!-- 实时刷新专用：只更新行情相关字段，避免覆盖行业/公司信息等 -->
+    <!-- 实时刷新专用：更新行情字段，并同步补全行业/板块/概念（来源东财f127/f128/f129） -->
     <update id="updateStockRealtime">
         update t_stock_basic set
             stock_name=#{stockName},
+            industry=#{industry}, sector=#{sector}, concept_sectors=#{conceptSectors},
             total_shares=#{totalShares}, circ_shares=#{circShares},
             total_market_cap=#{totalMarketCap}, circ_market_cap=#{circMarketCap},
             pe_static=#{peStatic}, pe_dynamic=#{peDynamic}, pe_ttm=#{peTtm},
-            pb_ratio=#{pbRatio},
+            pb_ratio=#{pbRatio}, ps_ratio=#{psRatio}, dividend_yield=#{dividendYield},
             last_price=#{lastPrice}, change_pct=#{changePct}, change_amount=#{changeAmount},
             turnover_rate=#{turnoverRate}, volume_ratio=#{volumeRatio}, amplitude=#{amplitude},
             turnover=#{turnover}, volume=#{volume},
@@ -124,6 +125,29 @@
              #{item.largeNet}, #{item.largeInflow}, #{item.largeOutflow}, #{item.mediumNet},
              #{item.smallNet}, #{item.main3d}, #{item.main5d}, #{item.main10d}, #{item.main20d},
              #{item.flowLevel}, now())
+        </foreach>
+    </insert>
+
+    <!-- insert ignore 依赖唯一索引 uk_stock_title(stock_code, title(200)) 去重，历史消息增量保留 -->
+    <insert id="batchAddStockNews">
+        insert ignore into t_stock_news(
+            stock_code, title, summary, source, news_url, publish_time, news_type
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.stockCode}, #{item.title}, #{item.summary}, #{item.source},
+             #{item.newsUrl}, #{item.publishTime}, #{item.newsType})
+        </foreach>
+    </insert>
+
+    <!-- insert ignore 依赖唯一索引 uk_code_date(stock_code, end_date) 去重，股东户数历史增量保留 -->
+    <insert id="batchAddStockHolderNum">
+        insert ignore into t_stock_holder_num(
+            stock_code, stock_name, end_date, holder_num, pre_holder_num,
+            holder_num_change, holder_num_ratio, avg_market_cap, avg_hold_num, notice_date
+        ) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.stockCode}, #{item.stockName}, #{item.endDate}, #{item.holderNum}, #{item.preHolderNum},
+             #{item.holderNumChange}, #{item.holderNumRatio}, #{item.avgMarketCap}, #{item.avgHoldNum}, #{item.noticeDate})
         </foreach>
     </insert>
 

@@ -78,8 +78,10 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\c
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\system\SysRoleMenu.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\assetControl\AssetLedgerVo.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\assetControl\FundBaseDateDto.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\StockNews.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\assetControl\AssetTypeSummaryVO.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\trialExecutionArea\TradeRecord.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\StockHolderNum.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\memoryReceptionArea\RowMemoryDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\AssetLedger.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\FundPortfolio.java
