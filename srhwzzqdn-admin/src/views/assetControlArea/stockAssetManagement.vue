@@ -749,11 +749,15 @@
               @click="runAiAnalysis"
             >
               <el-icon><MagicStick /></el-icon>
-              {{ aiLoading ? 'AI分析中，约需1分钟...' : '开始 AI 综合分析' }}
+              {{ aiLoading ? 'AI分析中，约需1~10分钟，请耐心等待...' : '开始 AI 综合分析' }}
             </el-button>
             <el-button v-if="aiResult" type="primary" @click="exportReport">
               <el-icon><Download /></el-icon>
               导出分析报告
+            </el-button>
+            <el-button v-if="aiResult" type="success" @click="exportWordReport">
+              <el-icon><Download /></el-icon>
+              导出 Word 报告
             </el-button>
             <span v-if="aiTime" class="ai-time">分析完成于 {{ aiTime }}</span>
           </div>
@@ -774,10 +778,12 @@
                 <div class="score-item">
                   <div class="score-item-head">
                     <span>技术面</span>
-                    <span>{{ aiResult.ruleScore.tech }}</span>
+                    <span :class="{ neg: aiResult.ruleScore.tech < 0 }">{{
+                      aiResult.ruleScore.tech
+                    }}</span>
                   </div>
                   <el-progress
-                    :percentage="aiResult.ruleScore.tech"
+                    :percentage="Math.max(0, aiResult.ruleScore.tech)"
                     color="#e6a23c"
                     :stroke-width="10"
                   />
@@ -785,10 +791,12 @@
                 <div class="score-item">
                   <div class="score-item-head">
                     <span>基本面</span>
-                    <span>{{ aiResult.ruleScore.fund }}</span>
+                    <span :class="{ neg: aiResult.ruleScore.fund < 0 }">{{
+                      aiResult.ruleScore.fund
+                    }}</span>
                   </div>
                   <el-progress
-                    :percentage="aiResult.ruleScore.fund"
+                    :percentage="Math.max(0, aiResult.ruleScore.fund)"
                     color="#409eff"
                     :stroke-width="10"
                   />
@@ -796,10 +804,12 @@
                 <div class="score-item">
                   <div class="score-item-head">
                     <span>资金面</span>
-                    <span>{{ aiResult.ruleScore.flow }}</span>
+                    <span :class="{ neg: aiResult.ruleScore.flow < 0 }">{{
+                      aiResult.ruleScore.flow
+                    }}</span>
                   </div>
                   <el-progress
-                    :percentage="aiResult.ruleScore.flow"
+                    :percentage="Math.max(0, aiResult.ruleScore.flow)"
                     color="#f56c6c"
                     :stroke-width="10"
                   />
@@ -807,10 +817,12 @@
                 <div class="score-item">
                   <div class="score-item-head">
                     <span>消息面</span>
-                    <span>{{ aiResult.ruleScore.news }}</span>
+                    <span :class="{ neg: aiResult.ruleScore.news < 0 }">{{
+                      aiResult.ruleScore.news
+                    }}</span>
                   </div>
                   <el-progress
-                    :percentage="aiResult.ruleScore.news"
+                    :percentage="Math.max(0, aiResult.ruleScore.news)"
                     color="#67c23a"
                     :stroke-width="10"
                   />
@@ -829,6 +841,39 @@
                     {{ aiResult.sectorInfo.total }}
                   </template>
                 </div>
+                <el-collapse class="score-detail-collapse">
+                  <el-collapse-item
+                    title="评分明细（各维度得分如何得出，逐项加减分）"
+                    name="detail"
+                  >
+                    <div class="score-detail-grid">
+                      <div
+                        v-for="dim in scoreDetailDims"
+                        :key="dim.name"
+                        class="score-dim-card"
+                      >
+                        <div class="score-dim-head">
+                          <span class="score-dim-name">{{ dim.name }}</span>
+                          <span
+                            class="score-dim-total"
+                            :class="totalLevelCls(dim.total)"
+                          >{{ dim.total }}</span>
+                        </div>
+                        <div class="score-dim-body">
+                          <div
+                            v-for="(row, ri) in dim.rows"
+                            :key="ri"
+                            class="score-row"
+                            :class="row.type"
+                          >
+                            <span class="score-badge">{{ row.score }}</span>
+                            <span class="score-text">{{ row.text }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </el-collapse-item>
+                </el-collapse>
               </div>
             </div>
             <div class="ai-report md-body" v-html="aiAnalysisHtml"></div>
@@ -1259,6 +1304,51 @@ const mdToHtml = md => {
 
 const aiAnalysisHtml = computed(() => mdToHtml(aiResult.value?.aiAnalysis))
 
+// 解析评分明细：拆出各维度总分与逐条加减分（分数徽章+说明文本）
+const parseScoreDetail = (items) => {
+  let total = ''
+  const rows = []
+  for (const raw of items || []) {
+    const s = String(raw)
+    if (s.startsWith('=>')) {
+      total = s.replace(/^=>\s*/, '')
+      continue
+    }
+    const m = s.match(/^([+-]?\d+(?:\.\d+)?|×[\d.]+)\s*(.*)$/)
+    if (m) {
+      const sc = m[1]
+      rows.push({
+        score: sc,
+        text: m[2],
+        type: sc.startsWith('+') ? 'plus' : sc.startsWith('-') ? 'minus' : 'zero'
+      })
+    } else {
+      rows.push({ score: '·', text: s, type: 'zero' })
+    }
+  }
+  return { total, rows }
+}
+
+// 总分徽章配色：≥70看多(红)、<45看空(绿，含负分)、其余中性
+const totalLevelCls = (total) => {
+  const m = String(total).match(/-?\d+/)
+  const num = m ? parseInt(m[0], 10) : NaN
+  if (isNaN(num)) return ''
+  return num >= 70 ? 'is-good' : num < 45 ? 'is-bad' : 'is-mid'
+}
+
+// 四个维度的评分明细（解析后供卡片渲染）
+const scoreDetailDims = computed(() => {
+  if (!aiResult.value || !aiResult.value.ruleScore) return []
+  const rs = aiResult.value.ruleScore
+  return [
+    { name: '技术面', items: rs.techDetail },
+    { name: '基本面', items: rs.fundDetail },
+    { name: '资金筹码面', items: rs.flowDetail },
+    { name: '消息面', items: rs.newsDetail }
+  ].map((d) => ({ name: d.name, ...parseScoreDetail(d.items) }))
+})
+
 // 导出美观的 HTML 分析报告（浏览器打开即可打印为 PDF）
 const exportReport = () => {
   if (!aiResult.value || !selectedStock.value) return
@@ -1366,6 +1456,140 @@ const exportReport = () => {
   a.click()
   URL.revokeObjectURL(url)
   ElMessage.success('分析报告已导出')
+}
+
+// 导出 Word 分析报告：采用 Word 兼容 HTML（.doc），Word/WPS 打开即为美观排版，无需额外依赖
+const exportWordReport = () => {
+  if (!aiResult.value || !selectedStock.value) return
+  const s = aiResult.value.ruleScore || {}
+  const stock = selectedStock.value
+  const sec = aiResult.value.sectorInfo || {}
+  const dims = scoreDetailDims.value
+
+  // 维度总分徽章配色：≥70红(看多)、<45绿(看空，含负分)、其余橙(中性)
+  const levelColor = v => {
+    const n = Number(String(v).match(/-?\d+/))
+    if (isNaN(n)) return '#e6a23c'
+    return n >= 70 ? '#c0392b' : n < 45 ? '#27ae60' : '#e6a23c'
+  }
+  const scoreColor = t =>
+    t === 'plus' ? '#c0392b' : t === 'minus' ? '#27ae60' : '#909399'
+
+  // 评分明细表：每维度一张表（总分徽章 + 逐条加减分，红涨绿跌）
+  const dimTableHtml = d => {
+    const rows = (d.rows || [])
+      .map(
+        r => `<tr>
+            <td width="72" align="center" style="border:1pt solid #ebeef5;padding:4pt 6pt;background-color:#fafafa;"><b style="color:${scoreColor(r.type)};font-size:10pt;">${r.score}</b></td>
+            <td style="border:1pt solid #ebeef5;padding:4pt 8pt;font-size:10.5pt;">${r.text}</td>
+          </tr>`
+      )
+      .join('')
+    return `<table width="100%" style="border-collapse:collapse;margin:8pt 0 14pt;">
+          <tr>
+            <td colspan="2" style="border:1pt solid #ebeef5;padding:6pt 10pt;background-color:#f5f7fa;font-size:11pt;">
+              <b style="color:#303133;">${d.name}评分构成</b>
+              <span style="background-color:${levelColor(d.total)};color:#ffffff;padding:2pt 10pt;font-weight:bold;font-size:10pt;">${d.total || '暂无'}</span>
+            </td>
+          </tr>
+          ${rows}
+        </table>`
+  }
+
+  // AI 分析正文（复用 mdToHtml，保留标题/列表/加粗结构）
+  const aiBody = mdToHtml(aiResult.value.aiAnalysis)
+
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="utf-8" />
+<title>AI综合分析报告 - ${stock.stockName}（${stock.stockCode}）</title>
+<!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>100</w:Zoom></w:WordDocument></xml><![endif]-->
+<style>
+  @page WordSection1 { size:595.3pt 841.9pt; margin:57pt 57pt 57pt 57pt; }
+  div.WordSection1 { page:WordSection1; }
+  body { font-family:'Microsoft YaHei','SimHei',sans-serif; font-size:11pt; color:#303133; line-height:1.7; }
+  p { margin:6pt 0; }
+  table { border-collapse:collapse; width:100%; }
+  td, th { border:1pt solid #dcdfe6; padding:5pt 8pt; font-size:10.5pt; }
+  h1 { font-size:20pt; color:#c0392b; text-align:center; margin:0 0 6pt; }
+  h2 { font-size:14pt; color:#1f3a5f; border-left:4pt solid #c0392b; padding-left:9pt; margin:18pt 0 8pt; }
+  h3 { font-size:12pt; color:#303133; margin:12pt 0 6pt; }
+  ul { margin:6pt 0; padding-left:22pt; }
+  li { margin:3pt 0; }
+  strong { color:#c0392b; }
+</style>
+</head>
+<body>
+<div class="WordSection1">
+  <div style="text-align:center;border-bottom:3pt double #c0392b;padding-bottom:10pt;margin-bottom:14pt;">
+    <h1>AI 综合分析报告</h1>
+    <span style="color:#909399;font-size:10pt;">${stock.stockName}（${stock.stockCode}）· 所属行业：${stock.industry || '-'} · 生成时间：${aiTime.value}</span>
+  </div>
+
+  <h2>一、个股概览</h2>
+  <table width="100%" style="border-collapse:collapse;">
+    <tr>
+      <td width="16%" style="background-color:#f5f7fa;">最新价</td><td width="17%">${stock.lastPrice ?? '-'}</td>
+      <td width="16%" style="background-color:#f5f7fa;">涨跌幅</td><td width="17%">${stock.changePct ?? '-'}%</td>
+      <td width="16%" style="background-color:#f5f7fa;">总市值</td><td width="18%">${stock.totalMarketCap ?? '-'} 亿</td>
+    </tr>
+    <tr>
+      <td style="background-color:#f5f7fa;">PE(TTM)</td><td>${stock.peTtm ?? '-'}</td>
+      <td style="background-color:#f5f7fa;">PB</td><td>${stock.pbRatio ?? '-'}</td>
+      <td style="background-color:#f5f7fa;">换手率</td><td>${stock.turnoverRate ?? '-'}%</td>
+    </tr>
+  </table>
+
+  <h2>二、系统规则评分</h2>
+  <table width="100%" style="border-collapse:collapse;margin-bottom:8pt;">
+    <tr>
+      <td width="30%" align="center" rowspan="6" style="border:1pt solid #dcdfe6;background-color:#fdf6f5;">
+        <span style="font-size:34pt;font-weight:bold;color:${levelColor(s.composite)};">${s.composite}</span><br />
+        <span style="font-size:10pt;color:#909399;">系统综合评分</span><br />
+        <span style="background-color:${levelColor(s.composite)};color:#ffffff;padding:2pt 10pt;font-weight:bold;font-size:10pt;">${s.valueLevel || ''}</span>
+      </td>
+      <th width="18%">维度</th><th width="16%">评分</th><th width="14%">权重</th><th>说明</th>
+    </tr>
+    <tr><td>技术面</td><td align="center"><b style="color:${levelColor(s.tech)};">${s.tech}</b></td><td align="center">35%</td><td>均线/MACD/KDJ/RSI/量价</td></tr>
+    <tr><td>基本面</td><td align="center"><b style="color:${levelColor(s.fund)};">${s.fund}</b></td><td align="center">30%</td><td>成长性/ROE/估值</td></tr>
+    <tr><td>资金面</td><td align="center"><b style="color:${levelColor(s.flow)};">${s.flow}</b></td><td align="center">20%</td><td>主力资金流向</td></tr>
+    <tr><td>消息面</td><td align="center"><b style="color:${levelColor(s.news)};">${s.news}</b></td><td align="center">15%</td><td>消息时效与公告密度</td></tr>
+    <tr><td colspan="3" style="background-color:#f5f7fa;">环境修正</td><td>${s.envDesc || '-'}</td></tr>
+  </table>
+  <p style="font-size:10.5pt;color:#606266;">${s.positionDesc || ''}</p>
+  ${
+    sec.name
+      ? `<p style="font-size:10.5pt;color:#606266;">所属板块「${sec.name}」今日涨跌 ${sec.changePct}%${
+          sec.rank ? `，行业板块涨幅排名 ${sec.rank}/${sec.total}` : ''
+        }</p>`
+      : ''
+  }
+
+  <h2>三、评分明细</h2>
+  ${dims.map(d => dimTableHtml(d)).join('')}
+
+  <h2>四、AI 综合分析</h2>
+  <div>${aiBody}</div>
+
+  <p style="margin-top:20pt;padding:9pt 12pt;background-color:#fef0f0;color:#a94442;font-size:9.5pt;border:1pt solid #f5dcdc;">
+    免责声明：本报告由 AI 基于公开实时数据自动生成，所有评分与分析仅供参考，不构成任何投资建议。市场有风险，投资需谨慎。
+  </p>
+</div>
+</body>
+</html>`
+  // \ufeff BOM 确保 Word 正确识别 UTF-8 中文
+  const blob = new Blob(['\ufeff' + html], {
+    type: 'application/msword;charset=utf-8'
+  })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `AI分析报告_${stock.stockName}_${
+    stock.stockCode
+  }_${new Date().toISOString().slice(0, 10)}.doc`
+  a.click()
+  URL.revokeObjectURL(url)
+  ElMessage.success('Word 报告已导出')
 }
 
 const handleTabChange = name => {
@@ -2203,6 +2427,11 @@ onBeforeUnmount(() => {
   margin-bottom: 4px;
 }
 
+.score-item-head span.neg {
+  color: #67c23a;
+  font-weight: 600;
+}
+
 .position-desc,
 .sector-desc {
   grid-column: 1 / -1;
@@ -2212,6 +2441,115 @@ onBeforeUnmount(() => {
   border-radius: 6px;
   padding: 6px 10px;
   border: 1px dashed #dcdfe6;
+}
+
+.score-detail-collapse {
+  grid-column: 1 / -1;
+  border: 1px dashed #dcdfe6;
+  border-radius: 6px;
+  background: #fff;
+  padding: 0 12px;
+}
+
+.score-detail-collapse :deep(.el-collapse-item__header) {
+  font-size: 13px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.score-detail-collapse :deep(.el-collapse-item__content) {
+  padding-bottom: 14px;
+}
+
+.score-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 1400px) {
+  .score-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.score-dim-card {
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+  background: #fafbfc;
+  overflow: hidden;
+}
+
+.score-dim-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 12px;
+  background: #f5f7fa;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.score-dim-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #303133;
+}
+
+.score-dim-total {
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 1px 10px;
+  color: #fff;
+  background: #909399;
+}
+
+.score-dim-total.is-good {
+  background: #f56c6c;
+}
+
+.score-dim-total.is-bad {
+  background: #67c23a;
+}
+
+.score-dim-total.is-mid {
+  background: #e6a23c;
+}
+
+.score-dim-body {
+  padding: 8px 12px;
+}
+
+.score-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 20px;
+  padding: 1px 0;
+}
+
+.score-badge {
+  flex: 0 0 42px;
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.score-row.plus .score-badge {
+  color: #f56c6c;
+}
+
+.score-row.minus .score-badge {
+  color: #67c23a;
+}
+
+.score-row.zero .score-badge {
+  color: #c0c4cc;
+}
+
+.score-text {
+  color: #606266;
 }
 
 .ai-report {

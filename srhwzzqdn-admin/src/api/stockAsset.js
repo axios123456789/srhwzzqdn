@@ -55,8 +55,8 @@ export const RefreshStockRealtime = (stockCode) => {
 };
 
 export const AnalyzeStock = (stockCode) => {
-  // AI 综合分析耗时较长，单独放宽超时
-  return request({ url: `${base_api}/analyzeStock/${stockCode}`, method: 'get', timeout: 300000 });
+  // AI 综合分析耗时较长，单独放宽超时；与后端 ai.common.read-timeout(900000) 对齐，保证前端不会先于后端超时
+  return request({ url: `${base_api}/analyzeStock/${stockCode}`, method: 'get', timeout: 900000 });
 };
 
 export const UpdateStockBasic = (data) => {

@@ -276,6 +276,11 @@ public class AiCommonUtil {
                 }
                 logger.warn("content和reasoning_content均为空 | finish_reason={} | messageKeys={}", choice0.getString("finish_reason"), message.keySet());
             }
+            // finish_reason=length 表示输出被截断（报告缺章节的常见原因），stop 表示正常完整
+            logger.info("AI响应解析 | finish_reason={} | 内容长度={} 字符", choice0.getString("finish_reason"), content.length());
+            if (!"stop".equals(choice0.getString("finish_reason")) && content.length() > 0) {
+                logger.warn("AI输出可能未完整结束 | finish_reason={}，若报告缺章节请检查中转网关的输出token上限", choice0.getString("finish_reason"));
+            }
             return content;
         } catch (Exception e) {
             logger.error("解析AI响应失败 | 原始响应前200字符: {}",
