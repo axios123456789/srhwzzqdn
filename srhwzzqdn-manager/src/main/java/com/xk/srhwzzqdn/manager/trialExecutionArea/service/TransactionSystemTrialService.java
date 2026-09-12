@@ -1,6 +1,7 @@
 package com.xk.srhwzzqdn.manager.trialExecutionArea.service;
 
 import com.github.pagehelper.PageInfo;
+import com.xk.srhwzzqdn.model.dto.trialExecutionArea.AutoGeneratePlanDto;
 import com.xk.srhwzzqdn.model.dto.trialExecutionArea.TransactionSystemTrialDto;
 import com.xk.srhwzzqdn.model.entity.trialExecutionArea.TransactionRule;
 import com.xk.srhwzzqdn.model.entity.trialExecutionArea.TransactionSystemTrial;
@@ -13,6 +14,9 @@ public interface TransactionSystemTrialService {
 
     //保存交易系统试验
     void saveTransactionSystemTrial(TransactionSystemTrial transactionSystemTrial);
+
+    //自动生成交易计划（整合东方财富实时数据+AI分析+规则匹配+入库）
+    TransactionSystemTrial autoGenerateTradePlan(AutoGeneratePlanDto dto);
 
     //根据id删除交易系统试验
     void deleteTransactionSystemTrialById(Long id);

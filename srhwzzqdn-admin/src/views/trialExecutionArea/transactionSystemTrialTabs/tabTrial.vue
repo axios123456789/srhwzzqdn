@@ -111,6 +111,10 @@
         <el-icon><DocumentAdd /></el-icon>
         添加试验
       </el-button>
+      <el-button type="warning" size="small" @click="showGeneratePlanDialog">
+        <el-icon><MagicStick /></el-icon>
+        自动生成计划
+      </el-button>
       <el-button type="danger" size="small" @click="deleteSelectAll">
         <el-icon><Delete /></el-icon>
         批量删除
@@ -488,6 +492,37 @@
     </template>
   </el-dialog>
 
+  <!-- 自动生成交易计划对话框 -->
+  <el-dialog
+    v-model="generatePlanDialogVisible"
+    title="自动生成交易计划"
+    width="500px"
+    class="custom-dialog enhanced-dialog"
+    :close-on-click-modal="false"
+  >
+    <el-form :model="generatePlanForm" label-width="100px" :rules="generatePlanRules" ref="generatePlanFormRef">
+      <el-form-item label="股票代码" prop="stockCode">
+        <el-input v-model="generatePlanForm.stockCode" placeholder="请输入股票代码，如 600519" />
+      </el-form-item>
+      <el-form-item label="交易类型" prop="tradeType">
+        <el-select v-model="generatePlanForm.tradeType" style="width: 100%" placeholder="请选择交易类型">
+          <el-option v-for="item in tradeTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="计划类型" prop="planType">
+        <el-select v-model="generatePlanForm.planType" style="width: 100%" placeholder="请选择计划类型">
+          <el-option v-for="item in planTypeOptions" :key="item.value" :label="item.text" :value="item.value" />
+        </el-select>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="generatePlanDialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="generatePlanLoading" @click="submitGeneratePlan">提交生成</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
   <!-- 导出对话框 -->
   <ExportDialog
     v-model="exportDialogVisible"
@@ -506,9 +541,9 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Refresh, DocumentAdd, Delete, Download, View, Edit } from '@element-plus/icons-vue'
+import { Search, Refresh, DocumentAdd, Delete, Download, View, Edit, MagicStick } from '@element-plus/icons-vue'
 import { GetKeyAndValueByType } from "@/api/sysDict"
-import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList } from "@/api/trialExecutionArea/transactionSystemTrial"
+import { GetTransactionSystemTrialByConditionAndPage, SaveTransactionSystemTrial, DeleteTransactionSystemTrialById, DeleteAllTransactionSystemTrialByIds, GetTransactionRuleList, AutoGenerateTradePlan } from "@/api/trialExecutionArea/transactionSystemTrial"
 import { getDisplayText } from "@/utils/common"
 import { useExport } from "@/components/Export/hooks/useExport"
 import ExportDialog from '@/components/Export/ExportDialog.vue'
@@ -573,7 +608,7 @@ const queryDto = reactive({
   planType: [],
   planStartTime: null,
   planEndTime: null,
-  tradeStatus: [],
+  tradeStatus: [1, 2],
   tradeResult: [],
   tradeFailType: [],
   isUsePlan: null
@@ -902,6 +937,54 @@ const {
 
 const showExportDialog = () => {
   showExportDialogMethod(list.value, total.value)
+}
+
+// ==================== 自动生成交易计划 ====================
+const generatePlanDialogVisible = ref(false)
+const generatePlanLoading = ref(false)
+const generatePlanFormRef = ref(null)
+const generatePlanForm = reactive({
+  stockCode: '',
+  tradeType: null,
+  planType: null
+})
+const generatePlanRules = {
+  stockCode: [{ required: true, message: '请输入股票代码', trigger: 'blur' }],
+  tradeType: [{ required: true, message: '请选择交易类型', trigger: 'change' }],
+  planType: [{ required: true, message: '请选择计划类型', trigger: 'change' }]
+}
+
+const showGeneratePlanDialog = () => {
+  generatePlanForm.stockCode = ''
+  generatePlanForm.tradeType = null
+  generatePlanForm.planType = null
+  generatePlanDialogVisible.value = true
+}
+
+const submitGeneratePlan = async () => {
+  if (!generatePlanFormRef.value) return
+  try {
+    const valid = await generatePlanFormRef.value.validate()
+    if (!valid) return
+  } catch (error) {
+    return
+  }
+  generatePlanLoading.value = true
+  try {
+    const result = await AutoGenerateTradePlan(generatePlanForm)
+    if (result.code === 200) {
+      ElMessage.success('交易计划自动生成成功')
+      generatePlanDialogVisible.value = false
+      fetchData()
+      fetchRuleData()
+    } else {
+      ElMessage.error(result.message || '自动生成失败')
+    }
+  } catch (error) {
+    ElMessage.error('自动生成失败')
+  } finally {
+    generatePlanLoading.value = false
+  }
 }
 
 // ==================== 钩子函数 ====================

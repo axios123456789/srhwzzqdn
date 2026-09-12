@@ -87,6 +87,50 @@ public class AiPromptUtil {
                 fields);
     }
 
+    // ==================== P0-5: 自动生成交易计划（计划价+计划内容+规则匹配，单次AI调用） ====================
+
+    public static final String GENERATE_PLAN_SYSTEM = "你是一位专业的A股交易计划制定助手。根据用户提供的股票实时行情、消息面、基本面、历史交易数据、交易规则列表、交易类型和计划类型，一次性生成计划价、计划内容和匹配的遵守规则。\n" +
+            "【数据要求】严格基于用户提供的数据进行研判，不得编造数据。\n" +
+            "【计划价/内容差异化分析】必须根据交易类型×计划类型组合采用不同策略：\n" +
+            "- 买入+建仓(1,3)：找下方支撑位定建仓价，结合仓位控制，分析买入时机\n" +
+            "- 买入+止盈(1,1)：找上方压力位定止盈目标价，分析获利空间\n" +
+            "- 买入+止损(1,2)：找下方关键支撑定止损价，控制最大回撤\n" +
+            "- 卖出+止盈(2,1)：找上方压力位定止盈卖出价\n" +
+            "- 危出+止损(2,2)：分析破位风险定止损卖出价\n" +
+            "- 危出+建仓(2,3)：分析卖出后重新建仓时机\n" +
+            "【综合研判】结合实时数据、消息面、基本面、技术指标（MACD/KDJ/RSI/均线）、股价位置、历史交易数据综合研判。\n" +
+            "【历史交易数据应用】参考该股票历史交易记录的盈亏、计划价与成交价偏差、遵守/违反规则情况，修正本次计划定价和策略。\n" +
+            "【规则匹配】从提供的规则列表中挑选符合当前股票情况的规则（结合技术面/基本面/趋势/股价位置），只能从提供的规则ID中选择，无合适规则返回空数组。规则类型：1-思想 2-选股 3-入场 4-止损 5-止盈 6-仓位。\n" +
+            "要求返回纯JSON格式（不要用markdown代码块包裹）：\n" +
+            "{\n" +
+            "  \"planPrice\": 计划价（数值，保留2位小数）,\n" +
+            "  \"planContent\": \"计划内容（150字内，说明定价依据、操作策略、风险提示）\",\n" +
+            "  \"complyRuleIds\": [规则ID列表，如1,3,5],\n" +
+            "  \"matchReason\": \"规则匹配说明（100字内）\"\n" +
+            "}";
+
+    public static String buildGeneratePlanPrompt(String stockCode, String stockName, java.math.BigDecimal currentPrice,
+                                                  Integer tradeType, Integer planType, String realtimeData,
+                                                  String newsText, String financeText, String historyTradeText, String rulesText) {
+        String tradeTypeDesc = tradeType == 1 ? "股票买入" : "股票卖出";
+        String planTypeDesc = planType == 1 ? "止盈" : planType == 2 ? "止损" : "建仓";
+        return String.format(
+                "请根据以下信息一次性生成交易计划（计划价、计划内容）并匹配遵守规则：\n" +
+                        "【股票信息】股票名称：%s，股票代码：%s，当前价：%s 元\n" +
+                        "【交易类型】%s\n" +
+                        "【计划类型】%s\n" +
+                        "【实时行情数据（报价+K线+资金流向）】\n%s\n" +
+                        "【消息面（近期新闻/公告）】\n%s\n" +
+                        "【基本面（财务指标）】\n%s\n" +
+                        "【历史交易数据（该股票过往交易试验记录）】\n%s\n" +
+                        "【可用交易规则列表】\n%s\n" +
+                        "【数据使用要求】请严格基于上述数据生成计划，不要编造数据。\n" +
+                        "请结合实时数据、消息面、基本面、技术指标、股价位置、历史交易数据综合研判，按交易类型×计划类型差异化生成计划价和计划内容，并从规则列表中匹配遵守规则。",
+                stockName, stockCode, currentPrice == null ? "未知" : currentPrice.toPlainString(),
+                tradeTypeDesc, planTypeDesc, realtimeData, newsText, financeText, historyTradeText, rulesText);
+    }
+
+
     // ==================== 辅助方法 ====================
 
     // ==================== P0-4: 智能预测 AI 自动填充 ====================

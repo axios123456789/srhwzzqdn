@@ -2,6 +2,7 @@ package com.xk.srhwzzqdn.manager.trialExecutionArea.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.xk.srhwzzqdn.manager.trialExecutionArea.service.TransactionSystemTrialService;
+import com.xk.srhwzzqdn.model.dto.trialExecutionArea.AutoGeneratePlanDto;
 import com.xk.srhwzzqdn.model.dto.trialExecutionArea.TransactionSystemTrialDto;
 import com.xk.srhwzzqdn.model.entity.trialExecutionArea.TransactionSystemTrial;
 import com.xk.srhwzzqdn.model.entity.trialExecutionArea.TransactionRule;
@@ -45,6 +46,21 @@ public class TransactionSystemTrialController {
             return Result.build(null, ResultCodeEnum.SUCCESS);
         } catch (Exception e) {
             return Result.build(null, 500, "保存交易系统试验失败！");
+        }
+    }
+
+    /**
+     * 自动生成交易计划
+     * @param dto（stockCode, tradeType, planType）
+     * @return 生成的交易试验记录
+     */
+    @PostMapping("/autoGenerateTradePlan")
+    public Result autoGenerateTradePlan(@RequestBody AutoGeneratePlanDto dto){
+        try {
+            TransactionSystemTrial trial = transactionSystemTrialService.autoGenerateTradePlan(dto);
+            return Result.build(trial, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            return Result.build(null, 500, "自动生成交易计划失败：" + e.getMessage());
         }
     }
 

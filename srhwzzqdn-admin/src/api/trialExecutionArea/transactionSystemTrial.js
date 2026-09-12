@@ -18,6 +18,15 @@ export const SaveTransactionSystemTrial = data => {
   })
 }
 
+export const AutoGenerateTradePlan = data => {
+  return request({
+    url: base_api + '/autoGenerateTradePlan',
+    method: 'post',
+    data: data,
+    timeout: 900000,
+  })
+}
+
 export const DeleteTransactionSystemTrialById = id => {
   return request({
     url: base_api + '/deleteTransactionSystemTrialById/' + id,

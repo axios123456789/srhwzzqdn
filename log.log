@@ -29847,3 +29847,73 @@ java.net.ConnectException: Connection timed out: getsockopt
 2026-09-12 14:32:47 Token消耗 | 输入: 2834 | 输出: 3390 | 总计: 6224
 2026-09-12 14:32:47 AI响应解析 | finish_reason=stop | 内容长度=1171 字符
 2026-09-12 14:32:47 AI调用成功 | 耗时=63331 ms | 响应长度=1171 字符
+2026-09-12 15:56:17 HikariPool-1 - Shutdown initiated...
+2026-09-12 15:56:17 HikariPool-1 - Shutdown completed.
+2026-09-12 15:56:42 Starting ManagerApplication using Java 17.0.17 with PID 3624 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-12 15:56:42 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-12 15:56:42 The following 1 profile is active: "dev"
+2026-09-12 15:56:43 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-12 15:56:43 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-12 15:56:43 Finished Spring Data repository scanning in 22 ms. Found 0 Redis repository interfaces.
+2026-09-12 15:56:44 Tomcat initialized with port(s): 8400 (http)
+2026-09-12 15:56:44 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-12 15:56:44 Starting service [Tomcat]
+2026-09-12 15:56:44 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-12 15:56:44 Initializing Spring embedded WebApplicationContext
+2026-09-12 15:56:44 Root WebApplicationContext: initialization completed in 2054 ms
+2026-09-12 15:56:46 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-12 15:56:46 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-12 15:56:46 Started ManagerApplication in 5.32 seconds (process running for 6.746)
+2026-09-12 15:56:50 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-12 15:56:50 Initializing Servlet 'dispatcherServlet'
+2026-09-12 15:56:50 Completed initialization in 3 ms
+2026-09-12 15:56:56 HikariPool-1 - Starting...
+2026-09-12 15:56:56 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3cc551bd
+2026-09-12 15:56:56 HikariPool-1 - Start completed.
+2026-09-12 16:05:47 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=13882 bytes
+2026-09-12 16:11:48 Token消耗 | 输入: 4573 | 输出: 16319 | 总计: 20892
+2026-09-12 16:11:48 AI响应解析 | finish_reason=stop | 内容长度=7588 字符
+2026-09-12 16:11:48 AI调用成功 | 耗时=361388 ms | 响应长度=7588 字符
+2026-09-12 16:11:48 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=23124 bytes
+2026-09-12 16:12:17 Token消耗 | 输入: 7712 | 输出: 1656 | 总计: 9368
+2026-09-12 16:12:17 AI响应解析 | finish_reason=stop | 内容长度=232 字符
+2026-09-12 16:12:17 AI调用成功 | 耗时=28791 ms | 响应长度=232 字符
+2026-09-12 16:12:17 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=27859 bytes
+2026-09-12 16:14:07 Token消耗 | 输入: 8362 | 输出: 5109 | 总计: 13471
+2026-09-12 16:14:07 AI响应解析 | finish_reason=stop | 内容长度=197 字符
+2026-09-12 16:14:07 AI调用成功 | 耗时=109765 ms | 响应长度=197 字符
+2026-09-12 19:14:28 HikariPool-1 - Shutdown initiated...
+2026-09-12 19:14:28 HikariPool-1 - Shutdown completed.
+2026-09-12 19:14:40 Starting ManagerApplication using Java 17.0.17 with PID 20024 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-12 19:14:40 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-12 19:14:40 The following 1 profile is active: "dev"
+2026-09-12 19:14:41 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-12 19:14:41 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-12 19:14:41 Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-09-12 19:14:42 Tomcat initialized with port(s): 8400 (http)
+2026-09-12 19:14:42 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-12 19:14:42 Starting service [Tomcat]
+2026-09-12 19:14:42 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-12 19:14:42 Initializing Spring embedded WebApplicationContext
+2026-09-12 19:14:42 Root WebApplicationContext: initialization completed in 1731 ms
+2026-09-12 19:14:44 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-12 19:14:44 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-12 19:14:44 Started ManagerApplication in 4.87 seconds (process running for 5.852)
+2026-09-12 19:14:48 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-12 19:14:48 Initializing Servlet 'dispatcherServlet'
+2026-09-12 19:14:48 Completed initialization in 2 ms
+2026-09-12 19:14:49 HikariPool-1 - Starting...
+2026-09-12 19:14:49 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@65b3fb1d
+2026-09-12 19:14:49 HikariPool-1 - Start completed.
+2026-09-12 19:16:26 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=16836 bytes
+2026-09-12 19:17:28 Token消耗 | 输入: 5679 | 输出: 3691 | 总计: 9370
+2026-09-12 19:17:28 AI响应解析 | finish_reason=stop | 内容长度=415 字符
+2026-09-12 19:17:28 AI调用成功 | 耗时=61919 ms | 响应长度=415 字符
+2026-09-12 19:19:26 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=16958 bytes
+2026-09-12 19:21:03 Token消耗 | 输入: 5730 | 输出: 5338 | 总计: 11068
+2026-09-12 19:21:03 AI响应解析 | finish_reason=stop | 内容长度=371 字符
+2026-09-12 19:21:03 AI调用成功 | 耗时=96471 ms | 响应长度=371 字符
+2026-09-12 19:25:20 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=17101 bytes
+2026-09-12 19:26:24 Token消耗 | 输入: 5786 | 输出: 3492 | 总计: 9278
+2026-09-12 19:26:24 AI响应解析 | finish_reason=stop | 内容长度=461 字符
+2026-09-12 19:26:24 AI调用成功 | 耗时=64494 ms | 响应长度=461 字符
