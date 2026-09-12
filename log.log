@@ -28111,3 +28111,1739 @@ Caused by: com.alibaba.fastjson2.JSONException: offset 382, character 2, line 5,
 2026-09-08 08:26:53 HikariPool-1 - Starting...
 2026-09-08 08:26:54 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5fbfe6a3
 2026-09-08 08:26:54 HikariPool-1 - Start completed.
+2026-09-08 10:33:02 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 10:33:02 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 10:33:02 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 10:33:02 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 10:33:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 10:33:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 10:33:03 HTTP请求失败: http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.003040&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61
+org.apache.http.NoHttpResponseException: push2his.eastmoney.com:80 failed to respond
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:141)
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:56)
+	at org.apache.http.impl.io.AbstractMessageParser.parse(AbstractMessageParser.java:259)
+	at org.apache.http.impl.DefaultBHttpClientConnection.receiveResponseHeader(DefaultBHttpClientConnection.java:163)
+	at org.apache.http.impl.conn.CPoolProxy.receiveResponseHeader(CPoolProxy.java:157)
+	at org.apache.http.protocol.HttpRequestExecutor.doReceiveResponse(HttpRequestExecutor.java:273)
+	at org.apache.http.protocol.HttpRequestExecutor.execute(HttpRequestExecutor.java:125)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:272)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186)
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89)
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:108)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.httpGet(StockAssetServiceImpl.java:75)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.fetchKlineData(StockAssetServiceImpl.java:240)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.refreshSingleStock(StockAssetServiceImpl.java:570)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.refreshStockRealtime(StockAssetServiceImpl.java:630)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.refreshStockRealtime(StockAssetController.java:148)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-08 10:33:03 股票003040K线抓取不完整（可能限流），保留旧K线数据
+2026-09-08 10:33:03 股票003040资金流抓取失败（可能限流），保留旧资金流数据
+2026-09-08 10:33:52 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 10:33:52 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 10:33:52 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 10:33:52 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 10:33:52 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 10:33:52 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 10:33:53 HTTP请求失败: http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.003040&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61
+org.apache.http.NoHttpResponseException: push2his.eastmoney.com:80 failed to respond
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:141)
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:56)
+	at org.apache.http.impl.io.AbstractMessageParser.parse(AbstractMessageParser.java:259)
+	at org.apache.http.impl.DefaultBHttpClientConnection.receiveResponseHeader(DefaultBHttpClientConnection.java:163)
+	at org.apache.http.impl.conn.CPoolProxy.receiveResponseHeader(CPoolProxy.java:157)
+	at org.apache.http.protocol.HttpRequestExecutor.doReceiveResponse(HttpRequestExecutor.java:273)
+	at org.apache.http.protocol.HttpRequestExecutor.execute(HttpRequestExecutor.java:125)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:272)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186)
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89)
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:108)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.httpGet(StockAssetServiceImpl.java:75)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.fetchKlineData(StockAssetServiceImpl.java:240)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.refreshSingleStock(StockAssetServiceImpl.java:570)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.refreshStockRealtime(StockAssetServiceImpl.java:630)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.refreshStockRealtime(StockAssetController.java:148)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-08 10:33:53 股票003040K线抓取不完整（可能限流），保留旧K线数据
+2026-09-08 10:33:53 股票003040资金流抓取失败（可能限流），保留旧资金流数据
+2026-09-08 11:19:33 HikariPool-1 - Shutdown initiated...
+2026-09-08 11:19:33 HikariPool-1 - Shutdown completed.
+2026-09-08 11:19:56 Starting ManagerApplication using Java 17.0.17 with PID 25892 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-08 11:19:56 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-08 11:19:56 The following 1 profile is active: "dev"
+2026-09-08 11:19:58 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-08 11:19:58 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-08 11:19:58 Finished Spring Data repository scanning in 19 ms. Found 0 Redis repository interfaces.
+2026-09-08 11:19:58 Tomcat initialized with port(s): 8400 (http)
+2026-09-08 11:19:59 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-08 11:19:59 Starting service [Tomcat]
+2026-09-08 11:19:59 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-08 11:19:59 Initializing Spring embedded WebApplicationContext
+2026-09-08 11:19:59 Root WebApplicationContext: initialization completed in 2209 ms
+2026-09-08 11:20:02 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-08 11:20:02 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-08 11:20:02 Started ManagerApplication in 6.104 seconds (process running for 7.56)
+2026-09-08 11:20:07 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08 11:20:07 Initializing Servlet 'dispatcherServlet'
+2026-09-08 11:20:07 Completed initialization in 2 ms
+2026-09-08 11:20:14 HikariPool-1 - Starting...
+2026-09-08 11:20:15 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@e2ffd1c
+2026-09-08 11:20:15 HikariPool-1 - Start completed.
+2026-09-08 11:20:19 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 11:20:19 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 11:20:20 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 11:20:20 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 11:20:20 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 11:20:20 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 11:20:20 HTTP请求失败: http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.003040&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61
+org.apache.http.NoHttpResponseException: push2his.eastmoney.com:80 failed to respond
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:141)
+	at org.apache.http.impl.conn.DefaultHttpResponseParser.parseHead(DefaultHttpResponseParser.java:56)
+	at org.apache.http.impl.io.AbstractMessageParser.parse(AbstractMessageParser.java:259)
+	at org.apache.http.impl.DefaultBHttpClientConnection.receiveResponseHeader(DefaultBHttpClientConnection.java:163)
+	at org.apache.http.impl.conn.CPoolProxy.receiveResponseHeader(CPoolProxy.java:157)
+	at org.apache.http.protocol.HttpRequestExecutor.doReceiveResponse(HttpRequestExecutor.java:273)
+	at org.apache.http.protocol.HttpRequestExecutor.execute(HttpRequestExecutor.java:125)
+	at org.apache.http.impl.execchain.MainClientExec.execute(MainClientExec.java:272)
+	at org.apache.http.impl.execchain.ProtocolExec.execute(ProtocolExec.java:186)
+	at org.apache.http.impl.execchain.RetryExec.execute(RetryExec.java:89)
+	at org.apache.http.impl.execchain.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.http.impl.client.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:83)
+	at org.apache.http.impl.client.CloseableHttpClient.execute(CloseableHttpClient.java:108)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.httpGet(StockAssetServiceImpl.java:75)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.fetchKlineData(StockAssetServiceImpl.java:246)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.refreshSingleStock(StockAssetServiceImpl.java:576)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.refreshStockRealtime(StockAssetServiceImpl.java:636)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.refreshStockRealtime(StockAssetController.java:148)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-08 11:20:20 股票003040K线抓取不完整（可能限流），保留旧K线数据
+2026-09-08 11:20:20 股票003040资金流抓取失败（可能限流），保留旧资金流数据
+2026-09-08 14:00:07 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2h24m49s574ms593µs500ns).
+2026-09-08 14:10:24 HikariPool-1 - Shutdown initiated...
+2026-09-08 14:10:24 HikariPool-1 - Shutdown completed.
+2026-09-08 14:10:32 Starting ManagerApplication using Java 17.0.17 with PID 23132 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-08 14:10:32 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-08 14:10:32 The following 1 profile is active: "dev"
+2026-09-08 14:10:33 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-08 14:10:33 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-08 14:10:33 Finished Spring Data repository scanning in 19 ms. Found 0 Redis repository interfaces.
+2026-09-08 14:10:34 Tomcat initialized with port(s): 8400 (http)
+2026-09-08 14:10:34 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-08 14:10:34 Starting service [Tomcat]
+2026-09-08 14:10:34 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-08 14:10:34 Initializing Spring embedded WebApplicationContext
+2026-09-08 14:10:34 Root WebApplicationContext: initialization completed in 2418 ms
+2026-09-08 14:10:37 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-08 14:10:37 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-08 14:10:37 Started ManagerApplication in 6.751 seconds (process running for 7.919)
+2026-09-08 14:10:49 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08 14:10:49 Initializing Servlet 'dispatcherServlet'
+2026-09-08 14:10:49 Completed initialization in 2 ms
+2026-09-08 14:10:50 HikariPool-1 - Starting...
+2026-09-08 14:10:50 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@da6e27f
+2026-09-08 14:10:51 HikariPool-1 - Start completed.
+2026-09-08 14:11:15 股票003040资金流抓取失败（可能限流），保留旧资金流数据
+2026-09-08 14:20:28 HikariPool-1 - Shutdown initiated...
+2026-09-08 14:20:28 HikariPool-1 - Shutdown completed.
+2026-09-08 14:23:19 Starting ManagerApplication using Java 17.0.17 with PID 18428 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-08 14:23:19 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-08 14:23:19 The following 1 profile is active: "dev"
+2026-09-08 14:23:20 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-08 14:23:20 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-08 14:23:20 Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+2026-09-08 14:23:21 Tomcat initialized with port(s): 8400 (http)
+2026-09-08 14:23:21 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-08 14:23:21 Starting service [Tomcat]
+2026-09-08 14:23:21 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-08 14:23:21 Initializing Spring embedded WebApplicationContext
+2026-09-08 14:23:21 Root WebApplicationContext: initialization completed in 1848 ms
+2026-09-08 14:23:23 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-08 14:23:24 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-08 14:23:24 Started ManagerApplication in 5.21 seconds (process running for 6.339)
+2026-09-08 14:23:32 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08 14:23:32 Initializing Servlet 'dispatcherServlet'
+2026-09-08 14:23:32 Completed initialization in 3 ms
+2026-09-08 14:23:33 HikariPool-1 - Starting...
+2026-09-08 14:23:34 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1c8c9fda
+2026-09-08 14:23:34 HikariPool-1 - Start completed.
+2026-09-08 14:23:35 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:23:35 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:23:35 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:23:35 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:23:35 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:23:35 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:23:35 HTTP请求失败 | 尝试=1/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.003040&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 14:23:36 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:23:36 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:23:36 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:23:36 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:23:36 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:23:36 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:23:36 HTTP请求失败 | 尝试=2/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.003040&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 14:23:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:23:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:23:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:23:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:23:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:23:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:23:37 HTTP请求失败 | 尝试=3/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.003040&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 14:23:37 股票003040K线抓取不完整（可能限流），保留旧K线数据
+2026-09-08 14:23:38 股票003040资金流向接口返回data为空（可能被限流或该股无资金流数据）
+2026-09-08 14:23:38 股票003040资金流抓取失败（可能限流），保留旧资金流数据
+2026-09-08 14:32:14 HikariPool-1 - Shutdown initiated...
+2026-09-08 14:32:14 HikariPool-1 - Shutdown completed.
+2026-09-08 14:32:31 Starting ManagerApplication using Java 17.0.17 with PID 21240 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-08 14:32:31 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-08 14:32:31 The following 1 profile is active: "dev"
+2026-09-08 14:32:33 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-08 14:32:33 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-08 14:32:33 Finished Spring Data repository scanning in 23 ms. Found 0 Redis repository interfaces.
+2026-09-08 14:32:34 Tomcat initialized with port(s): 8400 (http)
+2026-09-08 14:32:34 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-08 14:32:34 Starting service [Tomcat]
+2026-09-08 14:32:34 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-08 14:32:34 Initializing Spring embedded WebApplicationContext
+2026-09-08 14:32:34 Root WebApplicationContext: initialization completed in 2541 ms
+2026-09-08 14:32:37 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-08 14:32:37 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-08 14:32:37 Started ManagerApplication in 6.294 seconds (process running for 7.438)
+2026-09-08 14:38:30 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08 14:38:30 Initializing Servlet 'dispatcherServlet'
+2026-09-08 14:38:30 Completed initialization in 4 ms
+2026-09-08 14:38:33 HikariPool-1 - Starting...
+2026-09-08 14:38:34 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@737f49c5
+2026-09-08 14:38:34 HikariPool-1 - Start completed.
+2026-09-08 14:39:12 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:39:12 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:39:12 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:39:12 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:39:13 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:39:13 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:39:13 HTTP请求失败 | 尝试=1/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.603393&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 14:39:13 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:39:13 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:39:13 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:39:13 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:39:13 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:39:13 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:39:14 HTTP请求失败 | 尝试=2/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.603393&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 14:39:15 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:39:15 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:39:15 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:39:15 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:39:15 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:39:15 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:39:15 HTTP请求失败 | 尝试=3/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.603393&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 14:39:15 股票603393K线抓取不完整（可能限流），保留旧K线数据
+2026-09-08 14:44:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:44:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:44:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:44:37 HTTP请求失败 | 尝试=1/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600938&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 14:44:38 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:38 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:44:38 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:38 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:44:38 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:38 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:44:38 HTTP请求失败 | 尝试=2/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600938&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 14:44:40 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:40 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:44:40 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:40 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:44:41 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:41 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 14:44:41 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 14:44:41 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:46 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 15:30:46 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:46 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 15:30:46 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:46 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 15:30:46 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:46 HTTP请求失败 | 尝试=1/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600938&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 15:30:47 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 15:30:47 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:47 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 15:30:47 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:47 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 15:30:47 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:48 HTTP请求失败 | 尝试=2/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600938&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 15:30:49 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 15:30:49 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:49 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 15:30:49 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:49 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 15:30:49 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 15:30:49 HTTP请求失败 | 尝试=3/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600938&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 15:30:49 股票600938K线抓取不完整（可能限流），保留旧K线数据
+2026-09-08 16:13:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 16:13:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 16:13:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 16:13:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 16:13:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 16:13:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 16:13:26 HTTP请求失败 | 尝试=1/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.003040&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 16:13:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 16:13:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 16:13:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 16:13:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 16:13:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 16:13:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 16:13:27 HTTP请求失败 | 尝试=2/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.003040&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 16:13:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 16:13:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 16:13:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 16:13:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 16:13:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-08 16:13:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-08 16:13:28 HTTP请求失败 | 尝试=3/3 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.003040&klt=101&fqt=1&end=20500101&lmt=10000&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-08 16:13:28 股票003040K线抓取不完整（可能限流），保留旧K线数据
+2026-09-08 16:15:57 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=14263 bytes
+2026-09-08 16:22:08 Token消耗 | 输入: 4743 | 输出: 13822 | 总计: 18565
+2026-09-08 16:22:08 AI响应解析 | finish_reason=stop | 内容长度=7914 字符
+2026-09-08 16:22:08 AI调用成功 | 耗时=371055 ms | 响应长度=7914 字符
+2026-09-08 16:34:50 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=14263 bytes
+2026-09-08 16:35:15 HikariPool-1 - Shutdown initiated...
+2026-09-08 16:35:15 HikariPool-1 - Shutdown completed.
+2026-09-08 16:35:18 Starting ManagerApplication using Java 17.0.17 with PID 24608 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-08 16:35:18 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-08 16:35:18 The following 1 profile is active: "dev"
+2026-09-08 16:35:19 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-08 16:35:19 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-08 16:35:20 Finished Spring Data repository scanning in 34 ms. Found 0 Redis repository interfaces.
+2026-09-08 16:35:20 Tomcat initialized with port(s): 8400 (http)
+2026-09-08 16:35:20 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-08 16:35:20 Starting service [Tomcat]
+2026-09-08 16:35:20 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-08 16:35:21 Initializing Spring embedded WebApplicationContext
+2026-09-08 16:35:21 Root WebApplicationContext: initialization completed in 2701 ms
+2026-09-08 16:35:27 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-08 16:35:27 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-08 16:35:27 Started ManagerApplication in 10.26 seconds (process running for 11.359)
+2026-09-08 18:33:32 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08 18:33:32 Initializing Servlet 'dispatcherServlet'
+2026-09-08 18:33:32 Completed initialization in 24 ms
+2026-09-08 18:33:37 HikariPool-1 - Starting...
+2026-09-08 18:33:38 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@56d6fe71
+2026-09-08 18:33:38 HikariPool-1 - Start completed.
+2026-09-08 18:39:08 HikariPool-1 - Shutdown initiated...
+2026-09-08 18:39:08 HikariPool-1 - Shutdown completed.
+2026-09-08 18:59:40 Starting ManagerApplication using Java 17.0.17 with PID 17800 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-08 18:59:40 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-08 18:59:40 The following 1 profile is active: "dev"
+2026-09-08 18:59:42 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-08 18:59:42 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-08 18:59:42 Finished Spring Data repository scanning in 21 ms. Found 0 Redis repository interfaces.
+2026-09-08 18:59:43 Tomcat initialized with port(s): 8400 (http)
+2026-09-08 18:59:43 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-08 18:59:43 Starting service [Tomcat]
+2026-09-08 18:59:43 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-08 18:59:43 Initializing Spring embedded WebApplicationContext
+2026-09-08 18:59:43 Root WebApplicationContext: initialization completed in 2722 ms
+2026-09-08 18:59:47 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-08 18:59:47 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-08 18:59:47 Started ManagerApplication in 7.021 seconds (process running for 9.396)
+2026-09-08 19:00:51 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08 19:00:51 Initializing Servlet 'dispatcherServlet'
+2026-09-08 19:00:51 Completed initialization in 0 ms
+2026-09-08 19:06:23 Starting ManagerApplication using Java 17.0.17 with PID 9344 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-08 19:06:23 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-08 19:06:23 The following 1 profile is active: "dev"
+2026-09-08 19:06:25 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-08 19:06:25 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-08 19:06:25 Finished Spring Data repository scanning in 21 ms. Found 0 Redis repository interfaces.
+2026-09-08 19:06:25 Tomcat initialized with port(s): 8400 (http)
+2026-09-08 19:06:25 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-08 19:06:25 Starting service [Tomcat]
+2026-09-08 19:06:25 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-08 19:06:26 Initializing Spring embedded WebApplicationContext
+2026-09-08 19:06:26 Root WebApplicationContext: initialization completed in 2260 ms
+2026-09-08 19:06:28 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-08 19:06:28 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-08 19:06:28 Started ManagerApplication in 6.025 seconds (process running for 8.834)
+2026-09-08 19:07:05 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08 19:07:05 Initializing Servlet 'dispatcherServlet'
+2026-09-08 19:07:05 Completed initialization in 6 ms
+2026-09-08 19:07:11 HikariPool-1 - Starting...
+2026-09-08 19:07:12 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@48bbe4ab
+2026-09-08 19:07:12 HikariPool-1 - Start completed.
+2026-09-08 20:02:02 解析涨跌家数统计失败
+java.lang.NumberFormatException: For input string: "-"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.util.StockQuoteUtil.fetchRiseFallCountRealtime(StockQuoteUtil.java:262)
+	at com.xk.srhwzzqdn.manager.util.StockQuoteUtil.getMarketOverviewByDate(StockQuoteUtil.java:339)
+	at com.xk.srhwzzqdn.manager.trialExecutionArea.controller.DailyReviewController.fetchRealtimeMarketData(DailyReviewController.java:202)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-08 21:50:10 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=14508 bytes
+2026-09-08 21:50:31 AI调用异常 | endpoint=http://192.168.14.51:8080/v1/chat/completions
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1479)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1442)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.doRequest(AiCommonUtil.java:180)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.callWithSystem(AiCommonUtil.java:108)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.callAiAnalysis(StockAssetServiceImpl.java:1705)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.analyzeStock(StockAssetServiceImpl.java:1274)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.analyzeStock(StockAssetController.java:162)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-08 21:53:12 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=14480 bytes
+2026-09-08 21:53:33 AI调用异常 | endpoint=http://192.168.14.51:8080/v1/chat/completions
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1479)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1442)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.doRequest(AiCommonUtil.java:180)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.callWithSystem(AiCommonUtil.java:108)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.callAiAnalysis(StockAssetServiceImpl.java:1705)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.analyzeStock(StockAssetServiceImpl.java:1274)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.analyzeStock(StockAssetController.java:162)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-08 21:55:14 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=14763 bytes
+2026-09-08 21:55:35 AI调用异常 | endpoint=http://192.168.14.51:8080/v1/chat/completions
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1479)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1442)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.doRequest(AiCommonUtil.java:180)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.callWithSystem(AiCommonUtil.java:108)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.callAiAnalysis(StockAssetServiceImpl.java:1705)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.analyzeStock(StockAssetServiceImpl.java:1274)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.analyzeStock(StockAssetController.java:162)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-08 21:57:08 HikariPool-1 - Shutdown initiated...
+2026-09-08 21:57:08 HikariPool-1 - Shutdown completed.
+2026-09-09 08:32:19 Starting ManagerApplication using Java 17.0.17 with PID 19324 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-09 08:32:19 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-09 08:32:19 The following 1 profile is active: "dev"
+2026-09-09 08:32:22 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-09 08:32:22 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-09 08:32:22 Finished Spring Data repository scanning in 27 ms. Found 0 Redis repository interfaces.
+2026-09-09 08:32:23 Tomcat initialized with port(s): 8400 (http)
+2026-09-09 08:32:24 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-09 08:32:24 Starting service [Tomcat]
+2026-09-09 08:32:24 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-09 08:32:24 Initializing Spring embedded WebApplicationContext
+2026-09-09 08:32:24 Root WebApplicationContext: initialization completed in 4519 ms
+2026-09-09 08:32:28 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-09 08:32:28 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-09 08:32:28 Started ManagerApplication in 11.003 seconds (process running for 14.433)
+2026-09-09 08:33:11 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-09 08:33:11 Initializing Servlet 'dispatcherServlet'
+2026-09-09 08:33:11 Completed initialization in 0 ms
+2026-09-09 08:33:18 HikariPool-1 - Starting...
+2026-09-09 08:33:18 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7cbc20c1
+2026-09-09 08:33:18 HikariPool-1 - Start completed.
+2026-09-09 11:47:39 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=14m17s512ms360µs500ns).
+2026-09-09 11:59:52 Failure in @ExceptionHandler com.xk.srhwzzqdn.service.exception.GlobalExceptionHandler#error()
+org.apache.catalina.connector.ClientAbortException: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:347)
+	at org.apache.catalina.connector.OutputBuffer.flushByteBuffer(OutputBuffer.java:780)
+	at org.apache.catalina.connector.OutputBuffer.append(OutputBuffer.java:683)
+	at org.apache.catalina.connector.OutputBuffer.writeBytes(OutputBuffer.java:382)
+	at org.apache.catalina.connector.OutputBuffer.write(OutputBuffer.java:360)
+	at org.apache.catalina.connector.CoyoteOutputStream.write(CoyoteOutputStream.java:96)
+	at org.springframework.util.StreamUtils$NonClosingOutputStream.write(StreamUtils.java:267)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator._flushBuffer(UTF8JsonGenerator.java:2203)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.flush(UTF8JsonGenerator.java:1197)
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1063)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483)
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:103)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:194)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:413)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:74)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:141)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1341)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1152)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1098)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:132)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:97)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:53)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:532)
+	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:118)
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1381)
+	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:764)
+	at org.apache.tomcat.util.net.SocketWrapperBase.writeBlocking(SocketWrapperBase.java:589)
+	at org.apache.tomcat.util.net.SocketWrapperBase.write(SocketWrapperBase.java:533)
+	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.doWrite(Http11OutputBuffer.java:540)
+	at org.apache.coyote.http11.filters.ChunkedOutputFilter.doWrite(ChunkedOutputFilter.java:110)
+	at org.apache.coyote.http11.Http11OutputBuffer.doWrite(Http11OutputBuffer.java:193)
+	at org.apache.coyote.Response.doWrite(Response.java:613)
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:334)
+	... 61 common frames omitted
+2026-09-09 11:59:55 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=12m22s3ms852µs600ns).
+2026-09-09 18:39:40 HikariPool-1 - Shutdown initiated...
+2026-09-09 18:39:40 HikariPool-1 - Shutdown completed.
+2026-09-09 19:09:16 Starting ManagerApplication using Java 17.0.17 with PID 13428 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-09 19:09:16 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-09 19:09:16 The following 1 profile is active: "dev"
+2026-09-09 19:09:17 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-09 19:09:17 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-09 19:09:17 Finished Spring Data repository scanning in 19 ms. Found 0 Redis repository interfaces.
+2026-09-09 19:09:18 Tomcat initialized with port(s): 8400 (http)
+2026-09-09 19:09:18 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-09 19:09:18 Starting service [Tomcat]
+2026-09-09 19:09:18 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-09 19:09:18 Initializing Spring embedded WebApplicationContext
+2026-09-09 19:09:18 Root WebApplicationContext: initialization completed in 2144 ms
+2026-09-09 19:09:21 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-09 19:09:21 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-09 19:09:21 Started ManagerApplication in 5.569 seconds (process running for 8.206)
+2026-09-09 19:10:05 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-09 19:10:05 Initializing Servlet 'dispatcherServlet'
+2026-09-09 19:10:05 Completed initialization in 3 ms
+2026-09-09 19:10:45 HikariPool-1 - Starting...
+2026-09-09 19:10:45 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3f18bd2a
+2026-09-09 19:10:45 HikariPool-1 - Start completed.
+2026-09-09 19:37:48 解析涨跌家数统计失败
+java.lang.NumberFormatException: For input string: "-"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.util.StockQuoteUtil.fetchRiseFallCountRealtime(StockQuoteUtil.java:262)
+	at com.xk.srhwzzqdn.manager.util.StockQuoteUtil.getMarketOverviewByDate(StockQuoteUtil.java:339)
+	at com.xk.srhwzzqdn.manager.trialExecutionArea.controller.DailyReviewController.fetchRealtimeMarketData(DailyReviewController.java:202)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-09 19:42:55 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1379 bytes
+2026-09-09 19:43:16 AI调用异常 | endpoint=http://192.168.14.51:8080/v1/chat/completions
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1479)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1442)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.doRequest(AiCommonUtil.java:180)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.callWithSystem(AiCommonUtil.java:108)
+	at com.xk.srhwzzqdn.manager.trialExecutionArea.controller.DailyReviewController.aiAnalyzeTargets(DailyReviewController.java:172)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-09 19:43:24 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1379 bytes
+2026-09-09 19:44:05 Token消耗 | 输入: 298 | 输出: 2058 | 总计: 2356
+2026-09-09 19:44:05 AI响应解析 | finish_reason=stop | 内容长度=398 字符
+2026-09-09 19:44:05 AI调用成功 | 耗时=40701 ms | 响应长度=398 字符
+2026-09-09 19:45:29 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1551 bytes
+2026-09-09 19:46:09 Token消耗 | 输入: 374 | 输出: 1427 | 总计: 1801
+2026-09-09 19:46:09 AI响应解析 | finish_reason=stop | 内容长度=522 字符
+2026-09-09 19:46:09 AI调用成功 | 耗时=40285 ms | 响应长度=522 字符
+2026-09-09 19:47:16 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=8182 bytes
+2026-09-09 19:48:08 Token消耗 | 输入: 2672 | 输出: 2911 | 总计: 5583
+2026-09-09 19:48:08 AI响应解析 | finish_reason=stop | 内容长度=421 字符
+2026-09-09 19:48:08 AI调用成功 | 耗时=51974 ms | 响应长度=421 字符
+2026-09-09 21:52:50 HikariPool-1 - Shutdown initiated...
+2026-09-09 21:52:50 HikariPool-1 - Shutdown completed.
+2026-09-10 08:31:13 Starting ManagerApplication using Java 17.0.17 with PID 19292 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-10 08:31:13 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-10 08:31:13 The following 1 profile is active: "dev"
+2026-09-10 08:31:15 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-10 08:31:15 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-10 08:31:15 Finished Spring Data repository scanning in 30 ms. Found 0 Redis repository interfaces.
+2026-09-10 08:31:16 Tomcat initialized with port(s): 8400 (http)
+2026-09-10 08:31:16 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-10 08:31:16 Starting service [Tomcat]
+2026-09-10 08:31:16 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-10 08:31:16 Initializing Spring embedded WebApplicationContext
+2026-09-10 08:31:16 Root WebApplicationContext: initialization completed in 3317 ms
+2026-09-10 08:31:20 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-10 08:31:20 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-10 08:31:20 Started ManagerApplication in 7.94 seconds (process running for 10.606)
+2026-09-10 08:34:51 Starting ManagerApplication using Java 17.0.17 with PID 12664 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-10 08:34:51 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-10 08:34:51 The following 1 profile is active: "dev"
+2026-09-10 08:34:53 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-10 08:34:53 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-10 08:34:53 Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-09-10 08:34:54 Tomcat initialized with port(s): 8400 (http)
+2026-09-10 08:34:54 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-10 08:34:54 Starting service [Tomcat]
+2026-09-10 08:34:54 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-10 08:34:54 Initializing Spring embedded WebApplicationContext
+2026-09-10 08:34:54 Root WebApplicationContext: initialization completed in 2188 ms
+2026-09-10 08:34:56 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-10 08:34:56 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-10 08:34:56 Started ManagerApplication in 5.4 seconds (process running for 7.033)
+2026-09-10 08:35:39 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-10 08:35:39 Initializing Servlet 'dispatcherServlet'
+2026-09-10 08:35:39 Completed initialization in 0 ms
+2026-09-10 08:35:46 HikariPool-1 - Starting...
+2026-09-10 08:35:47 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2f7295f
+2026-09-10 08:35:47 HikariPool-1 - Start completed.
+2026-09-10 11:59:40 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=14m19s547ms189µs900ns).
+2026-09-10 17:17:20 Failure in @ExceptionHandler com.xk.srhwzzqdn.service.exception.GlobalExceptionHandler#error()
+org.apache.catalina.connector.ClientAbortException: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:347)
+	at org.apache.catalina.connector.OutputBuffer.flushByteBuffer(OutputBuffer.java:780)
+	at org.apache.catalina.connector.OutputBuffer.append(OutputBuffer.java:683)
+	at org.apache.catalina.connector.OutputBuffer.writeBytes(OutputBuffer.java:382)
+	at org.apache.catalina.connector.OutputBuffer.write(OutputBuffer.java:360)
+	at org.apache.catalina.connector.CoyoteOutputStream.write(CoyoteOutputStream.java:96)
+	at org.springframework.util.StreamUtils$NonClosingOutputStream.write(StreamUtils.java:267)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator._flushBuffer(UTF8JsonGenerator.java:2203)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.flush(UTF8JsonGenerator.java:1197)
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1063)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483)
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:103)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:194)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:413)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:74)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:141)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1341)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1152)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1098)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:132)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:97)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:53)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:532)
+	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:118)
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1381)
+	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:764)
+	at org.apache.tomcat.util.net.SocketWrapperBase.writeBlocking(SocketWrapperBase.java:589)
+	at org.apache.tomcat.util.net.SocketWrapperBase.write(SocketWrapperBase.java:533)
+	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.doWrite(Http11OutputBuffer.java:540)
+	at org.apache.coyote.http11.filters.ChunkedOutputFilter.doWrite(ChunkedOutputFilter.java:110)
+	at org.apache.coyote.http11.Http11OutputBuffer.doWrite(Http11OutputBuffer.java:193)
+	at org.apache.coyote.Response.doWrite(Response.java:613)
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:334)
+	... 61 common frames omitted
+2026-09-10 17:17:59 Failure in @ExceptionHandler com.xk.srhwzzqdn.service.exception.GlobalExceptionHandler#error()
+org.apache.catalina.connector.ClientAbortException: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:347)
+	at org.apache.catalina.connector.OutputBuffer.flushByteBuffer(OutputBuffer.java:780)
+	at org.apache.catalina.connector.OutputBuffer.append(OutputBuffer.java:683)
+	at org.apache.catalina.connector.OutputBuffer.writeBytes(OutputBuffer.java:382)
+	at org.apache.catalina.connector.OutputBuffer.write(OutputBuffer.java:360)
+	at org.apache.catalina.connector.CoyoteOutputStream.write(CoyoteOutputStream.java:96)
+	at org.springframework.util.StreamUtils$NonClosingOutputStream.write(StreamUtils.java:267)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator._flushBuffer(UTF8JsonGenerator.java:2203)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.flush(UTF8JsonGenerator.java:1197)
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1063)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483)
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:103)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:194)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:413)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:74)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:141)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1341)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1152)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1098)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:132)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:97)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:53)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:532)
+	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:118)
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1381)
+	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:764)
+	at org.apache.tomcat.util.net.SocketWrapperBase.writeBlocking(SocketWrapperBase.java:589)
+	at org.apache.tomcat.util.net.SocketWrapperBase.write(SocketWrapperBase.java:533)
+	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.doWrite(Http11OutputBuffer.java:540)
+	at org.apache.coyote.http11.filters.ChunkedOutputFilter.doWrite(ChunkedOutputFilter.java:110)
+	at org.apache.coyote.http11.Http11OutputBuffer.doWrite(Http11OutputBuffer.java:193)
+	at org.apache.coyote.Response.doWrite(Response.java:613)
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:334)
+	... 61 common frames omitted
+2026-09-10 17:18:00 Failure in @ExceptionHandler com.xk.srhwzzqdn.service.exception.GlobalExceptionHandler#error()
+org.apache.catalina.connector.ClientAbortException: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:347)
+	at org.apache.catalina.connector.OutputBuffer.flushByteBuffer(OutputBuffer.java:780)
+	at org.apache.catalina.connector.OutputBuffer.append(OutputBuffer.java:683)
+	at org.apache.catalina.connector.OutputBuffer.writeBytes(OutputBuffer.java:382)
+	at org.apache.catalina.connector.OutputBuffer.write(OutputBuffer.java:360)
+	at org.apache.catalina.connector.CoyoteOutputStream.write(CoyoteOutputStream.java:96)
+	at org.springframework.util.StreamUtils$NonClosingOutputStream.write(StreamUtils.java:267)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator._flushBuffer(UTF8JsonGenerator.java:2203)
+	at com.fasterxml.jackson.core.json.UTF8JsonGenerator.flush(UTF8JsonGenerator.java:1197)
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1063)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483)
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:103)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor.handleReturnValue(RequestResponseBodyMethodProcessor.java:194)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver.doResolveHandlerMethodException(ExceptionHandlerExceptionResolver.java:413)
+	at org.springframework.web.servlet.handler.AbstractHandlerMethodExceptionResolver.doResolveException(AbstractHandlerMethodExceptionResolver.java:74)
+	at org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver.resolveException(AbstractHandlerExceptionResolver.java:141)
+	at org.springframework.web.servlet.handler.HandlerExceptionResolverComposite.resolveException(HandlerExceptionResolverComposite.java:80)
+	at org.springframework.web.servlet.DispatcherServlet.processHandlerException(DispatcherServlet.java:1341)
+	at org.springframework.web.servlet.DispatcherServlet.processDispatchResult(DispatcherServlet.java:1152)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1098)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: java.io.IOException: 你的主机中的软件中止了一个已建立的连接。
+	at java.base/sun.nio.ch.SocketDispatcher.write0(Native Method)
+	at java.base/sun.nio.ch.SocketDispatcher.write(SocketDispatcher.java:54)
+	at java.base/sun.nio.ch.IOUtil.writeFromNativeBuffer(IOUtil.java:132)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:97)
+	at java.base/sun.nio.ch.IOUtil.write(IOUtil.java:53)
+	at java.base/sun.nio.ch.SocketChannelImpl.write(SocketChannelImpl.java:532)
+	at org.apache.tomcat.util.net.NioChannel.write(NioChannel.java:118)
+	at org.apache.tomcat.util.net.NioEndpoint$NioSocketWrapper.doWrite(NioEndpoint.java:1381)
+	at org.apache.tomcat.util.net.SocketWrapperBase.doWrite(SocketWrapperBase.java:764)
+	at org.apache.tomcat.util.net.SocketWrapperBase.writeBlocking(SocketWrapperBase.java:589)
+	at org.apache.tomcat.util.net.SocketWrapperBase.write(SocketWrapperBase.java:533)
+	at org.apache.coyote.http11.Http11OutputBuffer$SocketOutputBuffer.doWrite(Http11OutputBuffer.java:540)
+	at org.apache.coyote.http11.filters.ChunkedOutputFilter.doWrite(ChunkedOutputFilter.java:110)
+	at org.apache.coyote.http11.Http11OutputBuffer.doWrite(Http11OutputBuffer.java:193)
+	at org.apache.coyote.Response.doWrite(Response.java:613)
+	at org.apache.catalina.connector.OutputBuffer.realWriteBytes(OutputBuffer.java:334)
+	... 61 common frames omitted
+2026-09-10 19:00:33 Reconnecting, last destination was /127.0.0.1:6379
+2026-09-10 19:00:33 Cannot reconnect to [127.0.0.1/<unresolved>:6379]: Connection refused: getsockopt: /127.0.0.1:6379
+2026-09-10 19:00:42 Reconnecting, last destination was 127.0.0.1/<unresolved>:6379
+2026-09-10 19:00:42 Cannot reconnect to [127.0.0.1/<unresolved>:6379]: Connection refused: getsockopt: /127.0.0.1:6379
+2026-09-10 19:00:50 Reconnecting, last destination was 127.0.0.1/<unresolved>:6379
+2026-09-10 19:00:50 Cannot reconnect to [127.0.0.1/<unresolved>:6379]: Connection refused: getsockopt: /127.0.0.1:6379
+2026-09-10 19:01:07 Reconnecting, last destination was 127.0.0.1/<unresolved>:6379
+2026-09-10 19:01:07 Cannot reconnect to [127.0.0.1/<unresolved>:6379]: Connection refused: getsockopt: /127.0.0.1:6379
+2026-09-10 19:01:27 HikariPool-1 - Shutdown initiated...
+2026-09-10 19:01:27 HikariPool-1 - Shutdown completed.
+2026-09-10 19:31:47 Starting ManagerApplication using Java 17.0.17 with PID 23048 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-10 19:31:47 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-10 19:31:47 The following 1 profile is active: "dev"
+2026-09-10 19:31:48 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-10 19:31:48 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-10 19:31:48 Finished Spring Data repository scanning in 21 ms. Found 0 Redis repository interfaces.
+2026-09-10 19:31:49 Tomcat initialized with port(s): 8400 (http)
+2026-09-10 19:31:49 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-10 19:31:49 Starting service [Tomcat]
+2026-09-10 19:31:49 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-10 19:31:49 Initializing Spring embedded WebApplicationContext
+2026-09-10 19:31:49 Root WebApplicationContext: initialization completed in 2162 ms
+2026-09-10 19:31:52 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-10 19:31:52 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-10 19:31:52 Started ManagerApplication in 5.801 seconds (process running for 8.808)
+2026-09-10 19:32:49 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-10 19:32:49 Initializing Servlet 'dispatcherServlet'
+2026-09-10 19:32:49 Completed initialization in 2 ms
+2026-09-10 19:33:14 HikariPool-1 - Starting...
+2026-09-10 19:33:14 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6790e87a
+2026-09-10 19:33:14 HikariPool-1 - Start completed.
+2026-09-10 22:19:19 解析涨跌家数统计失败
+java.lang.NumberFormatException: For input string: "-"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.util.StockQuoteUtil.fetchRiseFallCountRealtime(StockQuoteUtil.java:262)
+	at com.xk.srhwzzqdn.manager.util.StockQuoteUtil.getMarketOverviewByDate(StockQuoteUtil.java:339)
+	at com.xk.srhwzzqdn.manager.trialExecutionArea.controller.DailyReviewController.fetchRealtimeMarketData(DailyReviewController.java:202)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-10 22:24:42 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1389 bytes
+2026-09-10 22:25:18 Token消耗 | 输入: 299 | 输出: 1523 | 总计: 1822
+2026-09-10 22:25:18 AI响应解析 | finish_reason=stop | 内容长度=460 字符
+2026-09-10 22:25:18 AI调用成功 | 耗时=35209 ms | 响应长度=460 字符
+2026-09-10 22:25:43 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1505 bytes
+2026-09-10 22:26:18 Token消耗 | 输入: 364 | 输出: 1243 | 总计: 1607
+2026-09-10 22:26:18 AI响应解析 | finish_reason=stop | 内容长度=481 字符
+2026-09-10 22:26:18 AI调用成功 | 耗时=34588 ms | 响应长度=481 字符
+2026-09-10 22:26:58 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=8407 bytes
+2026-09-10 22:27:56 Token消耗 | 输入: 2747 | 输出: 2794 | 总计: 5541
+2026-09-10 22:27:56 AI响应解析 | finish_reason=stop | 内容长度=406 字符
+2026-09-10 22:27:56 AI调用成功 | 耗时=58267 ms | 响应长度=406 字符
+2026-09-10 22:43:26 HikariPool-1 - Shutdown initiated...
+2026-09-10 22:43:26 HikariPool-1 - Shutdown completed.
+2026-09-11 08:35:07 Starting ManagerApplication using Java 17.0.17 with PID 264 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-11 08:35:07 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-11 08:35:07 The following 1 profile is active: "dev"
+2026-09-11 08:35:09 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-11 08:35:09 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-11 08:35:09 Finished Spring Data repository scanning in 31 ms. Found 0 Redis repository interfaces.
+2026-09-11 08:35:10 Tomcat initialized with port(s): 8400 (http)
+2026-09-11 08:35:10 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-11 08:35:10 Starting service [Tomcat]
+2026-09-11 08:35:10 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-11 08:35:11 Initializing Spring embedded WebApplicationContext
+2026-09-11 08:35:11 Root WebApplicationContext: initialization completed in 3499 ms
+2026-09-11 08:35:14 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-11 08:35:14 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-11 08:35:14 Started ManagerApplication in 7.959 seconds (process running for 11.409)
+2026-09-11 08:35:53 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-11 08:35:53 Initializing Servlet 'dispatcherServlet'
+2026-09-11 08:35:53 Completed initialization in 5 ms
+2026-09-11 08:36:24 HikariPool-1 - Starting...
+2026-09-11 08:36:24 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@ebe93f7
+2026-09-11 08:36:24 HikariPool-1 - Start completed.
+2026-09-11 11:48:55 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=19m27s668ms646µs200ns).
+2026-09-11 18:20:00 HikariPool-1 - Shutdown initiated...
+2026-09-11 18:20:00 HikariPool-1 - Shutdown completed.
+2026-09-11 18:58:24 Starting ManagerApplication using Java 17.0.17 with PID 15732 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-11 18:58:24 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-11 18:58:24 The following 1 profile is active: "dev"
+2026-09-11 18:58:25 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-11 18:58:25 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-11 18:58:25 Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-09-11 18:58:26 Tomcat initialized with port(s): 8400 (http)
+2026-09-11 18:58:26 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-11 18:58:26 Starting service [Tomcat]
+2026-09-11 18:58:26 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-11 18:58:26 Initializing Spring embedded WebApplicationContext
+2026-09-11 18:58:26 Root WebApplicationContext: initialization completed in 2200 ms
+2026-09-11 18:58:29 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-11 18:58:29 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-11 18:58:29 Started ManagerApplication in 5.725 seconds (process running for 8.595)
+2026-09-11 18:59:19 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-11 18:59:19 Initializing Servlet 'dispatcherServlet'
+2026-09-11 18:59:19 Completed initialization in 0 ms
+2026-09-11 19:02:04 HikariPool-1 - Starting...
+2026-09-11 19:02:04 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@213a6380
+2026-09-11 19:02:04 HikariPool-1 - Start completed.
+2026-09-11 19:11:20 解析涨跌家数统计失败
+java.lang.NumberFormatException: For input string: "-"
+	at java.base/jdk.internal.math.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2054)
+	at java.base/jdk.internal.math.FloatingDecimal.parseDouble(FloatingDecimal.java:110)
+	at java.base/java.lang.Double.parseDouble(Double.java:651)
+	at com.xk.srhwzzqdn.manager.util.StockQuoteUtil.fetchRiseFallCountRealtime(StockQuoteUtil.java:262)
+	at com.xk.srhwzzqdn.manager.util.StockQuoteUtil.getMarketOverviewByDate(StockQuoteUtil.java:339)
+	at com.xk.srhwzzqdn.manager.trialExecutionArea.controller.DailyReviewController.fetchRealtimeMarketData(DailyReviewController.java:202)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-11 21:26:55 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=13882 bytes
+2026-09-11 21:27:16 AI调用异常 | endpoint=http://192.168.14.51:8080/v1/chat/completions
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1479)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1442)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.doRequest(AiCommonUtil.java:180)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.callWithSystem(AiCommonUtil.java:108)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.callAiAnalysis(StockAssetServiceImpl.java:1705)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.analyzeStock(StockAssetServiceImpl.java:1274)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.analyzeStock(StockAssetController.java:162)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-11 21:29:30 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=14833 bytes
+2026-09-11 21:29:51 AI调用异常 | endpoint=http://192.168.14.51:8080/v1/chat/completions
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1479)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1442)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.doRequest(AiCommonUtil.java:180)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.callWithSystem(AiCommonUtil.java:108)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.callAiAnalysis(StockAssetServiceImpl.java:1705)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.analyzeStock(StockAssetServiceImpl.java:1274)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.analyzeStock(StockAssetController.java:162)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-11 23:46:19 HikariPool-1 - Shutdown initiated...
+2026-09-11 23:46:19 HikariPool-1 - Shutdown completed.
+2026-09-12 09:53:30 Starting ManagerApplication using Java 17.0.17 with PID 24212 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-12 09:53:30 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-12 09:53:30 The following 1 profile is active: "dev"
+2026-09-12 09:53:31 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-12 09:53:31 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-12 09:53:31 Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2026-09-12 09:53:32 Tomcat initialized with port(s): 8400 (http)
+2026-09-12 09:53:32 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-12 09:53:32 Starting service [Tomcat]
+2026-09-12 09:53:32 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-12 09:53:32 Initializing Spring embedded WebApplicationContext
+2026-09-12 09:53:32 Root WebApplicationContext: initialization completed in 1906 ms
+2026-09-12 09:53:33 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-12 09:53:34 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-12 09:53:34 Started ManagerApplication in 4.317 seconds (process running for 6.54)
+2026-09-12 09:54:32 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-12 09:54:32 Initializing Servlet 'dispatcherServlet'
+2026-09-12 09:54:32 Completed initialization in 6 ms
+2026-09-12 09:54:38 HikariPool-1 - Starting...
+2026-09-12 09:54:38 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@35c9658e
+2026-09-12 09:54:38 HikariPool-1 - Start completed.
+2026-09-12 14:31:43 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=8376 bytes
+2026-09-12 14:32:47 Token消耗 | 输入: 2834 | 输出: 3390 | 总计: 6224
+2026-09-12 14:32:47 AI响应解析 | finish_reason=stop | 内容长度=1171 字符
+2026-09-12 14:32:47 AI调用成功 | 耗时=63331 ms | 响应长度=1171 字符

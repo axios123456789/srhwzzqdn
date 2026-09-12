@@ -9,6 +9,7 @@ import com.xk.srhwzzqdn.manager.assetControlArea.mapper.StockAssetMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.StockAssetService;
 import com.xk.srhwzzqdn.model.dto.assetControl.StockQueryDto;
 import com.xk.srhwzzqdn.model.entity.assetControl.*;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -39,7 +40,8 @@ public class StockAssetServiceImpl implements StockAssetService {
 
     private static final String QUOTE_URL = "http://push2.eastmoney.com/api/qt/stock/get";
     private static final String KLINE_URL = "http://push2his.eastmoney.com/api/qt/stock/kline/get";
-    private static final String FLOW_URL = "http://push2.eastmoney.com/api/qt/stock/fflow/daykline/get";
+    // fflow/daykline 资金流接口已由 push2 迁移至 push2his（push2 下该路径返回 rc:100 data:null，且多IP部分残留导致间歇性成功）
+    private static final String FLOW_URL = "http://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get";
     private static final String FINANCE_URL = "https://datacenter.eastmoney.com/securities/api/data/get";
     private static final String ANNOUNCE_URL = "https://np-anotice-stock.eastmoney.com/api/security/ann";
     private static final String NEWS_SEARCH_URL = "https://search-api-web.eastmoney.com/search/jsonp";
@@ -69,16 +71,41 @@ public class StockAssetServiceImpl implements StockAssetService {
     }
 
     private static String httpGet(String url) {
-        try (CloseableHttpClient client = HttpClients.createDefault()) {
-            HttpGet request = new HttpGet(url);
-            request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-            try (CloseableHttpResponse response = client.execute(request)) {
-                if (response.getStatusLine().getStatusCode() == 200) {
-                    return EntityUtils.toString(response.getEntity(), "UTF-8");
+        return httpGet(url, 3);
+    }
+
+    /**
+     * 带超时与重试的GET请求：东财接口反爬存在间歇性拦截（空响应/断连/非200），
+     * 单次失败即放弃会导致行情/K线/资金流等数据偶发缺失，故默认最多尝试3次，间隔递增500ms/1000ms
+     */
+    private static String httpGet(String url, int maxAttempts) {
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try (CloseableHttpClient client = HttpClients.createDefault()) {
+                HttpGet request = new HttpGet(url);
+                request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+                // 连接10s/读取15s超时，避免反爬拦截时请求无限挂起拖垮整个刷新流程
+                request.setConfig(RequestConfig.custom()
+                        .setConnectTimeout(10000)
+                        .setSocketTimeout(15000)
+                        .build());
+                try (CloseableHttpResponse response = client.execute(request)) {
+                    if (response.getStatusLine().getStatusCode() == 200) {
+                        return EntityUtils.toString(response.getEntity(), "UTF-8");
+                    }
+                    logger.warn("HTTP非200响应 | 状态={} | 尝试={}/{} | url={}",
+                            response.getStatusLine().getStatusCode(), attempt, maxAttempts, url);
+                }
+            } catch (Exception e) {
+                logger.warn("HTTP请求失败 | 尝试={}/{} | url={} | 原因={}", attempt, maxAttempts, url, e.getMessage());
+            }
+            if (attempt < maxAttempts) {
+                try {
+                    Thread.sleep(500L * attempt);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    return null;
                 }
             }
-        } catch (Exception e) {
-            logger.error("HTTP请求失败: {}", url, e);
         }
         return null;
     }
@@ -150,11 +177,17 @@ public class StockAssetServiceImpl implements StockAssetService {
         stockBasic.setCreateBy("system");
         stockAssetMapper.addStockBasic(stockBasic);
 
-        // 日K 300根 / 周K 250根 / 月K 300根（月K覆盖全部历史）
-        for (int[] kt : new int[][]{{1, 300}, {2, 250}, {3, 300}}) {
+        // K线全量抓取：日K 10000根 / 周K 2000根 / 月K 600根，覆盖全部历史（与刷新流程保持一致；请求间200ms限流防反爬）
+        for (int[] kt : new int[][]{{1, 10000}, {2, 2000}, {3, 600}}) {
             List<StockKline> klineList = fetchKlineData(secid, stockCode, kt[0], kt[1]);
             if (!klineList.isEmpty()) {
                 stockAssetMapper.batchAddStockKline(klineList);
+            }
+            try {
+                Thread.sleep(200);   // 反爬限流
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                break;
             }
         }
 
@@ -173,9 +206,11 @@ public class StockAssetServiceImpl implements StockAssetService {
         List<StockCapitalFlow> flowList = fetchCapitalFlowData(secid, stockCode, 30);
         if (!flowList.isEmpty()) {
             stockAssetMapper.batchAddStockCapitalFlow(flowList);
+            return "成功获取股票数据：" + stockBasic.getStockName() + "（" + stockCode + "），含行情/K线/财务/股东人数/资金流";
         }
-
-        return "成功获取股票数据：" + stockBasic.getStockName() + "（" + stockCode + "），含行情/K线/财务/股东人数/资金流";
+        // 资金流偶发被反爬拦截，如实提示，避免用户误以为已有资金流数据
+        return "成功获取股票数据：" + stockBasic.getStockName() + "（" + stockCode
+                + "），含行情/K线/财务/股东人数；资金流本次抓取失败，请稍后点击【实时数据】刷新补全";
     }
 
     private StockBasic fetchStockBasic(String secid, String stockCode) {
@@ -279,13 +314,22 @@ public class StockAssetServiceImpl implements StockAssetService {
         String url = FLOW_URL + "?secid=" + secid + "&lmt=" + days +
                 "&klt=1&fields1=f1,f2,f3,f7&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61,f62,f63,f64,f65";
         String body = httpGet(url);
-        if (body == null) return Collections.emptyList();
+        if (body == null) {
+            logger.warn("股票{}资金流向请求失败（重试后仍失败，可能被反爬限流）", stockCode);
+            return Collections.emptyList();
+        }
         try {
             JSONObject json = JSON.parseObject(body);
             JSONObject d = json.getJSONObject("data");
-            if (d == null) return Collections.emptyList();
+            if (d == null) {
+                logger.warn("股票{}资金流向接口返回data为空（可能被限流或该股无资金流数据）", stockCode);
+                return Collections.emptyList();
+            }
             JSONArray klines = d.getJSONArray("klines");
-            if (klines == null || klines.isEmpty()) return Collections.emptyList();
+            if (klines == null || klines.isEmpty()) {
+                logger.warn("股票{}资金流向接口klines为空（可能被限流或该股无资金流数据）", stockCode);
+                return Collections.emptyList();
+            }
 
             List<StockCapitalFlow> list = new ArrayList<>();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
