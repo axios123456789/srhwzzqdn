@@ -59,6 +59,15 @@ export const AnalyzeStock = (stockCode) => {
   return request({ url: `${base_api}/analyzeStock/${stockCode}`, method: 'get', timeout: 900000 });
 };
 
+export const GetStockTrend = (stockCode, tradeDate) => {
+  return request({ url: `${base_api}/getStockTrend/${stockCode}/${tradeDate}`, method: 'get', timeout: 120000 });
+};
+
+export const GetChipAnalysis = (stockCode) => {
+  // 纯后端算法分析（不调AI），短超时即可
+  return request({ url: `${base_api}/getChipAnalysis/${stockCode}`, method: 'get', timeout: 30000 });
+};
+
 export const UpdateStockBasic = (data) => {
   return request({ url: `${base_api}/updateStockBasic`, method: 'put', data });
 };

@@ -1,0 +1,37 @@
+[    1048ms] [LOG] 2024/1/19 @ https://gbfek.dfcfw.com/deploy/fd_quote_editor/work/editor.js:21
+[    2157ms] [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ https://86.push2.eastmoney.com/api/qt/stock/trends2/sse?fields1=f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13,f17&fields2=f51,f52,f53,f54,f55,f56,f57,f58&mpi=1000&ut=fa5fd1943c7b386f172d6893dbfba10b&secid=1.600900&ndays=1&iscr=0&iscca=0&wbp2u=|0|0|0|web:0
+[    2277ms] [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=jQuery351004284783310540763_1789221982200&secid=1.600900&ut=fa5fd1943c7b386f172d6893dbfba10b&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=1&beg=0&end=20500101&smplmt=460&lmt=1000000&_=1789221982201:0
+[    2760ms] Object
+[    2760ms] [LOG] el JSHandle@node @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    2767ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    2797ms] [LOG] script.src https://gbapi.eastmoney.com/webarticlelist/api/Article/Articlelist?code=600900&sorttype=1&ps=36&from=CommonBaPost&deviceid=quoteweb&version=200&product=Guba&plat=Web&needzd=true&callback=jsonp_1789221984073_h8hqftc2vps @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3912ms] [LOG] json.re [Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object, Object] @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3914ms] [LOG] tempData {data: Array(18), stockbar_code: 600900, view_more_url: http://guba.eastmoney.com/list,600900.html, view_more_url_f: http://guba.eastmoney.com/list,600900,f.html, view_more_ba_name: 长江电力} @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3915ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3920ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3922ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3923ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3924ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3926ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3927ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3929ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3931ms] [LOG] execute app @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3932ms] [LOG] post_title:劝证金公司买回五亿五千万股要紧！！小作文和托二年 reply:0 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3932ms] [LOG] post_title:给大家看一个数据。长江电力近期走势、基本面情况稍 reply:4 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3932ms] [LOG] post_title:文森的投资实盘周报No.8--纽威/药明/福耀/ reply:0 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3933ms] [LOG] post_title:政策与市场共振 电力板块投资机遇凸显 reply:18 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3933ms] [LOG] post_title:水电行业半年报盘点：中小龙头量利爆发，电投水电扣 reply:7 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3933ms] [LOG] post_title:六库联合调度。是最大的谎言。是不是在给电网公司调 reply:4 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3933ms] [LOG] post_title:给你们讲讲股市的本质，股市是有千万个公司的集散地 reply:1 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3934ms] [LOG] post_title:未来两周国庆长假之前，大盘会暴跌，电力会反弹，长 reply:0 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3934ms] [LOG] post_title:美的和长江电力，哪个更适合收息 reply:31 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3934ms] [LOG] post_title:600744 华银电力——与上证指数月线相反走势 reply:1 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3934ms] [LOG] post_title:九月十二。星期六。沪深资金流入股票。 reply:2 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3935ms] [LOG] post_title:这10家公司，值得终身持有 reply:71 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3935ms] [LOG] post_title:长江电力十年ROE均值14.89%，行业排第一 reply:0 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3935ms] [LOG] post_title:出货 reply:1 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3935ms] [LOG] post_title:听说长电傻瓜股民最近“分红”听说受到重创，长电为 reply:2 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3935ms] [LOG] post_title:希望你往上冲到9月底，拜托啦 reply:1 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3935ms] [LOG] post_title:什么政策不政策，你们压根是以股民身份做炒股之事， reply:3 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[    3936ms] [LOG] post_title:史诗级的抄底机会～甘源食品，季K线底背离，请求各 reply:10 @ https://gbfek.eastmoney.com/deploy/article_list/work/article_list.js:21
+[   16242ms] [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600900&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52&klt=1&fqt=1&end=20500101&lmt=2400:0

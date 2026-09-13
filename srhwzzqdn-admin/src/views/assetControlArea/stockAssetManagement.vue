@@ -398,6 +398,29 @@
 
         <!-- 基本面 -->
         <el-tab-pane label="基本面" name="finance">
+          <!-- 筹码与主力动向（后端纯算法，不调AI） -->
+          <div v-if="chipAnalysis" class="chip-analysis-card">
+            <div class="chip-card-header">
+              <span class="chip-card-title">筹码与主力动向（系统算法）</span>
+              <el-tag :type="chipTagType" effect="dark" size="small">
+                {{ chipAnalysis.phaseTitle }}
+              </el-tag>
+              <span v-if="chipAnalysis.holderDays >= 0" class="chip-holder-days">
+                上期户数披露距今 {{ chipAnalysis.holderDays }} 天
+              </span>
+            </div>
+            <div class="chip-judgment" :class="'chip-' + chipAnalysis.level">
+              {{ chipAnalysis.judgment }}
+            </div>
+            <div class="chip-meta">
+              <span>筹码趋势：{{ chipAnalysis.chipTrend }}</span>
+              <span>主力资金：{{ chipAnalysis.flowDesc }}</span>
+              <span>技术状态：{{ chipAnalysis.techDesc }}</span>
+            </div>
+            <ul class="chip-evidence">
+              <li v-for="(e, i) in chipAnalysis.evidence" :key="i">{{ e }}</li>
+            </ul>
+          </div>
           <el-table
             v-if="financeData.length"
             :data="financeData"
@@ -778,7 +801,7 @@
                 <div class="score-item">
                   <div class="score-item-head">
                     <span>技术面</span>
-                    <span :class="{ neg: aiResult.ruleScore.tech < 0 }">{{
+                    <span :class="{ neg: aiResult.ruleScore.tech < 50 }">{{
                       aiResult.ruleScore.tech
                     }}</span>
                   </div>
@@ -791,7 +814,7 @@
                 <div class="score-item">
                   <div class="score-item-head">
                     <span>基本面</span>
-                    <span :class="{ neg: aiResult.ruleScore.fund < 0 }">{{
+                    <span :class="{ neg: aiResult.ruleScore.fund < 50 }">{{
                       aiResult.ruleScore.fund
                     }}</span>
                   </div>
@@ -804,7 +827,7 @@
                 <div class="score-item">
                   <div class="score-item-head">
                     <span>资金面</span>
-                    <span :class="{ neg: aiResult.ruleScore.flow < 0 }">{{
+                    <span :class="{ neg: aiResult.ruleScore.flow < 50 }">{{
                       aiResult.ruleScore.flow
                     }}</span>
                   </div>
@@ -817,7 +840,7 @@
                 <div class="score-item">
                   <div class="score-item-head">
                     <span>消息面</span>
-                    <span :class="{ neg: aiResult.ruleScore.news < 0 }">{{
+                    <span :class="{ neg: aiResult.ruleScore.news < 50 }">{{
                       aiResult.ruleScore.news
                     }}</span>
                   </div>
@@ -827,8 +850,24 @@
                     :stroke-width="10"
                   />
                 </div>
+                <div class="score-item">
+                  <div class="score-item-head">
+                    <span>大盘板块环境</span>
+                    <span :class="{ neg: aiResult.ruleScore.env < 50 }">{{
+                      aiResult.ruleScore.env
+                    }}</span>
+                  </div>
+                  <el-progress
+                    :percentage="Math.max(0, aiResult.ruleScore.env)"
+                    color="#909399"
+                    :stroke-width="10"
+                  />
+                </div>
                 <div class="position-desc">
                   {{ aiResult.ruleScore.positionDesc }}
+                </div>
+                <div class="position-desc">
+                  {{ aiResult.ruleScore.envDesc }}
                 </div>
                 <div
                   v-if="aiResult.sectorInfo && aiResult.sectorInfo.name"
@@ -889,6 +928,43 @@
         </el-tab-pane>
       </el-tabs>
     </div>
+
+    <!-- 分时图模态窗（通达信风格） -->
+    <el-dialog
+      v-model="trendModalVisible"
+      :title="`${selectedStock?.stockName || ''} ${trendModalDate} 分时图${trendScale === 5 ? '（5分钟级）' : ''}`"
+      width="1000px"
+      @opened="renderTrendChart"
+      @closed="onTrendModalClosed"
+    >
+      <!-- 通达信式顶部信息栏：名称代码/日期/现价/涨跌额/涨跌幅，红涨绿跌 -->
+      <div v-if="trendSummary" class="trend-info-bar">
+        <span class="trend-name">
+          {{ selectedStock?.stockName }}
+          <span class="trend-code">{{ selectedStock?.stockCode }}</span>
+        </span>
+        <span class="trend-date">{{ trendModalDate }}</span>
+        <span class="trend-price" :class="trendSummary.change >= 0 ? 'price-up' : 'price-down'">
+          {{ trendSummary.price.toFixed(2) }}
+        </span>
+        <span :class="trendSummary.change >= 0 ? 'price-up' : 'price-down'">
+          {{ trendSummary.change >= 0 ? '+' : '' }}{{ trendSummary.change.toFixed(2) }}
+          {{ trendSummary.change >= 0 ? '+' : '' }}{{ trendSummary.pct.toFixed(2) }}%
+        </span>
+        <span class="trend-legend">
+          <i class="legend-line price-line"></i>价格
+          <i class="legend-line avg-line"></i>均价
+        </span>
+      </div>
+      <div v-loading="trendLoading" style="height: 460px; position: relative;">
+        <div ref="trendChartRef" style="width: 100%; height: 100%;"></div>
+        <el-empty
+          v-if="!trendLoading && trendEmpty"
+          :description="trendEmptyText"
+          style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+        />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -918,6 +994,8 @@ import {
   RefreshStockNews,
   RefreshStockRealtime,
   AnalyzeStock,
+  GetStockTrend,
+  GetChipAnalysis,
 } from '@/api/stockAsset'
 
 const stockCodeInput = ref('')
@@ -930,6 +1008,11 @@ const flowChartRef = ref(null)
 const klineType = ref(1)
 const activeTab = ref('kline')
 const financeData = ref([])
+const chipAnalysis = ref(null)
+const chipTagType = computed(() => {
+  const lv = chipAnalysis.value?.level
+  return lv === 'danger' ? 'danger' : lv === 'success' ? 'success' : lv === 'warning' ? 'warning' : 'info'
+})
 const holderData = ref([])
 const klineRaw = ref([])
 const flowRaw = ref([])
@@ -938,6 +1021,15 @@ const newsLoading = ref(false)
 const aiLoading = ref(false)
 const aiResult = ref(null)
 const aiTime = ref('')
+const trendModalVisible = ref(false)
+const trendModalDate = ref('')
+const trendScale = ref(1)
+const trendLoading = ref(false)
+const trendEmpty = ref(false)
+const trendEmptyText = ref('该日期无分时数据')
+const trendChartRef = ref(null)
+const trendDataCache = ref(null)
+let trendChart = null
 let klineChart = null
 let flowChart = null
 
@@ -1057,6 +1149,7 @@ const handleRowClick = async row => {
     if (res.code === 200) {
       selectedStock.value = res.data
       financeData.value = []
+      chipAnalysis.value = null
       holderData.value = []
       klineRaw.value = []
       flowRaw.value = []
@@ -1112,6 +1205,13 @@ const loadFinanceData = async () => {
     const hres = await GetStockHolderNum(selectedStock.value.stockCode, 60)
     if (hres.code === 200) {
       holderData.value = hres.data || []
+    }
+    // 筹码与主力动向（后端纯算法，不调AI）：失败不阻塞财务表格展示
+    try {
+      const cres = await GetChipAnalysis(selectedStock.value.stockCode)
+      chipAnalysis.value = cres.code === 200 ? cres.data : null
+    } catch (e) {
+      chipAnalysis.value = null
     }
   } catch (e) {
     console.error('财务数据加载失败', e)
@@ -1213,7 +1313,7 @@ const refreshNews = async () => {
 }
 
 const scoreTagType = s =>
-  s >= 80 ? 'success' : s >= 70 ? 'primary' : s >= 60 ? 'warning' : 'danger'
+  s >= 70 ? 'success' : s >= 55 ? 'primary' : s >= 45 ? 'warning' : 'danger'
 
 // 单行刷新：只刷新该只股票的实时数据（行情/K线/资金流/财务/消息）
 const rowRefreshing = ref('')
@@ -1417,16 +1517,19 @@ const exportReport = () => {
         <tr><th>维度</th><th>评分</th><th>权重</th><th>说明</th></tr>
         <tr><td>技术面</td><td>${
           s.tech
-        }</td><td>35%</td><td>均线/MACD/KDJ/RSI/量价</td></tr>
+        }</td><td>30%</td><td>均线/MACD/KDJ/RSI/量价</td></tr>
         <tr><td>基本面</td><td>${
           s.fund
-        }</td><td>30%</td><td>成长性/ROE/估值</td></tr>
+        }</td><td>25%</td><td>成长性/ROE/估值</td></tr>
         <tr><td>资金面</td><td>${
           s.flow
         }</td><td>20%</td><td>主力资金流向</td></tr>
         <tr><td>消息面</td><td>${
           s.news
         }</td><td>15%</td><td>消息时效与公告密度</td></tr>
+        <tr><td>大盘板块环境</td><td>${
+          s.env
+        }</td><td>10%</td><td>${s.envDesc || '-'}</td></tr>
       </table>
       <p style="font-size:13px;color:#606266;margin:10px 0 0;">${
         s.positionDesc
@@ -1466,11 +1569,11 @@ const exportWordReport = () => {
   const sec = aiResult.value.sectorInfo || {}
   const dims = scoreDetailDims.value
 
-  // 维度总分徽章配色：≥70红(看多)、<45绿(看空，含负分)、其余橙(中性)
+  // 维度总分徽章配色：≥65红(看多)、<35绿(看空)、其余橙(中性)，50为中性标准
   const levelColor = v => {
     const n = Number(String(v).match(/-?\d+/))
     if (isNaN(n)) return '#e6a23c'
-    return n >= 70 ? '#c0392b' : n < 45 ? '#27ae60' : '#e6a23c'
+    return n >= 65 ? '#c0392b' : n < 35 ? '#27ae60' : '#e6a23c'
   }
   const scoreColor = t =>
     t === 'plus' ? '#c0392b' : t === 'minus' ? '#27ae60' : '#909399'
@@ -1550,11 +1653,11 @@ const exportWordReport = () => {
       </td>
       <th width="18%">维度</th><th width="16%">评分</th><th width="14%">权重</th><th>说明</th>
     </tr>
-    <tr><td>技术面</td><td align="center"><b style="color:${levelColor(s.tech)};">${s.tech}</b></td><td align="center">35%</td><td>均线/MACD/KDJ/RSI/量价</td></tr>
-    <tr><td>基本面</td><td align="center"><b style="color:${levelColor(s.fund)};">${s.fund}</b></td><td align="center">30%</td><td>成长性/ROE/估值</td></tr>
+    <tr><td>技术面</td><td align="center"><b style="color:${levelColor(s.tech)};">${s.tech}</b></td><td align="center">30%</td><td>均线/MACD/KDJ/RSI/量价</td></tr>
+    <tr><td>基本面</td><td align="center"><b style="color:${levelColor(s.fund)};">${s.fund}</b></td><td align="center">25%</td><td>成长性/ROE/估值</td></tr>
     <tr><td>资金面</td><td align="center"><b style="color:${levelColor(s.flow)};">${s.flow}</b></td><td align="center">20%</td><td>主力资金流向</td></tr>
     <tr><td>消息面</td><td align="center"><b style="color:${levelColor(s.news)};">${s.news}</b></td><td align="center">15%</td><td>消息时效与公告密度</td></tr>
-    <tr><td colspan="3" style="background-color:#f5f7fa;">环境修正</td><td>${s.envDesc || '-'}</td></tr>
+    <tr><td>大盘板块环境</td><td align="center"><b style="color:${levelColor(s.env)};">${s.env}</b></td><td align="center">10%</td><td>${s.envDesc || '-'}</td></tr>
   </table>
   <p style="font-size:10.5pt;color:#606266;">${s.positionDesc || ''}</p>
   ${
@@ -1840,6 +1943,209 @@ const renderKlineChart = data => {
     true
   )
   klineChart.resize()
+  // 点击K线某天 → 打开分时图模态窗
+  klineChart.off('click')
+  klineChart.on('click', params => {
+    if (params.componentType === 'series' && params.seriesName === 'K线') {
+      const k = sorted[params.dataIndex]
+      if (k && k.tradeDate) openTrendModal(k.tradeDate)
+    }
+  })
+}
+
+const openTrendModal = async tradeDate => {
+  trendModalDate.value = tradeDate
+  trendModalVisible.value = true
+  trendLoading.value = true
+  trendEmpty.value = false
+  trendDataCache.value = null
+  try {
+    const res = await GetStockTrend(selectedStock.value.stockCode, tradeDate)
+    if (res.code === 200 && res.data) {
+      trendDataCache.value = res.data
+      trendScale.value = res.data.scale || 1
+      trendEmpty.value = !res.data.trendList || res.data.trendList.length === 0
+      if (trendEmpty.value) trendEmptyText.value = '该日期无分钟数据'
+    } else {
+      trendEmpty.value = true
+      trendEmptyText.value = res.msg || '获取分时数据失败'
+    }
+  } catch (e) {
+    trendEmpty.value = true
+    trendEmptyText.value = e.message || '获取分时数据失败'
+  } finally {
+    trendLoading.value = false
+    if (trendDataCache.value && !trendEmpty.value) {
+      nextTick(() => renderTrendChart())
+    }
+  }
+}
+
+// 顶部信息栏：现价/涨跌额/涨跌幅（取当日最后一分钟收盘价与昨收比较）
+const trendSummary = computed(() => {
+  const cache = trendDataCache.value
+  if (!cache || !cache.trendList || !cache.trendList.length) return null
+  const preClose = Number(cache.preClose ?? 0)
+  const last = cache.trendList[cache.trendList.length - 1]
+  const price = Number(last.price)
+  const change = price - preClose
+  const pct = preClose ? (change / preClose) * 100 : 0
+  return { price, change, pct }
+})
+
+const renderTrendChart = () => {
+  if (!trendChartRef.value || !trendDataCache.value || trendEmpty.value) return
+  if (trendChart) {
+    trendChart.dispose()
+    trendChart = null
+  }
+  trendChart = echarts.init(trendChartRef.value)
+  const list = trendDataCache.value.trendList
+  const preClose = Number(trendDataCache.value.preClose ?? 0)
+  const times = list.map(p => p.time.substring(11, 16))
+  const prices = list.map(p => Number(p.price))
+  const avgPrices = list.map(p => Number(p.avgPrice))
+  const volumes = list.map(p => Number(p.volume))
+  const allVals = [...prices, ...avgPrices, preClose]
+  const minVal = Math.min(...allVals)
+  const maxVal = Math.max(...allVals)
+  const padding = (maxVal - minVal) * 0.08 || 0.05
+  const pMin = minVal - padding
+  const pMax = maxVal + padding
+  // 右轴涨跌幅与左轴价格同区间线性映射，0% 对齐昨收线位置
+  const pctOf = v => (preClose ? ((v - preClose) / preClose) * 100 : 0)
+  const pctMin = pctOf(pMin)
+  const pctMax = pctOf(pMax)
+  const fmtPct = v => (v > 0 ? '+' : '') + Number(v).toFixed(2) + '%'
+  // 通达信式五段刻度：09:30 / 10:30 / 11:30/13:00 / 14:00 / 15:00
+  const keyTimes = ['09:30', '10:30', '11:30', '14:00', '15:00']
+  trendChart.setOption({
+    animation: false,
+    backgroundColor: '#fff',
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'cross', label: { backgroundColor: '#555' } },
+      formatter: params => {
+        const idx = params[0]?.dataIndex
+        if (idx == null) return ''
+        const p = list[idx]
+        const price = Number(p.price)
+        const change = price - preClose
+        const pct = pctOf(price)
+        const color = change >= 0 ? '#ec0000' : '#00da3c'
+        let html = `<div style="font-weight:600;margin-bottom:4px;">${p.time.substring(11, 16)}</div>`
+        html += `价格：<span style="color:${color};font-weight:600;">${price.toFixed(2)}</span> <span style="color:${color}">${change >= 0 ? '+' : ''}${change.toFixed(2)} / ${fmtPct(pct)}</span><br/>`
+        html += `均价：<span style="color:#d99a00;">${Number(p.avgPrice).toFixed(2)}</span><br/>`
+        html += `成交量：${Number(p.volume).toLocaleString()}`
+        return html
+      },
+    },
+    legend: {
+      data: ['价格', '均价'],
+      top: 2,
+      right: 80,
+      itemWidth: 14,
+      textStyle: { fontSize: 12 },
+    },
+    grid: [
+      { left: 60, right: 70, top: 30, height: '58%' },
+      { left: 60, right: 70, top: '74%', height: '20%' },
+    ],
+    xAxis: [
+      {
+        type: 'category',
+        data: times,
+        boundaryGap: false,
+        axisTick: { show: false },
+        axisLine: { lineStyle: { color: '#999' } },
+        axisLabel: {
+          color: '#333',
+          interval: 0,
+          formatter: v =>
+            keyTimes.includes(v) ? v : v === '11:30' ? '11:30/13:00' : '',
+        },
+        splitLine: { show: false },
+      },
+      {
+        type: 'category',
+        gridIndex: 1,
+        data: times,
+        axisLabel: { show: false },
+        axisTick: { show: false },
+        axisLine: { lineStyle: { color: '#999' } },
+      },
+    ],
+    yAxis: [
+      {
+        min: pMin,
+        max: pMax,
+        axisLabel: { color: '#333' },
+        splitLine: { lineStyle: { color: '#eee' } },
+      },
+      {
+        gridIndex: 0,
+        position: 'right',
+        min: pctMin,
+        max: pctMax,
+        axisLabel: { color: '#333', formatter: fmtPct },
+        splitLine: { show: false },
+      },
+      {
+        gridIndex: 1,
+        splitNumber: 2,
+        axisLabel: { show: false },
+        splitLine: { show: false },
+      },
+    ],
+    series: [
+      {
+        name: '价格',
+        type: 'line',
+        data: prices,
+        showSymbol: false,
+        lineStyle: { width: 1.2, color: '#2b5fad' },
+        itemStyle: { color: '#2b5fad' },
+      },
+      {
+        name: '均价',
+        type: 'line',
+        data: avgPrices,
+        showSymbol: false,
+        lineStyle: { width: 1.2, color: '#f0a800' },
+        itemStyle: { color: '#f0a800' },
+      },
+      {
+        name: '昨收',
+        type: 'line',
+        data: times.map(() => preClose),
+        showSymbol: false,
+        lineStyle: { width: 1, type: 'dashed', color: '#999' },
+        tooltip: { show: false },
+      },
+      {
+        name: '成交量',
+        type: 'bar',
+        xAxisIndex: 1,
+        yAxisIndex: 2,
+        data: volumes.map((v, i) => ({
+          value: v,
+          itemStyle: {
+            color: prices[i] >= (i > 0 ? prices[i - 1] : preClose) ? '#ec0000' : '#00da3c',
+          },
+        })),
+      },
+    ],
+  })
+  trendChart.resize()
+}
+
+const onTrendModalClosed = () => {
+  if (trendChart) {
+    trendChart.dispose()
+    trendChart = null
+  }
+  trendDataCache.value = null
+  trendEmpty.value = false
 }
 
 const renderFlowChart = data => {
@@ -2034,6 +2340,7 @@ const handleDelete = row => {
             selectedStock.value = null
             klineRaw.value = []
             financeData.value = []
+            chipAnalysis.value = null
             holderData.value = []
           }
         }
@@ -2203,6 +2510,129 @@ onBeforeUnmount(() => {
 
 .price-down {
   color: #00da3c;
+}
+
+/* 分时图通达信式顶部信息栏 */
+.trend-info-bar {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 4px 4px 10px;
+  border-bottom: 1px solid #ebeef5;
+  font-size: 13px;
+}
+
+.trend-info-bar .trend-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #303133;
+}
+
+.trend-info-bar .trend-code {
+  font-size: 12px;
+  font-weight: 400;
+  color: #909399;
+  margin-left: 4px;
+}
+
+.trend-info-bar .trend-date {
+  color: #606266;
+}
+
+.trend-info-bar .trend-price {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.trend-info-bar .trend-legend {
+  margin-left: auto;
+  color: #606266;
+  font-size: 12px;
+}
+
+.trend-info-bar .legend-line {
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  vertical-align: middle;
+  margin: 0 4px 0 10px;
+}
+
+.trend-info-bar .legend-line.price-line {
+  background: #2b5fad;
+}
+
+.trend-info-bar .legend-line.avg-line {
+  background: #f0a800;
+}
+
+/* 基本面页：筹码与主力动向算法分析卡片 */
+.chip-analysis-card {
+  border: 1px solid #ebeef5;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  background: #fafbfc;
+}
+
+.chip-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.chip-card-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #303133;
+}
+
+.chip-holder-days {
+  font-size: 12px;
+  color: #909399;
+  margin-left: auto;
+}
+
+.chip-judgment {
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: #f4f4f5;
+  color: #303133;
+}
+
+.chip-judgment.chip-success {
+  background: #f0f9eb;
+  color: #529b2e;
+}
+
+.chip-judgment.chip-danger {
+  background: #fef0f0;
+  color: #c45656;
+}
+
+.chip-judgment.chip-warning {
+  background: #fdf6ec;
+  color: #b88230;
+}
+
+.chip-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #606266;
+}
+
+.chip-evidence {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #909399;
+  line-height: 1.7;
 }
 
 .metric-grid {

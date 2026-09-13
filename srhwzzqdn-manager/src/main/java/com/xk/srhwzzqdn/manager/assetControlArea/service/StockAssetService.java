@@ -33,6 +33,14 @@ public interface StockAssetService {
 
     Map<String, Object> analyzeStock(String stockCode);
 
+    Map<String, Object> getStockTrend(String stockCode, String tradeDate);
+
+    /**
+     * 基本面页筹码与主力动向分析（纯后端算法，不调AI）：
+     * 结合股东户数披露时效×K线走势阶段判定主力处于吸筹/拉升/派发
+     */
+    Map<String, Object> getChipAnalysis(String stockCode);
+
     void updateStockBasic(StockBasic stockBasic);
 
     void deleteStockDataByCode(String stockCode);

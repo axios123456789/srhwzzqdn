@@ -1,0 +1,3 @@
+[      14ms] [LOG] onbeforeunload save spyCache @ https://pss.bdstatic.com/r/www/cache/static/protocol/https/global/js/all_async_search_c278a9f.js:1869
+[   35296ms] [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600900&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52&klt=1&fqt=1&end=20500101&lmt=2400:0
+[   62741ms] [ERROR] Failed to load resource: net::ERR_EMPTY_RESPONSE @ https://push2his.eastmoney.com/api/qt/stock/kline/get?cb=__cb&secid=1.600900&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52&klt=1&fqt=1&end=20500101&lmt=2400:0

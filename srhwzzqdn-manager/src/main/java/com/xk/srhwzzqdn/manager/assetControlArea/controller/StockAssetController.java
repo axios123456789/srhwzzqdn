@@ -167,6 +167,35 @@ public class StockAssetController {
         }
     }
 
+    /**
+     * 获取指定日期分时数据（转发东方财富trends2接口，按日期过滤）
+     */
+    @GetMapping("/getStockTrend/{stockCode}/{tradeDate}")
+    public Result getStockTrend(@PathVariable String stockCode, @PathVariable String tradeDate) {
+        try {
+            Map<String, Object> result = stockAssetService.getStockTrend(stockCode, tradeDate);
+            return Result.build(result, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("获取分时数据失败", e);
+            return Result.build(null, 500, "获取分时数据失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 基本面页筹码与主力动向分析（纯后端算法，不调AI，响应快）：
+     * 结合股东户数披露时效×K线走势阶段判定主力处于吸筹/拉升/派发
+     */
+    @GetMapping("/getChipAnalysis/{stockCode}")
+    public Result getChipAnalysis(@PathVariable String stockCode) {
+        try {
+            Map<String, Object> result = stockAssetService.getChipAnalysis(stockCode);
+            return Result.build(result, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("筹码分析失败", e);
+            return Result.build(null, 500, "筹码分析失败：" + e.getMessage());
+        }
+    }
+
     @PutMapping("/updateStockBasic")
     public Result updateStockBasic(@RequestBody StockBasic stockBasic) {
         try {

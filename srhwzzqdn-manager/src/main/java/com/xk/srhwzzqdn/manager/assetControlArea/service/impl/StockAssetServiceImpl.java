@@ -53,6 +53,10 @@ public class StockAssetServiceImpl implements StockAssetService {
     private static final int AI_ANALYSIS_CACHE_MAX = 32;                  // 缓存条目上限，防内存膨胀
     private final Map<String, AiAnalysisCacheEntry> aiAnalysisCache = new ConcurrentHashMap<>();
 
+    // 行业板块列表缓存（交易日5分钟内不变，避免分页5次请求密集触发东财反爬限流）
+    private static volatile JSONArray cachedSectorDiff = null;
+    private static volatile long sectorCacheTime = 0L;
+
     private static class AiAnalysisCacheEntry {
         final Map<String, Object> result;
         final long expireAt;
@@ -842,70 +846,70 @@ public class StockAssetServiceImpl implements StockAssetService {
         // ---------- 技术面 0-100（趋势20+排列15+斜率5+MACD15+KDJ10+RSI8+量价16+换手4+突破8，按位置修正）----------
         double tech = 0;
         // 1) 趋势：现价与各均线关系（20分）
-        if (lastClose > ma5) { tech += 5; techDetail.add("+5 现价站上MA5(" + String.format("%.2f", ma5) + ")"); }
-        if (lastClose > ma10) { tech += 5; techDetail.add("+5 现价站上MA10(" + String.format("%.2f", ma10) + ")"); }
-        if (lastClose > ma20) { tech += 5; techDetail.add("+5 现价站上MA20(" + String.format("%.2f", ma20) + ")"); }
-        if (lastClose > ma60) { tech += 5; techDetail.add("+5 现价站上MA60(" + String.format("%.2f", ma60) + ")"); }
+        if (lastClose > ma5) { tech += 5; techDetail.add(ind(5) + " 现价站上MA5(" + String.format("%.2f", ma5) + ")"); }
+        if (lastClose > ma10) { tech += 5; techDetail.add(ind(5) + " 现价站上MA10(" + String.format("%.2f", ma10) + ")"); }
+        if (lastClose > ma20) { tech += 5; techDetail.add(ind(5) + " 现价站上MA20(" + String.format("%.2f", ma20) + ")"); }
+        if (lastClose > ma60) { tech += 5; techDetail.add(ind(5) + " 现价站上MA60(" + String.format("%.2f", ma60) + ")"); }
         // 2) 均线排列（15分）
         boolean bullAll = ma5 > ma10 && ma10 > ma20 && ma20 > ma60;
         boolean bullShort = !bullAll && ma5 > ma10 && ma10 > ma20;
         boolean bearAll = ma5 < ma10 && ma10 < ma20 && ma20 < ma60;
-        if (bullAll) { tech += 15; techDetail.add("+15 均线多头排列(MA5>MA10>MA20>MA60)"); }
-        else if (bullShort) { tech += 10; techDetail.add("+10 短中期均线多头(MA5>MA10>MA20，MA60未确认)"); }
-        else if (bearAll) { tech -= 12; techDetail.add("-12 均线空头排列(MA5<MA10<MA20<MA60)"); }
+        if (bullAll) { tech += 15; techDetail.add(ind(15) + " 均线多头排列(MA5>MA10>MA20>MA60)"); }
+        else if (bullShort) { tech += 10; techDetail.add(ind(10) + " 短中期均线多头(MA5>MA10>MA20，MA60未确认)"); }
+        else if (bearAll) { tech -= 12; techDetail.add(ind(-12) + " 均线空头排列(MA5<MA10<MA20<MA60)"); }
         // 3) MA20斜率（±5分）：与10日前的MA20对比
         boolean ma20Rising = false, ma20Falling = false;
         if (closes.size() > 30) {
             double ma20Prev10 = avgLast(closes.subList(0, closes.size() - 10), 20);
             ma20Rising = ma20 > ma20Prev10 * 1.002;
             ma20Falling = ma20 < ma20Prev10 * 0.998;
-            if (ma20Rising) { tech += 5; techDetail.add("+5 MA20上行(中期趋势向好)"); }
-            else if (ma20Falling) { tech -= 3; techDetail.add("-3 MA20下行(中期趋势偏弱)"); }
+            if (ma20Rising) { tech += 5; techDetail.add(ind(5) + " MA20上行(中期趋势向好)"); }
+            else if (ma20Falling) { tech -= 3; techDetail.add(ind(-3) + " MA20下行(中期趋势偏弱)"); }
         }
         // 4) MACD动量（15分）
-        if (macd[0] > macd[1]) { tech += 6; techDetail.add("+6 MACD金叉运行中(DIF>DEA)"); }
+        if (macd[0] > macd[1]) { tech += 6; techDetail.add(ind(6) + " MACD金叉运行中(DIF>DEA)"); }
         if (macd[2] > 0) {
-            if (macd[2] > macdPrev[2]) { tech += 6; techDetail.add("+6 MACD红柱放大(上涨动能增强)"); }
-            else { tech += 2; techDetail.add("+2 MACD红柱缩小(上涨动能衰减)"); }
+            if (macd[2] > macdPrev[2]) { tech += 6; techDetail.add(ind(6) + " MACD红柱放大(上涨动能增强)"); }
+            else { tech += 2; techDetail.add(ind(2) + " MACD红柱缩小(上涨动能衰减)"); }
         }
-        if (macd[0] > 0) { tech += 3; techDetail.add("+3 MACD零轴上方(多头市场)"); }
-        else if (macd[0] > macdPrev[0]) { tech += 2; techDetail.add("+2 DIF零轴下方上拐(反弹信号)"); }
+        if (macd[0] > 0) { tech += 3; techDetail.add(ind(3) + " MACD零轴上方(多头市场)"); }
+        else if (macd[0] > macdPrev[0]) { tech += 2; techDetail.add(ind(2) + " DIF零轴下方上拐(反弹信号)"); }
         // 5) KDJ（10分）
         boolean kdjGolden = kdj[0] > kdj[1] && kdjPrev[0] <= kdjPrev[1];
-        if (kdj[0] > kdj[1]) { tech += 4; techDetail.add("+4 KDJ的K在D上方"); }
-        if (kdjGolden) { tech += 4; techDetail.add("+4 KDJ刚形成金叉"); }
-        if (kdj[0] > 85 || kdj[2] > 100) { tech -= 8; techDetail.add("-8 KDJ超买(K>85或J>100)"); }
+        if (kdj[0] > kdj[1]) { tech += 4; techDetail.add(ind(4) + " KDJ的K在D上方"); }
+        if (kdjGolden) { tech += 4; techDetail.add(ind(4) + " KDJ刚形成金叉"); }
+        if (kdj[0] > 85 || kdj[2] > 100) { tech -= 8; techDetail.add(ind(-8) + " KDJ超买(K>85或J>100)"); }
         if (kdj[0] < 20 || kdj[2] < 0) {
-            if (positionPct < 40) { tech += 6; techDetail.add("+6 KDJ超卖且股价处中低位(反弹弹性大)"); }
-            else { tech += 2; techDetail.add("+2 KDJ超卖"); }
+            if (positionPct < 40) { tech += 6; techDetail.add(ind(6) + " KDJ超卖且股价处中低位(反弹弹性大)"); }
+            else { tech += 2; techDetail.add(ind(2) + " KDJ超卖"); }
         }
         // 6) RSI（8分）
-        if (rsi14 >= 45 && rsi14 <= 70) { tech += 8; techDetail.add("+8 RSI14=" + String.format("%.1f", rsi14) + "强势区(45~70)"); }
-        else if ((rsi14 >= 40 && rsi14 < 45) || (rsi14 > 70 && rsi14 <= 75)) { tech += 3; techDetail.add("+3 RSI14=" + String.format("%.1f", rsi14) + "中性偏强"); }
-        else if (rsi14 > 75) { tech -= 8; techDetail.add("-8 RSI14=" + String.format("%.1f", rsi14) + "超买"); }
-        else if (rsi14 < 25) { tech += 4; techDetail.add("+4 RSI14=" + String.format("%.1f", rsi14) + "超卖"); }
+        if (rsi14 >= 45 && rsi14 <= 70) { tech += 8; techDetail.add(ind(8) + " RSI14=" + String.format("%.1f", rsi14) + "强势区(45~70)"); }
+        else if ((rsi14 >= 40 && rsi14 < 45) || (rsi14 > 70 && rsi14 <= 75)) { tech += 3; techDetail.add(ind(3) + " RSI14=" + String.format("%.1f", rsi14) + "中性偏强"); }
+        else if (rsi14 > 75) { tech -= 8; techDetail.add(ind(-8) + " RSI14=" + String.format("%.1f", rsi14) + "超买"); }
+        else if (rsi14 < 25) { tech += 4; techDetail.add(ind(4) + " RSI14=" + String.format("%.1f", rsi14) + "超卖"); }
         // 7) 量价配合（16分）
         double volRatio = (prevK != null && prevK.getVolume() != null && prevK.getVolume() > 0 && lastK.getVolume() != null)
                 ? lastK.getVolume() / (double) prevK.getVolume() : 1;
         double todayChg = lastK.getChangePct() == null ? 0 : lastK.getChangePct().doubleValue();
         boolean volUp = volRatio >= 1.3, volDown = volRatio <= 0.7;
-        if (todayChg > 0 && volUp) { tech += 8; techDetail.add("+8 放量上涨(量为昨日" + String.format("%.2f", volRatio) + "倍，量价健康)"); }
-        else if (todayChg > 0 && volDown) { tech -= 3; techDetail.add("-3 缩量上涨(量为昨日" + String.format("%.2f", volRatio) + "倍，追高存疑)"); }
-        else if (todayChg < 0 && volUp) { tech -= 10; techDetail.add("-10 放量下跌(量为昨日" + String.format("%.2f", volRatio) + "倍，出货嫌疑)"); }
-        else if (todayChg < 0 && volDown) { tech -= 2; techDetail.add("-2 缩量回调(量为昨日" + String.format("%.2f", volRatio) + "倍，或为洗盘)"); }
+        if (todayChg > 0 && volUp) { tech += 8; techDetail.add(ind(8) + " 放量上涨(量为昨日" + String.format("%.2f", volRatio) + "倍，量价健康)"); }
+        else if (todayChg > 0 && volDown) { tech -= 3; techDetail.add(ind(-3) + " 缩量上涨(量为昨日" + String.format("%.2f", volRatio) + "倍，追高存疑)"); }
+        else if (todayChg < 0 && volUp) { tech -= 10; techDetail.add(ind(-10) + " 放量下跌(量为昨日" + String.format("%.2f", volRatio) + "倍，出货嫌疑)"); }
+        else if (todayChg < 0 && volDown) { tech -= 2; techDetail.add(ind(-2) + " 缩量回调(量为昨日" + String.format("%.2f", volRatio) + "倍，或为洗盘)"); }
         // 8) 换手率健康度（4分）
         double turnoverRateToday = lastK.getTurnoverRate() == null ? 0 : lastK.getTurnoverRate().doubleValue();
-        if (turnoverRateToday >= 1 && turnoverRateToday <= 7) { tech += 4; techDetail.add("+4 换手率" + String.format("%.2f%%", turnoverRateToday) + "适中"); }
-        else if (turnoverRateToday > 15 && positionPct >= 70) { tech -= 5; techDetail.add("-5 换手率" + String.format("%.2f%%", turnoverRateToday) + "高位过度换手"); }
-        else if (turnoverRateToday > 0 && turnoverRateToday < 0.5) { tech -= 3; techDetail.add("-3 换手率" + String.format("%.2f%%", turnoverRateToday) + "流动性不足"); }
+        if (turnoverRateToday >= 1 && turnoverRateToday <= 7) { tech += 4; techDetail.add(ind(4) + " 换手率" + String.format("%.2f%%", turnoverRateToday) + "适中"); }
+        else if (turnoverRateToday > 15 && positionPct >= 70) { tech -= 5; techDetail.add(ind(-5) + " 换手率" + String.format("%.2f%%", turnoverRateToday) + "高位过度换手"); }
+        else if (turnoverRateToday > 0 && turnoverRateToday < 0.5) { tech -= 3; techDetail.add(ind(-3) + " 换手率" + String.format("%.2f%%", turnoverRateToday) + "流动性不足"); }
         // 9) 突破与位置修正（+8/-8/×0.9/+5）
         boolean newHigh = positionPct >= 99 || lastClose >= yearHigh * 0.995;
-        if (newHigh && todayChg > 0 && volUp) { tech += 8; techDetail.add("+8 放量创年内新高(突破有效)"); }
-        else if (newHigh && !volUp) { tech -= 3; techDetail.add("-3 缩量触及年内新高(假突破风险)"); }
-        if (positionPct >= 80) { tech *= 0.9; techDetail.add("×0.9 股价处高位(" + String.format("%.0f%%", positionPct) + "位置)，技术信号统一打折防追高"); }
-        if (positionPct <= 20 && rsi14 < 35) { tech += 5; techDetail.add("+5 低位超跌(RSI<35，反弹弹性大)"); }
+        if (newHigh && todayChg > 0 && volUp) { tech += 8; techDetail.add(ind(8) + " 放量创年内新高(突破有效)"); }
+        else if (newHigh && !volUp) { tech -= 3; techDetail.add(ind(-3) + " 缩量触及年内新高(假突破风险)"); }
+        if (positionPct >= 80) { tech *= 0.9; techDetail.add(ind(-2) + " 股价处高位(" + String.format("%.0f%%", positionPct) + "位置)，技术信号统一打折防追高"); }
+        if (positionPct <= 20 && rsi14 < 35) { tech += 5; techDetail.add(ind(5) + " 低位超跌(RSI<35，反弹弹性大)"); }
         tech = Math.max(-100, Math.min(100, tech));
-        techDetail.add("=> 技术面总分 " + Math.round(tech));
+        techDetail.add("=> 技术面总分 " + Math.round(tech) + "（映射分 " + Math.round(Math.max(0, Math.min(10, 5 + tech / 20)) * 10) + "/100）");
 
         // ---------- 基本面 0-100（成长35+质量30+估值25+披露时效10，结合股价位置匹配；起步0分，数据缺失项不计分并标注）----------
         double fund = 0;
@@ -923,12 +927,12 @@ public class StockAssetServiceImpl implements StockAssetService {
         if (latestFin != null) {
             // 1) 成长性（35分）
             if (npYoy != null) {
-                if (npYoy > 30) { fund += 18; fundDetail.add("+18 净利润同比" + String.format("%+.1f%%", npYoy) + "（高增长）"); }
-                else if (npYoy > 10) { fund += 13; fundDetail.add("+13 净利润同比" + String.format("%+.1f%%", npYoy) + "（稳健增长）"); }
-                else if (npYoy >= 0) { fund += 7; fundDetail.add("+7 净利润同比" + String.format("%+.1f%%", npYoy) + "（微增）"); }
-                else if (npYoy > -15) { fund -= 8; fundDetail.add("-8 净利润同比" + String.format("%+.1f%%", npYoy) + "（小幅下滑）"); }
-                else { fund -= 16; fundDetail.add("-16 净利润同比" + String.format("%+.1f%%", npYoy) + "（大幅下滑）"); }
-            } else fundDetail.add("0 净利润同比缺失，未计分");
+                if (npYoy > 30) { fund += 18; fundDetail.add(ind(18) + " 净利润同比" + String.format("%+.1f%%", npYoy) + "（高增长）"); }
+                else if (npYoy > 10) { fund += 13; fundDetail.add(ind(13) + " 净利润同比" + String.format("%+.1f%%", npYoy) + "（稳健增长）"); }
+                else if (npYoy >= 0) { fund += 7; fundDetail.add(ind(7) + " 净利润同比" + String.format("%+.1f%%", npYoy) + "（微增）"); }
+                else if (npYoy > -15) { fund -= 8; fundDetail.add(ind(-8) + " 净利润同比" + String.format("%+.1f%%", npYoy) + "（小幅下滑）"); }
+                else { fund -= 16; fundDetail.add(ind(-16) + " 净利润同比" + String.format("%+.1f%%", npYoy) + "（大幅下滑）"); }
+            } else fundDetail.add(ind(0) + " 净利润同比缺失，未计分");
             for (StockFinance f : finances) {   // 最新在前，统计从最新期起的连续同向段
                 Double y = toDouble(f.getNetProfitYoy());
                 if (y == null || y == 0) break;
@@ -940,82 +944,82 @@ public class StockAssetServiceImpl implements StockAssetService {
                     declinePeriods++;
                 }
             }
-            if (growPeriods >= 3) { fund += 8; fundDetail.add("+8 连续" + growPeriods + "期净利润正增长"); }
-            else if (growPeriods >= 2) { fund += 5; fundDetail.add("+5 连续" + growPeriods + "期净利润正增长"); }
-            if (declinePeriods >= 2) { fund -= 10; fundDetail.add("-10 连续" + declinePeriods + "期净利润下滑"); }
+            if (growPeriods >= 3) { fund += 8; fundDetail.add(ind(8) + " 连续" + growPeriods + "期净利润正增长"); }
+            else if (growPeriods >= 2) { fund += 5; fundDetail.add(ind(5) + " 连续" + growPeriods + "期净利润正增长"); }
+            if (declinePeriods >= 2) { fund -= 10; fundDetail.add(ind(-10) + " 连续" + declinePeriods + "期净利润下滑"); }
             if (revYoy != null) {
-                if (revYoy > 20) { fund += 8; fundDetail.add("+8 营收同比" + String.format("%+.1f%%", revYoy) + "（放量增长）"); }
-                else if (revYoy >= 0) { fund += 4; fundDetail.add("+4 营收同比" + String.format("%+.1f%%", revYoy)); }
-                else { fund -= 7; fundDetail.add("-7 营收同比" + String.format("%+.1f%%", revYoy) + "（收缩）"); }
-            } else fundDetail.add("0 营收同比缺失，未计分");
+                if (revYoy > 20) { fund += 8; fundDetail.add(ind(8) + " 营收同比" + String.format("%+.1f%%", revYoy) + "（放量增长）"); }
+                else if (revYoy >= 0) { fund += 4; fundDetail.add(ind(4) + " 营收同比" + String.format("%+.1f%%", revYoy)); }
+                else { fund -= 7; fundDetail.add(ind(-7) + " 营收同比" + String.format("%+.1f%%", revYoy) + "（收缩）"); }
+            } else fundDetail.add(ind(0) + " 营收同比缺失，未计分");
             // 利润含金量：扣非净利润/净利润
             Double np = toDouble(latestFin.getNetProfit());
             Double deductNp = toDouble(latestFin.getDeductNetProfit());
             if (np != null && np > 0 && deductNp != null) {
-                if (deductNp < 0) { fund -= 6; fundDetail.add("-6 扣非净利润为负（主业实际亏损）"); }
-                else if (deductNp / np >= 0.8) { fund += 4; fundDetail.add("+4 扣非/净利=" + String.format("%.0f%%", deductNp / np * 100) + "（利润含金量高）"); }
+                if (deductNp < 0) { fund -= 6; fundDetail.add(ind(-6) + " 扣非净利润为负（主业实际亏损）"); }
+                else if (deductNp / np >= 0.8) { fund += 4; fundDetail.add(ind(4) + " 扣非/净利=" + String.format("%.0f%%", deductNp / np * 100) + "（利润含金量高）"); }
             }
             // 2) 盈利质量（30分）
             if (roe != null) {
-                if (roe > 15) { fund += 10; fundDetail.add("+10 ROE" + String.format("%.2f%%", roe) + "（>15% 优秀）"); }
-                else if (roe > 10) { fund += 7; fundDetail.add("+7 ROE" + String.format("%.2f%%", roe) + "（10%~15% 良好）"); }
-                else if (roe > 5) { fund += 4; fundDetail.add("+4 ROE" + String.format("%.2f%%", roe) + "（5%~10% 一般）"); }
-                else if (roe <= 0) { fund -= 10; fundDetail.add("-10 ROE" + String.format("%.2f%%", roe) + "（为负）"); }
-            } else fundDetail.add("0 ROE缺失，未计分");
+                if (roe > 15) { fund += 10; fundDetail.add(ind(10) + " ROE" + String.format("%.2f%%", roe) + "（>15% 优秀）"); }
+                else if (roe > 10) { fund += 7; fundDetail.add(ind(7) + " ROE" + String.format("%.2f%%", roe) + "（10%~15% 良好）"); }
+                else if (roe > 5) { fund += 4; fundDetail.add(ind(4) + " ROE" + String.format("%.2f%%", roe) + "（5%~10% 一般）"); }
+                else if (roe <= 0) { fund -= 10; fundDetail.add(ind(-10) + " ROE" + String.format("%.2f%%", roe) + "（为负）"); }
+            } else fundDetail.add(ind(0) + " ROE缺失，未计分");
             StockFinance prevFin = finances.size() > 1 ? finances.get(1) : null;
             if (roe != null && prevFin != null && toDouble(prevFin.getRoe()) != null && roe > toDouble(prevFin.getRoe())) {
-                fund += 3; fundDetail.add("+3 ROE较上期提升");
+                fund += 3; fundDetail.add(ind(3) + " ROE较上期提升");
             }
             Double netMargin = toDouble(latestFin.getNetMargin());
-            if (netMargin != null && netMargin > 15) { fund += 5; fundDetail.add("+5 净利率" + String.format("%.2f%%", netMargin) + "（>15%）"); }
+            if (netMargin != null && netMargin > 15) { fund += 5; fundDetail.add(ind(5) + " 净利率" + String.format("%.2f%%", netMargin) + "（>15%）"); }
             if (gross != null) {
-                if (gross > 40) { fund += 5; fundDetail.add("+5 毛利率" + String.format("%.2f%%", gross) + "（>40% 高毛利）"); }
-                else if (gross > 25) { fund += 3; fundDetail.add("+3 毛利率" + String.format("%.2f%%", gross)); }
-                else if (gross < 15) { fund -= 2; fundDetail.add("-2 毛利率" + String.format("%.2f%%", gross) + "（<15%）"); }
-            } else fundDetail.add("0 毛利率缺失（部分行业如银行无毛利概念），未计分");
+                if (gross > 40) { fund += 5; fundDetail.add(ind(5) + " 毛利率" + String.format("%.2f%%", gross) + "（>40% 高毛利）"); }
+                else if (gross > 25) { fund += 3; fundDetail.add(ind(3) + " 毛利率" + String.format("%.2f%%", gross)); }
+                else if (gross < 15) { fund -= 2; fundDetail.add(ind(-2) + " 毛利率" + String.format("%.2f%%", gross) + "（<15%）"); }
+            } else fundDetail.add(ind(0) + " 毛利率缺失（部分行业如银行无毛利概念），未计分");
             Double debt = toDouble(latestFin.getDebtRatio());
             if (debt != null) {
-                if (debt > 70) { fund -= 6; fundDetail.add("-6 负债率" + String.format("%.2f%%", debt) + "（>70% 高杠杆）"); }
-                else if (debt > 60) { fund -= 3; fundDetail.add("-3 负债率" + String.format("%.2f%%", debt)); }
-                else if (debt < 40) { fund += 5; fundDetail.add("+5 负债率" + String.format("%.2f%%", debt) + "（<40% 低杠杆）"); }
-            } else fundDetail.add("0 负债率缺失，未计分");
+                if (debt > 70) { fund -= 6; fundDetail.add(ind(-6) + " 负债率" + String.format("%.2f%%", debt) + "（>70% 高杠杆）"); }
+                else if (debt > 60) { fund -= 3; fundDetail.add(ind(-3) + " 负债率" + String.format("%.2f%%", debt)); }
+                else if (debt < 40) { fund += 5; fundDetail.add(ind(5) + " 负债率" + String.format("%.2f%%", debt) + "（<40% 低杠杆）"); }
+            } else fundDetail.add(ind(0) + " 负债率缺失，未计分");
             // 现金流质量：每股经营现金流/每股收益=净现比（F10接口无经营现金流总额字段，用每股口径等价计算）
             Double ocfps = toDouble(latestFin.getCashflowPerShare());
             Double eps = toDouble(latestFin.getEps());
             if (ocfps != null && ocfps > 0 && eps != null && eps > 0) {
-                if (ocfps / eps >= 0.5) { fund += 5; fundDetail.add("+5 净现比" + String.format("%.2f", ocfps / eps) + "（现金流覆盖净利，盈利含金量高）"); }
-                else fundDetail.add("0 净现比" + String.format("%.2f", ocfps / eps) + "（<0.5 现金流偏弱），未计分");
-            } else fundDetail.add("0 每股现金流或EPS缺失，未计分");
+                if (ocfps / eps >= 0.5) { fund += 5; fundDetail.add(ind(5) + " 净现比" + String.format("%.2f", ocfps / eps) + "（现金流覆盖净利，盈利含金量高）"); }
+                else fundDetail.add(ind(0) + " 净现比" + String.format("%.2f", ocfps / eps) + "（<0.5 现金流偏弱），未计分");
+            } else fundDetail.add(ind(0) + " 每股现金流或EPS缺失，未计分");
             // 3) 估值（25分，与股价位置匹配）
             BigDecimal pe = basic.getPeTtm();
             BigDecimal pb = basic.getPbRatio();
             if (pe != null) {
                 double p = pe.doubleValue();
-                if (p <= 0) { fund -= 8; fundDetail.add("-8 PE(TTM)为负（亏损状态）"); }
-                else if (p < 15) { fund += 10; fundDetail.add("+10 PE(TTM)" + String.format("%.2f", p) + "（<15 低估）"); }
-                else if (p < 25) { fund += 7; fundDetail.add("+7 PE(TTM)" + String.format("%.2f", p) + "（15~25 合理）"); }
-                else if (p < 40) { fund += 3; fundDetail.add("+3 PE(TTM)" + String.format("%.2f", p) + "（25~40 偏高）"); }
-                else if (p <= 80) { fund -= 3; fundDetail.add("-3 PE(TTM)" + String.format("%.2f", p) + "（40~80 高估）"); }
-                else { fund -= 6; fundDetail.add("-6 PE(TTM)" + String.format("%.2f", p) + "（>80 严重高估）"); }
-            } else fundDetail.add("0 PE(TTM)缺失，未计分");
+                if (p <= 0) { fund -= 8; fundDetail.add(ind(-8) + " PE(TTM)为负（亏损状态）"); }
+                else if (p < 15) { fund += 10; fundDetail.add(ind(10) + " PE(TTM)" + String.format("%.2f", p) + "（<15 低估）"); }
+                else if (p < 25) { fund += 7; fundDetail.add(ind(7) + " PE(TTM)" + String.format("%.2f", p) + "（15~25 合理）"); }
+                else if (p < 40) { fund += 3; fundDetail.add(ind(3) + " PE(TTM)" + String.format("%.2f", p) + "（25~40 偏高）"); }
+                else if (p <= 80) { fund -= 3; fundDetail.add(ind(-3) + " PE(TTM)" + String.format("%.2f", p) + "（40~80 高估）"); }
+                else { fund -= 6; fundDetail.add(ind(-6) + " PE(TTM)" + String.format("%.2f", p) + "（>80 严重高估）"); }
+            } else fundDetail.add(ind(0) + " PE(TTM)缺失，未计分");
             if (pb != null) {
                 double p = pb.doubleValue();
-                if (p > 0 && p < 1.5) { fund += 3; fundDetail.add("+3 PB" + String.format("%.2f", p) + "（<1.5 破净附近）"); }
-                else if (p > 8) { fund -= 3; fundDetail.add("-3 PB" + String.format("%.2f", p) + "（>8 溢价过高）"); }
+                if (p > 0 && p < 1.5) { fund += 3; fundDetail.add(ind(3) + " PB" + String.format("%.2f", p) + "（<1.5 破净附近）"); }
+                else if (p > 8) { fund -= 3; fundDetail.add(ind(-3) + " PB" + String.format("%.2f", p) + "（>8 溢价过高）"); }
             }
-            if (positionPct < 30 && npYoy != null && npYoy > 0) { fund += 6; fundDetail.add("+6 股价低位+业绩增长（估值与位置匹配，存在双击潜力）"); }
-            if (positionPct > 75 && pe != null && pe.doubleValue() > 45) { fund -= 8; fundDetail.add("-8 股价高位+PE>45（双杀风险）"); }
+            if (positionPct < 30 && npYoy != null && npYoy > 0) { fund += 6; fundDetail.add(ind(6) + " 股价低位+业绩增长（估值与位置匹配，存在双击潜力）"); }
+            if (positionPct > 75 && pe != null && pe.doubleValue() > 45) { fund -= 8; fundDetail.add(ind(-8) + " 股价高位+PE>45（双杀风险）"); }
             // 4) 披露时效（10分）：距最新报告期越久，基本面指引越弱
             if (daysSinceReport >= 0) {
-                if (daysSinceReport <= 50) { fund += 10; fundDetail.add("+10 最新报告期距今" + daysSinceReport + "天（披露新鲜，指引性强）"); }
-                else if (daysSinceReport > 110) { fund *= 0.9; fundDetail.add("×0.9 最新报告期距今" + daysSinceReport + "天（数据陈旧，全项打折）"); }
-                else fundDetail.add("0 最新报告期距今" + daysSinceReport + "天（时效一般），未计分");
+                if (daysSinceReport <= 50) { fund += 10; fundDetail.add(ind(10) + " 最新报告期距今" + daysSinceReport + "天（披露新鲜，指引性强）"); }
+                else if (daysSinceReport > 110) { fund *= 0.9; fundDetail.add(ind(-2) + " 最新报告期距今" + daysSinceReport + "天（数据陈旧，全项打折）"); }
+                else fundDetail.add(ind(0) + " 最新报告期距今" + daysSinceReport + "天（时效一般），未计分");
             }
         } else {
-            fundDetail.add("无财务数据（补抓失败），基本面按0分处理");
+            fundDetail.add(ind(0) + " 无财务数据（补抓失败），基本面按0分处理");
         }
         fund = Math.max(-100, Math.min(100, fund));
-        fundDetail.add("=> 基本面总分 " + Math.round(fund));
+        fundDetail.add("=> 基本面总分 " + Math.round(fund) + "（映射分 " + Math.round(Math.max(0, Math.min(10, 5 + fund / 20)) * 10) + "/100）");
 
         // ---------- 资金筹码面 0-100（主力动向55+股东户数筹码40+位置修正，吸筹/出货共振判定）----------
         // 注意：资金强度一律用"净流入/成交额"无量纲比例，避免金额绝对值单位失衡导致分数爆表/归零
@@ -1036,11 +1040,11 @@ public class StockAssetServiceImpl implements StockAssetService {
                 }
                 if (i >= n - 10) sum10 += m;
             }
-            if (sum3 > 0) { flowMain += 10; flowDetail.add("+10 近3日主力净流入 " + String.format("%.0f万", sum3)); }
-            else { flowMain -= 4; flowDetail.add("-4 近3日主力净流出 " + String.format("%.0f万", -sum3)); }
-            if (sum5 > 0) { flowMain += 10; flowDetail.add("+10 近5日主力净流入 " + String.format("%.0f万", sum5)); }
-            else { flowMain -= 8; flowDetail.add("-8 近5日主力净流出 " + String.format("%.0f万", -sum5)); }
-            if (sum10 > 0) { flowMain += 6; flowDetail.add("+6 近10日主力净流入 " + String.format("%.0f万", sum10)); }
+            if (sum3 > 0) { flowMain += 10; flowDetail.add(ind(10) + " 近3日主力净流入 " + String.format("%.0f万", sum3)); }
+            else { flowMain -= 4; flowDetail.add(ind(-4) + " 近3日主力净流出 " + String.format("%.0f万", -sum3)); }
+            if (sum5 > 0) { flowMain += 10; flowDetail.add(ind(10) + " 近5日主力净流入 " + String.format("%.0f万", sum5)); }
+            else { flowMain -= 8; flowDetail.add(ind(-8) + " 近5日主力净流出 " + String.format("%.0f万", -sum5)); }
+            if (sum10 > 0) { flowMain += 6; flowDetail.add(ind(6) + " 近10日主力净流入 " + String.format("%.0f万", sum10)); }
             // 主力强度：近5日主力净流入/近5日成交额（无量纲核心指标）
             double amount5 = 0;
             for (int i = Math.max(0, daily.size() - 5); i < daily.size(); i++) {
@@ -1049,15 +1053,15 @@ public class StockAssetServiceImpl implements StockAssetService {
             if (amount5 > 0) {
                 flowRatio5 = sum5 * 10000 / amount5 * 100;   // sum5为万元，amount5为元
                 String rStr = String.format("%.2f%%", flowRatio5);
-                if (flowRatio5 > 5) { flowMain += 8; flowDetail.add("+8 近5日主力净流入占成交额" + rStr + "（强势吸筹级别）"); }
-                else if (flowRatio5 > 2) { flowMain += 5; flowDetail.add("+5 近5日主力净流入占成交额" + rStr + "（明显流入）"); }
-                else if (flowRatio5 > 0) { flowMain += 2; flowDetail.add("+2 近5日主力净流入占成交额" + rStr + "（温和流入）"); }
-                else if (flowRatio5 > -2) { flowMain -= 2; flowDetail.add("-2 近5日主力净流入占成交额" + rStr + "（轻度流出）"); }
-                else if (flowRatio5 > -5) { flowMain -= 5; flowDetail.add("-5 近5日主力净流入占成交额" + rStr + "（明显流出）"); }
-                else { flowMain -= 10; flowDetail.add("-10 近5日主力净流入占成交额" + rStr + "（强力出货级别）"); }
+                if (flowRatio5 > 5) { flowMain += 8; flowDetail.add(ind(8) + " 近5日主力净流入占成交额" + rStr + "（强势吸筹级别）"); }
+                else if (flowRatio5 > 2) { flowMain += 5; flowDetail.add(ind(5) + " 近5日主力净流入占成交额" + rStr + "（明显流入）"); }
+                else if (flowRatio5 > 0) { flowMain += 2; flowDetail.add(ind(2) + " 近5日主力净流入占成交额" + rStr + "（温和流入）"); }
+                else if (flowRatio5 > -2) { flowMain -= 2; flowDetail.add(ind(-2) + " 近5日主力净流入占成交额" + rStr + "（轻度流出）"); }
+                else if (flowRatio5 > -5) { flowMain -= 5; flowDetail.add(ind(-5) + " 近5日主力净流入占成交额" + rStr + "（明显流出）"); }
+                else { flowMain -= 10; flowDetail.add(ind(-10) + " 近5日主力净流入占成交额" + rStr + "（强力出货级别）"); }
             }
-            if (sup5 > 0) { flowMain += 4; flowDetail.add("+4 近5日超大单净流入 " + String.format("%.0f万", sup5) + "（机构级别资金）"); }
-            else if (sup5 < 0) { flowMain -= 4; flowDetail.add("-4 近5日超大单净流出 " + String.format("%.0f万", -sup5) + "（机构减持动作）"); }
+            if (sup5 > 0) { flowMain += 4; flowDetail.add(ind(4) + " 近5日超大单净流入 " + String.format("%.0f万", sup5) + "（机构级别资金）"); }
+            else if (sup5 < 0) { flowMain -= 4; flowDetail.add(ind(-4) + " 近5日超大单净流出 " + String.format("%.0f万", -sup5) + "（机构减持动作）"); }
             double lastMain = toDouble(asc.get(n - 1).getMainNetInflow()) == null ? 0 : toDouble(asc.get(n - 1).getMainNetInflow()).doubleValue();
             inDir = lastMain >= 0;
             for (int i = n - 1; i >= 0; i--) {
@@ -1066,14 +1070,14 @@ public class StockAssetServiceImpl implements StockAssetService {
                 else break;
             }
             if (inDir) {
-                if (streak >= 5) { flowMain += 8; flowDetail.add("+8 主力资金连续" + streak + "日净流入（持续性吸筹）"); }
-                else if (streak >= 3) { flowMain += 5; flowDetail.add("+5 主力资金连续" + streak + "日净流入"); }
+                if (streak >= 5) { flowMain += 8; flowDetail.add(ind(8) + " 主力资金连续" + streak + "日净流入（持续性吸筹）"); }
+                else if (streak >= 3) { flowMain += 5; flowDetail.add(ind(5) + " 主力资金连续" + streak + "日净流入"); }
             } else {
-                if (streak >= 5) { flowMain -= 12; flowDetail.add("-12 主力资金连续" + streak + "日净流出（持续减仓）"); }
-                else if (streak >= 3) { flowMain -= 8; flowDetail.add("-8 主力资金连续" + streak + "日净流出"); }
+                if (streak >= 5) { flowMain -= 12; flowDetail.add(ind(-12) + " 主力资金连续" + streak + "日净流出（持续减仓）"); }
+                else if (streak >= 3) { flowMain -= 8; flowDetail.add(ind(-8) + " 主力资金连续" + streak + "日净流出"); }
             }
         } else {
-            flowDetail.add("资金流数据缺失（补抓失败），主力动向未计分");
+            flowDetail.add(ind(0) + " 资金流数据缺失（补抓失败），主力动向未计分");
         }
         // 股东户数筹码（40分）
         double chipScore = 0;
@@ -1093,47 +1097,47 @@ public class StockAssetServiceImpl implements StockAssetService {
         if (h0 != null) {
             Double r0 = toDouble(h0.getHolderNumRatio());
             if (r0 != null) {
-                if (r0 <= -5) { chipScore += 15; flowDetail.add("+15 最新股东户数环比" + String.format("%.2f%%", r0) + "（大幅集中，筹码向主力转移）"); }
-                else if (r0 <= -2) { chipScore += 10; flowDetail.add("+10 最新股东户数环比" + String.format("%.2f%%", r0) + "（明显集中）"); }
-                else if (r0 < 0) { chipScore += 6; flowDetail.add("+6 最新股东户数环比" + String.format("%.2f%%", r0) + "（小幅集中）"); }
-                else if (r0 >= 10) { chipScore -= 14; flowDetail.add("-14 最新股东户数环比" + String.format("%+.2f%%", r0) + "（大幅分散，散户接盘迹象）"); }
-                else if (r0 >= 5) { chipScore -= 8; flowDetail.add("-8 最新股东户数环比" + String.format("%+.2f%%", r0) + "（明显分散）"); }
-            } else flowDetail.add("0 最新股东户数变化率缺失，未计分");
-            if (downStreak >= 3) { chipScore += 8; flowDetail.add("+8 股东户数连续" + downStreak + "期下降（筹码持续集中）"); }
-            else if (downStreak >= 2) { chipScore += 4; flowDetail.add("+4 股东户数连续" + downStreak + "期下降"); }
-            if (upStreak >= 3) { chipScore -= 8; flowDetail.add("-8 股东户数连续" + upStreak + "期上升（筹码持续分散）"); }
-            else if (upStreak >= 2) { chipScore -= 4; flowDetail.add("-4 股东户数连续" + upStreak + "期上升"); }
+                if (r0 <= -5) { chipScore += 15; flowDetail.add(ind(15) + " 最新股东户数环比" + String.format("%.2f%%", r0) + "（大幅集中，筹码向主力转移）"); }
+                else if (r0 <= -2) { chipScore += 10; flowDetail.add(ind(10) + " 最新股东户数环比" + String.format("%.2f%%", r0) + "（明显集中）"); }
+                else if (r0 < 0) { chipScore += 6; flowDetail.add(ind(6) + " 最新股东户数环比" + String.format("%.2f%%", r0) + "（小幅集中）"); }
+                else if (r0 >= 10) { chipScore -= 14; flowDetail.add(ind(-14) + " 最新股东户数环比" + String.format("%+.2f%%", r0) + "（大幅分散，散户接盘迹象）"); }
+                else if (r0 >= 5) { chipScore -= 8; flowDetail.add(ind(-8) + " 最新股东户数环比" + String.format("%+.2f%%", r0) + "（明显分散）"); }
+            } else flowDetail.add(ind(0) + " 最新股东户数变化率缺失，未计分");
+            if (downStreak >= 3) { chipScore += 8; flowDetail.add(ind(8) + " 股东户数连续" + downStreak + "期下降（筹码持续集中）"); }
+            else if (downStreak >= 2) { chipScore += 4; flowDetail.add(ind(4) + " 股东户数连续" + downStreak + "期下降"); }
+            if (upStreak >= 3) { chipScore -= 8; flowDetail.add(ind(-8) + " 股东户数连续" + upStreak + "期上升（筹码持续分散）"); }
+            else if (upStreak >= 2) { chipScore -= 4; flowDetail.add(ind(-4) + " 股东户数连续" + upStreak + "期上升"); }
             // 共振判定：户数变化方向 × 主力资金方向
-            if (downStreak >= 2 && sum5 > 0) { chipScore += 10; flowDetail.add("+10 吸筹共振（户数连续集中+主力资金净流入，双重印证）"); }
-            if (upStreak >= 2 && sum5 < 0) { chipScore -= 10; flowDetail.add("-10 出货共振（户数连续分散+主力资金净流出，双重印证）"); }
+            if (downStreak >= 2 && sum5 > 0) { chipScore += 10; flowDetail.add(ind(10) + " 吸筹共振（户数连续集中+主力资金净流入，双重印证）"); }
+            if (upStreak >= 2 && sum5 < 0) { chipScore -= 10; flowDetail.add(ind(-10) + " 出货共振（户数连续分散+主力净流出，双重印证）"); }
         } else {
-            flowDetail.add("股东户数数据缺失（补抓失败），筹码部分未计分");
+            flowDetail.add(ind(0) + " 股东户数数据缺失（补抓失败），筹码部分未计分");
         }
         // 资金筹码位置修正
-        if (positionPct < 30 && sum5 > 0) { chipScore += 6; flowDetail.add("+6 低位吸筹（股价处" + String.format("%.0f%%", positionPct) + "位置，吸筹可信度高）"); }
-        if (positionPct >= 80 && sum5 > 0 && todayChg > 5) { chipScore -= 5; flowDetail.add("-5 高位放量流入警惕对倒出货（股价处" + String.format("%.0f%%", positionPct) + "位置）"); }
+        if (positionPct < 30 && sum5 > 0) { chipScore += 6; flowDetail.add(ind(6) + " 低位吸筹（股价处" + String.format("%.0f%%", positionPct) + "位置，吸筹可信度高）"); }
+        if (positionPct >= 80 && sum5 > 0 && todayChg > 5) { chipScore -= 5; flowDetail.add(ind(-5) + " 高位放量流入警惕对倒出货（股价处" + String.format("%.0f%%", positionPct) + "位置）"); }
         boolean noFlowChipData = flows.isEmpty() && holders.isEmpty();
         double flowScore = noFlowChipData ? 50 : Math.max(-100, Math.min(100, flowMain + chipScore));
-        flowDetail.add("=> 资金筹码总分 " + Math.round(flowScore));
+        flowDetail.add("=> 资金筹码总分 " + Math.round(flowScore) + "（映射分 " + Math.round(Math.max(0, Math.min(10, 5 + flowScore / 20)) * 10) + "/100）");
 
         // ---------- 消息面 0-100（时效25+公告20+关键词影响30+热度10，情绪方向由AI判断）----------
         double newsScore = 30;
-        newsDetail.add("基础分 30（中性起点）");
+        newsDetail.add(ind(0) + " 基础分30（中性起点，映射中性偏多）");
         int goodKwCnt = 0, badKwCnt = 0;
         List<String> goodTitles = new ArrayList<>(), badTitles = new ArrayList<>();
         if (!newsList.isEmpty()) {
             Date latestNews = newsList.get(0).getPublishTime();
             long daysSinceNews = latestNews == null ? 999 :
                     (System.currentTimeMillis() - latestNews.getTime()) / 86400000L;
-            if (daysSinceNews <= 3) { newsScore += 25; newsDetail.add("+25 最新消息距今" + daysSinceNews + "天（时效性高）"); }
-            else if (daysSinceNews <= 7) { newsScore += 12; newsDetail.add("+12 最新消息距今" + daysSinceNews + "天（时效一般）"); }
-            else newsDetail.add("0 最新消息距今" + daysSinceNews + "天（时效性弱），未计分");
+            if (daysSinceNews <= 3) { newsScore += 25; newsDetail.add(ind(25) + " 最新消息距今" + daysSinceNews + "天（时效性高）"); }
+            else if (daysSinceNews <= 7) { newsScore += 12; newsDetail.add(ind(12) + " 最新消息距今" + daysSinceNews + "天（时效一般）"); }
+            else newsDetail.add(ind(0) + " 最新消息距今" + daysSinceNews + "天（时效性弱），未计分");
             long annIn7d = newsList.stream().filter(n -> n.getNewsType() != null && n.getNewsType() == 2)
                     .filter(n -> n.getPublishTime() != null)
                     .filter(n -> (System.currentTimeMillis() - n.getPublishTime().getTime()) / 86400000L <= 7).count();
-            if (annIn7d >= 2) { newsScore += 20; newsDetail.add("+20 近7天公告" + annIn7d + "条（公告密度高）"); }
-            else if (annIn7d >= 1) { newsScore += 10; newsDetail.add("+10 近7天公告1条"); }
-            else newsDetail.add("0 近7天无公告，未计分");
+            if (annIn7d >= 2) { newsScore += 20; newsDetail.add(ind(20) + " 近7天公告" + annIn7d + "条（公告密度高）"); }
+            else if (annIn7d >= 1) { newsScore += 10; newsDetail.add(ind(10) + " 近7天公告1条"); }
+            else newsDetail.add(ind(0) + " 近7天无公告，未计分");
             // 近14天标题关键词影响（确定性规则，实质影响交由AI结合位置判断）
             String[] goodKw = {"增持", "回购", "中标", "预增", "扭亏", "分红", "派息", "业绩增长", "签订", "突破", "净利增"};
             String[] badKw = {"减持", "质押", "立案", "调查", "违规", "诉讼", "预亏", "下滑", "减值", "问询", "退市", "冻结", "仲裁"};
@@ -1165,15 +1169,15 @@ public class StockAssetServiceImpl implements StockAssetService {
             }
             int goodPts = Math.min(18, goodKwCnt * 6), badPts = Math.min(24, badKwCnt * 8);
             newsScore += goodPts - badPts;
-            if (goodKwCnt > 0) newsDetail.add("+" + goodPts + " 近14天利好关键词" + goodKwCnt + "条（如" + String.join("、", goodTitles) + "）");
-            if (badKwCnt > 0) newsDetail.add("-" + badPts + " 近14天利空关键词" + badKwCnt + "条（如" + String.join("、", badTitles) + "）");
-            if (goodKwCnt == 0 && badKwCnt == 0) newsDetail.add("0 近14天无利好/利空关键词命中，未计分");
-            if (hot3 >= 5) { newsScore += 10; newsDetail.add("+10 近3天消息" + hot3 + "条（关注度升温，方向由AI结合内容判断）"); }
+            if (goodKwCnt > 0) newsDetail.add(ind(goodPts) + " 近14天利好关键词" + goodKwCnt + "条（如" + String.join("、", goodTitles) + "）");
+            if (badKwCnt > 0) newsDetail.add(ind(-badPts) + " 近14天利空关键词" + badKwCnt + "条（如" + String.join("、", badTitles) + "）");
+            if (goodKwCnt == 0 && badKwCnt == 0) newsDetail.add(ind(0) + " 近14天无利好/利空关键词命中，未计分");
+            if (hot3 >= 5) { newsScore += 10; newsDetail.add(ind(10) + " 近3天消息" + hot3 + "条（关注度升温，方向由AI结合内容判断）"); }
         } else {
-            newsDetail.add("消息数据缺失（补抓失败），仅保留基础分30");
+            newsDetail.add(ind(0) + " 消息数据缺失（补抓失败），仅保留基础分30");
         }
         newsScore = Math.max(-100, Math.min(100, newsScore));
-        newsDetail.add("=> 消息面总分 " + Math.round(newsScore));
+        newsDetail.add("=> 消息面总分 " + Math.round(newsScore) + "（映射分 " + Math.round(Math.max(0, Math.min(10, 5 + newsScore / 20)) * 10) + "/100）");
 
         // ---------- 大盘与板块环境（实时抓取，对综合分做环境修正）----------
         double shPct = marketInfo.get("shChangePct") == null ? 0 : toDouble(new BigDecimal(marketInfo.get("shChangePct").toString()));
@@ -1181,20 +1185,25 @@ public class StockAssetServiceImpl implements StockAssetService {
         Integer sTotal = sectorInfo.getInteger("total");
         boolean sectorStrong = sRank != null && sTotal != null && sTotal > 0 && sRank <= sTotal / 3;
         boolean sectorWeak = sRank != null && sTotal != null && sTotal > 0 && sRank > sTotal / 2;
-        double envAdj = 0;
-        if (shPct >= 1) envAdj += sectorStrong ? 3 : 1.5;
-        if (shPct <= -1.5) envAdj -= sectorWeak ? 3 : 1.5;
+        // 大盘板块环境作为第五维度 envScore（0=中性，±100/±50 六档）
+        double envScore = 0;
+        if (shPct >= 1) envScore += sectorStrong ? 100 : 50;
+        if (shPct <= -1.5) envScore -= sectorWeak ? 100 : 50;
 
-        // 四维分允许负值，按权重如实计入综合分（负分拉低综合分，体现偏空程度），综合分区间[-100,100]
-        double composite = Math.max(-100, Math.min(100,
-                Math.round(tech * 0.35 + fund * 0.30 + flowScore * 0.20 + newsScore * 0.15 + envAdj)));
+        // 五维分映射到0~10（5=中性，无负数），板块分×10展示到0~100（50中性）
+        double tech10 = Math.max(0, Math.min(10, 5 + tech / 20));
+        double fund10 = Math.max(0, Math.min(10, 5 + fund / 20));
+        double flow10 = Math.max(0, Math.min(10, 5 + flowScore / 20));
+        double news10 = Math.max(0, Math.min(10, 5 + newsScore / 20));
+        double env10 = Math.max(0, Math.min(10, 5 + envScore / 20));
+        // 综合分=各板块分加权×10，0~100，50中性，权重和=1.0保证满分总和=满分
+        double composite = Math.round((tech10 * 0.30 + fund10 * 0.25 + flow10 * 0.20 + news10 * 0.15 + env10 * 0.10) * 10);
         String valueLevel;
         if (composite >= 80) valueLevel = "A（投资价值较高）";
         else if (composite >= 70) valueLevel = "B（有一定投资价值）";
         else if (composite >= 60) valueLevel = "C（中性观察）";
         else if (composite >= 50) valueLevel = "D（偏弱谨慎）";
-        else if (composite >= 0) valueLevel = "E（风险较大，宜回避）";
-        else valueLevel = "F（强烈看空，坚决回避）";
+        else valueLevel = "E（风险较大，宜回避）";
 
         // ===== 状态判定词（确定性结论，供AI引用，保证分析有理有据）=====
         JSONObject st = new JSONObject();
@@ -1239,6 +1248,9 @@ public class StockAssetServiceImpl implements StockAssetService {
         st.put("resonance", h0 == null || flows.isEmpty() ? ""
                 : downStreak >= 2 && sum5 > 0 ? String.format("【吸筹共振】筹码集中与主力净流入同时出现（%s区域），主力吸筹特征明显", posBand)
                 : upStreak >= 2 && sum5 < 0 ? String.format("【出货共振】筹码分散与主力净流出同时出现（%s区域），散户接盘/主力派发特征明显", posBand) : "");
+        // 筹码阶段判定：结合披露时间跨度×K线走势的确定性分支，供AI作为筹码分析主线框架（需求：判断吸筹/派发须考虑数据时效与行情阶段）
+        JSONObject chipPhase = buildChipPhase(holders, daily, lastClose, ma5, ma10, ma20, positionPct, sum5, daySdf);
+        st.put("chipPhase", chipPhase);
         st.put("newsFlags", String.format("近14天消息：利好关键词 %d 条，利空关键词 %d 条%s",
                 goodKwCnt, badKwCnt, goodKwCnt + badKwCnt == 0 ? "（无显著利好利空关键词）" : "（实质影响请AI结合具体标题判断）"));
         Object shPoint = marketInfo.get("shPoint");
@@ -1255,13 +1267,15 @@ public class StockAssetServiceImpl implements StockAssetService {
 
         Map<String, Object> score = new HashMap<>();
         score.put("composite", composite);
-        score.put("tech", Math.round(tech));
-        score.put("fund", Math.round(fund));
-        score.put("flow", Math.round(flowScore));
-        score.put("news", Math.round(newsScore));
+        score.put("tech", Math.round(tech10 * 10));
+        score.put("fund", Math.round(fund10 * 10));
+        score.put("flow", Math.round(flow10 * 10));
+        score.put("news", Math.round(news10 * 10));
+        score.put("env", Math.round(env10 * 10));
         score.put("valueLevel", valueLevel);
-        score.put("envDesc", String.format("大盘环境修正 %+d 分（上证 %.1f%%，板块%s）",
-                Math.round(envAdj), shPct, sectorStrong ? "强势" : sectorWeak ? "偏弱" : "中性"));
+        score.put("envDesc", String.format("大盘板块环境分 %+d（上证 %.1f%%，板块%s，%s）",
+                Math.round(envScore), shPct, sectorStrong ? "强势" : sectorWeak ? "偏弱" : "中性",
+                envScore > 0 ? "顺势加分" : envScore < 0 ? "逆势减分" : "中性未计"));
         score.put("positionDesc", String.format("现价 %.2f 处于近一年区间 %.0f%% 位置（%s，区间 %.2f~%.2f），距年内高点回撤 %.1f%%",
                 lastClose, positionPct, posBand, yearLow, yearHigh, drawdownFromHigh));
         // 评分明细（每维度得分如何得出的逐条说明，前端可直接展示，AI需在对应章节解读）
@@ -1285,6 +1299,370 @@ public class StockAssetServiceImpl implements StockAssetService {
         aiAnalysisCache.put(aiFingerprint, new AiAnalysisCacheEntry(result, System.currentTimeMillis() + AI_ANALYSIS_CACHE_TTL_MS));
         return result;
     }
+
+    /**
+     * 获取指定日期分时数据：分级取数（2026-09-12 浏览器实测确认各数据源能力）——
+     * 东财1分钟K线仅存最新1天（beg/end/lmt参数全无效），不可用于历史；
+     * 新浪1分钟（scale=1，datalen=1023）覆盖最近5个交易日；
+     * 新浪5分钟（scale=5）覆盖最近约22个交易日。
+     * 策略：先试新浪1分钟（真分时粒度），取不到再降级5分钟（形态一致但粒度粗）。
+     * 价格线=分钟收盘价，均价线=累计成交额/累计成交量（新浪volume单位已是股，无需×100），
+     * 昨收取K线表前一交易日收盘价。返回 {preClose, scale, trendList:[{time,price,avgPrice,volume}]}
+     */
+    public Map<String, Object> getStockTrend(String stockCode, String tradeDate) {
+        Map<String, Object> trend = fetchSinaTrend(stockCode, tradeDate, 1);
+        if (trend == null) {
+            trend = fetchSinaTrend(stockCode, tradeDate, 5);
+        }
+        if (trend == null) {
+            throw new RuntimeException("该日期无分钟数据（1分钟线仅保留最近5个交易日，5分钟线约22个交易日；或当日停牌）");
+        }
+
+        // 昨收：K线表（按日期降序）中该日期前一交易日的收盘价
+        SimpleDateFormat daySdf = new SimpleDateFormat("yyyy-MM-dd");
+        BigDecimal preClose = null;
+        List<StockKline> dailyDesc = stockAssetMapper.getStockKline(stockCode, 1, 60);
+        if (dailyDesc != null) {
+            for (StockKline k : dailyDesc) {
+                if (k.getTradeDate() == null) continue;
+                if (daySdf.format(k.getTradeDate()).compareTo(tradeDate) < 0) {
+                    preClose = k.getClosePrice();
+                    break;
+                }
+            }
+        }
+        if (preClose == null) {
+            // 兜底：日K表查不到昨收时，用目标日首根分钟线收盘价
+            List<Map<String, Object>> trendList = (List<Map<String, Object>>) trend.get("trendList");
+            preClose = (BigDecimal) trendList.get(0).get("price");
+        }
+        trend.put("preClose", preClose);
+        return trend;
+    }
+
+    /** 新浪分钟K线 symbol 规则：沪市 sh+code，深市 sz+code */
+    private String buildSinaSymbol(String stockCode) {
+        String code = stockCode == null ? "" : stockCode.trim();
+        return (code.startsWith("6") ? "sh" : "sz") + code;
+    }
+
+    /**
+     * 从新浪 CN_MarketDataService.getKLineData 接口取分钟K线并过滤目标日期。
+     * 返回 {scale, trendList}，该日期无数据返回 null（由调用方决定降级或报错）。
+     */
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> fetchSinaTrend(String stockCode, String tradeDate, int scale) {
+        String url = "https://quotes.sina.cn/cn/api/jsonp_v2.php/var%20srhwTrend="
+                + "/CN_MarketDataService.getKLineData?symbol=" + buildSinaSymbol(stockCode)
+                + "&scale=" + scale + "&ma=no&datalen=1023";
+        String body = httpGet(url);
+        if (body == null || body.isEmpty()) {
+            return null;
+        }
+        // JSONP 格式：var srhwTrend=([{...},...]); 提取首尾括号之间 JSON 数组
+        int start = body.indexOf('(');
+        int end = body.lastIndexOf(')');
+        if (start < 0 || end <= start) {
+            return null;
+        }
+        JSONArray arr;
+        try {
+            arr = JSON.parseArray(body.substring(start + 1, end));
+        } catch (Exception e) {
+            logger.warn("新浪分钟K线解析失败 | scale={} | body前100字符={}", scale, body.substring(0, Math.min(100, body.length())));
+            return null;
+        }
+        // 字段：day="2026-09-07 13:48:00"、open/high/low/close、volume（股）、amount（元）
+        List<Map<String, Object>> trendList = new ArrayList<>();
+        BigDecimal cumVolume = BigDecimal.ZERO;
+        BigDecimal cumAmount = BigDecimal.ZERO;
+        for (int i = 0; i < arr.size(); i++) {
+            JSONObject o = arr.getJSONObject(i);
+            String day = o.getString("day");
+            if (day == null || !day.startsWith(tradeDate)) continue;
+            BigDecimal volume = o.getBigDecimal("volume");
+            BigDecimal amount = o.getBigDecimal("amount");
+            cumVolume = cumVolume.add(volume == null ? BigDecimal.ZERO : volume);
+            cumAmount = cumAmount.add(amount == null ? BigDecimal.ZERO : amount);
+            BigDecimal price = o.getBigDecimal("close");
+            Map<String, Object> point = new HashMap<>();
+            point.put("time", day);
+            point.put("price", price);
+            point.put("avgPrice", cumVolume.signum() > 0
+                    ? cumAmount.divide(cumVolume, 3, RoundingMode.HALF_UP)
+                    : price);
+            point.put("volume", volume);
+            trendList.add(point);
+        }
+        if (trendList.isEmpty()) {
+            return null;
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("scale", scale);
+        result.put("trendList", trendList);
+        return result;
+    }
+
+    /**
+     * 筹码阶段判定算法（确定性规则，供 AI 综合分析与基本面页纯算法分析共用，保证两边口径一致）：
+     * 结合最新股东户数披露时间跨度与近60个交易日K线走势，判定主力筹码所处阶段——
+     * 1) 披露<30天：数据较新，按常规技术/资金/消息面判定；
+     * 2) 披露≥30天 + 走过行情(近60日最大涨幅≥25%) + 近期转跌 → 派发筹码嫌疑；
+     * 3) 披露≥30天 + 走过行情 + 仍上升趋势 → 拉升中（派发或继续吸筹待AI辨析）；
+     * 4) 披露≥30天 + 未走行情 + 底部企稳 → 吸筹行情未启动；
+     * 5) 其余（走过行情但横盘/未走行情且不在底部）→ 筹码阶段中性。
+     * 返回 {holderDays, phaseKey, phaseTitle, phaseDesc, evidence:[...]}；户数缺失时 phaseKey=NONE
+     */
+    private JSONObject buildChipPhase(List<StockHolderNum> holders, List<StockKline> dailyAsc,
+                                      double lastClose, double ma5, double ma10, double ma20,
+                                      double positionPct, double sum5, SimpleDateFormat daySdf) {
+        JSONObject ph = new JSONObject();
+        List<String> ev = new ArrayList<>();
+        ph.put("holderDays", -1);
+        ph.put("phaseKey", "NONE");
+        ph.put("phaseTitle", "无股东户数数据");
+        ph.put("phaseDesc", "无股东户数数据，筹码阶段无法判定，请按资金面与技术面正常分析主力动向。");
+        ph.put("evidence", ev);
+        if (holders == null || holders.isEmpty() || holders.get(0).getEndDate() == null) {
+            return ph;
+        }
+        StockHolderNum h0 = holders.get(0);
+        int holderDays = (int) ((System.currentTimeMillis() - h0.getEndDate().getTime()) / 86400000L);
+        ph.put("holderDays", holderDays);
+        ev.add("最新股东户数披露（截止 " + daySdf.format(h0.getEndDate()) + "）距今 " + holderDays + " 天");
+        // 无K线数据时无法判定行情阶段，直接中性返回，避免用默认值0误判为底部企稳
+        if (dailyAsc == null || dailyAsc.isEmpty()) {
+            ph.put("phaseKey", "NEUTRAL");
+            ph.put("phaseTitle", "筹码阶段中性");
+            ph.put("phaseDesc", "无K线数据，无法结合行情走势判定筹码阶段。请结合资金面与消息面正常分析主力动向。");
+            return ph;
+        }
+
+        // 户数趋势（与评分口径一致：连续集中/分散期数 + 最新环比）
+        Double r0 = toDouble(h0.getHolderNumRatio());
+        int downStreak = 0, upStreak = 0;
+        for (StockHolderNum h : holders) {
+            Double r = toDouble(h.getHolderNumRatio());
+            if (r == null || r == 0) break;
+            if (r < 0) {
+                if (upStreak > 0) break;
+                downStreak++;
+            } else {
+                if (downStreak > 0) break;
+                upStreak++;
+            }
+        }
+        ev.add("户数趋势：" + (downStreak >= 2 ? "连续" + downStreak + "期下降（筹码集中）"
+                : upStreak >= 2 ? "连续" + upStreak + "期上升（筹码分散）" : "交替波动")
+                + (r0 == null ? "" : String.format("，最新环比 %+.2f%%", r0)));
+
+        // 近60个交易日窗口：区间最大涨幅（是否走过行情）+ 近10日趋势 + 资金方向
+        double maxRally = 0, chg10 = 0;
+        if (dailyAsc != null && !dailyAsc.isEmpty()) {
+            int w = Math.min(60, dailyAsc.size());
+            double minC = Double.MAX_VALUE, maxC = 0;
+            for (int i = dailyAsc.size() - w; i < dailyAsc.size(); i++) {
+                double c = dailyAsc.get(i).getClosePrice() == null ? 0 : dailyAsc.get(i).getClosePrice().doubleValue();
+                if (c > 0) {
+                    minC = Math.min(minC, c);
+                    maxC = Math.max(maxC, c);
+                }
+            }
+            maxRally = minC > 0 ? (maxC - minC) / minC * 100 : 0;
+            if (dailyAsc.size() > 10) {
+                double base = dailyAsc.get(dailyAsc.size() - 11).getClosePrice() == null ? 0
+                        : dailyAsc.get(dailyAsc.size() - 11).getClosePrice().doubleValue();
+                chg10 = base > 0 ? (lastClose / base - 1) * 100 : 0;
+            }
+            ev.add(String.format("近%d个交易日：最低收盘 %.2f → 最高收盘 %.2f，区间最大涨幅 %.1f%%，现价 %.2f 距窗口高点 %.1f%%",
+                    w, minC, maxC, maxRally, lastClose, maxC > 0 ? (lastClose - maxC) / maxC * 100 : 0));
+            ev.add(String.format("近10日涨跌 %+.1f%%，MA5=%.2f MA10=%.2f MA20=%.2f，股价处近一年 %.0f%% 位置",
+                    chg10, ma5, ma10, ma20, positionPct));
+            ev.add(sum5 != 0 ? String.format("近5日主力资金净%s %.0f 万", sum5 > 0 ? "流入" : "流出", Math.abs(sum5))
+                    : "近5日无主力资金流数据");
+        }
+
+        boolean rallyDone = maxRally >= 25;
+        boolean falling = chg10 < -3 || (ma5 < ma10 && ma10 < ma20);
+        boolean rising = chg10 > 3 || (ma5 > ma10 && ma10 > ma20);
+        boolean bottomStable = positionPct < 35 && Math.abs(chg10) <= 5;
+
+        if (holderDays < 30) {
+            ph.put("phaseKey", "FRESH");
+            ph.put("phaseTitle", "户数披露较新·正常判定");
+            ph.put("phaseDesc", String.format(
+                    "股东户数披露较新（距今%d天，<30天），户数变化可直接反映近期主力动向。请按技术面、资金面、消息面指标正常判定主力当前是否继续吸筹，并结合股价位置评估信号可信度。", holderDays));
+            return ph;
+        }
+        // 披露跨度长（≥30天，超过一期披露周期），期间筹码结构可能已变化，必须结合K线走势分阶段判定
+        if (rallyDone && falling) {
+            ph.put("phaseKey", "DISTRIBUTE_SUSPECT");
+            ph.put("phaseTitle", "派发筹码嫌疑");
+            ph.put("phaseDesc", String.format(
+                    "距上期股东户数披露已%d天（跨度长，期间筹码结构可能已变化），期间股价走过一波上涨行情（近60日最大涨幅%.1f%%）且近期转跌（近10日%+.1f%%）——存在主力派发筹码嫌疑。"
+                            + "请必须结合技术面指标（均线趋势/MACD/KDJ/量价配合）、资金面指标（主力净流入连续性/超大单动向/流出占比）、消息面指标（利好兑现/减持公告等）综合判断：当前是主力派发出货，还是洗盘回踩后仍将继续吸筹拉升。",
+                    holderDays, maxRally, chg10));
+        } else if (rallyDone && rising) {
+            ph.put("phaseKey", "RALLY_CONTINUE");
+            ph.put("phaseTitle", "拉升中·派发或吸筹待辨");
+            ph.put("phaseDesc", String.format(
+                    "距上期股东户数披露已%d天，期间走过一波行情且仍处上升趋势（近10日%+.1f%%，股价处近一年%.0f%%位置）——主力可能在拉升途中继续吸筹，也可能边拉边派。"
+                            + "请必须结合技术面、资金面、消息面指标综合判断：当前是主力派发筹码，还是吸筹后继续走行情。",
+                    holderDays, chg10, positionPct));
+        } else if (!rallyDone && bottomStable) {
+            ph.put("phaseKey", "ACCUM_WAITING");
+            ph.put("phaseTitle", "吸筹行情未启动");
+            ph.put("phaseDesc", String.format(
+                    "距上期股东户数披露已%d天，股价未走出行情（近60日最大涨幅仅%.1f%%）且在底部企稳（%.0f%%位置）——初步判断为吸筹行情未启动。"
+                            + "请必须结合技术面、资金面、消息面指标综合验证该吸筹判断是否成立（户数集中的持续性、主力资金是否反复流入、有无启动迹象）。",
+                    holderDays, maxRally, positionPct));
+        } else {
+            ph.put("phaseKey", "NEUTRAL");
+            ph.put("phaseTitle", "筹码阶段中性");
+            ph.put("phaseDesc", String.format(
+                    "距上期股东户数披露已%d天，期间行情特征不明显（近60日最大涨幅%.1f%%，近10日%+.1f%%，%.0f%%位置），筹码阶段难以单一定性。"
+                            + "请结合技术面、资金面、消息面指标综合判断主力当前处于吸筹、拉升还是派发阶段。",
+                    holderDays, maxRally, chg10, positionPct));
+        }
+        return ph;
+    }
+
+    /**
+     * 基本面页筹码与主力动向分析（纯后端算法，不调AI）：复用筹码阶段判定算法，
+     * 叠加户数趋势×资金方向×技术趋势的确定性判定矩阵，给出结论与依据明细。
+     * 库中数据缺失的维度不补抓（保持接口轻快），缺失项在依据中如实说明。
+     */
+    @Override
+    public Map<String, Object> getChipAnalysis(String stockCode) {
+        SimpleDateFormat daySdf = new SimpleDateFormat("yyyy-MM-dd");
+        List<StockHolderNum> holders = stockAssetMapper.getStockHolderNum(stockCode, 8);
+        List<StockKline> dailyDesc = stockAssetMapper.getStockKline(stockCode, 1, 300);
+        List<StockCapitalFlow> flows = stockAssetMapper.getStockCapitalFlow(stockCode, 15);
+
+        // 升序K线 + 指标
+        List<StockKline> dailyAsc = new ArrayList<>(dailyDesc);
+        Collections.reverse(dailyAsc);
+        List<Double> closes = new ArrayList<>();
+        for (StockKline k : dailyAsc) {
+            closes.add(k.getClosePrice() == null ? 0d : k.getClosePrice().doubleValue());
+        }
+        double lastClose = closes.isEmpty() ? 0 : closes.get(closes.size() - 1);
+        double ma5 = avgLast(closes, 5), ma10 = avgLast(closes, 10), ma20 = avgLast(closes, 20);
+        double positionPct = 50;
+        if (!closes.isEmpty()) {
+            int posN = Math.min(250, closes.size());
+            double yearHigh = 0, yearLow = Double.MAX_VALUE;
+            for (int i = closes.size() - posN; i < closes.size(); i++) {
+                yearHigh = Math.max(yearHigh, closes.get(i));
+                yearLow = Math.min(yearLow, closes.get(i));
+            }
+            if (yearHigh > yearLow) positionPct = (lastClose - yearLow) / (yearHigh - yearLow) * 100;
+        }
+        // 近5日主力净流入合计（万元）
+        double sum5 = 0;
+        for (int i = Math.max(0, flows.size() - 5); i < flows.size(); i++) {
+            Double m = toDouble(flows.get(i).getMainNetInflow());
+            sum5 += m == null ? 0 : m;
+        }
+
+        JSONObject ph = buildChipPhase(holders, dailyAsc, lastClose, ma5, ma10, ma20, positionPct, sum5, daySdf);
+        String phaseKey = ph.getString("phaseKey");
+        Double r0 = holders.isEmpty() ? null : toDouble(holders.get(0).getHolderNumRatio());
+        int downStreak = 0, upStreak = 0;
+        for (StockHolderNum h : holders) {
+            Double r = toDouble(h.getHolderNumRatio());
+            if (r == null || r == 0) break;
+            if (r < 0) {
+                if (upStreak > 0) break;
+                downStreak++;
+            } else {
+                if (downStreak > 0) break;
+                upStreak++;
+            }
+        }
+        boolean concentrated = downStreak >= 2 || (r0 != null && r0 < 0);
+        boolean dispersed = upStreak >= 2 || (r0 != null && r0 > 5);
+        boolean flowIn = sum5 > 0, flowOut = sum5 < 0;
+
+        // 确定性判定矩阵：阶段 × 户数趋势 × 资金方向 → 结论
+        String judgment;
+        String level;
+        switch (phaseKey) {
+            case "DISTRIBUTE_SUSPECT":
+                if (dispersed && flowOut) {
+                    judgment = "股东户数持续分散 + 主力资金持续净流出 + 股价高位转跌，主力派发筹码特征明显，散户接盘风险高，建议回避或逢高减仓。";
+                    level = "danger";
+                } else if (flowOut) {
+                    judgment = "股价高位转跌且主力资金净流出，派发概率大于洗盘；若户数暂未明显分散，需警惕派发初期，建议逢高减仓、控制回撤。";
+                    level = "danger";
+                } else {
+                    judgment = "股价高位转跌但主力资金仍在流入，洗盘回踩概率较大；若后续户数披露明显分散且资金转为流出则确认派发，建议观察2~3个交易日资金方向再定。";
+                    level = "warning";
+                }
+                break;
+            case "RALLY_CONTINUE":
+                if (concentrated && flowIn) {
+                    judgment = "上升趋势 + 户数集中 + 主力资金净流入，拉升途中继续吸筹特征明显，可持股或回调低吸，同时留意拉升节奏与量价配合。";
+                    level = "success";
+                } else if (flowOut || dispersed) {
+                    judgment = "股价仍处上升趋势，但户数分散或主力资金流出，边拉边派嫌疑较大，不宜追高；持仓者建议设好移动止盈位。";
+                    level = "warning";
+                } else {
+                    judgment = "拉升趋势延续，主力动向中性，持股观察为主，重点跟踪资金连续性与下期户数变化。";
+                    level = "info";
+                }
+                break;
+            case "ACCUM_WAITING":
+                if (concentrated && flowIn) {
+                    judgment = "底部企稳 + 户数持续集中 + 主力资金流入，底部吸筹特征明显、行情未启动，适合低位分批布局并耐心等待启动信号。";
+                    level = "success";
+                } else if (dispersed) {
+                    judgment = "底部横盘但户数分散，吸筹证据不足，可能仍处磨底期，建议暂缓介入，等待户数集中信号出现。";
+                    level = "warning";
+                } else {
+                    judgment = "底部企稳，吸筹迹象初现但未充分验证，可小仓位跟踪，等待主力资金连续流入确认。";
+                    level = "info";
+                }
+                break;
+            case "FRESH":
+                if (concentrated && flowIn) {
+                    judgment = "户数披露较新且筹码集中，主力资金同步流入，继续吸筹概率较大。";
+                    level = "success";
+                } else if (dispersed) {
+                    judgment = flowOut ? "户数披露较新且筹码分散，主力资金同步流出，散户接盘特征明显，短期谨慎。"
+                            : "户数披露较新且筹码分散，资金尚未明显流出，短期谨慎、关注资金是否配合。";
+                    level = "warning";
+                } else {
+                    judgment = "户数披露较新，筹码结构中性，按技术面与资金面正常跟踪即可。";
+                    level = "info";
+                }
+                break;
+            default:
+                judgment = flowIn ? "筹码阶段特征不明显，主力资金近期净流入，可结合股价位置与后续数据综合观察。"
+                        : flowOut ? "筹码阶段特征不明显，主力资金近期净流出，暂不给方向性结论，谨慎观望。"
+                        : "筹码阶段特征不明显且无资金流数据，暂不给方向性结论，建议补齐数据后再分析。";
+                level = "info";
+                break;
+        }
+
+        Map<String, Object> r = new HashMap<>();
+        r.put("holderDays", ph.getIntValue("holderDays"));
+        r.put("phaseKey", phaseKey);
+        r.put("phaseTitle", ph.getString("phaseTitle"));
+        r.put("judgment", judgment);
+        r.put("level", level);
+        r.put("chipTrend", holders.isEmpty() ? "无股东户数数据" : (downStreak >= 2 ? "连续" + downStreak + "期下降（筹码集中）"
+                : upStreak >= 2 ? "连续" + upStreak + "期上升（筹码分散）" : "交替波动")
+                + (r0 == null ? "" : String.format("，最新环比 %+.2f%%", r0)));
+        r.put("flowDesc", flows.isEmpty() ? "无资金流数据"
+                : String.format("近5日主力资金净%s %.0f 万", flowIn ? "流入" : "流出", Math.abs(sum5)));
+        r.put("techDesc", closes.isEmpty() ? "无K线数据"
+                : String.format("现价 %.2f，MA5=%.2f MA10=%.2f MA20=%.2f，处近一年 %.0f%% 位置",
+                lastClose, ma5, ma10, ma20, positionPct));
+        r.put("evidence", ph.get("evidence"));
+        return r;
+    }
+
 
     /**
      * 构建 AI 分析缓存指纹：覆盖分析所用的全部输入数据（行情估值/K线/财务/资金/消息/筹码/板块/大盘实时），
@@ -1508,6 +1886,14 @@ public class StockAssetServiceImpl implements StockAssetService {
     }
 
     /**
+     * 指标分映射：原加减分→0~10分（5=中性标准，正分>5，负分<5），取整。
+     * 用于评分明细展示，各板块分与综合分均无负数。
+     */
+    private String ind(double x) {
+        return Math.max(0, Math.min(10, (int) Math.round(5 + x / 2))) + "分";
+    }
+
+    /**
      * 获取所属行业板块当日表现与排名（东财行业板块行情）
      */
     private JSONObject fetchSectorInfo(String industry) {
@@ -1517,40 +1903,72 @@ public class StockAssetServiceImpl implements StockAssetService {
         info.put("rank", null);
         info.put("total", null);
         if (industry == null || industry.isEmpty()) return info;
-        String url = "http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14";
-        String body = httpGet(url);
-        if (body == null) return info;
-        try {
-            JSONObject json = JSON.parseObject(body);
-            JSONObject data = json.getJSONObject("data");
-            if (data == null) return info;
-            JSONArray diff = data.getJSONArray("diff");
-            if (diff == null || diff.isEmpty()) return info;
-            info.put("total", diff.size());
-            // 先精确匹配，再去除Ⅱ/Ⅰ后缀前缀匹配
-            String target = industry;
-            for (int round = 0; round < 2; round++) {
-                for (int i = 0; i < diff.size(); i++) {
-                    JSONObject s = diff.getJSONObject(i);
-                    String name = s.getString("f14");
-                    if (name == null) continue;
-                    boolean match = round == 0 ? name.equals(target)
-                            : (target.replace("Ⅱ", "").replace("Ⅰ", "").length() >= 2
-                            && (name.startsWith(target.replace("Ⅱ", "").replace("Ⅰ", ""))
-                            || target.startsWith(name.replace("Ⅱ", "").replace("Ⅰ", ""))));
-                    if (match) {
-                        info.put("name", name);
-                        info.put("changePct", s.get("f3"));
-                        info.put("rank", i + 1);
-                        return info;
-                    }
+        // 板块列表5分钟缓存（交易日5分钟内排名变化小，避免分页5次请求密集触发东财反爬限流）
+        JSONArray allDiff = cachedSectorDiff;
+        if (allDiff == null || System.currentTimeMillis() - sectorCacheTime > 300000L) {
+            allDiff = fetchAllSectorDiff();
+            if (allDiff != null && !allDiff.isEmpty()) {
+                cachedSectorDiff = allDiff;
+                sectorCacheTime = System.currentTimeMillis();
+            } else {
+                allDiff = cachedSectorDiff; // 本次取不到时降级用旧缓存
+            }
+        }
+        if (allDiff == null || allDiff.isEmpty()) return info;
+        info.put("total", allDiff.size());
+        // 先精确匹配，再去除Ⅱ/Ⅰ后缀前缀匹配
+        String target = industry;
+        for (int round = 0; round < 2; round++) {
+            for (int i = 0; i < allDiff.size(); i++) {
+                JSONObject s = allDiff.getJSONObject(i);
+                String name = s.getString("f14");
+                if (name == null) continue;
+                boolean match = round == 0 ? name.equals(target)
+                        : (target.replace("Ⅱ", "").replace("Ⅰ", "").length() >= 2
+                        && (name.startsWith(target.replace("Ⅱ", "").replace("Ⅰ", ""))
+                        || target.startsWith(name.replace("Ⅱ", "").replace("Ⅰ", ""))));
+                if (match) {
+                    info.put("name", name);
+                    info.put("changePct", s.get("f3"));
+                    info.put("rank", i + 1);
+                    return info;
                 }
             }
-        } catch (Exception e) {
-            logger.error("获取板块行情失败: {}", industry, e);
         }
         return info;
     }
+
+    /**
+     * 分页取东财行业板块全量（单页上限100，全量约496，分5页）。
+     * 页间延时300ms避免密集请求触发反爬，每页重试2次降低失败请求量。
+     */
+    private JSONArray fetchAllSectorDiff() {
+        JSONArray allDiff = new JSONArray();
+        int dataTotal = 0;
+        for (int pn = 1; pn <= 5; pn++) {
+            if (pn > 1) {
+                try { Thread.sleep(300L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); break; }
+            }
+            String url = "http://push2.eastmoney.com/api/qt/clist/get?pn=" + pn
+                    + "&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14";
+            String body = httpGet(url, 2);
+            if (body == null) continue;
+            try {
+                JSONObject json = JSON.parseObject(body);
+                JSONObject data = json.getJSONObject("data");
+                if (data == null) continue;
+                if (dataTotal == 0) dataTotal = data.getIntValue("total");
+                JSONArray diff = data.getJSONArray("diff");
+                if (diff == null || diff.isEmpty()) continue;
+                allDiff.addAll(diff);
+            } catch (Exception e) {
+                logger.warn("解析板块行情第{}页失败: {}", pn, e.getMessage());
+            }
+            if (dataTotal > 0 && allDiff.size() >= dataTotal) break;
+        }
+        return allDiff;
+    }
+
 
     private String callAiAnalysis(StockBasic basic, List<StockKline> daily,
                                   double ma5, double ma10, double ma20, double ma60,
@@ -1613,27 +2031,25 @@ public class StockAssetServiceImpl implements StockAssetService {
             sb.append("\n个股相对强弱：").append(states.getString("sectorRel")).append("\n");
         }
 
-        // 5) 基本面（含披露时效与历史披露后股价反应）
+        // 5) 基本面（瘦身：最近6期全量+系统已算好的趋势结论，历史期不再逐期罗列）
         if (!finances.isEmpty()) {
-            sb.append("\n【基本面-财务指标（").append(finances.size()).append("期，最新在前）】\n");
-            for (StockFinance f : finances) {
+            sb.append("\n【基本面-财务指标（最近 ").append(Math.min(6, finances.size())).append(" 期，最新在前）】\n");
+            for (StockFinance f : finances.subList(0, Math.min(6, finances.size()))) {
                 sb.append(f.getReportDate() == null ? "" : daySdf.format(f.getReportDate()))
                         .append("：营收").append(f.getRevenue()).append("亿(同比").append(f.getRevenueYoy()).append("%)")
                         .append("，净利润").append(f.getNetProfit()).append("亿(同比").append(f.getNetProfitYoy()).append("%)")
-                        .append("，扣非").append(f.getDeductNetProfit()).append("亿")
                         .append("，ROE ").append(f.getRoe()).append("%，毛利率").append(f.getGrossMargin())
-                        .append("%，净利率").append(f.getNetMargin()).append("%，负债率").append(f.getDebtRatio())
-                        .append("%，经营现金流").append(f.getOperatingCashFlow()).append("亿\n");
+                        .append("%，负债率").append(f.getDebtRatio()).append("%\n");
             }
             sb.append("披露时效：").append(states.getString("financeFresh")).append("\n");
-            sb.append("业绩趋势：").append(states.getString("profitTrend")).append("\n");
+            sb.append("业绩趋势（系统已统计，直接引用）：").append(states.getString("profitTrend")).append("\n");
             sb.append("历史披露后股价反应（近似披露日=报告期后45天，验证市场对业绩的认可度）：\n").append(states.getString("reactions"));
         }
 
-        // 6) 资金面
+        // 6) 资金面（瘦身：最近10天明细+系统汇总行）
         if (!flows.isEmpty()) {
-            sb.append("\n【资金面-主力资金近 ").append(flows.size()).append(" 日流向（万元，最新在前）】\n");
-            for (StockCapitalFlow fl : flows) {
+            sb.append("\n【资金面-主力资金最近 10 日流向（万元，最新在前；近3/5/10日合计见系统判定）】\n");
+            for (StockCapitalFlow fl : flows.subList(0, Math.min(10, flows.size()))) {
                 sb.append(fl.getTradeDate() == null ? "" : daySdf.format(fl.getTradeDate()))
                         .append("：主力").append(fl.getMainNetInflow()).append("万")
                         .append("，超大单").append(fl.getSuperLargeNet()).append("万\n");
@@ -1641,10 +2057,20 @@ public class StockAssetServiceImpl implements StockAssetService {
             sb.append("系统判定：").append(states.getString("flowStreak")).append("\n");
         }
 
-        // 7) 筹码结构（股东户数）
+        // 7) 筹码结构（股东户数）——筹码阶段判定为主线框架（结合披露时间跨度×K线走势）
         if (holders != null && !holders.isEmpty()) {
-            sb.append("\n【筹码结构-股东户数（户数下降=筹码集中=主力吸筹方向；上升=筹码分散=散户接盘方向）】\n");
-            for (StockHolderNum h : holders) {
+            sb.append("\n【筹码阶段判定——系统算法结论（本章分析主线，必须先引用此结论再展开）】\n");
+            JSONObject chipPhase = states.getJSONObject("chipPhase");
+            if (chipPhase != null) {
+                sb.append("阶段判定：").append(chipPhase.getString("phaseTitle")).append("\n");
+                JSONArray phaseEv = chipPhase.getJSONArray("evidence");
+                if (phaseEv != null) {
+                    for (int i = 0; i < phaseEv.size(); i++) sb.append("- ").append(phaseEv.getString(i)).append("\n");
+                }
+                sb.append("分析要求：").append(chipPhase.getString("phaseDesc")).append("\n");
+            }
+            sb.append("\n【筹码结构-股东户数最近 4 期明细（户数下降=筹码集中=主力吸筹方向；上升=筹码分散=散户接盘方向）】\n");
+            for (StockHolderNum h : holders.subList(0, Math.min(4, holders.size()))) {
                 sb.append(h.getEndDate() == null ? "" : daySdf.format(h.getEndDate()))
                         .append("：股东户数 ").append(h.getHolderNum())
                         .append("，较上期变化率 ").append(h.getHolderNumRatio() == null ? "-" : h.getHolderNumRatio()).append("%")
@@ -1656,10 +2082,10 @@ public class StockAssetServiceImpl implements StockAssetService {
             }
         }
 
-        // 8) 消息面
+        // 8) 消息面（瘦身：最近10条）
         if (!newsList.isEmpty()) {
-            sb.append("\n【消息面-最新消息（注意结合时间判断时效性，当前时间：").append(fullSdf.format(new Date())).append("）】\n");
-            for (StockNews n : newsList) {
+            sb.append("\n【消息面-最新消息最近 10 条（注意结合时间判断时效性，当前时间：").append(fullSdf.format(new Date())).append("）】\n");
+            for (StockNews n : newsList.subList(0, Math.min(10, newsList.size()))) {
                 sb.append(n.getPublishTime() == null ? "" : fullSdf.format(n.getPublishTime()))
                         .append(" [").append(n.getNewsType() != null && n.getNewsType() == 2 ? "公告" : "新闻").append("]")
                         .append(n.getTitle()).append("\n");
@@ -1669,33 +2095,32 @@ public class StockAssetServiceImpl implements StockAssetService {
 
         // 9) 系统规则评分
         sb.append("\n【系统规则评分（供参考，可修正；注意股价位置已参与修正）】\n");
-        sb.append("评分语义：四维分与综合分均为正表示偏多、为负表示偏空，负值已按权重如实计入综合分，负得越多看空越强。\n");
+        sb.append("评分语义：五维分与综合分均为0~100，50为中性标准（5分制×10），>50偏多、<50偏空，权重和=1.0保证满分总和=满分。\n");
         sb.append("技术面 ").append(score.get("tech")).append(" 分、基本面 ").append(score.get("fund"))
                 .append(" 分、资金筹码面 ").append(score.get("flow")).append(" 分、消息面 ").append(score.get("news"))
-                .append(" 分，加权综合 ").append(score.get("composite")).append(" 分（权重 35/30/20/15，")
+                .append(" 分、大盘板块环境 ").append(score.get("env"))
+                .append(" 分，加权综合 ").append(score.get("composite")).append(" 分（权重 30/25/20/15/10，")
                 .append(score.get("envDesc")).append("），等级：").append(score.get("valueLevel")).append("\n");
         sb.append("股价位置：").append(score.get("positionDesc")).append("\n");
-        // 评分明细：每维度得分如何得出的逐条加减分记录，AI必须引用并解释，让用户看得懂分是怎么来的
+        // 评分明细仅作为AI解读依据（前端已单独展示完整明细，禁止在报告中复述）
         appendScoreDetail(sb, "技术面评分构成", score.get("techDetail"));
         appendScoreDetail(sb, "基本面评分构成", score.get("fundDetail"));
         appendScoreDetail(sb, "资金筹码面评分构成", score.get("flowDetail"));
         appendScoreDetail(sb, "消息面评分构成", score.get("newsDetail"));
 
-        // 10) 输出要求
-        sb.append("\n请输出 Markdown 格式分析报告，必须包含以下章节（顺序固定）：\n");
-        sb.append("## 综合结论（200字以内：第一句必须点明股价位置，随后给出明确评级[买入/增持/观望/减持/卖出]与首要逻辑）\n");
-        sb.append("## 技术面详解（先列出技术面评分构成中每条加减分项并解释其含义，让读者明白技术分怎么来的；")
-                .append("再逐项解读均线系统→MACD→KDJ→RSI→量价，结合股价位置判断当前趋势阶段[启动/加速/赶顶/阴跌/震荡]与买卖时机）\n");
-        sb.append("## 基本面详解（先列出基本面评分构成逐条解释；再说明财务披露时效；逐项分析成长性/盈利质量/现金流/估值；")
-                .append("结合历史披露后股价反应说明市场对业绩的认可度；低位业绩增=双击潜力，高位业绩增=预期兑现风险）\n");
-        sb.append("## 资金面与筹码详解（先列出资金筹码评分构成逐条解释；再分析主力资金连续性→超大单动向→股东户数趋势→吸筹/出货判定；")
-                .append("必须结合位置：低位吸筹可信度高，高位放量流入警惕对倒出货）\n");
-        sb.append("## 消息面详解（先列出消息面评分构成逐条解释；再按时效分类，逐条标注利好/利空及实质影响；高位利好需评估兑现风险）\n");
-        sb.append("## 板块与大盘环境（板块强度与排名、个股相对板块强弱、大盘与市场情绪对个股中短期的影响）\n");
-        sb.append("## 股价位置综合评估（汇总当前位置下技术/基本面/资金/消息四类信号的可信度修正结论，明确该位置的操作基调）\n");
-        sb.append("## 投资价值评估（AI综合评分0-100与理由；与系统规则评分对比，说明差异原因）\n");
-        sb.append("## 风险点（逐条列出，标注发生概率与影响程度）\n");
-        sb.append("## 操作建议（①评级 ②建议仓位区间[结合位置：低位可积极、中位稳健、高位防守] ③短线与中线视角 "
+        // 10) 输出要求（瘦身：评分明细前端已单独展示，AI 严禁复述；各章节限字数，降低输出与思考耗时）
+        sb.append("\n【输出要求（Markdown，章节顺序固定，全文总字数控制在1600字以内）】\n");
+        sb.append("重要效率约束：五维评分构成的逐条加减分明细已在系统界面单独完整展示，报告中【严禁逐条复述评分明细】，每章最多引用其中2~3条最关键的加减分项来支撑你的解读。\n");
+        sb.append("## 综合结论（≤150字：第一句必须点明股价位置，随后给出明确评级[买入/增持/观望/减持/卖出]与首要逻辑）\n");
+        sb.append("## 技术面详解（≤350字：直接逐项解读均线系统→MACD→KDJ→RSI→量价，结合股价位置判断当前趋势阶段[启动/加速/赶顶/阴跌/震荡]与买卖时机，引用关键评分项佐证）\n");
+        sb.append("## 基本面详解（≤350字：逐项分析成长性/盈利质量/现金流/估值与披露时效；结合历史披露后股价反应说明市场认可度；低位业绩增=双击潜力，高位业绩增=预期兑现风险）\n");
+        sb.append("## 资金面与筹码详解（≤450字：必须先引用【筹码阶段判定】的系统算法结论作为主线，按其分析要求结合技术面/资金面/消息面展开吸筹/派发的综合判断——这是本报告的核心章节；再分析主力资金连续性与超大单动向；低位吸筹可信度高，高位放量流入警惕对倒出货）\n");
+        sb.append("## 消息面详解（≤250字：按时效分类，逐条标注利好/利空及实质影响；高位利好需评估兑现风险）\n");
+        sb.append("## 板块与大盘环境（≤150字：板块强度与排名、个股相对板块强弱、大盘与市场情绪对个股中短期的影响）\n");
+        sb.append("## 股价位置综合评估（≤200字：汇总当前位置下技术/基本面/资金/消息四类信号的可信度修正结论，明确该位置的操作基调）\n");
+        sb.append("## 投资价值评估（≤150字：AI综合评分0-100与理由；与系统规则评分对比，说明差异原因）\n");
+        sb.append("## 风险点（3~5条，每条≤40字，标注发生概率与影响程度）\n");
+        sb.append("## 操作建议（≤200字：①评级 ②建议仓位区间[结合位置：低位可积极、中位稳健、高位防守] ③短线与中线视角 "
                 + "④参考支撑位与压力位[基于年内低点/高点/MA20/MA60给出具体价位] ⑤止损参考位）\n");
         sb.append("要求：数据驱动、有理有据、观点明确、不空话套话；每个结论必须能对应到上文具体数据；若数据缺失如实说明。");
 
