@@ -45,6 +45,18 @@ public class StockAssetServiceImpl implements StockAssetService {
     private static final String FINANCE_URL = "https://datacenter.eastmoney.com/securities/api/data/get";
     private static final String ANNOUNCE_URL = "https://np-anotice-stock.eastmoney.com/api/security/ann";
     private static final String NEWS_SEARCH_URL = "https://search-api-web.eastmoney.com/search/jsonp";
+    // 全市场快照（clist）：一次请求即可返回全部A股行情+基本面字段，用于基本面选股。
+    // push2 主集群会因高频请求临时拉黑IP（TCP可通但HTTP静默丢弃，表现为NoHttpResponseException），
+    // 故按顺序failover：push2delay 为延迟行情集群（数据格式一致，基本面字段不受延迟影响），实测稳定可用
+    private static final String[] CLIST_HOSTS = {
+            "http://push2delay.eastmoney.com",
+            "http://push2.eastmoney.com"
+    };
+
+    // 基本面选股结果短TTL缓存：切标签页会重复触发选股，缓存1分钟内结果，避免高频请求触发东财限流
+    private static final long FUNDAMENTAL_CACHE_TTL_MS = 60 * 1000L;
+    private static volatile Map<String, Object> fundamentalStocksCache = null;
+    private static volatile long fundamentalStocksCacheTime = 0L;
 
     // ===== AI 分析结果缓存：以数据指纹为 key，输入数据未变时直接复用上次分析结果，避免重复等待 AI 生成 =====
     // 指纹覆盖分析所用的全部输入（行情估值/K线/财务/资金/消息/筹码/板块/大盘实时），任一数据变化则指纹变化，
@@ -56,6 +68,8 @@ public class StockAssetServiceImpl implements StockAssetService {
     // 行业板块列表缓存（交易日5分钟内不变，避免分页5次请求密集触发东财反爬限流）
     private static volatile JSONArray cachedSectorDiff = null;
     private static volatile long sectorCacheTime = 0L;
+    // 板块拉取失败退避：push2被拉黑时5页×多域名重试会放大无效请求量反而延长封禁，失败后3分钟内直接降级
+    private static volatile long sectorFetchFailUntil = 0L;
 
     private static class AiAnalysisCacheEntry {
         final Map<String, Object> result;
@@ -1734,6 +1748,157 @@ public class StockAssetServiceImpl implements StockAssetService {
         return v == null ? null : v.doubleValue();
     }
 
+    /** 东方财富快照字段值转Double：缺失时为"-"或空串 */
+    private static Double asDouble(Object val) {
+        if (val == null) return null;
+        String s = val.toString().trim();
+        if (s.isEmpty() || "-".equals(s) || "null".equalsIgnoreCase(s)) return null;
+        try {
+            return Double.valueOf(s);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static Double round2(Double v) {
+        if (v == null) return null;
+        return BigDecimal.valueOf(v).setScale(2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    private static Double round1(Double v) {
+        if (v == null) return null;
+        return BigDecimal.valueOf(v).setScale(1, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    /**
+     * 基本面选股：调用东方财富全市场快照接口（clist），一次性拉取全部A股的行情与基本面字段，
+     * 按盈利能力/成长性/盈利质量/估值等硬性门槛筛选，再按加权评分降序取前20，
+     * 并为每只股票生成"基本面好在哪"的亮点说明。纯实时计算，不落库。
+     */
+    @Override
+    public Map<String, Object> getFundamentalStocks() throws Exception {
+        // 命中短TTL缓存直接返回（screenTime为缓存生成时间）
+        Map<String, Object> cached = fundamentalStocksCache;
+        if (cached != null && System.currentTimeMillis() - fundamentalStocksCacheTime < FUNDAMENTAL_CACHE_TTL_MS) {
+            return cached;
+        }
+        // 字段：f12代码 f13市场 f14名称 f2最新价 f3涨跌幅 f9PE动态 f23市净率 f20总市值(元)
+        //       f37加权ROE(%) f40营业收入(元) f41营收同比(%) f45净利润(元) f46净利同比(%) f49毛利率(%) f115PE(TTM)
+        String query = "?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f45"
+                + "&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23"
+                + "&fields=f12,f13,f14,f2,f3,f9,f23,f20,f37,f40,f41,f45,f46,f49,f115";
+        // 多域名failover：单域名内部HttpClient已自带3次重试，此处每个域名只做1轮，避免全部失败时等待过久
+        JSONArray diff = null;
+        for (String host : CLIST_HOSTS) {
+            String resp = httpGet(host + "/api/qt/clist/get" + query, 1);
+            JSONObject root = resp == null ? null : JSON.parseObject(resp);
+            JSONObject data = root == null ? null : root.getJSONObject("data");
+            diff = data == null ? null : data.getJSONArray("diff");
+            if (diff != null && !diff.isEmpty()) break;
+            logger.warn("全市场快照获取失败，准备切换域名 | host={}", host);
+        }
+        if (diff == null || diff.isEmpty()) {
+            throw new RuntimeException("东方财富全市场基本面数据获取失败，请稍后重试");
+        }
+
+        List<Map<String, Object>> matched = new ArrayList<>();
+        int totalScanned = 0;
+        for (int i = 0; i < diff.size(); i++) {
+            JSONObject s = diff.getJSONObject(i);
+            String code = s.getString("f12");
+            String name = s.getString("f14");
+            if (code == null || name == null || name.contains("ST") || name.contains("退")) continue;
+            Double roe = asDouble(s.get("f37"));            // 加权净资产收益率(%)
+            Double revGrowth = asDouble(s.get("f41"));      // 营业收入同比增长(%)
+            Double profitGrowth = asDouble(s.get("f46"));   // 净利润同比增长(%)
+            Double grossMargin = asDouble(s.get("f49"));    // 销售毛利率(%)，银行等无此概念为0
+            Double peTtm = asDouble(s.get("f115"));         // 市盈率TTM
+            Double peDyn = asDouble(s.get("f9"));           // 市盈率动态
+            Double pb = asDouble(s.get("f23"));             // 市净率
+            Double totalCap = asDouble(s.get("f20"));       // 总市值(元)
+            Double netProfit = asDouble(s.get("f45"));      // 净利润(元)
+            Double revenue = asDouble(s.get("f40"));        // 营业收入(元)
+            Double lastPrice = asDouble(s.get("f2"));
+            Double changePct = asDouble(s.get("f3"));
+            totalScanned++;
+            if (roe == null || revGrowth == null || profitGrowth == null || peTtm == null
+                    || totalCap == null || netProfit == null) continue;
+            // 硬性门槛：真实盈利 + 具备规模 + 盈利能力优秀 + 业绩增长 + 营收未负增长 + 估值合理
+            if (netProfit <= 0) continue;                    // 最新报告期净利润为正
+            if (totalCap < 5e9) continue;                    // 总市值≥50亿，剔除微型盘
+            if (roe < 12) continue;                          // 加权ROE≥12%，盈利能力达标
+            if (profitGrowth < 15) continue;                 // 净利润同比≥15%，具备成长性
+            if (revGrowth < 0) continue;                     // 营收未负增长
+            if (peTtm <= 0 || peTtm > 60) continue;          // 估值在合理可投资区间
+
+            // 加权评分（满分100）：盈利能力25 + 成长性25 + 营收扩张15 + 盈利质量15 + 估值15 + 规模5
+            double score = 0;
+            score += Math.min(roe / 30.0, 1.2) * 25;
+            score += Math.min(profitGrowth / 60.0, 1.2) * 25;
+            score += Math.min(revGrowth / 40.0, 1.2) * 15;
+            if (grossMargin != null && grossMargin > 0) score += Math.min(grossMargin / 60.0, 1.2) * 15;
+            if (peTtm <= 15) score += 15;
+            else if (peTtm <= 25) score += 11;
+            else if (peTtm <= 40) score += 7;
+            else score += 4;
+            score += Math.min(totalCap / 1e11, 1.0) * 5;
+            score = Math.min(score, 100.0);
+
+            // "基本面好在哪"亮点说明
+            List<String> highlights = new ArrayList<>();
+            if (roe >= 25) highlights.add(String.format("加权ROE %.2f%%，盈利能力行业顶尖", roe));
+            else if (roe >= 18) highlights.add(String.format("加权ROE %.2f%%，盈利能力优秀", roe));
+            else highlights.add(String.format("加权ROE %.2f%%，盈利能力稳健", roe));
+            if (profitGrowth >= 50) highlights.add(String.format("净利润同比增长 %.2f%%，业绩高速增长", profitGrowth));
+            else if (profitGrowth >= 30) highlights.add(String.format("净利润同比增长 %.2f%%，业绩快速增长", profitGrowth));
+            else highlights.add(String.format("净利润同比增长 %.2f%%，业绩稳步提升", profitGrowth));
+            if (revGrowth >= 20) highlights.add(String.format("营业收入同比增长 %.2f%%，市场扩张动能强劲", revGrowth));
+            else if (revGrowth >= 10) highlights.add(String.format("营业收入同比增长 %.2f%%，成长空间广阔", revGrowth));
+            else highlights.add(String.format("营业收入同比增长 %.2f%%，经营基本盘稳固", revGrowth));
+            if (grossMargin != null && grossMargin >= 50) {
+                highlights.add(String.format("毛利率 %.2f%%，产品附加值与定价权强", grossMargin));
+            } else if (grossMargin != null && grossMargin >= 30) {
+                highlights.add(String.format("毛利率 %.2f%%，盈利质量较高", grossMargin));
+            }
+            if (peTtm <= 15) highlights.add(String.format("PE(TTM) %.2f倍，估值偏低，安全边际充足", peTtm));
+            else if (peTtm <= 25) highlights.add(String.format("PE(TTM) %.2f倍，估值与成长性匹配", peTtm));
+            if (totalCap >= 3e10) highlights.add(String.format("总市值约 %.0f亿元，行业龙头属性明显", totalCap / 1e8));
+
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("stockCode", code);
+            item.put("stockName", name);
+            item.put("market", s.getInteger("f13") == null ? 0 : s.getInteger("f13"));
+            item.put("lastPrice", round2(lastPrice));
+            item.put("changePct", round2(changePct));
+            item.put("peTtm", round2(peTtm));
+            item.put("peDyn", round2(peDyn));
+            item.put("pb", round2(pb));
+            item.put("totalMarketCap", round2(totalCap / 1e8));      // 亿元
+            item.put("revenue", round2(revenue / 1e8));              // 亿元
+            item.put("revenueGrowth", round2(revGrowth));
+            item.put("netProfit", round2(netProfit / 1e8));          // 亿元
+            item.put("netProfitGrowth", round2(profitGrowth));
+            item.put("roe", round2(roe));
+            item.put("grossMargin", round2(grossMargin));
+            item.put("score", round1(score));
+            item.put("highlights", highlights);
+            matched.add(item);
+        }
+
+        // 按综合得分降序取前20
+        matched.sort((a, b) -> Double.compare((Double) b.get("score"), (Double) a.get("score")));
+        List<Map<String, Object>> top = matched.subList(0, Math.min(20, matched.size()));
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("screenTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        result.put("totalScanned", totalScanned);
+        result.put("matchedCount", matched.size());
+        result.put("stocks", top);
+        fundamentalStocksCache = result;
+        fundamentalStocksCacheTime = System.currentTimeMillis();
+        return result;
+    }
+
     private double avgLast(List<Double> list, int n) {
         int from = Math.max(0, list.size() - n);
         return list.subList(from, list.size()).stream().mapToDouble(Double::doubleValue).average().orElse(0);
@@ -1906,12 +2071,18 @@ public class StockAssetServiceImpl implements StockAssetService {
         // 板块列表5分钟缓存（交易日5分钟内排名变化小，避免分页5次请求密集触发东财反爬限流）
         JSONArray allDiff = cachedSectorDiff;
         if (allDiff == null || System.currentTimeMillis() - sectorCacheTime > 300000L) {
-            allDiff = fetchAllSectorDiff();
-            if (allDiff != null && !allDiff.isEmpty()) {
-                cachedSectorDiff = allDiff;
-                sectorCacheTime = System.currentTimeMillis();
+            if (System.currentTimeMillis() < sectorFetchFailUntil) {
+                // 失败退避期内不再请求东财（拉黑状态下反复重试会延长封禁），直接降级用旧缓存
+                allDiff = cachedSectorDiff;
             } else {
-                allDiff = cachedSectorDiff; // 本次取不到时降级用旧缓存
+                allDiff = fetchAllSectorDiff();
+                if (allDiff != null && !allDiff.isEmpty()) {
+                    cachedSectorDiff = allDiff;
+                    sectorCacheTime = System.currentTimeMillis();
+                } else {
+                    allDiff = cachedSectorDiff; // 本次取不到时降级用旧缓存
+                    sectorFetchFailUntil = System.currentTimeMillis() + 3 * 60 * 1000L;
+                }
             }
         }
         if (allDiff == null || allDiff.isEmpty()) return info;
@@ -1940,7 +2111,8 @@ public class StockAssetServiceImpl implements StockAssetService {
 
     /**
      * 分页取东财行业板块全量（单页上限100，全量约496，分5页）。
-     * 页间延时300ms避免密集请求触发反爬，每页重试2次降低失败请求量。
+     * 多域名failover（push2delay主 + push2备，push2会临时拉黑高频IP致NoHttpResponseException）；
+     * 页间延时300ms避免密集请求触发反爬，每页仅1轮外层尝试（内层HttpClient自带3次重试）。
      */
     private JSONArray fetchAllSectorDiff() {
         JSONArray allDiff = new JSONArray();
@@ -1949,21 +2121,25 @@ public class StockAssetServiceImpl implements StockAssetService {
             if (pn > 1) {
                 try { Thread.sleep(300L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); break; }
             }
-            String url = "http://push2.eastmoney.com/api/qt/clist/get?pn=" + pn
-                    + "&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14";
-            String body = httpGet(url, 2);
-            if (body == null) continue;
-            try {
-                JSONObject json = JSON.parseObject(body);
-                JSONObject data = json.getJSONObject("data");
-                if (data == null) continue;
-                if (dataTotal == 0) dataTotal = data.getIntValue("total");
-                JSONArray diff = data.getJSONArray("diff");
-                if (diff == null || diff.isEmpty()) continue;
-                allDiff.addAll(diff);
-            } catch (Exception e) {
-                logger.warn("解析板块行情第{}页失败: {}", pn, e.getMessage());
+            JSONArray diff = null;
+            for (String host : CLIST_HOSTS) {
+                String url = host + "/api/qt/clist/get?pn=" + pn
+                        + "&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14";
+                String body = httpGet(url, 1);
+                if (body == null) continue;
+                try {
+                    JSONObject json = JSON.parseObject(body);
+                    JSONObject data = json.getJSONObject("data");
+                    if (data == null) continue;
+                    if (dataTotal == 0) dataTotal = data.getIntValue("total");
+                    diff = data.getJSONArray("diff");
+                    if (diff != null && !diff.isEmpty()) break;
+                } catch (Exception e) {
+                    logger.warn("解析板块行情第{}页失败: {}", pn, e.getMessage());
+                }
             }
+            if (diff == null || diff.isEmpty()) continue;
+            allDiff.addAll(diff);
             if (dataTotal > 0 && allDiff.size() >= dataTotal) break;
         }
         return allDiff;

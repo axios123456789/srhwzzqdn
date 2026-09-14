@@ -196,6 +196,20 @@ public class StockAssetController {
         }
     }
 
+    /**
+     * 基本面选股：调用东方财富全市场接口，筛选基本面优秀、发展潜力强的A股公司并给出基本面亮点（不入库）
+     */
+    @GetMapping("/getFundamentalStocks")
+    public Result getFundamentalStocks() {
+        try {
+            Map<String, Object> result = stockAssetService.getFundamentalStocks();
+            return Result.build(result, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("基本面选股失败", e);
+            return Result.build(null, 500, "基本面选股失败：" + e.getMessage());
+        }
+    }
+
     @PutMapping("/updateStockBasic")
     public Result updateStockBasic(@RequestBody StockBasic stockBasic) {
         try {

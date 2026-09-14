@@ -31424,3 +31424,378 @@ java.lang.RuntimeException: 该日期无分钟数据（1分钟线仅保留最近
 2026-09-13 15:19:12 Token消耗 | 输入: 4082 | 输出: 5733 | 总计: 9815
 2026-09-13 15:19:12 AI响应解析 | finish_reason=stop | 内容长度=2160 字符
 2026-09-13 15:19:12 AI调用成功 | 耗时=116413 ms | 响应长度=2160 字符
+2026-09-13 21:18:03 HikariPool-1 - Shutdown initiated...
+2026-09-13 21:18:03 HikariPool-1 - Shutdown completed.
+2026-09-13 21:18:31 Starting ManagerApplication using Java 17.0.17 with PID 27264 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-13 21:18:31 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-13 21:18:31 The following 1 profile is active: "dev"
+2026-09-13 21:18:32 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-13 21:18:32 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-13 21:18:32 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-13 21:18:33 Tomcat initialized with port(s): 8400 (http)
+2026-09-13 21:18:33 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-13 21:18:33 Starting service [Tomcat]
+2026-09-13 21:18:33 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-13 21:18:33 Initializing Spring embedded WebApplicationContext
+2026-09-13 21:18:33 Root WebApplicationContext: initialization completed in 2024 ms
+2026-09-13 21:18:35 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-13 21:18:36 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-13 21:18:36 Started ManagerApplication in 5.532 seconds (process running for 7.077)
+2026-09-13 21:18:42 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-13 21:18:42 Initializing Servlet 'dispatcherServlet'
+2026-09-13 21:18:42 Completed initialization in 2 ms
+2026-09-13 21:18:43 HikariPool-1 - Starting...
+2026-09-13 21:18:43 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@413189a4
+2026-09-13 21:18:43 HikariPool-1 - Start completed.
+2026-09-13 21:19:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:19:28 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:19:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:19:29 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:19:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:19:30 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:19:30 HTTP请求失败 | 尝试=1/3 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f45&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f12,f13,f14,f2,f3,f9,f23,f20,f37,f40,f41,f45,f46,f49,f115 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:19:32 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:19:32 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:19:32 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:19:32 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:19:33 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:19:33 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:19:33 HTTP请求失败 | 尝试=2/3 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f45&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f12,f13,f14,f2,f3,f9,f23,f20,f37,f40,f41,f45,f46,f49,f115 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:19:35 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:19:35 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:19:35 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:19:35 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:19:36 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:19:36 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:19:37 HTTP请求失败 | 尝试=3/3 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f45&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f12,f13,f14,f2,f3,f9,f23,f20,f37,f40,f41,f45,f46,f49,f115 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:19:37 基本面选股失败
+java.lang.RuntimeException: 东方财富全市场基本面数据获取失败，请稍后重试
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.getFundamentalStocks(StockAssetServiceImpl.java:1788)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.getFundamentalStocks(StockAssetController.java:205)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-13 21:20:33 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:33 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:33 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:33 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:34 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:34 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:34 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:34 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:34 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:34 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:34 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:35 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:35 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:35 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:35 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:35 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:36 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:36 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:37 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:37 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=2&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:37 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:37 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:38 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:38 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:38 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=2&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:39 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:39 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:40 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:40 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:40 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:40 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:41 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=3&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:42 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:42 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:42 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:42 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:44 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:44 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:45 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=3&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:46 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:46 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:46 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:46 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:48 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:48 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:48 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=4&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:50 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:50 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:50 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:50 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:50 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:50 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:50 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=4&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:51 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:51 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:52 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:52 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:53 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:53 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:53 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=5&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:54 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:54 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:55 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:55 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:55 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:20:55 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:20:56 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=5&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:20:56 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=12758 bytes
+2026-09-13 21:22:43 Token消耗 | 输入: 4017 | 输出: 5215 | 总计: 9232
+2026-09-13 21:22:43 AI响应解析 | finish_reason=stop | 内容长度=2221 字符
+2026-09-13 21:22:43 AI调用成功 | 耗时=106847 ms | 响应长度=2221 字符
+2026-09-13 21:26:18 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:18 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:18 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:18 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:21 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:21 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:22 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:23 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:23 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:23 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:23 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:23 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:23 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:24 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:24 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:24 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:26 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:26 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=2&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:28 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:28 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:28 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:30 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=2&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:30 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:31 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:31 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:34 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:34 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:34 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=3&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:38 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:38 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:39 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:39 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:40 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:40 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:41 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=3&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:41 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:41 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:41 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:41 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:43 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:43 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:43 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=4&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:43 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:43 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:44 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:44 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:44 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:44 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:47 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=4&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:48 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:48 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:48 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:48 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:48 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:48 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:48 HTTP请求失败 | 尝试=1/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=5&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:48 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:48 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:49 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:49 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:49 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:26:49 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:26:49 HTTP请求失败 | 尝试=2/2 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=5&pz=100&po=1&np=1&fltt=2&invt=2&fid=f3&fs=m:90+t:2&fields=f3,f14 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:26:49 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=13490 bytes
+2026-09-13 21:29:57 Token消耗 | 输入: 4174 | 输出: 9217 | 总计: 13391
+2026-09-13 21:29:57 AI响应解析 | finish_reason=stop | 内容长度=2380 字符
+2026-09-13 21:29:57 AI调用成功 | 耗时=187923 ms | 响应长度=2380 字符
+2026-09-13 21:30:31 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:30:31 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:30:31 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:30:31 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:30:32 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:30:32 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:30:40 HTTP请求失败 | 尝试=1/3 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f45&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f12,f13,f14,f2,f3,f9,f23,f20,f37,f40,f41,f45,f46,f49,f115 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:30:40 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:30:40 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:30:40 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:30:40 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:30:41 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:30:41 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:30:41 HTTP请求失败 | 尝试=2/3 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f45&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f12,f13,f14,f2,f3,f9,f23,f20,f37,f40,f41,f45,f46,f49,f115 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:30:43 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:30:43 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:30:44 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:30:44 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:30:44 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2.eastmoney.com:80: The target server failed to respond
+2026-09-13 21:30:44 Retrying request to {}->http://push2.eastmoney.com:80
+2026-09-13 21:30:44 HTTP请求失败 | 尝试=3/3 | url=http://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f45&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f12,f13,f14,f2,f3,f9,f23,f20,f37,f40,f41,f45,f46,f49,f115 | 原因=push2.eastmoney.com:80 failed to respond
+2026-09-13 21:30:44 基本面选股失败
+java.lang.RuntimeException: 东方财富全市场基本面数据获取失败，请稍后重试
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.StockAssetServiceImpl.getFundamentalStocks(StockAssetServiceImpl.java:1788)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.StockAssetController.getFundamentalStocks(StockAssetController.java:205)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-13 21:36:46 HikariPool-1 - Shutdown initiated...
+2026-09-13 21:36:46 HikariPool-1 - Shutdown completed.
+2026-09-13 21:36:59 Starting ManagerApplication using Java 17.0.17 with PID 14316 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-13 21:36:59 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-13 21:36:59 The following 1 profile is active: "dev"
+2026-09-13 21:37:00 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-13 21:37:00 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-13 21:37:00 Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-09-13 21:37:01 Tomcat initialized with port(s): 8400 (http)
+2026-09-13 21:37:01 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-13 21:37:01 Starting service [Tomcat]
+2026-09-13 21:37:01 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-13 21:37:01 Initializing Spring embedded WebApplicationContext
+2026-09-13 21:37:01 Root WebApplicationContext: initialization completed in 1817 ms
+2026-09-13 21:37:03 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-13 21:37:03 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-13 21:37:04 Started ManagerApplication in 5.03 seconds (process running for 5.912)
+2026-09-13 21:37:13 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-13 21:37:13 Initializing Servlet 'dispatcherServlet'
+2026-09-13 21:37:13 Completed initialization in 3 ms
+2026-09-13 21:37:14 HikariPool-1 - Starting...
+2026-09-13 21:37:14 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@78d6f163
+2026-09-13 21:37:14 HikariPool-1 - Start completed.
+2026-09-13 21:37:47 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=13535 bytes
+2026-09-13 21:40:15 Token消耗 | 输入: 4190 | 输出: 7962 | 总计: 12152
+2026-09-13 21:40:15 AI响应解析 | finish_reason=stop | 内容长度=2387 字符
+2026-09-13 21:40:15 AI调用成功 | 耗时=148154 ms | 响应长度=2387 字符
+2026-09-13 21:47:38 调用AI服务 | type=anthropic | model=glm-latest | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=13021 bytes
+2026-09-13 21:50:21 Token消耗 | 输入: 4012 | 输出: 7748 | 总计: 11760
+2026-09-13 21:50:21 AI响应解析 | finish_reason=stop | 内容长度=2220 字符
+2026-09-13 21:50:21 AI调用成功 | 耗时=163831 ms | 响应长度=2220 字符
+2026-09-13 22:00:50 HikariPool-1 - Shutdown initiated...
+2026-09-13 22:00:50 HikariPool-1 - Shutdown completed.
+2026-09-14 08:33:46 Starting ManagerApplication using Java 17.0.17 with PID 14956 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-14 08:33:46 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-14 08:33:46 The following 1 profile is active: "dev"
+2026-09-14 08:33:50 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-14 08:33:50 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-14 08:33:50 Finished Spring Data repository scanning in 29 ms. Found 0 Redis repository interfaces.
+2026-09-14 08:33:51 Tomcat initialized with port(s): 8400 (http)
+2026-09-14 08:33:51 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-14 08:33:51 Starting service [Tomcat]
+2026-09-14 08:33:51 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-14 08:33:51 Initializing Spring embedded WebApplicationContext
+2026-09-14 08:33:51 Root WebApplicationContext: initialization completed in 4706 ms
+2026-09-14 08:33:55 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-14 08:33:55 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-14 08:33:55 Started ManagerApplication in 10.319 seconds (process running for 13.159)
+2026-09-14 08:35:56 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-14 08:35:56 Initializing Servlet 'dispatcherServlet'
+2026-09-14 08:35:56 Completed initialization in 17 ms
+2026-09-14 08:36:02 HikariPool-1 - Starting...
+2026-09-14 08:36:02 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5670de2
+2026-09-14 08:36:02 HikariPool-1 - Start completed.

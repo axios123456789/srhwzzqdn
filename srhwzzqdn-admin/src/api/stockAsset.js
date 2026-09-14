@@ -68,6 +68,11 @@ export const GetChipAnalysis = (stockCode) => {
   return request({ url: `${base_api}/getChipAnalysis/${stockCode}`, method: 'get', timeout: 30000 });
 };
 
+export const GetFundamentalStocks = () => {
+  // 基本面选股：全市场快照实时筛选（不入库），放宽超时以应对东方财富接口偶发波动重试
+  return request({ url: `${base_api}/getFundamentalStocks`, method: 'get', timeout: 60000 });
+};
+
 export const UpdateStockBasic = (data) => {
   return request({ url: `${base_api}/updateStockBasic`, method: 'put', data });
 };

@@ -41,6 +41,11 @@ public interface StockAssetService {
      */
     Map<String, Object> getChipAnalysis(String stockCode);
 
+    /**
+     * 基本面选股：调用东方财富全市场接口，筛选基本面优秀、发展潜力强的A股公司（实时计算，不入库）
+     */
+    Map<String, Object> getFundamentalStocks() throws Exception;
+
     void updateStockBasic(StockBasic stockBasic);
 
     void deleteStockDataByCode(String stockCode);
