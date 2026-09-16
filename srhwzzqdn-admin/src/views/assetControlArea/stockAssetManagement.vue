@@ -5,7 +5,7 @@
       <el-tab-pane label="股票分析" name="analysis">
         <TabStockAnalysis v-if="activeTab === 'analysis'" />
       </el-tab-pane>
-      <el-tab-pane label="基本面选股" name="fundamental">
+      <el-tab-pane label="价值选股" name="fundamental">
         <TabFundamentalScreening v-if="activeTab === 'fundamental'" />
       </el-tab-pane>
     </el-tabs>

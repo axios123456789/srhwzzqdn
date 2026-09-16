@@ -26,6 +26,9 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Service
 public class StockAssetServiceImpl implements StockAssetService {
@@ -57,6 +60,49 @@ public class StockAssetServiceImpl implements StockAssetService {
     private static final long FUNDAMENTAL_CACHE_TTL_MS = 60 * 1000L;
     private static volatile Map<String, Object> fundamentalStocksCache = null;
     private static volatile long fundamentalStocksCacheTime = 0L;
+
+    // ===== 基本面选股：静态行业属性名单（按东财行业名 f100 关键字匹配）=====
+    // 强周期行业（优质公司宜在非周期行业中寻找；非周期≈生产必需品/弱波动行业）
+    private static final String[] CYCLICAL_INDUSTRY_KEYWORDS = {
+            "银行", "证券", "保险", "多元金融", "房地产", "煤炭", "钢铁", "工业金属", "贵金属",
+            "能源金属", "小金属", "石油", "油气", "炼化", "化工", "化纤", "橡胶", "塑料", "农药",
+            "航运", "港口", "物流", "水泥", "玻璃", "装修建材", "工程机械", "工程咨询",
+            "养殖", "汽车整车", "汽车服务", "商用车"
+    };
+    // 国家政策重点支持方向（朝阳行业/自主可控/高端制造/创新药等）
+    private static final String[] POLICY_INDUSTRY_KEYWORDS = {
+            "半导体", "元件", "消费电子", "光学光电子", "电子化学品", "光伏", "风电", "电池",
+            "电网", "电源设备", "军工", "航空", "航天", "船舶", "通信设备", "软件开发",
+            "计算机", "IT服务", "互联网服务", "人工智能", "机器人", "仪器仪表", "通用设备",
+            "专用设备", "生物制品", "化学制药", "中药", "医疗服务", "医疗器械", "汽车零部件", "游戏"
+    };
+    // 金融行业（负债率门槛豁免：高杠杆是其经营模式；毛利率也无实际意义）
+    private static final String[] FINANCE_INDUSTRY_KEYWORDS = {"银行", "证券", "保险", "多元金融"};
+
+    // ===== 价值选股：技术面与题材 =====
+    // 概念板块噪声黑名单（交易统计类/持仓统计类板块，无故事属性，剔除后不计入题材与热度）
+    private static final String[] CONCEPT_NOISE_KEYWORDS = {
+            "昨日", "连板", "打板", "首板", "涨停", "触板", "反转", "ST", "次新", "百元", "低价",
+            "破净", "微盘", "B股", "融资", "转融", "股通", "重仓", "预盈", "预亏", "预增", "预减",
+            "高送转", "举牌", "壳资源", "重组", "新股", "IPO", "MSCI", "标普", "富时", "中标",
+            "回购", "增持", "减持", "分红", "送转", "破发", "定增", "员工持股", "股权激励", "AH"
+    };
+    // 故事题材关键词：命中即视为"有逻辑炒作性/未来故事性"的真题材方向
+    private static final String[] STORY_CONCEPT_KEYWORDS = {
+            "存储", "内存", "HBM", "芯片", "半导体", "光刻", "封测", "算力", "CPO", "光模块",
+            "服务器", "数据中心", "云计算", "人工智能", "大模型", "机器人", "无人驾驶", "智能驾驶",
+            "车路云", "低空", "无人机", "航天", "卫星", "火箭", "北斗", "军工", "大飞机", "发动机",
+            "核聚变", "核电", "电网", "特高压", "虚拟电厂", "储能", "固态电池", "钠离子", "锂电",
+            "氢能", "燃料电池", "光伏", "钙钛矿", "海风", "创新药", "减肥药", "疫苗", "基因",
+            "细胞", "脑机", "量子", "6G", "数据要素", "信创", "鸿蒙", "国产软件", "网络安全",
+            "数字货币", "跨境支付", "元宇宙", "游戏", "短剧", "消费电子", "折叠屏", "面板",
+            "新材料", "碳纤维", "超导", "3D打印", "稀土", "华为", "苹果", "汽车芯片", "车联网"
+    };
+    // 题材上下文缓存（概念成分股变化极慢，6小时足够）
+    private static final long THEME_CACHE_TTL_MS = 6 * 3600 * 1000L;
+    private static volatile Map<String, List<String>> themeStocksCache = null; // code -> List<概念名>
+    private static volatile Set<String> hotConceptNamesCache = null;     // 当日热度榜前20概念名
+    private static volatile long themeCacheTime = 0L;
 
     // ===== AI 分析结果缓存：以数据指纹为 key，输入数据未变时直接复用上次分析结果，避免重复等待 AI 生成 =====
     // 指纹覆盖分析所用的全部输入（行情估值/K线/财务/资金/消息/筹码/板块/大盘实时），任一数据变化则指纹变化，
@@ -1771,9 +1817,12 @@ public class StockAssetServiceImpl implements StockAssetService {
     }
 
     /**
-     * 基本面选股：调用东方财富全市场快照接口（clist），一次性拉取全部A股的行情与基本面字段，
-     * 按盈利能力/成长性/盈利质量/估值等硬性门槛筛选，再按加权评分降序取前20，
-     * 并为每只股票生成"基本面好在哪"的亮点说明。纯实时计算，不落库。
+     * 基本面选股（两阶段漏斗，纯实时计算不落库）：
+     * 阶段1：clist 全市场快照一次拉取（含行业f100/年初涨幅f25/每股净资产f113），硬性门槛粗筛出候选池，
+     *        同时按行业分组统计 PE中位数/PB均值/年初涨幅均值/市值排名（同行业对比估值，市盈率法）；
+     * 阶段2：对候选池批量调东财数据中心（业绩报表+资产负债表摘要，支持SECURITY_CODE in批量），
+     *        补齐每股经营现金流（充足现金流）、资产负债率/流动比率（财报健康度），精细化评分排序取前20。
+     * 评分模型（满分100）：盈利20+成长20+营收10+质量15+现金流10+估值15+行业地位10
      */
     @Override
     public Map<String, Object> getFundamentalStocks() throws Exception {
@@ -1784,119 +1833,664 @@ public class StockAssetServiceImpl implements StockAssetService {
         }
         // 字段：f12代码 f13市场 f14名称 f2最新价 f3涨跌幅 f9PE动态 f23市净率 f20总市值(元)
         //       f37加权ROE(%) f40营业收入(元) f41营收同比(%) f45净利润(元) f46净利同比(%) f49毛利率(%) f115PE(TTM)
-        String query = "?pn=1&pz=6000&po=1&np=1&fltt=2&invt=2&fid=f45"
+        //       f100所属行业 f25年初至今涨跌幅(%) f112每股收益(元)
+        // 东财已将clist单页上限收紧为100（实测pz>100一律返回100条），故按ROE降序分页拉取：
+        // 选股门槛最低ROE 10%，全市场ROE≥10%的公司不足800家，拉前10页(1000家)即可完整覆盖全部候选，
+        // 行业统计基于"各行业最优秀公司集合"，其PE/PB中位数即同行业优质公司的估值对比基准
+        String query = "?po=1&np=1&fltt=2&invt=2&fid=f37"
                 + "&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23"
-                + "&fields=f12,f13,f14,f2,f3,f9,f23,f20,f37,f40,f41,f45,f46,f49,f115";
-        // 多域名failover：单域名内部HttpClient已自带3次重试，此处每个域名只做1轮，避免全部失败时等待过久
-        JSONArray diff = null;
+                + "&fields=f12,f13,f14,f2,f3,f9,f23,f20,f37,f40,f41,f45,f46,f49,f115,f100,f25,f112";
+        JSONArray diff = new JSONArray();
         for (String host : CLIST_HOSTS) {
-            String resp = httpGet(host + "/api/qt/clist/get" + query, 1);
-            JSONObject root = resp == null ? null : JSON.parseObject(resp);
-            JSONObject data = root == null ? null : root.getJSONObject("data");
-            diff = data == null ? null : data.getJSONArray("diff");
-            if (diff != null && !diff.isEmpty()) break;
+            diff.clear();
+            for (int pn = 1; pn <= 10; pn++) {
+                String resp = httpGet(host + "/api/qt/clist/get" + query + "&pn=" + pn + "&pz=100", 1);
+                JSONObject root = resp == null ? null : JSON.parseObject(resp);
+                JSONObject data = root == null ? null : root.getJSONObject("data");
+                JSONArray rows = data == null ? null : data.getJSONArray("diff");
+                if (rows == null || rows.isEmpty()) break;
+                diff.addAll(rows);
+                // ROE降序排列：页尾ROE低于最低门槛10%再留缓冲（<8%）时提前终止，减少分页请求量
+                Double lastRoe = asDouble(rows.getJSONObject(rows.size() - 1).get("f37"));
+                if (lastRoe != null && lastRoe < 8) break;
+                if (rows.size() < 100) break; // 末页不足100说明拉完了
+                try { Thread.sleep(200L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); break; }
+            }
+            if (!diff.isEmpty()) break;
             logger.warn("全市场快照获取失败，准备切换域名 | host={}", host);
         }
-        if (diff == null || diff.isEmpty()) {
+        if (diff.isEmpty()) {
             throw new RuntimeException("东方财富全市场基本面数据获取失败，请稍后重试");
         }
 
-        List<Map<String, Object>> matched = new ArrayList<>();
+        // 第一遍遍历：解析全市场 + 行业统计（用于同行业估值对比与龙头判断）
         int totalScanned = 0;
+        Map<String, IndustryStat> industryStats = new LinkedHashMap<>();
+        List<JSONObject> all = new ArrayList<>();
         for (int i = 0; i < diff.size(); i++) {
             JSONObject s = diff.getJSONObject(i);
             String code = s.getString("f12");
             String name = s.getString("f14");
-            if (code == null || name == null || name.contains("ST") || name.contains("退")) continue;
-            Double roe = asDouble(s.get("f37"));            // 加权净资产收益率(%)
-            Double revGrowth = asDouble(s.get("f41"));      // 营业收入同比增长(%)
-            Double profitGrowth = asDouble(s.get("f46"));   // 净利润同比增长(%)
-            Double grossMargin = asDouble(s.get("f49"));    // 销售毛利率(%)，银行等无此概念为0
-            Double peTtm = asDouble(s.get("f115"));         // 市盈率TTM
-            Double peDyn = asDouble(s.get("f9"));           // 市盈率动态
-            Double pb = asDouble(s.get("f23"));             // 市净率
-            Double totalCap = asDouble(s.get("f20"));       // 总市值(元)
-            Double netProfit = asDouble(s.get("f45"));      // 净利润(元)
-            Double revenue = asDouble(s.get("f40"));        // 营业收入(元)
+            if (code == null || name == null) continue;
+            totalScanned++;
+            all.add(s);
+            Double peTtm = asDouble(s.get("f115"));
+            Double pb = asDouble(s.get("f23"));
+            Double totalCap = asDouble(s.get("f20"));
+            Double ytdChg = asDouble(s.get("f25"));
+            String industry = s.getString("f100");
+            if (industry == null || totalCap == null) continue;
+            IndustryStat st = industryStats.computeIfAbsent(industry, k -> new IndustryStat());
+            st.totalCap += totalCap;
+            if (peTtm != null && peTtm > 0) st.pes.add(peTtm);
+            if (pb != null && pb > 0) st.pbs.add(pb);
+            if (ytdChg != null) st.ytds.add(ytdChg);
+            st.capRanking.add(new Object[]{code, totalCap});
+        }
+        for (IndustryStat st : industryStats.values()) {
+            st.peMedian = median(st.pes);
+            st.pbMedian = median(st.pbs);
+            st.ytdAvg = st.ytds.isEmpty() ? null : st.ytds.stream().mapToDouble(Double::doubleValue).average().orElse(0);
+            st.capRanking.sort((a, b) -> Double.compare((Double) b[1], (Double) a[1]));
+        }
+
+        // 硬性门槛粗筛（ROE优秀线15%起，候选不足20家时按15/12/10逐级放宽补足）
+        List<JSONObject> candidates = new ArrayList<>();
+        double roeFloor = 15.0;
+        double[] floors = {15.0, 12.0, 10.0};
+        for (double floor : floors) {
+            candidates.clear();
+            roeFloor = floor;
+            for (JSONObject s : all) {
+                String name = s.getString("f14");
+                if (name.contains("ST") || name.contains("退")) continue;
+                Double roe = asDouble(s.get("f37"));
+                Double revGrowth = asDouble(s.get("f41"));
+                Double profitGrowth = asDouble(s.get("f46"));
+                Double peTtm = asDouble(s.get("f115"));
+                Double totalCap = asDouble(s.get("f20"));
+                Double netProfit = asDouble(s.get("f45"));
+                if (roe == null || revGrowth == null || profitGrowth == null || peTtm == null
+                        || totalCap == null || netProfit == null) continue;
+                // 硬性门槛：真实盈利+具备规模+盈利能力优秀+业绩增长+营收未负增长+估值合理
+                if (netProfit <= 0) continue;
+                if (totalCap < 5e9) continue;
+                if (roe < floor) continue;
+                if (profitGrowth < 15) continue;
+                if (revGrowth < 0) continue;
+                if (peTtm <= 0 || peTtm > 60) continue;
+                candidates.add(s);
+            }
+            if (candidates.size() >= 20) break;
+        }
+        int matchedCount = candidates.size();
+
+        // 第二阶段：候选池批量拉数据中心财务（每股经营现金流 + 资产负债率/流动比率），报告期与快照口径对齐
+        List<String> candCodes = new ArrayList<>();
+        for (JSONObject s : candidates) candCodes.add(s.getString("f12"));
+        String reportDate = latestReportDate();
+        Map<String, JSONObject> perfRows = fetchReportByCodes("RPT_LICO_FN_CPD",
+                "SECURITY_CODE,MGJYXJJE", candCodes, reportDate, "REPORTDATE");
+        Map<String, JSONObject> balanceRows = fetchReportByCodes("RPT_DMSK_FN_BALANCE",
+                "SECURITY_CODE,DEBT_ASSET_RATIO,CURRENT_RATIO", candCodes, reportDate, "REPORT_DATE");
+
+        // 精筛+评分+亮点
+        List<Map<String, Object>> matched = new ArrayList<>();
+        for (JSONObject s : candidates) {
+            String code = s.getString("f12");
+            String name = s.getString("f14");
+            String industry = s.getString("f100");
+            Double roe = asDouble(s.get("f37"));
+            Double revGrowth = asDouble(s.get("f41"));
+            Double profitGrowth = asDouble(s.get("f46"));
+            Double grossMargin = asDouble(s.get("f49"));
+            Double peTtm = asDouble(s.get("f115"));
+            Double peDyn = asDouble(s.get("f9"));
+            Double pb = asDouble(s.get("f23"));
+            Double totalCap = asDouble(s.get("f20"));
+            Double netProfit = asDouble(s.get("f45"));
+            Double revenue = asDouble(s.get("f40"));
+            Double eps = asDouble(s.get("f112"));
             Double lastPrice = asDouble(s.get("f2"));
             Double changePct = asDouble(s.get("f3"));
-            totalScanned++;
-            if (roe == null || revGrowth == null || profitGrowth == null || peTtm == null
-                    || totalCap == null || netProfit == null) continue;
-            // 硬性门槛：真实盈利 + 具备规模 + 盈利能力优秀 + 业绩增长 + 营收未负增长 + 估值合理
-            if (netProfit <= 0) continue;                    // 最新报告期净利润为正
-            if (totalCap < 5e9) continue;                    // 总市值≥50亿，剔除微型盘
-            if (roe < 12) continue;                          // 加权ROE≥12%，盈利能力达标
-            if (profitGrowth < 15) continue;                 // 净利润同比≥15%，具备成长性
-            if (revGrowth < 0) continue;                     // 营收未负增长
-            if (peTtm <= 0 || peTtm > 60) continue;          // 估值在合理可投资区间
+            Double ytdChg = asDouble(s.get("f25"));
+            boolean isFinance = matchKeyword(industry, FINANCE_INDUSTRY_KEYWORDS);
+            boolean isCycle = matchKeyword(industry, CYCLICAL_INDUSTRY_KEYWORDS);
+            boolean isPolicy = matchKeyword(industry, POLICY_INDUSTRY_KEYWORDS);
+            IndustryStat st = industryStats.get(industry);
 
-            // 加权评分（满分100）：盈利能力25 + 成长性25 + 营收扩张15 + 盈利质量15 + 估值15 + 规模5
+            // 财报健康度（数据中心数据，缺失时按中性处理）
+            JSONObject perf = perfRows.get(code);
+            JSONObject bal = balanceRows.get(code);
+            Double ocfPerShare = perf == null ? null : asDouble(perf.get("MGJYXJJE"));   // 每股经营现金流(元)
+            Double debtRatio = bal == null ? null : asDouble(bal.get("DEBT_ASSET_RATIO")); // 资产负债率(%)
+            Double currentRatio = bal == null ? null : asDouble(bal.get("CURRENT_RATIO")); // 流动比率(已×100)
+            // 非金融资产负债率>70%剔除（30%~50%为理想区间；金融豁免——高杠杆是经营模式）
+            if (!isFinance && debtRatio != null && debtRatio > 70) continue;
+
+            // ===== 加权评分（满分100）=====
             double score = 0;
-            score += Math.min(roe / 30.0, 1.2) * 25;
-            score += Math.min(profitGrowth / 60.0, 1.2) * 25;
-            score += Math.min(revGrowth / 40.0, 1.2) * 15;
-            if (grossMargin != null && grossMargin > 0) score += Math.min(grossMargin / 60.0, 1.2) * 15;
-            if (peTtm <= 15) score += 15;
-            else if (peTtm <= 25) score += 11;
-            else if (peTtm <= 40) score += 7;
-            else score += 4;
-            score += Math.min(totalCap / 1e11, 1.0) * 5;
+            // 盈利能力20：ROE 30%拿满分，1.2倍封顶
+            score += Math.min(roe / 30.0, 1.2) * 20;
+            // 成长性20：净利同比60%拿满分
+            score += Math.min(profitGrowth / 60.0, 1.2) * 20;
+            // 营收扩张10：营收同比40%拿满分
+            score += Math.min(revGrowth / 40.0, 1.2) * 10;
+            // 盈利质量15：毛利率10（银行等无此概念不计）+ 销售净利率5
+            if (grossMargin != null && grossMargin > 0) score += Math.min(grossMargin / 60.0, 1.2) * 10;
+            double netMargin = (netProfit != null && revenue != null && revenue > 0) ? netProfit / revenue * 100 : 0;
+            if (netMargin >= 15) score += 5;
+            else if (netMargin >= 8) score += 3;
+            else if (netMargin > 0) score += 1;
+            // 现金流10：净现比=经营现金流净额/净利润（每股经营现金流×总股本≈经营现金流净额，总股本=净利润/EPS）
+            Double ocfNpRatio = null;
+            if (ocfPerShare != null && eps != null && eps > 0 && netProfit != null && netProfit > 0) {
+                ocfNpRatio = ocfPerShare * (netProfit / eps) / netProfit; // = ocfPerShare/eps
+            }
+            if (ocfNpRatio == null) score += 5;
+            else if (ocfNpRatio >= 1) score += 10;
+            else if (ocfNpRatio >= 0.5) score += 7;
+            else if (ocfNpRatio > 0) score += 4;
+            // 估值15（同行业对比——市盈率法：与同行业公司比，低于同业=可能被低估）
+            double peInd = st == null ? 0 : (st.peMedian == null ? 0 : st.peMedian);
+            double pbInd = st == null ? 0 : (st.pbMedian == null ? 0 : st.pbMedian);
+            if (peInd > 0 && peTtm != null && peTtm > 0) {
+                double d = peInd / peTtm;
+                score += d >= 1.2 ? 8 : d >= 1.0 ? 6 : d >= 0.8 ? 4 : 2;
+            } else score += 4;
+            if (pbInd > 0 && pb != null && pb > 0) {
+                double d = pbInd / pb;
+                score += d >= 1.2 ? 4 : d >= 1.0 ? 3 : d >= 0.8 ? 2 : 1;
+            } else score += 2;
+            // 未被市场挖掘3：年初涨幅显著跑输行业=尚未被充分定价
+            double ytdInd = st == null || st.ytdAvg == null ? 0 : st.ytdAvg;
+            if (ytdChg != null) {
+                if (ytdChg <= ytdInd - 10) score += 3;
+                else if (ytdChg <= ytdInd) score += 2;
+                else if (ytdChg <= ytdInd + 10) score += 1;
+            } else score += 1;
+            // 行业地位/特质10：龙头5（行业市值占比≥25%或排名前3）+非周期3+政策支持2
+            int rank = 0;
+            double capShare = 0;
+            if (st != null) {
+                for (int r = 0; r < st.capRanking.size(); r++) {
+                    if (code.equals(st.capRanking.get(r)[0])) { rank = r + 1; break; }
+                }
+                capShare = st.totalCap > 0 ? totalCap / st.totalCap : 0;
+            }
+            if (rank > 0 && (rank <= 3 || capShare >= 0.25)) score += 5;
+            else if (rank > 0 && rank <= 10) score += 3;
+            if (!isCycle) score += 3;
+            if (isPolicy) score += 2;
             score = Math.min(score, 100.0);
 
-            // "基本面好在哪"亮点说明
+            // ===== "基本面好在哪"亮点说明（按用户优质股标准文案）=====
             List<String> highlights = new ArrayList<>();
-            if (roe >= 25) highlights.add(String.format("加权ROE %.2f%%，盈利能力行业顶尖", roe));
-            else if (roe >= 18) highlights.add(String.format("加权ROE %.2f%%，盈利能力优秀", roe));
-            else highlights.add(String.format("加权ROE %.2f%%，盈利能力稳健", roe));
+            if (roe >= 15) highlights.add(String.format("加权ROE %.2f%%，超过优秀线15%%，净资产增值能力强", roe));
+            else highlights.add(String.format("加权ROE %.2f%%，达到良好水平", roe));
             if (profitGrowth >= 50) highlights.add(String.format("净利润同比增长 %.2f%%，业绩高速增长", profitGrowth));
             else if (profitGrowth >= 30) highlights.add(String.format("净利润同比增长 %.2f%%，业绩快速增长", profitGrowth));
             else highlights.add(String.format("净利润同比增长 %.2f%%，业绩稳步提升", profitGrowth));
             if (revGrowth >= 20) highlights.add(String.format("营业收入同比增长 %.2f%%，市场扩张动能强劲", revGrowth));
             else if (revGrowth >= 10) highlights.add(String.format("营业收入同比增长 %.2f%%，成长空间广阔", revGrowth));
             else highlights.add(String.format("营业收入同比增长 %.2f%%，经营基本盘稳固", revGrowth));
-            if (grossMargin != null && grossMargin >= 50) {
-                highlights.add(String.format("毛利率 %.2f%%，产品附加值与定价权强", grossMargin));
+            if (grossMargin != null && grossMargin >= 40) {
+                highlights.add(String.format("毛利率 %.2f%%，显著高于30%%~40%%高毛利区间，产品附加值突出", grossMargin));
             } else if (grossMargin != null && grossMargin >= 30) {
-                highlights.add(String.format("毛利率 %.2f%%，盈利质量较高", grossMargin));
+                highlights.add(String.format("毛利率 %.2f%%，处于30%%~40%%高毛利区间", grossMargin));
             }
-            if (peTtm <= 15) highlights.add(String.format("PE(TTM) %.2f倍，估值偏低，安全边际充足", peTtm));
-            else if (peTtm <= 25) highlights.add(String.format("PE(TTM) %.2f倍，估值与成长性匹配", peTtm));
-            if (totalCap >= 3e10) highlights.add(String.format("总市值约 %.0f亿元，行业龙头属性明显", totalCap / 1e8));
+            if (netMargin >= 15) highlights.add(String.format("销售净利率 %.2f%%，费用控制与盈利转化效率高", netMargin));
+            if (!isFinance && debtRatio != null) {
+                if (debtRatio >= 30 && debtRatio <= 50) {
+                    highlights.add(String.format("资产负债率 %.2f%%，处于30%%~50%%最理想区间，财务结构稳健", debtRatio));
+                } else if (debtRatio < 30) {
+                    highlights.add(String.format("资产负债率仅 %.2f%%，几乎没有偿债压力", debtRatio));
+                } else {
+                    highlights.add(String.format("资产负债率 %.2f%%，杠杆适中可控", debtRatio));
+                }
+                if (currentRatio != null && currentRatio / 100 >= 2) {
+                    highlights.add(String.format("流动比率 %.2f倍，短期偿债能力强", currentRatio / 100));
+                }
+            }
+            if (ocfNpRatio != null) {
+                if (ocfNpRatio >= 1) highlights.add(String.format("净现比 %.2f，经营现金流完全覆盖净利润，盈利含金量高", ocfNpRatio));
+                else if (ocfNpRatio >= 0.5) highlights.add(String.format("净现比 %.2f，现金流状况良好", ocfNpRatio));
+            }
+            if (peInd > 0 && peTtm != null && peTtm > 0 && peTtm < peInd) {
+                highlights.add(String.format("PE(TTM) %.2f倍低于行业同业中位数 %.2f倍，同行业对比存在低估", peTtm, peInd));
+            }
+            if (ytdChg != null && st != null && st.ytdAvg != null && ytdChg <= st.ytdAvg - 5) {
+                highlights.add(String.format("年初至今涨幅 %.2f%%，跑输行业平均 %.2f%%，股价尚未被市场充分挖掘", ytdChg, st.ytdAvg));
+            }
+            if (rank > 0 && (rank <= 3 || capShare >= 0.25)) {
+                if (capShare >= 0.25) highlights.add(String.format("%s行业市值占比超25%%，市场份额龙头", industry));
+                else highlights.add(String.format("%s行业市值排名第%d位，龙头地位稳固", industry, rank));
+            }
+            if (!isCycle && !isPolicy) {
+                highlights.add(String.format("所处%s行业属非周期性行业，业绩稳定性强", industry));
+            } else if (isPolicy) {
+                highlights.add(String.format("所处%s行业属国家政策重点支持方向", industry));
+            }
 
             Map<String, Object> item = new LinkedHashMap<>();
             item.put("stockCode", code);
             item.put("stockName", name);
             item.put("market", s.getInteger("f13") == null ? 0 : s.getInteger("f13"));
+            item.put("industry", industry);
             item.put("lastPrice", round2(lastPrice));
             item.put("changePct", round2(changePct));
+            item.put("totalMarketCap", round2(totalCap / 1e8));
+            item.put("roe", round2(roe));
+            item.put("netProfitGrowth", round2(profitGrowth));
+            item.put("revenueGrowth", round2(revGrowth));
+            item.put("grossMargin", round2(grossMargin));
+            item.put("netMargin", round1(netMargin));
             item.put("peTtm", round2(peTtm));
             item.put("peDyn", round2(peDyn));
             item.put("pb", round2(pb));
-            item.put("totalMarketCap", round2(totalCap / 1e8));      // 亿元
-            item.put("revenue", round2(revenue / 1e8));              // 亿元
-            item.put("revenueGrowth", round2(revGrowth));
-            item.put("netProfit", round2(netProfit / 1e8));          // 亿元
-            item.put("netProfitGrowth", round2(profitGrowth));
-            item.put("roe", round2(roe));
-            item.put("grossMargin", round2(grossMargin));
+            item.put("industryPeMedian", st == null ? null : round2(st.peMedian));
+            item.put("debtRatio", isFinance ? null : round2(debtRatio));
+            item.put("currentRatio", (isFinance || currentRatio == null) ? null : round2(currentRatio / 100));
+            item.put("ocfNpRatio", ocfNpRatio == null ? null : round2(ocfNpRatio));
+            item.put("yearChangePct", round2(ytdChg));
+            item.put("netProfit", round2(netProfit / 1e8));
+            item.put("revenue", round2(revenue / 1e8));
             item.put("score", round1(score));
             item.put("highlights", highlights);
             matched.add(item);
         }
 
-        // 按综合得分降序取前20
+        // ===== 价值选股融合层：基本面78 + 技术面12 + 题材10 =====
+        // 基本面分前35名进入技术面与题材分析（技术面+题材最高22分，第35名与第20名基本面分差通常不足22，覆盖足够）
         matched.sort((a, b) -> Double.compare((Double) b.get("score"), (Double) a.get("score")));
-        List<Map<String, Object>> top = matched.subList(0, Math.min(20, matched.size()));
+        List<Map<String, Object>> pool = new ArrayList<>(matched.subList(0, Math.min(35, matched.size())));
+
+        // 并发拉取候选股60日K线（4线程×150ms间隔，兼顾速度与限流风险）
+        Map<String, List<double[]>> klineMap = fetchKlinesConcurrently(pool);
+
+        // 题材上下文（故事概念成分股映射 + 当日热度榜，6小时缓存）
+        Map<String, List<String>> themeByStock = getThemeStocks();
+        Set<String> hotConcepts = getHotConceptNames();
+
+        List<Map<String, Object>> finalList = new ArrayList<>();
+        for (Map<String, Object> item : pool) {
+            String code = (String) item.get("stockCode");
+            double fundScore = (Double) item.get("score");
+            // 技术面：60日K线形态与量价（10.10底部/10.11顶部/10.12底部放量突破）
+            List<double[]> klines = klineMap.get(code);
+            if (klines != null && klines.size() >= 30) {
+                TechResult tech = analyzeTech(klines);
+                // 双重顶部预警（天量见天价/大阴吞阳/金针探顶中≥2项）视为高位风险股，直接剔除
+                if (tech.topWarnings.size() >= 2) continue;
+                double techScore = Math.max(0, tech.score);
+                item.put("techSignals", tech.bottomSignals);
+                item.put("topWarnings", tech.topWarnings);
+                item.put("breakout", tech.breakout);
+                item.put("techScore", round1(techScore));
+            } else {
+                // K线缺失按中性处理（满分12的中位4分，不因接口偶发失败误杀）
+                item.put("techSignals", new ArrayList<String>());
+                item.put("topWarnings", new ArrayList<String>());
+                item.put("breakout", false);
+                item.put("techScore", 4.0);
+            }
+            // 题材：命中故事概念（逻辑炒作性/未来故事性），当日热度榜额外加成
+            List<String> concepts = themeByStock.getOrDefault(code, new ArrayList<>());
+            double themeScore = 0;
+            if (!concepts.isEmpty()) {
+                themeScore = 6 + Math.min(concepts.size() - 1, 2) * 2; // 1个6分/2个8分/3个及以上10分
+                boolean hot = concepts.stream().anyMatch(hotConcepts::contains);
+                if (hot) themeScore = Math.min(themeScore + 2, 10);
+            }
+            item.put("concepts", concepts);
+            item.put("themeScore", round1(themeScore));
+            // 总分 = 基本面×0.78 + 技术面(≤12) + 题材(≤10)，满分100
+            item.put("fundScore", round1(fundScore));
+            item.put("score", round1(Math.min(fundScore * 0.78 + (Double) item.get("techScore") + themeScore, 100.0)));
+            finalList.add(item);
+        }
+
+        // 按价值选股总分降序取前20
+        finalList.sort((a, b) -> Double.compare((Double) b.get("score"), (Double) a.get("score")));
+        List<Map<String, Object>> top = finalList.subList(0, Math.min(20, finalList.size()));
 
         Map<String, Object> result = new LinkedHashMap<>();
         result.put("screenTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         result.put("totalScanned", totalScanned);
-        result.put("matchedCount", matched.size());
+        result.put("matchedCount", matchedCount);
+        result.put("poolCount", pool.size());
+        result.put("finalCount", finalList.size());
+        result.put("reportDate", reportDate);
+        result.put("roeFloor", roeFloor);
         result.put("stocks", top);
         fundamentalStocksCache = result;
         fundamentalStocksCacheTime = System.currentTimeMillis();
         return result;
+    }
+
+    /** 技术面分析结果：底部信号/顶部预警/放量突破/技术分（0~12） */
+    private static class TechResult {
+        final List<String> bottomSignals = new ArrayList<>();
+        final List<String> topWarnings = new ArrayList<>();
+        boolean breakout = false;
+        double score = 0;
+    }
+
+    /**
+     * 60日K线技术面分析（klines元素: [open, close, high, low, volume]，时间升序）。
+     * 底部信号：地量见地价（近5日均量≤60日最大单日量的20%）、金针探底（近20日长下影线+阶段最低点+未跌破）；
+     * 顶部预警：天量见天价（60日天量+价格高位滞涨）、大阴吞阳（长阴吞没前阳）、金针探顶（60日新高位长上影）；
+     * 底部放量突破：缩量整理+巨量突破30日平台。
+     * 评分：地量2.5+金针探底2.5+缩量整理1.5+放量突破2.5+站上20日线且上翘1.5+60日未爆炒1.5-顶部预警每项2(≤4)
+     */
+    private TechResult analyzeTech(List<double[]> k) {
+        TechResult r = new TechResult();
+        int n = k.size();
+        double maxVol = 0, sumVol = 0;
+        double hi = -Double.MAX_VALUE, lo = Double.MAX_VALUE;
+        for (double[] bar : k) {
+            maxVol = Math.max(maxVol, bar[4]);
+            sumVol += bar[4];
+            hi = Math.max(hi, bar[2]);
+            lo = Math.min(lo, bar[3]);
+        }
+        double avgVol = sumVol / n;
+        double lastClose = k.get(n - 1)[1];
+
+        // —— 底部信号（10.10）——
+        // 地量见地价：近5日均量 ≤ 60日最大单日成交量的20%
+        double v5 = 0;
+        for (int i = n - 5; i < n; i++) v5 += k.get(i)[4];
+        v5 /= 5;
+        if (v5 <= maxVol * 0.2) r.bottomSignals.add("地量见地价");
+        // 金针探底：近20日出现长下影线（≥2.5%），且为60日阶段最低点，且之后未跌破金针
+        for (int i = Math.max(0, n - 20); i < n; i++) {
+            double[] b = k.get(i);
+            double lowerShadow = (Math.min(b[0], b[1]) - b[3]) / b[1];
+            boolean isStageLow = b[3] <= lo * 1.002;
+            boolean notBroken = true;
+            for (int j = i + 1; j < n; j++) {
+                if (k.get(j)[3] < b[3] * 0.998) { notBroken = false; break; }
+            }
+            if (lowerShadow >= 0.025 && isStageLow && notBroken) { r.bottomSignals.add("金针探底"); break; }
+        }
+
+        // —— 顶部预警（10.11）——
+        // 天量见天价：近10日出现60日最大量（且显著放量），当前价距60日最高价回撤不足5%（高位滞涨）
+        boolean maxVolIn10 = false;
+        for (int i = n - 10; i < n; i++) if (k.get(i)[4] >= maxVol * 0.999) { maxVolIn10 = true; break; }
+        if (maxVolIn10 && maxVol >= avgVol * 1.8 && lastClose >= hi * 0.95) r.topWarnings.add("天量见天价");
+        // 大阴吞阳：近5日长阴实体（≥4%）吞没前一日阳线实体
+        for (int i = Math.max(1, n - 5); i < n; i++) {
+            double[] cur = k.get(i), prev = k.get(i - 1);
+            boolean bearish = cur[1] < cur[0] && (cur[0] - cur[1]) / cur[1] >= 0.04;
+            boolean engulf = prev[1] > prev[0] && cur[0] >= prev[1] && cur[1] <= prev[0];
+            if (bearish && engulf) { r.topWarnings.add("大阴吞阳"); break; }
+        }
+        // 金针探顶：近10日长上影线（≥2.5%）且创60日新高
+        for (int i = Math.max(0, n - 10); i < n; i++) {
+            double[] b = k.get(i);
+            double upperShadow = (b[2] - Math.max(b[0], b[1])) / b[1];
+            if (upperShadow >= 0.025 && b[2] >= hi * 0.998) { r.topWarnings.add("金针探顶"); break; }
+        }
+
+        // —— 底部放量突破（10.12）——
+        // 缩量整理：近10日整体振幅≤8%且均量低于60日均量
+        double h10 = -Double.MAX_VALUE, l10 = Double.MAX_VALUE, v10 = 0, c10 = 0;
+        for (int i = n - 10; i < n; i++) {
+            h10 = Math.max(h10, k.get(i)[2]);
+            l10 = Math.min(l10, k.get(i)[3]);
+            v10 += k.get(i)[4];
+            c10 += k.get(i)[1];
+        }
+        boolean shrinking = (h10 - l10) / (c10 / 10) <= 0.08 && v10 / 10 <= avgVol * 0.9;
+        if (shrinking) r.score += 1.5;
+        // 放量突破：近3日单日巨量（≥60日均量2倍）且收盘突破此前30日平台高点2%以上
+        double platformHigh = -Double.MAX_VALUE;
+        for (int i = 0; i < n - 3; i++) platformHigh = Math.max(platformHigh, k.get(i)[1]);
+        for (int i = n - 3; i < n; i++) {
+            if (k.get(i)[4] >= avgVol * 2 && k.get(i)[1] >= platformHigh * 1.02) {
+                r.breakout = true;
+                r.score += 2.5;
+                break;
+            }
+        }
+
+        // —— 趋势位置 ——
+        // 站上20日均线且均线上翘
+        double ma20 = 0, ma20Prev = 0;
+        for (int i = n - 20; i < n; i++) ma20 += k.get(i)[1];
+        ma20 /= 20;
+        for (int i = n - 25; i < n - 5; i++) ma20Prev += k.get(i)[1];
+        ma20Prev /= 20;
+        if (lastClose > ma20 && ma20 > ma20Prev) r.score += 1.5;
+        // 60日未爆炒：区间涨幅在-15%~35%之间（涨幅过高视为已透支炒作）
+        double periodChg = (lastClose / k.get(0)[1] - 1) * 100;
+        if (periodChg >= -15 && periodChg <= 35) r.score += 1.5;
+
+        // —— 汇总评分 ——
+        if (r.bottomSignals.contains("地量见地价")) r.score += 2.5;
+        if (r.bottomSignals.contains("金针探底")) r.score += 2.5;
+        r.score -= Math.min(r.topWarnings.size() * 2.0, 4.0);
+        return r;
+    }
+
+    /** 并发拉取候选股60日日K（前复权），4线程×每任务150ms间隔；单股失败静默跳过 */
+    private Map<String, List<double[]>> fetchKlinesConcurrently(List<Map<String, Object>> pool) {
+        Map<String, List<double[]>> map = new ConcurrentHashMap<>();
+        ExecutorService es = Executors.newFixedThreadPool(4);
+        try {
+            List<Callable<Void>> tasks = new ArrayList<>();
+            for (Map<String, Object> item : pool) {
+                tasks.add(() -> {
+                    try {
+                        String code = (String) item.get("stockCode");
+                        int market = item.get("market") instanceof Integer ? (Integer) item.get("market") : 0;
+                        String url = "http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=" + market + "." + code
+                                + "&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57";
+                        String resp = httpGet(url, 1);
+                        if (resp != null) {
+                            JSONObject root = JSON.parseObject(resp);
+                            JSONObject data = root.getJSONObject("data");
+                            JSONArray ks = data == null ? null : data.getJSONArray("klines");
+                            if (ks != null && !ks.isEmpty()) {
+                                List<double[]> bars = new ArrayList<>(ks.size());
+                                for (int i = 0; i < ks.size(); i++) {
+                                    // kline格式: date,open,close,high,low,volume,amount
+                                    String[] parts = ks.getString(i).split(",");
+                                    bars.add(new double[]{Double.parseDouble(parts[1]), Double.parseDouble(parts[2]),
+                                            Double.parseDouble(parts[3]), Double.parseDouble(parts[4]),
+                                            Double.parseDouble(parts[5])});
+                                }
+                                map.put(code, bars);
+                            }
+                        }
+                    } catch (Exception ignore) {
+                        // 单股K线失败不影响整体，按缺失中性处理
+                    }
+                    Thread.sleep(150);
+                    return null;
+                });
+            }
+            es.invokeAll(tasks);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            es.shutdown();
+        }
+        return map;
+    }
+
+    /** 故事概念→成分股映射（code→命中概念名列表），6小时缓存；构建失败时返回空映射（题材分按0处理不阻断选股） */
+    private Map<String, List<String>> getThemeStocks() {
+        ensureThemeContext();
+        Map<String, List<String>> cached = themeStocksCache;
+        return cached == null ? new HashMap<>() : cached;
+    }
+
+    /** 当日热度榜前20概念名（非噪声），与题材映射同一缓存周期 */
+    private Set<String> getHotConceptNames() {
+        ensureThemeContext();
+        Set<String> cached = hotConceptNamesCache;
+        return cached == null ? new HashSet<>() : cached;
+    }
+
+    private synchronized void ensureThemeContext() {
+        if (themeStocksCache != null && hotConceptNamesCache != null
+                && System.currentTimeMillis() - themeCacheTime < THEME_CACHE_TTL_MS) return;
+        // 1. 概念板块全列表（按当日涨幅降序，即热度榜），pz上限100分页拉取
+        List<String> allNames = new ArrayList<>();   // 按热度降序的非噪声概念名
+        Map<String, String> nameToCode = new LinkedHashMap<>();
+        try {
+            for (int pn = 1; pn <= 6; pn++) {
+                String url = "http://push2delay.eastmoney.com/api/qt/clist/get?po=1&np=1&fltt=2&invt=2&fid=f3"
+                        + "&fs=m:90+t:3&pn=" + pn + "&pz=100&fields=f12,f14";
+                String resp = httpGet(url, 1);
+                if (resp == null) break;
+                JSONObject data = JSON.parseObject(resp).getJSONObject("data");
+                JSONArray rows = data == null ? null : data.getJSONArray("diff");
+                if (rows == null || rows.isEmpty()) break;
+                for (int i = 0; i < rows.size(); i++) {
+                    JSONObject b = rows.getJSONObject(i);
+                    String name = b.getString("f14");
+                    if (name == null || matchKeyword(name, CONCEPT_NOISE_KEYWORDS)) continue;
+                    allNames.add(name);
+                    nameToCode.putIfAbsent(name, b.getString("f12"));
+                }
+                if (rows.size() < 100) break;
+                Thread.sleep(200L);
+            }
+        } catch (Exception e) {
+            logger.warn("概念板块列表获取失败，题材分本轮按0处理: {}", e.getMessage());
+            return;
+        }
+        // 2. 当日热度榜前20（列表已按涨幅降序，天然是热度榜）
+        Set<String> hot = new LinkedHashSet<>();
+        for (String name : allNames) {
+            if (hot.size() >= 20) break;
+            hot.add(name);
+        }
+        // 3. 故事概念（名称含故事关键词），按热度排序取前15个
+        List<String> storyConcepts = new ArrayList<>();
+        for (String name : allNames) {
+            if (storyConcepts.size() >= 15) break;
+            if (matchKeyword(name, STORY_CONCEPT_KEYWORDS)) storyConcepts.add(name);
+        }
+        // 4. 逐概念拉成分股（每概念1页100只，覆盖涨幅居前的活跃成分）
+        Map<String, List<String>> themeMap = new HashMap<>();
+        try {
+            for (String name : storyConcepts) {
+                String bk = nameToCode.get(name);
+                if (bk == null) continue;
+                String url = "http://push2delay.eastmoney.com/api/qt/clist/get?po=1&np=1&fltt=2&invt=2&fid=f3"
+                        + "&fs=b:" + bk + "&pn=1&pz=100&fields=f12";
+                String resp = httpGet(url, 1);
+                if (resp == null) continue;
+                JSONObject data = JSON.parseObject(resp).getJSONObject("data");
+                JSONArray rows = data == null ? null : data.getJSONArray("diff");
+                if (rows == null) continue;
+                for (int i = 0; i < rows.size(); i++) {
+                    String code = rows.getJSONObject(i).getString("f12");
+                    if (code == null) continue;
+                    themeMap.computeIfAbsent(code, k -> new ArrayList<>(2)).add(name);
+                }
+                Thread.sleep(200L);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (Exception e) {
+            logger.warn("概念成分股拉取部分失败: {}", e.getMessage());
+        }
+        themeStocksCache = themeMap;
+        hotConceptNamesCache = hot;
+        themeCacheTime = System.currentTimeMillis();
+    }
+
+    /** 最新已披露报告期推断（1-4月上年三季报、5-8月一季报、9-10月中报、11-12月三季报，按法定披露截止日） */
+    private String latestReportDate() {
+        java.time.LocalDate d = java.time.LocalDate.now();
+        int m = d.getMonthValue();
+        if (m >= 5 && m <= 8) return d.getYear() + "-03-31";
+        if (m >= 9 && m <= 10) return d.getYear() + "-06-30";
+        if (m >= 11) return d.getYear() + "-09-30";
+        return (d.getYear() - 1) + "-09-30"; // 1-4月：上年三季报（年报4月底才披露完，口径保守）
+    }
+
+    /**
+     * 东财数据中心报表批量查询：filter=(日期列='date')(SECURITY_CODE in (...))。
+     * 注意两个报表日期列名不同：业绩报表 RPT_LICO_FN_CPD 为 REPORTDATE，资产负债表摘要 RPT_DMSK_FN_BALANCE 为 REPORT_DATE，
+     * 列名错误时接口不报错而是静默返回极少行，必须区分传入。
+     * 业绩报表同股同报告期可能存在多条记录（快报/正式报），批内行数会超过批大小，
+     * 故批大小200、pageSize=500兜底，重复行由map覆盖去重（正式报通常后返回覆盖快报）；
+     * 批间延时300ms防限流；返回 code→row 映射
+     */
+    private Map<String, JSONObject> fetchReportByCodes(String reportName, String columns,
+                                                       List<String> codes, String reportDate, String dateColumn) {
+        Map<String, JSONObject> map = new HashMap<>();
+        int batchSize = 200;
+        for (int from = 0; from < codes.size(); from += batchSize) {
+            int to = Math.min(from + batchSize, codes.size());
+            StringJoiner sj = new StringJoiner(",");
+            for (int i = from; i < to; i++) sj.add("%22" + codes.get(i) + "%22");
+            String url = "https://datacenter-web.eastmoney.com/api/data/v1/get"
+                    + "?reportName=" + reportName
+                    + "&columns=" + columns
+                    + "&filter=(" + dateColumn + "%3D%27" + reportDate + "%27)(SECURITY_CODE+in+(" + sj + "))"
+                    + "&pageNumber=1&pageSize=500"
+                    + "&sortColumns=SECURITY_CODE&sortTypes=-1&source=WEB&client=WEB";
+            String body = httpGet(url, 1);
+            if (body == null) {
+                logger.warn("数据中心批量报表获取失败 | report={} batch={}/{}", reportName, from / batchSize + 1,
+                        (codes.size() + batchSize - 1) / batchSize);
+                continue;
+            }
+            try {
+                JSONObject json = JSON.parseObject(body);
+                JSONObject result = json.getJSONObject("result");
+                JSONArray rows = result == null ? null : result.getJSONArray("data");
+                if (rows != null) {
+                    for (int i = 0; i < rows.size(); i++) {
+                        JSONObject row = rows.getJSONObject(i);
+                        String c = row.getString("SECURITY_CODE");
+                        if (c != null) map.put(c, row);
+                    }
+                }
+            } catch (Exception e) {
+                logger.warn("解析数据中心批量报表失败 | report={}: {}", reportName, e.getMessage());
+            }
+            if (to < codes.size()) {
+                try { Thread.sleep(300L); } catch (InterruptedException ie) { Thread.currentThread().interrupt(); break; }
+            }
+        }
+        return map;
+    }
+
+    private Double median(List<Double> list) {
+        if (list == null || list.isEmpty()) return null;
+        List<Double> sorted = new ArrayList<>(list);
+        Collections.sort(sorted);
+        int n = sorted.size();
+        return n % 2 == 1 ? sorted.get(n / 2) : (sorted.get(n / 2 - 1) + sorted.get(n / 2)) / 2;
+    }
+
+    private boolean matchKeyword(String text, String[] keywords) {
+        if (text == null) return false;
+        for (String k : keywords) {
+            if (text.contains(k)) return true;
+        }
+        return false;
+    }
+
+    /** 行业统计：同行业估值对比（PE/PB中位数）、年初涨幅均值、行业总市值与市值排名（龙头判断） */
+    private static class IndustryStat {
+        final List<Double> pes = new ArrayList<>();
+        final List<Double> pbs = new ArrayList<>();
+        final List<Double> ytds = new ArrayList<>();
+        final List<Object[]> capRanking = new ArrayList<>(); // [code, totalCap]
+        double totalCap = 0;
+        Double peMedian;
+        Double pbMedian;
+        Double ytdAvg;
     }
 
     private double avgLast(List<Double> list, int n) {

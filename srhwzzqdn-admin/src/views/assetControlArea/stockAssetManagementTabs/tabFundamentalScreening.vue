@@ -16,19 +16,20 @@
     <div class="rule-section">
       <el-alert type="info" :closable="false" show-icon>
         <template #title>
-          筛选标准：全市场A股剔除ST/退市风险股后，须同时满足最新报告期【净利润为正、加权ROE≥12%、净利润同比增长≥15%、营收未负增长、总市值≥50亿、PE(TTM) 0~60】
+          价值选股 = 基本面(78) + 技术面(12) + 题材(10)，满分100。基本面门槛：剔除ST/退市后须同时满足【净利润为正、加权ROE≥{{ screenData ? screenData.roeFloor : 15 }}%（候选不足时逐级放宽）、净利同比≥15%、营收未负增长、总市值≥50亿、PE(TTM) 0~60、非金融资产负债率≤70%】
         </template>
         <template #default>
-          入围后按「盈利能力25 + 成长性25 + 营收扩张15 + 盈利质量15 + 估值15 + 规模5」加权评分（满分100），取综合得分前20名。数据来源于东方财富全市场快照，实时计算不落库。
+          技术面（60日K线量价）：底部信号「地量见地价/金针探底」、底部放量突破「缩量整理+巨量破平台」加分，顶部预警「天量见天价/大阴吞阳/金针探顶」扣分，双重顶部预警直接剔除；题材：命中真实故事概念（存储/算力/机器人/核聚变/创新药等方向）得分，概念正处当日热度榜前20再加成。技术面与题材仅对基本面前35名生效，确保不选纯题材垃圾股。
         </template>
       </el-alert>
     </div>
 
     <!-- 选股汇总 -->
     <div class="summary-section" v-if="screenData">
-      <el-tag size="large">扫描 {{ screenData.totalScanned }} 家</el-tag>
-      <el-tag type="success" size="large">入围 {{ screenData.matchedCount }} 家</el-tag>
-      <el-tag type="warning" size="large">精选前 {{ screenData.stocks.length }} 家</el-tag>
+      <el-tag size="large">ROE头部池 {{ screenData.totalScanned }} 家</el-tag>
+      <el-tag type="success" size="large">基本面入围 {{ screenData.matchedCount }} 家</el-tag>
+      <el-tag type="warning" size="large">技术面+题材精选 {{ screenData.stocks.length }} 家</el-tag>
+      <el-tag v-if="screenData.reportDate" type="info" size="large">报告期 {{ screenData.reportDate }}</el-tag>
       <span class="screen-time">选股时间：{{ screenData.screenTime }}</span>
     </div>
 
@@ -62,11 +63,45 @@
         </el-table-column>
         <el-table-column label="股票代码" prop="stockCode" width="95" align="center" />
         <el-table-column label="股票名称" prop="stockName" width="110" align="center" />
-        <el-table-column label="市场" width="60" align="center">
+        <el-table-column label="行业" prop="industry" width="100" align="center" />
+        <el-table-column label="题材" width="150" align="center">
           <template #default="{ row }">
-            <el-tag :type="row.market === 1 ? 'danger' : 'primary'" size="small">
-              {{ row.market === 1 ? '沪' : '深' }}
-            </el-tag>
+            <template v-if="row.concepts && row.concepts.length">
+              <el-tag type="warning" size="small" class="concept-tag">
+                {{ row.concepts[0] }}
+              </el-tag>
+              <el-tooltip v-if="row.concepts.length > 1" :content="row.concepts.join('、')" placement="top">
+                <el-tag size="small" class="concept-tag">+{{ row.concepts.length - 1 }}</el-tag>
+              </el-tooltip>
+            </template>
+            <span v-else>-</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="技术面" width="150" align="center">
+          <template #default="{ row }">
+            <div class="tech-cell">
+              <el-tag
+                v-for="sig in (row.techSignals || [])"
+                :key="sig"
+                type="success"
+                size="small"
+                class="tech-tag"
+              >
+                {{ sig }}
+              </el-tag>
+              <el-tag v-if="row.breakout" type="danger" size="small" class="tech-tag">放量突破</el-tag>
+              <el-tag
+                v-for="warn in (row.topWarnings || [])"
+                :key="warn"
+                type="danger"
+                size="small"
+                effect="dark"
+                class="tech-tag"
+              >
+                {{ warn }}
+              </el-tag>
+              <span v-if="!(row.techSignals || []).length && !(row.topWarnings || []).length && !row.breakout">-</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="最新价" width="90" align="right">
@@ -78,6 +113,13 @@
           <template #default="{ row }">
             <span :class="row.changePct >= 0 ? 'price-up' : 'price-down'">
               {{ formatPct(row.changePct) }}
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="年初涨幅%" width="95" align="right">
+          <template #default="{ row }">
+            <span :class="row.yearChangePct >= 0 ? 'price-up' : 'price-down'">
+              {{ formatNum(row.yearChangePct) }}
             </span>
           </template>
         </el-table-column>
@@ -110,9 +152,31 @@
             {{ row.grossMargin > 0 ? formatNum(row.grossMargin) : '-' }}
           </template>
         </el-table-column>
+        <el-table-column label="净利率%" width="85" align="right">
+          <template #default="{ row }">
+            {{ formatNum(row.netMargin) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="负债率%" width="85" align="right">
+          <template #default="{ row }">
+            {{ formatNum(row.debtRatio) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="净现比" width="80" align="right">
+          <template #default="{ row }">
+            <span :class="row.ocfNpRatio != null && row.ocfNpRatio >= 1 ? 'metric-strong' : ''">
+              {{ formatNum(row.ocfNpRatio) }}
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="PE(TTM)" width="85" align="right">
           <template #default="{ row }">
             {{ formatNum(row.peTtm) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="行业中位PE" width="100" align="right">
+          <template #default="{ row }">
+            {{ formatNum(row.industryPeMedian) }}
           </template>
         </el-table-column>
         <el-table-column label="市净率" width="80" align="right">
@@ -122,7 +186,12 @@
         </el-table-column>
         <el-table-column label="综合得分" width="95" align="right">
           <template #default="{ row }">
-            <span class="score-value">{{ formatScore(row.score) }}</span>
+            <el-tooltip
+              :content="`基本面 ${formatScore(row.fundScore)} + 技术面 ${formatScore(row.techScore)} + 题材 ${formatScore(row.themeScore)}`"
+              placement="top"
+            >
+              <span class="score-value">{{ formatScore(row.score) }}</span>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column label="核心亮点" min-width="240">
@@ -250,6 +319,19 @@ onMounted(() => {
 .first-highlight {
   color: #67c23a;
   cursor: default;
+}
+
+/* 题材与技术面标签 */
+.concept-tag,
+.tech-tag {
+  margin: 2px 3px 2px 0;
+}
+
+.tech-cell {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 展开行亮点说明 */
