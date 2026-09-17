@@ -43,6 +43,11 @@ public class StockAssetServiceImpl implements StockAssetService {
 
     private static final String QUOTE_URL = "http://push2.eastmoney.com/api/qt/stock/get";
     private static final String KLINE_URL = "http://push2his.eastmoney.com/api/qt/stock/kline/get";
+    // 东财对kline/get大lmt请求（10000/2000根）存在临时定向拦截（静默空回复，同域名fflow不受影响，且会连坐波及后续小请求数十秒），
+    // 单次请求失败时降级为分段补抓：每段500根 + end日期向前翻页
+    private static final int KLINE_SEG_LMT = 500;
+    // 腾讯K线兜底接口（东财整域被临时拉黑时使用）：单次上限640根，end=日期向前翻页，前复权口径与东财一致
+    private static final String TX_KLINE_URL = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get";
     // fflow/daykline 资金流接口已由 push2 迁移至 push2his（push2 下该路径返回 rc:100 data:null，且多IP部分残留导致间歇性成功）
     private static final String FLOW_URL = "http://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get";
     private static final String FINANCE_URL = "https://datacenter.eastmoney.com/securities/api/data/get";
@@ -221,6 +226,88 @@ public class StockAssetServiceImpl implements StockAssetService {
         }
     }
 
+    /**
+     * 单周期K线混合维护：增量优先，异常自动退全量。
+     * 流程：抓最近比对段(小请求) → 与库内重叠日期逐日比对 OHLCV →
+     *   库内无数据 → 全量抓取追加(FULL_NEW)；
+     *   重叠≥3天且价格全一致 → 纯增量，只插库内没有的新日期(INC)；
+     *   重叠≥3天但价格不一致 → 检测到除权除息(前复权基准变化) → 全量重建(FULL_RECALC)；
+     *   重叠<3天 → 库内断档过久无法校验复权基准 → 全量重建(FULL_BACKFILL)；
+     *   抓取失败 → FAIL（调用方保留库内旧数据）。
+     *
+     * @return FAIL / INC:n / FULL_NEW:n / FULL_RECALC:n / FULL_BACKFILL:n（n=入库根数）
+     */
+    private String refreshKlinePeriod(String stockCode, String secid, int klineType, int fullCount, int compareCount) throws Exception {
+        SimpleDateFormat ymd = new SimpleDateFormat("yyyy-MM-dd");
+        // 1. 抓最近比对段（小请求，避开东财对大lmt的定向拦截）
+        List<StockKline> recent = fetchKlineData(secid, stockCode, klineType, compareCount);
+        if (recent == null || recent.isEmpty()) {
+            return "FAIL";
+        }
+        // 2. 库内该周期最近若干根（覆盖比对窗口的全部可能重叠），trade_date 倒序
+        List<StockKline> dbRecent = stockAssetMapper.selectRecentKlines(stockCode, klineType, compareCount + 150);
+        Map<String, StockKline> dbMap = new HashMap<>();
+        if (dbRecent != null) {
+            for (StockKline k : dbRecent) {
+                dbMap.put(ymd.format(k.getTradeDate()), k);
+            }
+        }
+        // 3. 库内无该周期数据 → 首次全量追加
+        if (dbMap.isEmpty()) {
+            List<StockKline> full = fetchKlineData(secid, stockCode, klineType, fullCount);
+            if (full == null || full.isEmpty()) {
+                return "FAIL";
+            }
+            insertKlineInBatches(full);
+            return "FULL_NEW:" + full.size();
+        }
+        // 4. 重叠比对（OHLCV；成交额不入比对——腾讯兜底的成交额为估算值，避免误判为除权）
+        int overlap = 0;
+        boolean mismatch = false;
+        for (StockKline k : recent) {
+            StockKline db = dbMap.get(ymd.format(k.getTradeDate()));
+            if (db == null) continue;
+            overlap++;
+            if (!sameKline(db, k)) {
+                mismatch = true;
+                break;
+            }
+        }
+        // 5. 分支处理
+        if (overlap < 3 || mismatch) {
+            List<StockKline> full = fetchKlineData(secid, stockCode, klineType, fullCount);
+            if (full == null || full.isEmpty()) {
+                return "FAIL";
+            }
+            stockAssetMapper.deleteStockKlineByCodeAndType(stockCode, klineType);
+            insertKlineInBatches(full);
+            return (mismatch ? "FULL_RECALC:" : "FULL_BACKFILL:") + full.size();
+        }
+        // 6. 纯增量：只插库内没有的新日期
+        List<StockKline> newOnes = new ArrayList<>();
+        for (StockKline k : recent) {
+            if (!dbMap.containsKey(ymd.format(k.getTradeDate()))) {
+                newOnes.add(k);
+            }
+        }
+        insertKlineInBatches(newOnes);
+        return "INC:" + newOnes.size();
+    }
+
+    /** K线逐日比对：开高低收+成交量（BigDecimal按值比较不看精度；成交额/振幅等衍生字段不参与，容忍数据源差异） */
+    private boolean sameKline(StockKline db, StockKline src) {
+        return eqDecimal(db.getOpenPrice(), src.getOpenPrice())
+                && eqDecimal(db.getClosePrice(), src.getClosePrice())
+                && eqDecimal(db.getHighPrice(), src.getHighPrice())
+                && eqDecimal(db.getLowPrice(), src.getLowPrice())
+                && (db.getVolume() == null ? src.getVolume() == null : db.getVolume().equals(src.getVolume()));
+    }
+
+    private boolean eqDecimal(BigDecimal a, BigDecimal b) {
+        if (a == null || b == null) return a == b;
+        return a.compareTo(b) == 0;
+    }
+
     @Override
     public String getStockAllDataByCode(String stockCode) throws Exception {
         if (stockAssetMapper.isExistByCode(stockCode) > 0) {
@@ -242,10 +329,13 @@ public class StockAssetServiceImpl implements StockAssetService {
         stockAssetMapper.addStockBasic(stockBasic);
 
         // K线全量抓取：日K 10000根 / 周K 2000根 / 月K 600根，覆盖全部历史（与刷新流程保持一致；请求间200ms限流防反爬）
+        // 东财对大lmt的kline请求存在临时拦截（静默空回复），若K线未抓到需如实告知用户稍后补抓
+        int klinePeriodsOk = 0;
         for (int[] kt : new int[][]{{1, 10000}, {2, 2000}, {3, 600}}) {
             List<StockKline> klineList = fetchKlineData(secid, stockCode, kt[0], kt[1]);
             if (!klineList.isEmpty()) {
                 stockAssetMapper.batchAddStockKline(klineList);
+                klinePeriodsOk++;
             }
             try {
                 Thread.sleep(200);   // 反爬限流
@@ -270,11 +360,21 @@ public class StockAssetServiceImpl implements StockAssetService {
         List<StockCapitalFlow> flowList = fetchCapitalFlowData(secid, stockCode, 30);
         if (!flowList.isEmpty()) {
             stockAssetMapper.batchAddStockCapitalFlow(flowList);
-            return "成功获取股票数据：" + stockBasic.getStockName() + "（" + stockCode + "），含行情/K线/财务/股东人数/资金流";
+            if (klinePeriodsOk == 3) {
+                return "成功获取股票数据：" + stockBasic.getStockName() + "（" + stockCode + "），含行情/K线/财务/股东人数/资金流";
+            }
+            return "成功获取股票数据：" + stockBasic.getStockName() + "（" + stockCode + "），含行情/财务/股东人数/资金流；"
+                    + "K线仅" + klinePeriodsOk + "/3周期成功（东财临时拦截），请10分钟后点击【实时数据】刷新补全";
         }
         // 资金流偶发被反爬拦截，如实提示，避免用户误以为已有资金流数据
+        String flowTip = "资金流本次抓取失败，请稍后点击【实时数据】刷新补全";
+        if (klinePeriodsOk == 3) {
+            return "成功获取股票数据：" + stockBasic.getStockName() + "（" + stockCode
+                    + "），含行情/K线/财务/股东人数；" + flowTip;
+        }
         return "成功获取股票数据：" + stockBasic.getStockName() + "（" + stockCode
-                + "），含行情/K线/财务/股东人数；资金流本次抓取失败，请稍后点击【实时数据】刷新补全";
+                + "），含行情/财务/股东人数；K线仅" + klinePeriodsOk + "/3周期成功、"
+                + flowTip + "（东财对K线大请求临时拦截，10分钟后刷新即可补全）";
     }
 
     private StockBasic fetchStockBasic(String secid, String stockCode) {
@@ -337,7 +437,76 @@ public class StockAssetServiceImpl implements StockAssetService {
                 "&fqt=1&end=20500101&lmt=" + count +
                 "&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61";
         String body = httpGet(url);
-        if (body == null) return Collections.emptyList();
+        if (body != null) {
+            List<StockKline> parsed = parseKlineBody(body, stockCode, klineType);
+            if (!parsed.isEmpty()) {
+                return parsed;
+            }
+        }
+        // 东财对大lmt的kline请求存在临时拦截（静默空回复/200空数据），降级为小分段+end日期向前翻页补抓
+        List<StockKline> segmented = fetchKlineSegmented(secid, stockCode, klineType, count);
+        if (!segmented.isEmpty()) {
+            logger.info("股票{}K线单次请求被拦，分段补抓成功：klt={} 共{}根", stockCode,
+                    klineType == 1 ? 101 : klineType == 2 ? 102 : 103, segmented.size());
+            return segmented;
+        }
+        // 东财整域被临时拉黑时，走腾讯K线接口兜底（同为前复权口径，价格/成交量与东财一致）
+        List<StockKline> tx = fetchKlineFromTencent(stockCode, klineType, count);
+        if (!tx.isEmpty()) {
+            logger.info("股票{}K线东财被拦，腾讯兜底成功：klt={} 共{}根", stockCode,
+                    klineType == 1 ? 101 : klineType == 2 ? 102 : 103, tx.size());
+            return tx;
+        }
+        return Collections.emptyList();
+    }
+
+    /** K线分段补抓：每段lmt=500，用end=最早日期前一天向前翻页；任一段失败即整体放弃（保持全有或全无语义，调用方会保留旧数据） */
+    private List<StockKline> fetchKlineSegmented(String secid, String stockCode, int klineType, int count) {
+        String klt = String.valueOf(klineType == 1 ? 101 : klineType == 2 ? 102 : 103);
+        SimpleDateFormat ymdDash = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat ymd = new SimpleDateFormat("yyyyMMdd");
+        // 日期降序合并（与原接口"最新在前"顺序一致），date字符串做key天然去重防翻页重叠
+        TreeMap<String, StockKline> merged = new TreeMap<>(Collections.reverseOrder());
+        String end = "20500101";
+        int maxSegments = (int) Math.ceil(count / (double) KLINE_SEG_LMT) + 2;
+        try {
+            for (int seg = 0; seg < maxSegments && merged.size() < count; seg++) {
+                String url = KLINE_URL + "?secid=" + secid + "&klt=" + klt +
+                        "&fqt=1&end=" + end + "&lmt=" + KLINE_SEG_LMT +
+                        "&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61";
+                String body = httpGet(url);
+                if (body == null) {
+                    return Collections.emptyList();
+                }
+                List<StockKline> part = parseKlineBody(body, stockCode, klineType);
+                if (part.isEmpty()) {
+                    break;   // 已到上市最早日期
+                }
+                String earliest = null;
+                for (StockKline k : part) {
+                    String d = ymdDash.format(k.getTradeDate());
+                    if (earliest == null || d.compareTo(earliest) < 0) {
+                        earliest = d;
+                    }
+                    merged.put(d, k);
+                }
+                if (part.size() < KLINE_SEG_LMT) {
+                    break;   // 不足一段说明已触底
+                }
+                end = ymd.format(new Date(ymdDash.parse(earliest).getTime() - 24L * 3600 * 1000));
+                Thread.sleep(300);   // 分段间限流
+            }
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Collections.emptyList();
+        } catch (Exception e) {
+            logger.warn("K线分段补抓异常 stock={} klt={}", stockCode, klt, e);
+            return Collections.emptyList();
+        }
+        return merged.isEmpty() ? Collections.emptyList() : new ArrayList<>(merged.values());
+    }
+
+    private List<StockKline> parseKlineBody(String body, String stockCode, int klineType) {
         try {
             JSONObject json = JSON.parseObject(body);
             JSONObject d = json.getJSONObject("data");
@@ -371,6 +540,114 @@ public class StockAssetServiceImpl implements StockAssetService {
             logger.error("解析K线数据失败", e);
             return Collections.emptyList();
         }
+    }
+
+    /**
+     * 腾讯K线兜底：东财 push2his 整域被临时拉黑时使用（实测当日拦截持续数十分钟）。
+     * 接口：web.ifzq.gtimg.cn/appstock/app/fqkline/get，单次上限640根，end参数=返回≤该日期的最近N根（已实测验证），
+     * 前复权口径与东财 fqt=1 一致，成交量单位同为"手"（实测同花顺当日98958手两源一致）。
+     * 腾讯原始数据仅含 [日期,开,收,高,低,量]，无成交额/涨跌幅/振幅/换手率：成交额以收盘价估算、
+     * 涨跌额/涨跌幅/振幅按前收盘计算、换手率以当前流通股本估算（历史送转会有少量误差）。
+     */
+    private List<StockKline> fetchKlineFromTencent(String stockCode, int klineType, int count) {
+        String period = klineType == 1 ? "day" : klineType == 2 ? "week" : "month";
+        String qfqKey = "qfq" + period;
+        String txCode = (stockCode.startsWith("6") ? "sh" : "sz") + stockCode;
+        BigDecimal circShares = null;
+        try {
+            StockBasic basic = stockAssetMapper.getStockBasicByCode(stockCode);
+            if (basic != null) {
+                circShares = basic.getCircShares();
+            }
+        } catch (Exception ignored) {
+        }
+        SimpleDateFormat ymd = new SimpleDateFormat("yyyy-MM-dd");
+        // 日期降序合并（与东财"最新在前"顺序一致），date字符串做key天然去重防翻页重叠
+        TreeMap<String, StockKline> merged = new TreeMap<>(Collections.reverseOrder());
+        String end = "";
+        int maxSegments = (int) Math.ceil(count / 640.0) + 2;
+        try {
+            for (int seg = 0; seg < maxSegments && merged.size() < count; seg++) {
+                String url = TX_KLINE_URL + "?param=" + txCode + "," + period + ",," + end + ",640,qfq";
+                String body = httpGet(url);
+                if (body == null) {
+                    return Collections.emptyList();
+                }
+                JSONObject json = JSON.parseObject(body);
+                if (json.getIntValue("code") != 0) {
+                    return Collections.emptyList();
+                }
+                JSONObject data = json.getJSONObject("data");
+                JSONObject stock = data == null ? null : data.getJSONObject(txCode);
+                if (stock == null) {
+                    return Collections.emptyList();
+                }
+                JSONArray rows = stock.getJSONArray(qfqKey);
+                if (rows == null || rows.isEmpty()) {
+                    rows = stock.getJSONArray(period);   // 无前复权数据时退回复权前数组
+                }
+                if (rows == null || rows.isEmpty()) {
+                    break;   // 已到上市最早日期
+                }
+                String earliest = null;
+                for (int i = 0; i < rows.size(); i++) {
+                    JSONArray r = rows.getJSONArray(i);
+                    if (r.size() < 6) continue;
+                    StockKline k = new StockKline();
+                    k.setStockCode(stockCode);
+                    k.setTradeDate(ymd.parse(r.getString(0)));
+                    k.setKlineType(klineType);
+                    k.setOpenPrice(new BigDecimal(r.getString(1)));
+                    k.setClosePrice(new BigDecimal(r.getString(2)));
+                    k.setHighPrice(new BigDecimal(r.getString(3)));
+                    k.setLowPrice(new BigDecimal(r.getString(4)));
+                    long vol = new BigDecimal(r.getString(5)).longValue();
+                    k.setVolume(vol);
+                    // 腾讯无成交额字段：以收盘价×股数估算（误差一般<2%）
+                    k.setTurnover(new BigDecimal(vol * 100L).multiply(k.getClosePrice()));
+                    String d = r.getString(0);
+                    if (earliest == null || d.compareTo(earliest) < 0) {
+                        earliest = d;
+                    }
+                    merged.put(d, k);
+                }
+                if (rows.size() < 640) {
+                    break;   // 不足一段说明已触底
+                }
+                end = earliest;   // 下一段取 ≤earliest 的640根
+                Thread.sleep(300);
+            }
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            return Collections.emptyList();
+        } catch (Exception e) {
+            logger.warn("腾讯K线兜底抓取异常 stock={} period={}", stockCode, period, e);
+            return Collections.emptyList();
+        }
+        if (merged.isEmpty()) {
+            return Collections.emptyList();
+        }
+        // 衍生字段计算：换手率=量(手)/流通股本(万股)；涨跌额/涨跌幅/振幅按前收盘
+        List<StockKline> list = new ArrayList<>(merged.values());
+        for (int i = 0; i < list.size(); i++) {
+            StockKline k = list.get(i);
+            if (circShares != null && circShares.signum() > 0 && k.getVolume() != null) {
+                k.setTurnoverRate(new BigDecimal(k.getVolume()).divide(circShares, 4, RoundingMode.HALF_UP));
+            }
+            if (i + 1 < list.size()) {
+                BigDecimal prevClose = list.get(i + 1).getClosePrice();
+                if (prevClose != null && prevClose.signum() > 0) {
+                    BigDecimal chg = k.getClosePrice().subtract(prevClose);
+                    k.setChangeAmount(chg);
+                    k.setChangePct(chg.multiply(new BigDecimal("100")).divide(prevClose, 4, RoundingMode.HALF_UP));
+                    if (k.getHighPrice() != null && k.getLowPrice() != null) {
+                        k.setAmplitude(k.getHighPrice().subtract(k.getLowPrice())
+                                .multiply(new BigDecimal("100")).divide(prevClose, 4, RoundingMode.HALF_UP));
+                    }
+                }
+            }
+        }
+        return list;
     }
 
     private List<StockCapitalFlow> fetchCapitalFlowData(String secid, String stockCode, int days) {
@@ -642,7 +919,7 @@ public class StockAssetServiceImpl implements StockAssetService {
         }
         int ok = 0, fail = 0;
         for (StockBasic item : all) {
-            if (refreshSingleStock(item.getStockCode(), "system")) {
+            if (refreshSingleStock(item.getStockCode(), "system") != null) {
                 ok++;
             } else {
                 fail++;
@@ -657,39 +934,57 @@ public class StockAssetServiceImpl implements StockAssetService {
 
     /**
      * 刷新单只股票全部实时数据：行情估值/K线(三周期)/资金流/财务(按报告期刷新)/消息(增量去重)
+     * K线/资金流抓取失败不视为整体失败（行情已成功），但返回明细中如实标注，避免假成功误导用户
      *
-     * @return true=成功 false=失败
+     * @return null=整体失败；否则返回刷新明细消息（K线/资金流缺失时明确提示）
      */
-    private boolean refreshSingleStock(String code, String updateBy) {
+    private String refreshSingleStock(String code, String updateBy) {
         try {
             String secid = buildSecId(code);
             StockBasic quote = fetchStockBasic(secid, code);
             if (quote == null || quote.getLastPrice() == null) {
-                return false;
+                return null;
             }
             quote.setStockCode(code);
             quote.setUpdateBy(updateBy);
             stockAssetMapper.updateStockRealtime(quote);
+            StringBuilder detail = new StringBuilder("行情估值已更新");
 
-            // 重建K线（先抓全部周期且都成功，才删旧插新，避免接口限流失败导致旧K线丢失；请求间200ms限流）
+            // K线混合模式：日/周/月各自独立"增量优先"维护（只抓最近一段与库内比对），
+            // 复权基准变化/长期未刷新/无库数据时才自动退全量重建；常规刷新只需3个小请求，且避开东财对大lmt的定向拦截
+            String[] periodNames = {"日", "周", "月"};
+            int[][] periods = {{1, 10000, 250}, {2, 2000, 120}, {3, 600, 80}};
+            StringBuilder klineDetail = new StringBuilder();
             boolean klineAllOk = true;
-            List<List<StockKline>> klineBatches = new ArrayList<>();
-            for (int[] kt : new int[][]{{1, 10000}, {2, 2000}, {3, 600}}) {
-                List<StockKline> ks = fetchKlineData(secid, code, kt[0], kt[1]);
-                if (ks == null || ks.isEmpty()) {
+            for (int i = 0; i < periods.length; i++) {
+                String r = refreshKlinePeriod(code, secid, periods[i][0], periods[i][1], periods[i][2]);
+                if (klineDetail.length() > 0) klineDetail.append("、");
+                if ("FAIL".equals(r)) {
                     klineAllOk = false;
-                    break;
+                    klineDetail.append(periodNames[i]).append("K未更新(数据源被拦,旧数据已保留)");
+                    continue;
                 }
-                klineBatches.add(ks);
-                Thread.sleep(200);   // 反爬限流
+                String kind = r.substring(0, r.indexOf(':'));
+                int n = Integer.parseInt(r.substring(r.indexOf(':') + 1));
+                switch (kind) {
+                    case "INC":
+                        klineDetail.append(periodNames[i]).append("K增量").append(n > 0 ? "+" + n + "根" : "无新增");
+                        break;
+                    case "FULL_NEW":
+                        klineDetail.append(periodNames[i]).append("K首次全量").append(n).append("根");
+                        break;
+                    case "FULL_RECALC":
+                        klineDetail.append(periodNames[i]).append("K全量重建").append(n).append("根(检测到除权,复权价已重算)");
+                        break;
+                    default:
+                        klineDetail.append(periodNames[i]).append("K全量补抓").append(n).append("根(库内断档过久)");
+                        break;
+                }
+                Thread.sleep(200);   // 周期间限流
             }
-            if (klineAllOk) {
-                stockAssetMapper.deleteStockKlineByCode(code);
-                for (List<StockKline> ks : klineBatches) {
-                    insertKlineInBatches(ks);
-                }
-            } else {
-                logger.warn("股票{}K线抓取不完整（可能限流），保留旧K线数据", code);
+            detail.append("/K线：").append(klineDetail);
+            if (!klineAllOk) {
+                logger.warn("股票{}部分K线周期抓取失败（数据源临时拦截），失败周期保留旧K线数据", code);
             }
 
             // 重建资金流向（先抓成功再删旧，避免限流失败导致旧资金流丢失）
@@ -697,8 +992,10 @@ public class StockAssetServiceImpl implements StockAssetService {
             if (fs != null && !fs.isEmpty()) {
                 stockAssetMapper.deleteStockCapitalFlowByCode(code);
                 stockAssetMapper.batchAddStockCapitalFlow(fs);
+                detail.append("/资金流已更新");
             } else {
                 logger.warn("股票{}资金流抓取失败（可能限流），保留旧资金流数据", code);
+                detail.append("/资金流未更新(请稍后重试)");
             }
             Thread.sleep(200);   // 反爬限流
 
@@ -707,12 +1004,14 @@ public class StockAssetServiceImpl implements StockAssetService {
             if (!fins.isEmpty()) {
                 stockAssetMapper.deleteStockFinanceByCode(code);
                 stockAssetMapper.batchAddStockFinance(fins);
+                detail.append("/财务已更新");
             }
 
             // 增量补全股东人数历史（唯一索引去重，新披露期数自动入库）
             List<StockHolderNum> holders = fetchHolderNumData(code);
             if (!holders.isEmpty()) {
                 stockAssetMapper.batchAddStockHolderNum(holders);
+                detail.append("/股东人数已更新");
             }
 
             // 增量补全消息面（新闻+公告，唯一索引去重，历史保留）
@@ -721,11 +1020,12 @@ public class StockAssetServiceImpl implements StockAssetService {
             news.addAll(fetchAnnouncementList(code));
             if (!news.isEmpty()) {
                 stockAssetMapper.batchAddStockNews(news);
+                detail.append("/消息面已更新");
             }
-            return true;
+            return detail.toString();
         } catch (Exception e) {
             logger.error("刷新股票实时数据失败: {}", code, e);
-            return false;
+            return null;
         }
     }
 
@@ -735,9 +1035,11 @@ public class StockAssetServiceImpl implements StockAssetService {
         if (basic == null) {
             return "未找到股票：" + stockCode;
         }
-        boolean ok = refreshSingleStock(stockCode, "admin");
-        return ok ? "股票 " + basic.getStockName() + "（" + stockCode + "）实时数据刷新成功：行情估值/K线/资金流/财务/消息已更新"
-                : "股票 " + basic.getStockName() + "（" + stockCode + "）实时数据刷新失败，请查看后端日志";
+        String detail = refreshSingleStock(stockCode, "admin");
+        if (detail == null) {
+            return "股票 " + basic.getStockName() + "（" + stockCode + "）实时数据刷新失败，请查看后端日志";
+        }
+        return "股票 " + basic.getStockName() + "（" + stockCode + "）刷新明细：" + detail;
     }
 
     @Override

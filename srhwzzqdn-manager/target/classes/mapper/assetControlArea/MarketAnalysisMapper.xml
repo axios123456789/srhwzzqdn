@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.assetControlArea.mapper.MarketAnalysisMapper">
+
+    <!-- 市场分析每日宽表：按天唯一（uk_market_date），同天重分析先删后插 -->
+    <update id="createTableIfNotExists">
+        CREATE TABLE IF NOT EXISTS t_market_analysis_daily (
+            id BIGINT AUTO_INCREMENT COMMENT '主键自增' PRIMARY KEY,
+            market_date DATE NOT NULL COMMENT '交易日（按天唯一）',
+            analysis_time DATETIME COMMENT '本次实时分析的采集时间',
+            market_phase VARCHAR(20) COMMENT '数据阶段：盘前/竞价/早盘/盘中/尾盘/已收盘/非交易时段',
+            market_status VARCHAR(500) COMMENT '市场在做什么（一句话结论）',
+            sentiment_score INT COMMENT '市场情绪温度0-100',
+            sentiment_level VARCHAR(20) COMMENT '情绪档位：冰点/低迷/中性/活跃/亢奋',
+            sh_close DECIMAL(12, 2) COMMENT '上证指数点位',
+            sh_change_pct DECIMAL(8, 4) COMMENT '上证涨跌幅%',
+            sz_close DECIMAL(12, 2) COMMENT '深证成指点位',
+            sz_change_pct DECIMAL(8, 4) COMMENT '深证成指涨跌幅%',
+            cyb_close DECIMAL(12, 2) COMMENT '创业板指点位',
+            cyb_change_pct DECIMAL(8, 4) COMMENT '创业板指涨跌幅%',
+            kc50_close DECIMAL(12, 2) COMMENT '科创50点位',
+            kc50_change_pct DECIMAL(8, 4) COMMENT '科创50涨跌幅%',
+            total_amount DECIMAL(20, 2) COMMENT '两市实时成交额(元)',
+            prev_total_amount DECIMAL(20, 2) COMMENT '昨日全天两市成交额(元)',
+            amount_ratio DECIMAL(8, 4) COMMENT '今日实时/昨日全天成交额比',
+            up_count INT COMMENT '全市场上涨家数',
+            down_count INT COMMENT '全市场下跌家数',
+            flat_count INT COMMENT '全市场平盘家数',
+            limit_up_count INT COMMENT '涨停家数',
+            limit_down_count INT COMMENT '跌停家数',
+            zha_ban_count INT COMMENT '炸板家数',
+            zha_ban_rate DECIMAL(8, 4) COMMENT '炸板率%',
+            max_lianban INT COMMENT '最高连板数',
+            lianban_stocks TEXT COMMENT '连板梯队JSON',
+            main_net_inflow DECIMAL(20, 2) COMMENT '全市场主力净流入(元)',
+            ultra_net_inflow DECIMAL(20, 2) COMMENT '超大单净流入(元)',
+            big_net_inflow DECIMAL(20, 2) COMMENT '大单净流入(元)',
+            mid_net_inflow DECIMAL(20, 2) COMMENT '中单净流入(元)',
+            small_net_inflow DECIMAL(20, 2) COMMENT '小单净流入(元)',
+            margin_balance DECIMAL(20, 2) COMMENT '两融余额(元,T-1)',
+            margin_net_buy DECIMAL(20, 2) COMMENT '融资净买入(元,T-1)',
+            hot_sectors TEXT COMMENT '主拉板块TOP JSON',
+            cold_sectors TEXT COMMENT '主弃板块 JSON',
+            main_line VARCHAR(1000) COMMENT '市场主线（规则初判）',
+            main_line_sustainability VARCHAR(500) COMMENT '主线持续性规则初判',
+            leaders TEXT COMMENT '主线龙头股JSON（含新手可买标记）',
+            news_highlights TEXT COMMENT '核心消息面JSON',
+            ai_market_status LONGTEXT COMMENT 'AI：市场在做什么/情绪综合',
+            ai_logic LONGTEXT COMMENT 'AI：核心消息面与驱动逻辑',
+            ai_money_flow LONGTEXT COMMENT 'AI：资金流向与增量退场判断',
+            ai_mainline LONGTEXT COMMENT 'AI：主线板块与持续性判断',
+            ai_outlook LONGTEXT COMMENT 'AI：明日展望',
+            ai_history_review LONGTEXT COMMENT 'AI：历史分析准确性复盘',
+            realtime_json LONGTEXT COMMENT '实时快照全量JSON（历史对比复盘用）',
+            create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+            update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+            UNIQUE KEY uk_market_date (market_date)
+        ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '市场实时分析每日宽表（按天存储，同天重分析先删后插）'
+    </update>
+
+    <!-- 仅删除指定交易日，保证不误删其他天数据 -->
+    <delete id="deleteByMarketDate">
+        DELETE FROM t_market_analysis_daily
+        WHERE market_date = DATE(#{marketDate})
+    </delete>
+
+    <insert id="insertAnalysis" parameterType="com.xk.srhwzzqdn.model.entity.assetControl.MarketAnalysisDaily">
+        INSERT INTO t_market_analysis_daily (
+            market_date, analysis_time, market_phase, market_status,
+            sentiment_score, sentiment_level,
+            sh_close, sh_change_pct, sz_close, sz_change_pct,
+            cyb_close, cyb_change_pct, kc50_close, kc50_change_pct,
+            total_amount, prev_total_amount, amount_ratio,
+            up_count, down_count, flat_count,
+            limit_up_count, limit_down_count, zha_ban_count, zha_ban_rate, max_lianban,
+            lianban_stocks,
+            main_net_inflow, ultra_net_inflow, big_net_inflow, mid_net_inflow, small_net_inflow,
+            margin_balance, margin_net_buy,
+            hot_sectors, cold_sectors, main_line, main_line_sustainability,
+            leaders, news_highlights,
+            ai_market_status, ai_logic, ai_money_flow, ai_mainline, ai_outlook, ai_history_review,
+            realtime_json
+        ) VALUES (
+            #{marketDate}, #{analysisTime}, #{marketPhase}, #{marketStatus},
+            #{sentimentScore}, #{sentimentLevel},
+            #{shClose}, #{shChangePct}, #{szClose}, #{szChangePct},
+            #{cybClose}, #{cybChangePct}, #{kc50Close}, #{kc50ChangePct},
+            #{totalAmount}, #{prevTotalAmount}, #{amountRatio},
+            #{upCount}, #{downCount}, #{flatCount},
+            #{limitUpCount}, #{limitDownCount}, #{zhaBanCount}, #{zhaBanRate}, #{maxLianban},
+            #{lianbanStocks},
+            #{mainNetInflow}, #{ultraNetInflow}, #{bigNetInflow}, #{midNetInflow}, #{smallNetInflow},
+            #{marginBalance}, #{marginNetBuy},
+            #{hotSectors}, #{coldSectors}, #{mainLine}, #{mainLineSustainability},
+            #{leaders}, #{newsHighlights},
+            #{aiMarketStatus}, #{aiLogic}, #{aiMoneyFlow}, #{aiMainline}, #{aiOutlook}, #{aiHistoryReview},
+            #{realtimeJson}
+        )
+    </insert>
+
+    <select id="selectByMarketDate" resultType="com.xk.srhwzzqdn.model.entity.assetControl.MarketAnalysisDaily">
+        SELECT *
+        FROM t_market_analysis_daily
+        WHERE market_date = DATE(#{marketDate})
+        LIMIT 1
+    </select>
+
+    <select id="selectRecent" resultType="com.xk.srhwzzqdn.model.entity.assetControl.MarketAnalysisDaily">
+        SELECT *
+        FROM t_market_analysis_daily
+        ORDER BY market_date DESC
+        LIMIT #{limit}
+    </select>
+</mapper>

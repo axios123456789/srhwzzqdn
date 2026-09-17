@@ -29,6 +29,14 @@ public interface StockAssetMapper {
     @Delete("delete from t_stock_kline where stock_code = #{param1}")
     void deleteStockKlineByCode(String stockCode);
 
+    // 混合模式K线增量维护：按周期查最近N根（trade_date倒序，依赖全局 mapUnderscoreToCamelCase 自动映射）
+    @Select("select * from t_stock_kline where stock_code = #{param1} and kline_type = #{param2} order by trade_date desc limit #{param3}")
+    List<StockKline> selectRecentKlines(String stockCode, int klineType, int limit);
+
+    // 混合模式K线全量重建：按周期删除（不影响其他周期与库内其他股票）
+    @Delete("delete from t_stock_kline where stock_code = #{param1} and kline_type = #{param2}")
+    void deleteStockKlineByCodeAndType(String stockCode, int klineType);
+
     @Delete("delete from t_stock_finance where stock_code = #{param1}")
     void deleteStockFinanceByCode(String stockCode);
 

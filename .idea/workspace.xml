@@ -5,8 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产管制区-股票资产管理-08">
-      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl$IndustryStat.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl$TechResult.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/tmp/d24e3433-ebfb-4c33-b0ad-1dcb1fa79777" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-admin/build_log.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/stockAssetManagementTabs/tabMarketAnalysis.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-common/common-util/target/common-util-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-common/common-util/target/maven-archiver/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/controller/MarketAnalysisController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/MarketAnalysisMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/MarketAnalysisService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/MarketAnalysisServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/mapper/assetControlArea/MarketAnalysisMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/controller/MarketAnalysisController.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/mapper/MarketAnalysisMapper.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/MarketAnalysisService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/MarketAnalysisServiceImpl.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/mapper/assetControlArea/MarketAnalysisMapper.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/maven-archiver/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/srhwzzqdn-manager-1.0-SNAPSHOT.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/src/main/java/com/xk/srhwzzqdn/model/entity/assetControl/MarketAnalysisDaily.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/classes/com/xk/srhwzzqdn/model/entity/assetControl/MarketAnalysisDaily.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/maven-archiver/pom.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/srhwzzqdn-model-1.0-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -15,15 +34,14 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/tmp/be996a50-b1f9-43cf-8e0f-14076109504c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/stockAsset.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/stockAsset.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/stockAssetManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/stockAssetManagement.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/stockAssetManagementTabs/tabFundamentalScreening.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/stockAssetManagementTabs/tabFundamentalScreening.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/StockAssetMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/mapper/StockAssetMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl$AiAnalysisCacheEntry.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl$AiAnalysisCacheEntry.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-model/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-model/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -572,14 +590,9 @@
       <workItem from="1789385325278" duration="656000" />
       <workItem from="1789432282233" duration="2979000" />
       <workItem from="1789470650484" duration="737000" />
-      <workItem from="1789518790697" duration="631000" />
-    </task>
-    <task id="LOCAL-00124" summary="基金资产管理-31">
-      <created>1779023976543</created>
-      <option name="number" value="00124" />
-      <option name="presentableId" value="LOCAL-00124" />
-      <option name="project" value="LOCAL" />
-      <updated>1779023976543</updated>
+      <workItem from="1789518790697" duration="2446000" />
+      <workItem from="1789560988555" duration="3332000" />
+      <workItem from="1789605101782" duration="5037000" />
     </task>
     <task id="LOCAL-00125" summary="基金资产管理-32">
       <created>1779109125896</created>
@@ -917,7 +930,14 @@
       <option name="project" value="LOCAL" />
       <updated>1789347576102</updated>
     </task>
-    <option name="localTasksCounter" value="173" />
+    <task id="LOCAL-00173" summary="资产管制区-股票资产管理-08">
+      <created>1789520089606</created>
+      <option name="number" value="00173" />
+      <option name="presentableId" value="LOCAL-00173" />
+      <option name="project" value="LOCAL" />
+      <updated>1789520089607</updated>
+    </task>
+    <option name="localTasksCounter" value="174" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -1,2 +1,6 @@
+com\xk\srhwzzqdn\manager\assetControlArea\service\MarketAnalysisService.class
+com\xk\srhwzzqdn\manager\assetControlArea\service\impl\MarketAnalysisServiceImpl.class
+com\xk\srhwzzqdn\manager\assetControlArea\controller\MarketAnalysisController.class
+com\xk\srhwzzqdn\manager\assetControlArea\mapper\MarketAnalysisMapper.class
 com\xk\srhwzzqdn\manager\assetControlArea\service\impl\StockAssetServiceImpl$TechResult.class
 com\xk\srhwzzqdn\manager\assetControlArea\service\impl\StockAssetServiceImpl$IndustryStat.class

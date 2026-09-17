@@ -2,6 +2,9 @@
   <div class="page-container">
     <!-- 标签页 -->
     <el-tabs v-model="activeTab" class="main-tabs">
+      <el-tab-pane label="市场分析" name="market">
+        <TabMarketAnalysis v-if="activeTab === 'market'" />
+      </el-tab-pane>
       <el-tab-pane label="股票分析" name="analysis">
         <TabStockAnalysis v-if="activeTab === 'analysis'" />
       </el-tab-pane>
@@ -16,8 +19,9 @@
 import { ref } from 'vue'
 import TabStockAnalysis from './stockAssetManagementTabs/tabStockAnalysis.vue'
 import TabFundamentalScreening from './stockAssetManagementTabs/tabFundamentalScreening.vue'
+import TabMarketAnalysis from './stockAssetManagementTabs/tabMarketAnalysis.vue'
 
-const activeTab = ref('analysis')
+const activeTab = ref('market')
 </script>
 
 <style scoped>

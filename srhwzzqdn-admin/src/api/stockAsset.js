@@ -80,3 +80,29 @@ export const UpdateStockBasic = (data) => {
 export const DeleteStockDataByCode = (stockCode) => {
   return request({ url: `${base_api}/deleteStockDataByCode/${stockCode}`, method: 'delete' });
 };
+
+// ==================== 市场分析（市场分析标签页） ====================
+const marketApi = '/superBrain/assetControl/marketAnalysis';
+
+export const GetRealtimeAnalysis = () => {
+  // 实时聚合：后端需串行请求约10个东财接口（含重试与限速间隔），放宽超时
+  return request({ url: `${marketApi}/getRealtimeAnalysis`, method: 'get', timeout: 90000 });
+};
+
+export const AnalyzeMarketWithAi = () => {
+  // AI深度分析耗时较长：与后端 ai.common.read-timeout(900000) 对齐
+  return request({ url: `${marketApi}/analyzeWithAi`, method: 'get', timeout: 900000 });
+};
+
+export const GetTodayMarketAnalysis = () => {
+  return request({ url: `${marketApi}/getTodayAnalysis`, method: 'get', timeout: 30000 });
+};
+
+export const GetMarketHistoryList = (limit) => {
+  return request({ url: `${marketApi}/getHistoryList/${limit}`, method: 'get', timeout: 30000 });
+};
+
+export const GetMarketHistoryReview = () => {
+  // AI历史复盘调用大模型，放宽超时
+  return request({ url: `${marketApi}/getHistoryReview`, method: 'get', timeout: 300000 });
+};
