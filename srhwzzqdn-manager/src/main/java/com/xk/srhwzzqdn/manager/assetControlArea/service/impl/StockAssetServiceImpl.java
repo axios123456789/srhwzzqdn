@@ -48,6 +48,14 @@ public class StockAssetServiceImpl implements StockAssetService {
     private static final int KLINE_SEG_LMT = 500;
     // 腾讯K线兜底接口（东财整域被临时拉黑时使用）：单次上限640根，end=日期向前翻页，前复权口径与东财一致
     private static final String TX_KLINE_URL = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get";
+    // 东财K线熔断退避：任一K线请求失败（静默空回复/200空数据）后，5分钟内所有东财K线请求（单次+分段）直接跳过走腾讯兜底，
+    // 避免被拦期间每个请求都白耗3次重试（约2秒/次）的等待；到期后自动恢复探测东财，拉黑解除即回归主源
+    private static final long EAST_KLINE_BREAK_MS = 5 * 60 * 1000L;
+    private static volatile long eastKlineBlockedUntil = 0L;
+
+    private static boolean eastKlineBlocked() {
+        return System.currentTimeMillis() < eastKlineBlockedUntil;
+    }
     // fflow/daykline 资金流接口已由 push2 迁移至 push2his（push2 下该路径返回 rc:100 data:null，且多IP部分残留导致间歇性成功）
     private static final String FLOW_URL = "http://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get";
     private static final String FINANCE_URL = "https://datacenter.eastmoney.com/securities/api/data/get";
@@ -436,14 +444,21 @@ public class StockAssetServiceImpl implements StockAssetService {
                 "&klt=" + (klineType == 1 ? 101 : klineType == 2 ? 102 : 103) +
                 "&fqt=1&end=20500101&lmt=" + count +
                 "&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61";
-        String body = httpGet(url);
+        // 熔断期内直接跳过东财主请求，省去3次重试的白等
+        String body = eastKlineBlocked() ? null : httpGet(url);
+        List<StockKline> direct = Collections.emptyList();
         if (body != null) {
-            List<StockKline> parsed = parseKlineBody(body, stockCode, klineType);
-            if (!parsed.isEmpty()) {
-                return parsed;
+            direct = parseKlineBody(body, stockCode, klineType);
+            if (!direct.isEmpty()) {
+                return direct;
             }
         }
-        // 东财对大lmt的kline请求存在临时拦截（静默空回复/200空数据），降级为小分段+end日期向前翻页补抓
+        // 主请求失败（静默空回复/200空数据=定向拦截的典型特征）→ 激活5分钟熔断（已激活则保持）
+        if (!eastKlineBlocked()) {
+            eastKlineBlockedUntil = System.currentTimeMillis() + EAST_KLINE_BREAK_MS;
+            logger.warn("东财K线请求被拦（secid={}），激活5分钟熔断：期间K线请求直接走腾讯兜底", secid);
+        }
+        // 东财对大lmt的kline请求存在临时拦截（静默空回复/200空数据），降级为小分段+end日期向前翻页补抓（熔断期内自动跳过）
         List<StockKline> segmented = fetchKlineSegmented(secid, stockCode, klineType, count);
         if (!segmented.isEmpty()) {
             logger.info("股票{}K线单次请求被拦，分段补抓成功：klt={} 共{}根", stockCode,
@@ -462,6 +477,9 @@ public class StockAssetServiceImpl implements StockAssetService {
 
     /** K线分段补抓：每段lmt=500，用end=最早日期前一天向前翻页；任一段失败即整体放弃（保持全有或全无语义，调用方会保留旧数据） */
     private List<StockKline> fetchKlineSegmented(String secid, String stockCode, int klineType, int count) {
+        if (eastKlineBlocked()) {
+            return Collections.emptyList();   // 熔断期内跳过东财分段，直接交由腾讯兜底
+        }
         String klt = String.valueOf(klineType == 1 ? 101 : klineType == 2 ? 102 : 103);
         SimpleDateFormat ymdDash = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat ymd = new SimpleDateFormat("yyyyMMdd");

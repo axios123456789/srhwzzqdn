@@ -97,4 +97,32 @@ public class MarketAnalysisController {
             return Result.build(null, 500, "AI历史复盘失败：" + e.getMessage());
         }
     }
+
+    /**
+     * 中期市场研判（近10~30天放大视角）：算法判定市场类型并输出依据（不调AI，当日缓存）
+     */
+    @GetMapping("/getMarketCycleAnalysis")
+    public Result getMarketCycleAnalysis() {
+        try {
+            Map<String, Object> result = marketAnalysisService.getMarketCycleAnalysis();
+            return Result.build(result, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("中期市场研判失败", e);
+            return Result.build(null, 500, "中期市场研判失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 中期研判 + AI策略推荐：操作建议/板块推荐/龙头推荐（含依据，当日指纹缓存）
+     */
+    @GetMapping("/analyzeMarketCycleWithAi")
+    public Result analyzeMarketCycleWithAi() {
+        try {
+            Map<String, Object> result = marketAnalysisService.analyzeMarketCycleWithAi();
+            return Result.build(result, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("AI中期策略推荐失败", e);
+            return Result.build(null, 500, "AI中期策略推荐失败：" + e.getMessage());
+        }
+    }
 }

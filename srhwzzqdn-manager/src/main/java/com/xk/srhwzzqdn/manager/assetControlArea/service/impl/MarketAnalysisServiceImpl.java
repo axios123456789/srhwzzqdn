@@ -23,6 +23,10 @@ import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 市场实时分析服务实现
@@ -342,8 +346,12 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         BigDecimal mainNetPct = BigDecimal.ZERO;
         long quoteTime = 0;
         try {
-            String body = httpGetHosts(String.format(INDEX_URL_TPL, PUSH2_HOSTS[0]));
-            if (body == null) body = httpGetHosts(String.format(INDEX_URL_TPL, PUSH2_HOSTS[1]));
+            // clist熔断期直接跳过（指数该轮缺省），防拉黑期间反复请求延长封禁
+            String body = isPush2ClistBlocked() ? null : httpGetHosts(String.format(INDEX_URL_TPL, PUSH2_HOSTS[0]));
+            if (body == null && !isPush2ClistBlocked()) {
+                body = httpGetHosts(String.format(INDEX_URL_TPL, PUSH2_HOSTS[1]));
+                if (body == null) markPush2ClistFail();
+            }
             JSONObject json = JSON.parseObject(body);
             JSONArray diff = json.getJSONObject("data").getJSONArray("diff");
             for (int i = 0; i < diff.size(); i++) {
@@ -395,30 +403,58 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         return out;
     }
 
-    /** 昨日两市全天成交额（沪+深指数日线，量能对比基准） */
+    /** 昨日两市全天成交额（沪+深指数日线，量能对比基准）；push2his熔断期直接跳过东财，用市场分析表最近交易日记录兜底 */
     private JSONObject fetchPrevAmount() {
         JSONObject out = new JSONObject();
-        double prev = 0;
+        double prev = 0; // 单位：元
         String prevDate = null;
-        String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        for (String secid : new String[]{"1.000001", "0.399001"}) {
+        if (isPush2hisBlocked()) {
+            logger.info("push2his K线熔断中，昨日成交额改用市场分析表兜底");
+        } else {
+            String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            for (String secid : new String[]{"1.000001", "0.399001"}) {
+                String body = httpGetNoRetry(String.format(KLINE_URL, secid));
+                if (body == null) {
+                    // 首次失败即熔断（push2his拉黑特征），剩余指数不再请求，转表兜底
+                    markPush2hisFail();
+                    break;
+                }
+                try {
+                    JSONArray klines = JSON.parseObject(body).getJSONObject("data").getJSONArray("klines");
+                    // klines 倒数第一条可能是今日盘中，倒数第二条即上一交易日
+                    for (int i = klines.size() - 1; i >= 1; i--) {
+                        String[] parts = klines.getString(i).split(",");
+                        if (!parts[0].replace("-", "").equals(today)) {
+                            prev += Double.parseDouble(parts[6]);
+                            prevDate = parts[0];
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.warn("解析昨日成交额K线失败 secid={}", secid);
+                }
+                sleep(200);
+            }
+        }
+        if (prev <= 0) {
+            // 兜底：市场分析表最近一个交易日记录的两市成交额（表内单位=元）
             try {
-                String body = httpGet(String.format(KLINE_URL, secid));
-                JSONObject json = JSON.parseObject(body);
-                JSONArray klines = json.getJSONObject("data").getJSONArray("klines");
-                // klines 倒数第一条可能是今日盘中，倒数第二条即上一交易日
-                for (int i = klines.size() - 1; i >= 1; i--) {
-                    String[] parts = klines.getString(i).split(",");
-                    if (!parts[0].replace("-", "").equals(today)) {
-                        prev += Double.parseDouble(parts[6]);
-                        prevDate = parts[0];
-                        break;
+                SimpleDateFormat dayKey = new SimpleDateFormat("yyyy-MM-dd");
+                String todayKey = dayKey.format(new Date());
+                List<MarketAnalysisDaily> recent = marketAnalysisMapper.selectRecent(3);
+                if (recent != null) {
+                    for (MarketAnalysisDaily r : recent) {
+                        if (r.getMarketDate() != null && r.getTotalAmount() != null
+                                && dayKey.format(r.getMarketDate()).compareTo(todayKey) < 0) {
+                            prev = r.getTotalAmount().doubleValue();
+                            prevDate = dayKey.format(r.getMarketDate());
+                            break;
+                        }
                     }
                 }
             } catch (Exception e) {
-                logger.warn("获取昨日成交额失败 secid={}", secid, e);
+                logger.warn("昨日成交额表兜底失败：{}", e.getMessage());
             }
-            sleep(200);
         }
         out.put("prevAmountYi", BigDecimal.valueOf(prev / 1e8));
         out.put("prevDate", prevDate);
@@ -473,7 +509,7 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         return list;
     }
 
-    /** 连板梯队：按连板数分组 */
+    /** 连板梯队：按连板数分组，2板以上全部档位、每档全部个股结构化返回（前端流式铺满展示，不做截断） */
     private List<Map<String, Object>> buildLianbanTiers(List<Map<String, Object>> ztList) {
         Map<Integer, List<Map<String, Object>>> byLb = new TreeMap<>(Collections.reverseOrder());
         for (Map<String, Object> s : ztList) {
@@ -481,15 +517,24 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         }
         List<Map<String, Object>> tiers = new ArrayList<>();
         for (Map.Entry<Integer, List<Map<String, Object>>> e : byLb.entrySet()) {
-            if (e.getKey() < 2 || tiers.size() >= 5) continue; // 展示2板以上的空间梯队
+            if (e.getKey() < 2) continue; // 仅展示2板以上的空间梯队
+            List<Map<String, Object>> stocks = new ArrayList<>();
+            for (Map<String, Object> s : e.getValue()) {
+                Map<String, Object> st = new LinkedHashMap<>();
+                st.put("code", s.get("code"));
+                st.put("name", s.get("name"));
+                st.put("pct", s.get("pct"));
+                st.put("price", s.get("price"));
+                st.put("hybk", s.get("hybk"));
+                st.put("ztStat", s.get("ztStat"));
+                Object fund = s.get("fund");
+                st.put("fund", fund == null ? null : String.format("%.1f", ((Number) fund).doubleValue() / 1e8));
+                stocks.add(st);
+            }
             Map<String, Object> tier = new LinkedHashMap<>();
             tier.put("lianban", e.getKey());
-            tier.put("count", e.getValue().size());
-            List<String> names = new ArrayList<>();
-            for (Map<String, Object> s : e.getValue()) {
-                names.add(s.get("name") + "(" + s.get("code") + ")");
-            }
-            tier.put("stocks", String.join("、", names));
+            tier.put("count", stocks.size());
+            tier.put("stocks", stocks);
             tiers.add(tier);
         }
         return tiers;
@@ -516,10 +561,12 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
             int pz = Integer.parseInt(spec[2]);
             try {
                 String url = String.format(SECTOR_URL_TPL, PUSH2_HOSTS[0], pz, desc ? 1 : 0, desc ? "f62" : "f62", fs);
-                String body = httpGetHosts(url);
-                if (body == null) {
+                // clist熔断期直接跳过（板块列表该轮缺省），防拉黑期间反复请求延长封禁
+                String body = isPush2ClistBlocked() ? null : httpGetHosts(url);
+                if (body == null && !isPush2ClistBlocked()) {
                     url = String.format(SECTOR_URL_TPL, PUSH2_HOSTS[1], pz, desc ? 1 : 0, desc ? "f62" : "f62", fs);
                     body = httpGetHosts(url);
+                    if (body == null) markPush2ClistFail();
                 }
                 JSONObject json = JSON.parseObject(body);
                 JSONObject dataObj = json.getJSONObject("data");
@@ -1012,6 +1059,792 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         }
     }
 
+    // ==================== 中期市场研判（近10~30天放大视角） ====================
+
+    // 研判当日缓存：特征构建涉及指数K线+两融历史+约40个板块30日K线（约15秒），当日30分钟内复用
+    private static final long CYCLE_CACHE_TTL_MS = 30 * 60 * 1000L;
+    // 降级结果（东财K线被熔断，走了腾讯兜底/板块特征缺失）只缓存5分钟，封禁过期后自动恢复完整数据
+    private static final long CYCLE_DEGRADED_TTL_MS = 5 * 60 * 1000L;
+    private final Map<String, Object> cycleCacheHolder = new ConcurrentHashMap<>();
+    // AI策略推荐缓存：key=当日日期|涨停数指纹，当日数据小变时不重复调用大模型
+    private final Map<String, Map<String, Object>> cycleAiCache = new ConcurrentHashMap<>();
+
+    // push2his K线熔断（同个股K线熔断机制：高频请求触发临时拉黑，TCP通但HTTP静默丢响应，NoHttpResponseException即拉黑特征）：
+    // 首次失败立即熔断5分钟，期间所有push2his K线类请求直接跳过（指数走腾讯兜底、板块K线跳过、昨日成交额用表数据兜底），
+    // 避免拉黑期间重试延长封禁+日志刷屏；封禁过期后下一次构建自动拿到完整数据
+    private static final long PUSH2HIS_BREAK_MS = 5 * 60 * 1000L;
+    private static volatile long push2hisBlockedUntil = 0L;
+
+    private static boolean isPush2hisBlocked() {
+        return System.currentTimeMillis() < push2hisBlockedUntil;
+    }
+
+    private static void markPush2hisFail() {
+        push2hisBlockedUntil = System.currentTimeMillis() + PUSH2HIS_BREAK_MS;
+        logger.warn("东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级");
+    }
+
+    // push2/push2delay 行情集群clist熔断（clist高频分页会触发该集群临时拉黑，与push2his独立）：
+    // 首次失败熔断3分钟，期间clist类请求直接跳过（板块池返回空=研判降级，实时分析板块/指数该轮缺省）
+    private static final long PUSH2_CLIST_BREAK_MS = 3 * 60 * 1000L;
+    private static volatile long push2ClistBlockedUntil = 0L;
+
+    private static boolean isPush2ClistBlocked() {
+        return System.currentTimeMillis() < push2ClistBlockedUntil;
+    }
+
+    private static void markPush2ClistFail() {
+        push2ClistBlockedUntil = System.currentTimeMillis() + PUSH2_CLIST_BREAK_MS;
+        logger.warn("东财行情集群clist请求失败，首次即熔断3分钟：期间clist类请求跳过防延长封禁");
+    }
+
+    /** 研判特征板块池：按当日成交额取活跃行业板块30个 + 活跃概念板块10个（控制push2his请求量防拉黑） */
+    private static final String CYCLE_SECTOR_INDUSTRY_URL_TPL =
+            "%s/api/qt/clist/get?fltt=2&pn=1&pz=30&po=1&fid=f6&fs=m:90+t:2&fields=f12,f14,f3,f6";
+    private static final String CYCLE_SECTOR_CONCEPT_URL_TPL =
+            "%s/api/qt/clist/get?fltt=2&pn=1&pz=10&po=1&fid=f6&fs=m:90+t:3&fields=f12,f14,f3,f6";
+    private static final String CYCLE_KLINE_URL_TPL =
+            "http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=%s&klt=101&fqt=1&lmt=30&end=20500101"
+                    + "&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57";
+    /** 腾讯K线兜底（指数用，口径与个股K线兜底一致） */
+    private static final String CYCLE_TX_KLINE_URL = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get";
+
+    @Override
+    public Map<String, Object> getMarketCycleAnalysis() {
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        Map<String, Object> cached = (Map<String, Object>) cycleCacheHolder.get("result");
+        Long cachedDay = (Long) cycleCacheHolder.get("time");
+        String cachedDate = (String) cycleCacheHolder.get("date");
+        if (cached != null && today.equals(cachedDate) && cachedDay != null) {
+            // 降级结果（东财K线被熔断）只缓存5分钟，封禁过期后自动重建完整数据
+            long ttl = Boolean.TRUE.equals(cached.get("klineDegraded")) ? CYCLE_DEGRADED_TTL_MS : CYCLE_CACHE_TTL_MS;
+            if (System.currentTimeMillis() - cachedDay < ttl) {
+                return cached;
+            }
+        }
+        Map<String, Object> result = buildCycleAnalysis();
+        cycleCacheHolder.put("result", result);
+        cycleCacheHolder.put("time", System.currentTimeMillis());
+        cycleCacheHolder.put("date", today);
+        return result;
+    }
+
+    @Override
+    public Map<String, Object> analyzeMarketCycleWithAi() {
+        Map<String, Object> cycle = getMarketCycleAnalysis();
+        Map<String, Object> result = new LinkedHashMap<>(cycle);
+
+        // 资金异动候选池提前拉取：其完整性参与指纹，避免"数据缺失期间生成的空仓结论"被缓存固化
+        List<Map<String, Object>> candidates = fetchCycleCandidates();
+        int sfSize = cycle.get("sectorFeatures") instanceof List ? ((List<?>) cycle.get("sectorFeatures")).size() : 0;
+
+        // 指纹缓存：当日+涨停数+主力净流入+候选池/轮动明细完整性，数据小变不重复调用大模型；
+        // 数据从缺失恢复为可用时指纹变化，自动重新分析覆盖旧的降级结论
+        Map<String, Object> realtime;
+        try {
+            realtime = getRealtimeAnalysis();
+        } catch (Exception e) {
+            realtime = Collections.emptyMap();
+        }
+        String fingerprint = String.format("cycle|%s|%s|%s|cand%d|sf%d",
+                new SimpleDateFormat("yyyy-MM-dd").format(new Date()),
+                realtime.get("limitUpCount"), realtime.get("mainNetInflowYi"),
+                candidates.size(), sfSize);
+        Map<String, Object> cachedAi = cycleAiCache.get(fingerprint);
+        if (cachedAi != null && System.currentTimeMillis() - (long) cachedAi.get("_cacheTime") < AI_CACHE_TTL_MS) {
+            result.put("ai", cachedAi.get("ai"));
+            return result;
+        }
+
+        Map<String, Object> ai = callCycleAi(cycle, realtime, candidates);
+        result.put("ai", ai);
+        Map<String, Object> cacheEntry = new HashMap<>(ai);
+        cacheEntry.put("_cacheTime", System.currentTimeMillis());
+        cycleAiCache.clear();
+        cycleAiCache.put(fingerprint, cacheEntry);
+        return result;
+    }
+
+    /** 特征构建：指数30日K线 + 两融30天历史 + 活跃板块30日K线 + 表内已有分析记录 */
+    private Map<String, Object> buildCycleAnalysis() {
+        Map<String, Object> out = new LinkedHashMap<>();
+        boolean klineDegraded = false;
+        try {
+            // 1. 指数30日K线（上证=趋势主锚，创业板=弹性风向标），东财熔断时走腾讯兜底；上证原始行复用给每日特征表（省1次K线请求）
+            Map<String, List<double[]>> indexK = new LinkedHashMap<>(); // key -> [pct, amount, close]
+            List<String[]> shRaw = fetchIndexKlineRaw("1.000001", "sh000001");
+            List<double[]> shRows = parseIndexRows(shRaw);
+            Thread.sleep(200);
+            List<double[]> cybRows = parseIndexRows(fetchIndexKlineRaw("0.399006", "sz399006"));
+            Thread.sleep(200);
+            if (shRows.isEmpty() || cybRows.isEmpty()) klineDegraded = true;
+            indexK.put("上证指数", shRows);
+            indexK.put("创业板指", cybRows);
+            // 2. 两融30天
+            List<Map<String, Object>> marginRows = fetchMarginHistory(30);
+            // 3. 活跃板块池（行业30+概念10）30日K线（东财熔断时跳过，研判降级）
+            List<Map<String, Object>> sectorFeatures = fetchCycleSectorFeatures();
+            if (sectorFeatures.size() < 10) klineDegraded = true;
+            // 4. 表内已有分析记录（直接用）
+            List<MarketAnalysisDaily> tableRows = marketAnalysisMapper.selectRecent(30);
+
+            // 5. 算法研判
+            Map<String, Object> cycle = analyzeCycle(indexK, marginRows, sectorFeatures, tableRows);
+            out.putAll(cycle);
+            out.put("dailyFeatures", buildDailyFeatures(shRaw, marginRows, sectorFeatures, tableRows));
+            out.put("sectorFeatures", buildSectorFeaturesForAi(sectorFeatures)); // 近10日板块轮动明细（AI预测轮动回踩用）
+            out.put("klineDegraded", klineDegraded);
+        } catch (Exception e) {
+            logger.error("中期市场研判构建失败", e);
+            out.put("cycleType", "研判失败");
+            out.put("reasons", Collections.singletonList("数据构建异常：" + e.getMessage()));
+            out.put("klineDegraded", true);
+        }
+        return out;
+    }
+
+    /** 指数30日K线原始行（旧→新，行=date,open,close,high,low,vol(,amount)）：东财优先（熔断期跳过），失败退腾讯兜底 */
+    private List<String[]> fetchIndexKlineRaw(String secid, String txCode) throws Exception {
+        if (!isPush2hisBlocked()) {
+            List<String[]> rows = new ArrayList<>();
+            boolean ok = false;
+            String body = httpGetNoRetry(String.format(CYCLE_KLINE_URL_TPL, secid));
+            if (body != null) {
+                JSONObject data = JSON.parseObject(body).getJSONObject("data");
+                JSONArray klines = data == null ? null : data.getJSONArray("klines");
+                if (klines != null && !klines.isEmpty()) {
+                    for (int i = 0; i < klines.size(); i++) rows.add(((String) klines.get(i)).split(","));
+                    ok = true;
+                }
+            }
+            if (ok) {
+                return rows;
+            }
+            markPush2hisFail(); // 首次失败即熔断，本轮后续K线请求全部跳过
+        }
+        return fetchIndexKlineRawFromTencent(txCode);
+    }
+
+    /** 腾讯指数K线兜底（口径与个股K线兜底一致）：行无成交额（第7列补空），仅能算涨跌幅不能算量能比 */
+    private List<String[]> fetchIndexKlineRawFromTencent(String txCode) {
+        List<String[]> rows = new ArrayList<>();
+        String body = httpGetNoRetry(CYCLE_TX_KLINE_URL + "?param=" + txCode + ",day,,,40,qfq");
+        if (body == null) return rows;
+        try {
+            JSONObject json = JSON.parseObject(body);
+            if (json.getIntValue("code") != 0) return rows;
+            JSONObject data = json.getJSONObject("data");
+            JSONObject stock = data == null ? null : data.getJSONObject(txCode);
+            if (stock == null) return rows;
+            JSONArray klines = stock.getJSONArray("qfqday");
+            if (klines == null) klines = stock.getJSONArray("day");
+            if (klines == null) return rows;
+            int from = Math.max(0, klines.size() - 30);
+            for (int i = from; i < klines.size(); i++) {
+                JSONArray r = klines.getJSONArray(i);
+                String[] row = new String[7];
+                for (int j = 0; j < 6 && j < r.size(); j++) row[j] = r.getString(j);
+                row[6] = r.size() > 6 ? r.getString(6) : "";
+                rows.add(row);
+            }
+        } catch (Exception e) {
+            logger.warn("腾讯指数K线兜底失败 txCode={}：{}", txCode, e.getMessage());
+        }
+        return rows;
+    }
+
+    /** 指数30日K线 → [涨跌幅, 成交额亿, 收盘价] 旧→新（腾讯兜底行无成交额→amount=0，量能比自动降级） */
+    private List<double[]> parseIndexRows(List<String[]> raw) {
+        List<double[]> rows = new ArrayList<>();
+        for (int i = 0; i < raw.size(); i++) {
+            String[] p = raw.get(i);
+            double close = Double.parseDouble(p[2]);
+            double prevClose = i > 0 ? Double.parseDouble(raw.get(i - 1)[2]) : close;
+            double pct = prevClose > 0 ? (close - prevClose) / prevClose * 100 : 0;
+            double amountYi = p.length > 6 && p[6] != null && !p[6].isEmpty() ? Double.parseDouble(p[6]) / 1e8 : 0;
+            rows.add(new double[]{pct, amountYi, close});
+        }
+        return rows;
+    }
+
+    /** 两融历史（T-1起往前n天，含融资余额与融资净买入，单位元） */
+    private List<Map<String, Object>> fetchMarginHistory(int n) throws Exception {
+        String url = "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPTA_RZRQ_LSHJ&columns=ALL"
+                + "&source=WEB&sortColumns=dim_date&sortTypes=-1&pageSize=" + n + "&pageNumber=1";
+        List<Map<String, Object>> rows = new ArrayList<>();
+        String body = httpGet(url);
+        if (body == null) return rows;
+        JSONObject data = JSON.parseObject(body).getJSONObject("result");
+        if (data == null) return rows;
+        JSONArray arr = data.getJSONArray("data");
+        if (arr == null) return rows;
+        for (int i = arr.size() - 1; i >= 0; i--) { // 旧→新
+            JSONObject d = arr.getJSONObject(i);
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("date", d.getString("DIM_DATE") == null ? "" : d.getString("DIM_DATE").substring(0, 10));
+            m.put("rzrqYi", d.getDoubleValue("RZRQYE") / 1e8);
+            m.put("rzNetBuyYi", d.getDoubleValue("RZJME") / 1e8);
+            rows.add(m);
+        }
+        return rows;
+    }
+
+    /** 活跃板块（行业30+概念10，按成交额）近30日K线特征；3线程并行限速（参考价值选股已验证并发度），push2his首次失败即熔断并终止剩余请求 */
+    private List<Map<String, Object>> fetchCycleSectorFeatures() throws Exception {
+        List<Map<String, Object>> pool = fetchCycleSectorPool();
+        if (pool.isEmpty()) return new ArrayList<>();
+        // 每板块30日K线 → 5/10/20日累计涨幅 + 每日涨幅序列；3线程并行（线程内串行+250ms间隔），熔断后剩余板块全部快速跳过
+        List<Map<String, Object>> features = Collections.synchronizedList(new ArrayList<>());
+        int threads = Math.min(3, pool.size());
+        int step = (pool.size() + threads - 1) / threads;
+        ExecutorService exec = Executors.newFixedThreadPool(threads);
+        List<Future<?>> futures = new ArrayList<>();
+        for (int t = 0; t < threads; t++) {
+            final List<Map<String, Object>> part =
+                    pool.subList(t * step, Math.min(pool.size(), (t + 1) * step));
+            futures.add(exec.submit(() -> {
+                for (Map<String, Object> s : part) {
+                    if (isPush2hisBlocked()) break; // 熔断后剩余板块不再发请求（防延长封禁）
+                    if (fetchOneSectorKline(s)) {
+                        features.add(s);
+                    }
+                    try {
+                        Thread.sleep(250);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+            }));
+        }
+        for (Future<?> f : futures) {
+            try {
+                f.get(90, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                logger.warn("板块K线并行任务异常", e);
+            }
+        }
+        exec.shutdown();
+        return features;
+    }
+
+    /** 单板块30日K线特征；返回是否成功（数据解析异常当跳过不计熔断，网络失败返回false计一次熔断） */
+    private boolean fetchOneSectorKline(Map<String, Object> s) {
+        String secid = "90." + s.get("code");
+        try {
+            String body = httpGetNoRetry(String.format(CYCLE_KLINE_URL_TPL, secid));
+            if (body == null) {
+                markPush2hisFail();
+                return false;
+            }
+            JSONObject data = JSON.parseObject(body).getJSONObject("data");
+            JSONArray klines = data == null ? null : data.getJSONArray("klines");
+            if (klines == null || klines.isEmpty()) {
+                markPush2hisFail();
+                return false;
+            }
+            List<Double> pcts = new ArrayList<>();
+            for (int i = 0; i < klines.size(); i++) {
+                String[] p = ((String) klines.get(i)).split(",");
+                double close = Double.parseDouble(p[2]);
+                double prev = i > 0 ? Double.parseDouble(((String) klines.get(i - 1)).split(",")[2]) : close;
+                pcts.add(prev > 0 ? (close - prev) / prev * 100 : 0);
+            }
+            int n = pcts.size();
+            s.put("pct5", sumRange(pcts, n - 5, n));
+            s.put("pct10", sumRange(pcts, n - 10, n));
+            s.put("pct20", sumRange(pcts, n - 20, n));
+            s.put("dailyPcts", pcts);
+            return true;
+        } catch (Exception ignore) {
+            return true; // 数据解析问题跳过，不计入熔断（网络失败走 body==null 分支）
+        }
+    }
+
+    /** 板块池：当日成交额排行（push2delay→push2 failover，clist熔断期直接返回空=研判降级） */
+    private List<Map<String, Object>> fetchCycleSectorPool() throws Exception {
+        List<Map<String, Object>> pool = new ArrayList<>();
+        if (isPush2ClistBlocked()) {
+            logger.info("行情集群clist熔断中，板块池跳过（本轮研判降级，指数/量能/两融维度保留）");
+            return pool;
+        }
+        boolean anyOk = false;
+        for (String tpl : new String[]{CYCLE_SECTOR_INDUSTRY_URL_TPL, CYCLE_SECTOR_CONCEPT_URL_TPL}) {
+            for (String host : PUSH2_HOSTS) {
+                String body = httpGetHosts(String.format(tpl, host));
+                if (body == null) continue;
+                JSONObject data = JSON.parseObject(body).getJSONObject("data");
+                Object diffObj = data == null ? null : data.get("diff");
+                JSONArray diff = toDiffArray(diffObj);
+                if (diff == null) continue;
+                anyOk = true;
+                for (int i = 0; i < diff.size(); i++) {
+                    JSONObject d = diff.getJSONObject(i);
+                    Map<String, Object> m = new LinkedHashMap<>();
+                    m.put("code", d.getString("f12"));
+                    m.put("name", d.getString("f14"));
+                    m.put("pct", d.getDoubleValue("f3"));
+                    m.put("amountYi", d.getDoubleValue("f6") / 1e8);
+                    pool.add(m);
+                }
+                break;
+            }
+            Thread.sleep(200);
+        }
+        if (!anyOk) markPush2ClistFail();
+        return pool;
+    }
+
+    /** 板块轮动明细（AI输入）：今日/3日/5日/10日/20日涨幅+成交额，供AI识别"曾强势+近3日回踩"的轮动回踩板块 */
+    private List<Map<String, Object>> buildSectorFeaturesForAi(List<Map<String, Object>> sectorFeatures) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        if (sectorFeatures == null) return list;
+        for (Map<String, Object> s : sectorFeatures) {
+            List<Double> pcts = (List<Double>) s.get("dailyPcts");
+            if (pcts == null || pcts.isEmpty()) continue;
+            int n = pcts.size();
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("name", s.get("name"));
+            m.put("todayPct", round2(pcts.get(n - 1)));
+            m.put("pct3", round2(sumRange(pcts, n - 3, n)));
+            m.put("pct5", round2((Double) s.get("pct5")));
+            m.put("pct10", round2((Double) s.get("pct10")));
+            m.put("pct20", round2((Double) s.get("pct20")));
+            m.put("amountYi", round2((Double) s.get("amountYi")));
+            list.add(m);
+        }
+        return list;
+    }
+
+    /** 资金异动候选池（AI预测输入）：全市场当日主力净流入前列且当前未启动（涨幅-3%~7%、未涨停、非ST），
+     *  识别"资金先行潜伏"个股；inflowPct=主力净流入占成交比（越高潜伏迹象越明显）。
+     *  走clist熔断，失败返回空（AI退化为仅用板块轮动明细研判） */
+    private List<Map<String, Object>> fetchCycleCandidates() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        if (isPush2ClistBlocked()) {
+            logger.info("行情集群clist熔断中，资金异动候选池跳过");
+            return list;
+        }
+        // fs=沪深A股；fid=f62主力净流入降序；fltt=2返回已是元/百分比；f12代码/f14名称/f3涨幅/f8换手/f62主力净流入(元)/f184主力净占比
+        String tpl = "https://%s/api/qt/clist/get?pn=1&pz=120&po=1&np=1&fltt=2&invt=2&fid=f62"
+                + "&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f12,f13,f14,f2,f3,f8,f62,f184";
+        boolean ok = false;
+        for (String host : PUSH2_HOSTS) {
+            String body = httpGetHosts(String.format(tpl, host));
+            if (body == null) continue;
+            try {
+                JSONObject data = JSON.parseObject(body).getJSONObject("data");
+                JSONArray diff = toDiffArray(data == null ? null : data.get("diff"));
+                if (diff == null) continue;
+                ok = true;
+                for (int i = 0; i < diff.size() && list.size() < 60; i++) {
+                    JSONObject d = diff.getJSONObject(i);
+                    String name = d.getString("f14");
+                    Double pct = d.getDouble("f3");
+                    Double inflow = d.getDouble("f62"); // 元
+                    if (name == null || pct == null || inflow == null) continue;
+                    if (name.contains("ST")) continue;   // 剔除ST
+                    if (pct >= 7 || pct <= -3) continue; // 已启动/深跌剔除，保留"当前未启动"
+                    if (inflow <= 0) continue;           // 必须当日资金净流入
+                    Map<String, Object> m = new LinkedHashMap<>();
+                    m.put("code", d.getString("f12"));
+                    m.put("name", name);
+                    m.put("pct", pct);
+                    m.put("mainInflowYi", round2(inflow / 1e8));
+                    Double turn = d.getDouble("f8");
+                    if (turn != null) m.put("turnover", turn);
+                    Double inflowPct = d.getDouble("f184");
+                    if (inflowPct != null) m.put("inflowPct", inflowPct);
+                    list.add(m);
+                }
+                break;
+            } catch (Exception e) {
+                logger.warn("解析资金异动候选池失败：{}", e.getMessage());
+            }
+        }
+        if (!ok) markPush2ClistFail();
+        return list;
+    }
+
+    private double sumRange(List<Double> list, int from, int to) {
+        double sum = 0;
+        from = Math.max(0, from);
+        for (int i = from; i < Math.min(to, list.size()); i++) sum += list.get(i);
+        return sum;
+    }
+
+    /**
+     * 市场类型判定算法（近10~30天放大视角，全部依据可量化）：
+     * - 指数维度：上证20日累计涨跌幅、量能比（5日均额/20日均额）
+     * - 杠杆维度：两融余额5日变化
+     * - 板块维度：每日涨幅TOP5板块集合的相邻日重合率（轮动指数）、最强板块群连续霸榜天数（主线持续性）
+     * - 盘面维度：表内分析记录的涨停数/连板高度均值（有记录则加权）
+     * 类型优先级：熊市退潮 > 趋势牛市 > 主线市场 > 轮动市场 > 震荡市；输出全部判定依据。
+     */
+    private Map<String, Object> analyzeCycle(Map<String, List<double[]>> indexK,
+                                             List<Map<String, Object>> marginRows,
+                                             List<Map<String, Object>> sectorFeatures,
+                                             List<MarketAnalysisDaily> tableRows) {
+        Map<String, Object> out = new LinkedHashMap<>();
+        List<String> reasons = new ArrayList<>();
+        List<double[]> shRows = indexK.get("上证指数");
+        List<double[]> cybRows = indexK.get("创业板指");
+        int n = shRows == null ? 0 : shRows.size();
+
+        // 1. 指数趋势
+        double pct20 = n >= 20 ? sumD(shRows, n - 20, n, 0) : (n > 0 ? sumD(shRows, 0, n, 0) : 0);
+        double cybPct20 = cybRows != null && cybRows.size() >= 20 ? sumD(cybRows, cybRows.size() - 20, cybRows.size(), 0) : 0;
+        double volRatio = 0;
+        if (n >= 20) {
+            double avg5 = sumD(shRows, n - 5, n, 1) / 5;
+            double avg20 = sumD(shRows, n - 20, n, 1) / 20;
+            volRatio = avg20 > 0 ? avg5 / avg20 : 0;
+        }
+        reasons.add(String.format("上证近20日累计%s%.2f%%，创业板同期%s%.2f%%",
+                pct20 >= 0 ? "+" : "", pct20, cybPct20 >= 0 ? "+" : "", cybPct20));
+        if (volRatio > 0) {
+            reasons.add(String.format("量能比（5日均额/20日均额）%.2f，%s", volRatio,
+                    volRatio >= 1.15 ? "显著放量" : volRatio >= 0.95 ? "量能平稳" : "量能萎缩"));
+        } else {
+            reasons.add("量能比暂缺（东财K线临时受限，指数K线走腾讯兜底无成交额），本轮量能维度不参与判定");
+        }
+
+        // 2. 两融趋势
+        double marginChg = 0;
+        if (marginRows != null && marginRows.size() >= 6) {
+            double latest = (double) marginRows.get(marginRows.size() - 1).get("rzrqYi");
+            double prev5 = (double) marginRows.get(marginRows.size() - 6).get("rzrqYi");
+            marginChg = prev5 > 0 ? (latest - prev5) / prev5 * 100 : 0;
+            reasons.add(String.format("两融余额5日%s%.2f%%，杠杆资金%s", marginChg >= 0 ? "+" : "", marginChg,
+                    marginChg >= 0.5 ? "加速进场" : marginChg >= 0 ? "温和进场" : "退场观望"));
+        }
+
+        // 3. 板块轮动指数与主线持续性
+        double rotationIdx = 0;       // 相邻日TOP5平均重合率（低=聚焦=主线，高=快速切换=轮动）
+        int mainlineDays = 0;         // 最强板块连续霸榜天数
+        String mainlineName = "";
+        if (sectorFeatures != null && sectorFeatures.size() >= 10) {
+            int days = sectorFeatures.stream().mapToInt(s -> ((List<Double>) s.get("dailyPcts")).size()).min().orElse(0);
+            int topN = 5;
+            List<List<String>> dailyTop = new ArrayList<>();
+            for (int d = Math.max(0, days - 10); d < days; d++) {
+                final int day = d;
+                List<Map<String, Object>> sorted = new ArrayList<>(sectorFeatures);
+                sorted.sort((a, b) -> Double.compare(
+                        ((List<Double>) b.get("dailyPcts")).get(Math.min(day, ((List<Double>) b.get("dailyPcts")).size() - 1)),
+                        ((List<Double>) a.get("dailyPcts")).get(Math.min(day, ((List<Double>) a.get("dailyPcts")).size() - 1))));
+                List<String> top = new ArrayList<>();
+                for (int i = 0; i < Math.min(topN, sorted.size()); i++) top.add((String) sorted.get(i).get("name"));
+                dailyTop.add(top);
+            }
+            if (dailyTop.size() >= 2) {
+                double sumOverlap = 0;
+                for (int i = 1; i < dailyTop.size(); i++) {
+                    List<String> prev = dailyTop.get(i - 1);
+                    long ov = dailyTop.get(i).stream().filter(prev::contains).count();
+                    sumOverlap += (double) ov / topN;
+                }
+                rotationIdx = sumOverlap / (dailyTop.size() - 1);
+            }
+            // 最强板块：近5日累计涨幅第一；霸榜天数=它连续出现在每日TOP5里的天数（从最后一天往回数）
+            Map<String, Object> strongest = sectorFeatures.stream()
+                    .filter(s -> ((List<Double>) s.get("dailyPcts")).size() >= 5)
+                    .max(Comparator.comparingDouble(s -> sumRange((List<Double>) s.get("dailyPcts"),
+                            ((List<Double>) s.get("dailyPcts")).size() - 5, ((List<Double>) s.get("dailyPcts")).size())))
+                    .orElse(null);
+            if (strongest != null) {
+                mainlineName = (String) strongest.get("name");
+                for (int d = dailyTop.size() - 1; d >= 0; d--) {
+                    if (dailyTop.get(d).contains(mainlineName)) mainlineDays++;
+                    else break;
+                }
+                double pct5 = (double) strongest.get("pct5");
+                reasons.add(String.format("近5日最强板块【%s】累计%s%.2f%%，已连续%d日霸榜涨幅TOP5",
+                        mainlineName, pct5 >= 0 ? "+" : "", pct5, mainlineDays));
+            }
+            reasons.add(String.format("板块轮动指数%.2f（相邻日涨幅TOP5重合率，<0.45聚焦/0.45~0.65均衡/>0.65快速切换）", rotationIdx));
+        }
+
+        // 4. 盘面维度（表内记录：涨停/连板高度）
+        double avgZt = 0, avgLb = 0;
+        if (tableRows != null && !tableRows.isEmpty()) {
+            avgZt = tableRows.stream().filter(r -> r.getLimitUpCount() != null)
+                    .mapToInt(MarketAnalysisDaily::getLimitUpCount).average().orElse(0);
+            avgLb = tableRows.stream().filter(r -> r.getMaxLianban() != null)
+                    .mapToInt(MarketAnalysisDaily::getMaxLianban).average().orElse(0);
+            reasons.add(String.format("近%d个已记录交易日：日均涨停%.0f家、平均最高连板%.1f板",
+                    tableRows.size(), avgZt, avgLb));
+        }
+
+        // 5. 类型判定（优先级：熊市退潮 > 趋势牛市 > 主线市场 > 轮动市场 > 震荡市）
+        String cycleType;
+        String desc;
+        if (pct20 < -8 && (marginChg < 0 || (volRatio > 0 && volRatio < 0.9))) {
+            cycleType = "熊市退潮期";
+            desc = "指数趋势向下且杠杆资金离场，赚钱效应差，宜轻仓防守";
+        } else if (pct20 > 8 && volRatio >= 1.05) {
+            cycleType = "趋势上行市";
+            desc = "指数放量上行，趋势健康，回调即买点";
+        } else if (mainlineDays >= 5 && rotationIdx < 0.55) {
+            cycleType = "主线明确市场";
+            desc = "资金高度聚焦【" + mainlineName + "】等核心方向，主线内强者恒强";
+        } else if (rotationIdx > 0.62 && pct20 > -5 && pct20 < 8) {
+            cycleType = "轮动博弈市";
+            desc = "热点快速轮动切换、缺乏持续主线，追高易被套，宜潜伏低吸";
+        } else if (pct20 < -3) {
+            cycleType = "弱势震荡市";
+            desc = "指数阴跌缩量，题材收缩，控制仓位等待企稳";
+            if (avgZt >= 60 || avgLb >= 5) {
+                desc += String.format("；但涨停中枢%.0f家/最高%.0f板，题材局部活跃，可轻仓参与结构性主线", avgZt, avgLb);
+            }
+        } else {
+            cycleType = "均衡震荡市";
+            desc = "指数区间震荡，结构性行情为主，围绕活跃板块高抛低吸";
+            if (avgZt >= 60 || avgLb >= 5) {
+                desc += String.format("；涨停中枢%.0f家/最高%.0f板，情绪偏活跃，题材参与度可适当提高", avgZt, avgLb);
+            } else if (avgZt > 0 && avgZt < 40) {
+                desc += String.format("；涨停中枢仅%.0f家，情绪偏冰点，降低仓位与预期", avgZt);
+            }
+        }
+        out.put("cycleType", cycleType);
+        out.put("cycleDesc", desc);
+        out.put("reasons", reasons);
+        Map<String, Object> metrics = new LinkedHashMap<>();
+        metrics.put("shPct20", round2(pct20));
+        metrics.put("cybPct20", round2(cybPct20));
+        // 缺数据的维度输出null（前端显示'-'）：降级期0值有误导性（会被误读为"量能极低/完全无轮动"）
+        metrics.put("volRatio", volRatio > 0 ? round2(volRatio) : null);
+        metrics.put("marginChg5d", round2(marginChg));
+        metrics.put("rotationIdx", rotationIdx > 0 ? round2(rotationIdx) : null);
+        metrics.put("mainlineDays", mainlineDays > 0 ? mainlineDays : null);
+        metrics.put("mainlineName", mainlineDays > 0 ? mainlineName : null);
+        metrics.put("avgLimitUp", round2(avgZt));
+        metrics.put("avgMaxLianban", round2(avgLb));
+        out.put("metrics", metrics);
+        return out;
+    }
+
+    private double sumD(List<double[]> rows, int from, int to, int col) {
+        double s = 0;
+        for (int i = Math.max(0, from); i < Math.min(to, rows.size()); i++) s += rows.get(i)[col];
+        return s;
+    }
+
+    /** 近10天每日特征表（前端展示+AI输入）：上证原始行由研判阶段复用（不重复请求），两融来自接口历史，涨停/连板/主线来自表记录（无记录日留空） */
+    private List<Map<String, Object>> buildDailyFeatures(List<String[]> shRaw,
+                                                         List<Map<String, Object>> marginRows,
+                                                         List<Map<String, Object>> sectorFeatures,
+                                                         List<MarketAnalysisDaily> tableRows) {
+        SimpleDateFormat dayKey = new SimpleDateFormat("yyyy-MM-dd");
+        Map<String, MarketAnalysisDaily> tableMap = new HashMap<>();
+        if (tableRows != null) {
+            for (MarketAnalysisDaily r : tableRows) {
+                if (r.getMarketDate() != null) tableMap.put(dayKey.format(r.getMarketDate()), r);
+            }
+        }
+        Map<String, Double> marginByDay = new HashMap<>();
+        if (marginRows != null) {
+            for (Map<String, Object> m : marginRows) marginByDay.put((String) m.get("date"), (Double) m.get("rzrqYi"));
+        }
+        List<Map<String, Object>> daily = new ArrayList<>();
+        try {
+            int size = shRaw.size();
+            int from = Math.max(0, size - 10);
+            for (int i = size - 1; i >= from; i--) { // 新→旧
+                String[] p = shRaw.get(i);
+                String date = p[0];
+                Map<String, Object> row = new LinkedHashMap<>();
+                row.put("date", date);
+                double close = Double.parseDouble(p[2]);
+                double prev = i > 0 ? Double.parseDouble(shRaw.get(i - 1)[2]) : close;
+                row.put("shPct", prev > 0 ? round2((close - prev) / prev * 100) : 0);
+                MarketAnalysisDaily tr = tableMap.get(date);
+                // 成交额：东财K线自带 → 熔断腾讯兜底无成交额时用表内分析时刻累计成交额兜底（收盘后记录≈全天）
+                double amt = p.length > 6 && p[6] != null && !p[6].isEmpty() ? Double.parseDouble(p[6]) : 0;
+                if (amt <= 0 && tr != null && tr.getTotalAmount() != null) {
+                    amt = tr.getTotalAmount().doubleValue();
+                }
+                row.put("amountYi", amt > 0 ? round2(amt / 1e8) : null);
+                row.put("marginYi", marginByDay.get(date));
+                row.put("recorded", tr != null); // 当日是否有市场分析记录（前端淡化无记录行）
+                row.put("limitUp", tr == null ? null : tr.getLimitUpCount());
+                row.put("maxLianban", tr == null ? null : tr.getMaxLianban());
+                row.put("sentiment", tr == null ? null : tr.getSentimentScore());
+                row.put("mainLine", tr == null ? null : tr.getMainLine());
+                daily.add(row);
+            }
+        } catch (Exception e) {
+            logger.warn("每日特征构建失败", e);
+        }
+        return daily;
+    }
+
+    /** AI策略推荐：按市场类型给操作建议/板块推荐/龙头推荐，全部要求引用输入事实作依据 */
+    private Map<String, Object> callCycleAi(Map<String, Object> cycle, Map<String, Object> realtime, List<Map<String, Object>> candidates) {
+        Map<String, Object> ai = new LinkedHashMap<>();
+        ai.put("operationAdvice", "AI策略推荐暂时不可用（AI服务过载或临时异常）。中期研判与每日特征数据已缓存有效，点击右上角【AI策略推荐】按钮即可重试。");
+        ai.put("aiFailed", true);
+        try {
+            String cycleJson = JSON.toJSONString(cycle);
+            // 当日实时盘面摘要（主线/龙头/板块/快讯）
+            StringBuilder rt = new StringBuilder();
+            rt.append("当日主线：").append(realtime.get("mainLine")).append("\n");
+            rt.append("当日持续性初判：").append(realtime.get("mainLineSustain")).append("\n");
+            rt.append("情绪：").append(realtime.get("sentimentScore")).append("分(").append(realtime.get("sentimentLevel")).append(")\n");
+            Object leaders = realtime.get("leaders");
+            if (leaders != null) {
+                List<Map<String, Object>> ls = (List<Map<String, Object>>) leaders;
+                StringBuilder lb = new StringBuilder();
+                for (Map<String, Object> l : ls) {
+                    lb.append(String.format("%s(%s,%s,连板%s,板块%s)；", l.get("name"), l.get("code"),
+                            l.get("source"), l.get("lianban"), l.get("sector")));
+                }
+                rt.append("当日龙头股（连板/首板/领涨，含板块归属）：").append(lb).append("\n");
+            }
+            Object hot = realtime.get("hotSectors");
+            if (hot != null) {
+                List<Map<String, Object>> hs = (List<Map<String, Object>>) hot;
+                StringBuilder hb = new StringBuilder();
+                for (int i = 0; i < Math.min(10, hs.size()); i++) {
+                    Map<String, Object> s = hs.get(i);
+                    hb.append(String.format("%s(%s,+%s亿,%s%%领涨%s)；", s.get("name"), s.get("type"),
+                            s.get("mainInflowYi"), s.get("changePct"), s.get("leaderName")));
+                }
+                rt.append("当日主力净流入TOP板块：").append(hb).append("\n");
+            }
+            Object news = realtime.get("news");
+            if (news != null) {
+                List<Map<String, Object>> ns = (List<Map<String, Object>>) news;
+                StringBuilder nb = new StringBuilder();
+                for (int i = 0; i < Math.min(12, ns.size()); i++) {
+                    nb.append(ns.get(i).get("title")).append("；");
+                }
+                rt.append("最新快讯：").append(nb).append("\n");
+            }
+
+            String system = "你是资深A股策略分析师。需要输出两块互补的策略推荐（动量跟随+潜伏预测），全部引用输入数据中真实存在的板块名/股票名/资金数据/快讯事件作为依据，禁止编造。输出严格JSON，不要输出任何JSON以外的内容："
+                    + "\n【第一块 momentum 动量跟随】回答'当前谁在走强、能否跟随'：基于【当日实时盘面】推荐当日已确立主线/最强轮动方向中的领涨龙头（连板梯队高位股+板块中军）。"
+                    + "个股可以是当日涨停/领涨股，但reason必须明确标注追高风险（如：当日已涨停、位置较高，仅适合打板/情绪高手，追高需谨慎）；"
+                    + "\n【第二块 predictive 潜伏预测】回答'接下来谁可能启动、如何提前布局'，预测未来1-3个交易日可能启动的板块与个股，规则："
+                    + "a.板块从【近10日板块轮动明细】中找'曾强势（pct10或pct20居前）但近3日回踩（pct3明显低于pct10）、当日出现资金回流迹象'的板块，"
+                    + "或从【资金异动候选池】统计板块聚集度（同一板块≥3只进入主力净流入前列=资金先行潜伏迹象），优先推荐'即将轮到'的板块；"
+                    + "b.板块禁则：当日涨幅第一/净流入第一的板块属于已启动，禁止仅以此作为predictive推荐理由；"
+                    + "c.个股必须是'当前未启动但具备启动条件'——当日涨幅<7%且未涨停（候选池已预过滤），依据至少一条可验证事实："
+                    + "主力净流入及inflowPct占成交比（资金先行潜伏）、近期涨停基因（当日龙头休息回踩等待二次启动）、快讯催化、板块内比价补涨（同板块龙头已涨停而它仍在低位）；"
+                    + "d.个股禁则：predictive中禁止推荐依据写'当日领涨股/当日涨停/当日涨幅最高'；"
+                    + "e.predictive每只股reason必须包含'推荐依据+启动确认信号'（如：放量收复5日线/突破近期平台/板块再度领涨时率先封板）；"
+                    + "\n【市场类型适配】主线明确市场：momentum推主线领涨龙头、predictive推主线板块内中军回踩位与低位补涨；"
+                    + "轮动博弈市/震荡市：momentum推当日最强轮动方向龙头、predictive推轮动回踩板块；"
+                    + "趋势上行市：momentum推量价齐升强势板块龙头、predictive推回踩低吸机会；熊市退潮期：两块均以防守为主，明确建议轻仓观望。"
+                    + "\n【输出JSON格式】{\"momentum\":{\"operationAdvice\":\"150字内动量策略（仓位/跟随方式/风险控制）\","
+                    + "\"sectors\":[{\"name\":\"板块名\",\"stage\":\"启动初期|主升期\",\"logic\":\"推荐逻辑50字内\","
+                    + "\"evidenceNews\":\"消息面催化\",\"evidenceMoney\":\"资金面动作\",\"evidenceEmotion\":\"情绪面地位\","
+                    + "\"leaders\":[{\"code\":\"6位代码\",\"name\":\"股票名\",\"price\":\"最新价或空\",\"reason\":\"推荐依据+追高风险提示\",\"beginner\":true}]}]},"
+                    + "\"predictive\":{\"operationAdvice\":\"150字内潜伏策略（仓位/布局节奏/确认信号触发后加仓思路）\","
+                    + "\"sectors\":[{\"name\":\"板块名\",\"stage\":\"潜伏期|启动初期|主升期\",\"logic\":\"推荐逻辑50字内（为何即将启动）\","
+                    + "\"evidenceNews\":\"消息面催化\",\"evidenceMoney\":\"资金面动作（引用候选池净流入/板块资金/两融事实）\","
+                    + "\"evidenceEmotion\":\"情绪面地位（引用涨停/连板/轮动明细事实）\","
+                    + "\"leaders\":[{\"code\":\"6位代码\",\"name\":\"股票名\",\"price\":\"最新价或空\",\"reason\":\"推荐依据+启动确认信号\",\"beginner\":true}]}]}}"
+                    + "（每块sectors给2-3个板块，每个板块leaders给2-4只，beginner=true仅限00/60开头主板股；"
+                    + "predictive的stage语义：潜伏期=资金异动+催化但股价未启动；启动初期=盘中已现异动迹象；主升期仅限主线市场且必须给出回踩低吸思路）";
+
+            String user = "【中期市场研判】\n" + cycleJson
+                    + "\n\n【近10日每日特征】\n" + JSON.toJSONString(cycle.get("dailyFeatures"))
+                    + "\n\n【近10日板块轮动明细】（todayPct/pct3/pct5/pct10/pct20=今日及近3/5/10/20日累计涨幅%，识别曾强势但近3日回踩的板块）\n"
+                    + JSON.toJSONString(cycle.get("sectorFeatures"))
+                    + "\n\n【资金异动候选池】（全市场主力净流入前列且当前未启动：涨幅-3%~7%、未涨停、非ST；"
+                    + "mainInflowYi=主力净流入亿，inflowPct=净流入占成交比越高潜伏迹象越明显，turnover=换手%）\n"
+                    + JSON.toJSONString(candidates)
+                    + "\n\n【当日实时盘面】\n" + rt;
+
+            String resp = aiCommonUtil.callWithSystem(system, user);
+            if (resp != null && !resp.isEmpty()) {
+                Map<String, Object> parsed = parseCycleAiJson(resp);
+                if (!parsed.isEmpty()) {
+                    return parsed;
+                }
+                ai.put("operationAdvice", trunc(resp, 3000));
+                ai.put("parseFailed", true);
+            }
+        } catch (Exception e) {
+            logger.error("AI中期策略推荐失败", e);
+            ai.put("operationAdvice", "AI策略推荐异常：" + e.getMessage() + "。点击右上角【AI策略推荐】按钮可重试。");
+            ai.put("aiFailed", true);
+        }
+        return ai;
+    }
+
+    /** 解析AI策略JSON：剥离```围栏容错；支持双块结构（momentum动量+predictive潜伏）与旧单块结构 */
+    private Map<String, Object> parseCycleAiJson(String resp) {
+        Map<String, Object> out = new LinkedHashMap<>();
+        try {
+            String text = resp.trim();
+            int s = text.indexOf('{');
+            int e = text.lastIndexOf('}');
+            if (s < 0 || e <= s) return out;
+            text = text.substring(s, e + 1);
+            JSONObject jo = JSON.parseObject(text);
+            // 双块结构：momentum（动量跟随）+ predictive（潜伏预测）
+            if (jo.containsKey("momentum") || jo.containsKey("predictive")) {
+                JSONObject mom = jo.getJSONObject("momentum");
+                if (mom != null) out.put("momentum", parseSectorBlock(mom));
+                JSONObject pre = jo.getJSONObject("predictive");
+                if (pre != null) out.put("predictive", parseSectorBlock(pre));
+                return out;
+            }
+            // 旧单块结构兼容
+            out.put("operationAdvice", jo.getString("operationAdvice"));
+            JSONArray sectors = jo.getJSONArray("sectors");
+            if (sectors != null) {
+                out.put("sectors", parseSectors(sectors));
+            }
+        } catch (Exception ex) {
+            logger.warn("AI策略JSON解析失败: {}", ex.getMessage());
+        }
+        return out;
+    }
+
+    /** 单块策略解析：operationAdvice + sectors 列表 */
+    private Map<String, Object> parseSectorBlock(JSONObject block) {
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("operationAdvice", block.getString("operationAdvice"));
+        JSONArray sectors = block.getJSONArray("sectors");
+        m.put("sectors", sectors != null ? parseSectors(sectors) : new ArrayList<>());
+        return m;
+    }
+
+    /** sectors 数组解析（双块/单块共用） */
+    private List<Map<String, Object>> parseSectors(JSONArray sectors) {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (int i = 0; i < sectors.size() && i < 4; i++) {
+            JSONObject sc = sectors.getJSONObject(i);
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("name", sc.getString("name"));
+            m.put("stage", sc.getString("stage"));
+            m.put("logic", sc.getString("logic"));
+            m.put("evidenceNews", sc.getString("evidenceNews"));
+            m.put("evidenceMoney", sc.getString("evidenceMoney"));
+            m.put("evidenceEmotion", sc.getString("evidenceEmotion"));
+            List<Map<String, Object>> leaders = new ArrayList<>();
+            JSONArray larr = sc.getJSONArray("leaders");
+            if (larr != null) {
+                for (int j = 0; j < larr.size() && j < 4; j++) {
+                    JSONObject l = larr.getJSONObject(j);
+                    Map<String, Object> lm = new LinkedHashMap<>();
+                    lm.put("code", l.getString("code"));
+                    lm.put("name", l.getString("name"));
+                    lm.put("price", l.getString("price"));
+                    lm.put("reason", l.getString("reason"));
+                    lm.put("beginner", l.getBooleanValue("beginner"));
+                    leaders.add(lm);
+                }
+            }
+            m.put("leaders", leaders);
+            list.add(m);
+        }
+        return list;
+    }
+
     private void ensureTable() {
         marketAnalysisMapper.createTableIfNotExists();
     }
@@ -1082,7 +1915,12 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
                     }
                 }
             } catch (Exception e) {
-                logger.warn("HTTP请求失败 attempt={} url={}", attempt, url, e);
+                // 前2次只记消息不记全栈（拉黑期间重试会大量触发，避免刷屏）；最后一次保留全栈定位
+                if (attempt >= 3) {
+                    logger.warn("HTTP请求失败 attempt={} url={}", attempt, url, e);
+                } else {
+                    logger.warn("HTTP请求失败 attempt={} url={} err={}", attempt, url, e.getMessage());
+                }
             }
             if (attempt < 3) {
                 try {
@@ -1110,9 +1948,14 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
                 }
             }
         } catch (Exception e) {
-            logger.warn("HTTP请求失败 url={}", url, e);
+            logger.warn("HTTP请求失败 url={} err={}", url, e.getMessage());
         }
         return null;
+    }
+
+    /** 单次GET（不重试）：用于可降级的K线请求，配合熔断器避免拉黑期间重试放大封禁+日志刷屏 */
+    private static String httpGetNoRetry(String url) {
+        return httpGetHosts(url);
     }
 
     private static void sleep(long ms) {

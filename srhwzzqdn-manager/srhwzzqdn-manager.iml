@@ -100,7 +100,7 @@
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.16" level="project" />
     <orderEntry type="module" module-name="common-service" />
     <orderEntry type="module" module-name="srhwzzqdn-model" />
-    <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.20" level="project" />
+    <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.30" level="project" />
     <orderEntry type="library" name="Maven: com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.github.xiaoymin:knife4j-core:4.1.0" level="project" />
     <orderEntry type="library" name="Maven: com.github.xiaoymin:knife4j-openapi3-ui:4.1.0" level="project" />

@@ -55,8 +55,8 @@
     </div>
     <el-skeleton v-else :rows="3" animated class="loading-skeleton" />
 
-    <!-- 情绪 / 涨跌分布 / 涨停梯队 -->
-    <el-row :gutter="12" class="section-row" v-if="data">
+    <!-- 情绪 / 涨跌分布 / 涨停梯队（三卡等高铺满） -->
+    <el-row :gutter="12" class="section-row equal-row" v-if="data">
       <el-col :span="8">
         <el-card shadow="hover" class="panel-card">
           <template #header>
@@ -90,11 +90,15 @@
             <div class="flat-part" :style="{ width: flatPct + '%' }">{{ data.flatCount }}</div>
             <div class="down-part" :style="{ width: downPct + '%' }">{{ data.downCount }}</div>
           </div>
+          <div class="updown-desc">{{ breadthText }}</div>
           <div class="stat-chips">
             <div class="chip red">涨停 {{ data.limitUpCount }}</div>
             <div class="chip green">跌停 {{ data.limitDownCount }}</div>
             <div class="chip orange">炸板 {{ data.zhaBanCount }}（{{ data.zhaBanRate }}%）</div>
             <div class="chip purple">最高 {{ data.maxLianban }} 连板</div>
+          </div>
+          <div class="chip-desc">
+            涨停家数代表做多情绪峰值，跌停代表恐慌释放程度；炸板率越低封板质量越高、打板接力越安全；最高连板数代表市场当前的空间高度与赚钱效应上限。
           </div>
           <div class="updown-tip" v-if="data.poolQdate">涨跌停池数据日期：{{ data.poolQdate }}</div>
         </el-card>
@@ -106,9 +110,24 @@
           </template>
           <div class="tier-list">
             <div v-for="tier in data.lianbanTiers" :key="tier.lianban" class="tier-item">
-              <el-tag type="danger" size="small" class="tier-tag">{{ tier.lianban }}板</el-tag>
-              <span class="tier-count">×{{ tier.count }}</span>
-              <span class="tier-stocks">{{ tier.stocks }}</span>
+              <div class="tier-head">
+                <el-tag type="danger" size="small" class="tier-tag">{{ tier.lianban }}板</el-tag>
+                <span class="tier-count">×{{ tier.count }}</span>
+                <span class="tier-line"></span>
+              </div>
+              <div class="tier-stocks">
+                <el-tooltip
+                  v-for="st in tier.stocks"
+                  :key="st.code"
+                  :content="tierStockTip(st, tier.lianban)"
+                  placement="top"
+                >
+                  <span class="stock-tag" :class="{ 'stock-tag-hi': tier.lianban >= 5 }">
+                    <span class="st-name">{{ st.name }}</span>
+                    <span class="st-pct" :class="pctClass(st.pct)">{{ signedNum(st.pct) }}%</span>
+                  </span>
+                </el-tooltip>
+              </div>
             </div>
             <el-empty v-if="!data.lianbanTiers || !data.lianbanTiers.length" description="暂无2板以上梯队" :image-size="50" />
           </div>
@@ -260,6 +279,182 @@
       </div>
     </el-card>
 
+    <!-- 中期市场研判（近10~30天）与 AI 策略推荐 -->
+    <el-card shadow="hover" class="cycle-card" v-loading="cycleLoading">
+      <template #header>
+        <div class="ai-header">
+          <span class="card-title">中期市场研判（近10~30天）与 AI 策略推荐</span>
+          <div class="cycle-header-right">
+            <el-tag v-if="cycleData && cycleData.klineDegraded" type="warning" size="small" effect="plain">
+              数据降级（东财临时受限，约5分钟后自动恢复）
+            </el-tag>
+            <el-tag v-if="cycleData && cycleData.cycleType" :type="cycleTagType" size="large" effect="dark">
+              {{ cycleData.cycleType }}
+            </el-tag>
+            <el-button type="primary" :loading="cycleAiLoading" @click="analyzeCycleAi">
+              <el-icon><MagicStick /></el-icon>
+              AI策略推荐
+            </el-button>
+          </div>
+        </div>
+      </template>
+      <template v-if="cycleData">
+        <el-row :gutter="14">
+          <el-col :span="10">
+            <div class="cycle-desc">{{ cycleData.cycleDesc }}</div>
+            <div class="cycle-metrics">
+              <div class="cm-item">
+                <span class="cm-label">上证20日累计</span>
+                <span class="cm-value" :class="pctClass(cycleData.metrics?.shPct20)">{{ signedNum(cycleData.metrics?.shPct20) }}%</span>
+              </div>
+              <div class="cm-item">
+                <span class="cm-label">创业板20日累计</span>
+                <span class="cm-value" :class="pctClass(cycleData.metrics?.cybPct20)">{{ signedNum(cycleData.metrics?.cybPct20) }}%</span>
+              </div>
+              <div class="cm-item">
+                <span class="cm-label">量能比（5日/20日均额）</span>
+                <span class="cm-value">{{ cycleData.metrics?.volRatio ?? '-' }}</span>
+              </div>
+              <div class="cm-item">
+                <span class="cm-label">两融余额5日变化</span>
+                <span class="cm-value" :class="pctClass(cycleData.metrics?.marginChg5d)">{{ signedNum(cycleData.metrics?.marginChg5d) }}%</span>
+              </div>
+              <div class="cm-item">
+                <span class="cm-label">板块轮动指数</span>
+                <span class="cm-value">{{ cycleData.metrics?.rotationIdx ?? '-' }}</span>
+              </div>
+              <div class="cm-item">
+                <span class="cm-label">主线霸榜天数</span>
+                <span class="cm-value">
+                  {{ cycleData.metrics?.mainlineDays ? cycleData.metrics.mainlineDays + '天' : '-' }}
+                  · {{ cycleData.metrics?.mainlineName || '暂无' }}
+                </span>
+              </div>
+            </div>
+            <div class="cycle-reasons">
+              <div class="cr-title">判定依据（算法可量化）</div>
+              <div v-for="(r, i) in cycleData.reasons || []" :key="i" class="cr-item">
+                <span class="cr-idx">{{ i + 1 }}</span>{{ r }}
+              </div>
+            </div>
+            <el-table
+              :data="cycleData.dailyFeatures || []"
+              size="small"
+              border
+              stripe
+              class="daily-table"
+              :row-class-name="dailyRowClass"
+            >
+              <el-table-column label="日期" width="78" align="center">
+                <template #default="{ row }">{{ (row.date || '').substring(5) }}</template>
+              </el-table-column>
+              <el-table-column label="上证%" width="68" align="right">
+                <template #default="{ row }">
+                  <span :class="pctClass(row.shPct)">{{ signedNum(row.shPct) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="成交(亿)" width="78" align="right">
+                <template #default="{ row }">{{ fmtNum(row.amountYi) }}</template>
+              </el-table-column>
+              <el-table-column label="两融(亿)" width="84" align="right">
+                <template #default="{ row }">{{ fmtNum(row.marginYi) }}</template>
+              </el-table-column>
+              <el-table-column label="涨停" width="52" align="center">
+                <template #default="{ row }">{{ row.limitUp ?? '-' }}</template>
+              </el-table-column>
+              <el-table-column label="连板" width="52" align="center">
+                <template #default="{ row }">{{ row.maxLianban ?? '-' }}</template>
+              </el-table-column>
+              <el-table-column label="情绪" width="52" align="center">
+                <template #default="{ row }">{{ row.sentiment ?? '-' }}</template>
+              </el-table-column>
+              <el-table-column label="当日主线" min-width="150" show-overflow-tooltip>
+                <template #default="{ row }">{{ row.mainLine || '-' }}</template>
+              </el-table-column>
+            </el-table>
+            <div class="table-note">
+              注：两融为T-1交易日数据；成交为当日市场分析记录的累计成交额（收盘后记录≈全天）；浅灰行为当日无分析记录，涨停/连板/情绪留空。
+            </div>
+          </el-col>
+          <el-col :span="14">
+            <template v-if="cycleData.ai">
+              <el-alert
+                v-if="cycleData.ai.aiFailed"
+                type="warning"
+                :closable="false"
+                show-icon
+                class="ai-fail-alert"
+                title="AI策略推荐暂不可用"
+                :description="cycleData.ai.operationAdvice"
+              />
+              <template v-else>
+                <el-tabs v-model="aiTab" class="ai-block-tabs">
+                <el-tab-pane v-for="blk in aiBlocks" :key="blk.key" :name="blk.key">
+                  <template #label>
+                    <span class="ai-tab-label">
+                      <el-tag :type="blk.tagType" size="small" effect="dark" class="blk-tag">{{ blk.tag }}</el-tag>
+                      {{ blk.shortTitle }}
+                    </span>
+                  </template>
+                <div class="ai-section">
+                  <div class="ai-section-title">{{ blk.title }}</div>
+                  <div class="md-body" v-html="mdToHtml(blk.data.operationAdvice)"></div>
+                </div>
+              <div class="sector-rec-list">
+                <div v-for="(sec, i) in blk.data.sectors || []" :key="i" class="sector-rec">
+                  <div class="sr-head">
+                    <span class="sr-rank">{{ i + 1 }}</span>
+                    <span class="sr-name">{{ sec.name }}</span>
+                    <el-tag size="small" :type="stageTagType(sec.stage)" effect="dark">{{ sec.stage || '观察' }}</el-tag>
+                    <span class="sr-logic">{{ sec.logic }}</span>
+                  </div>
+                  <div class="sr-evidence">
+                    <div class="sr-ev" v-if="sec.evidenceNews">
+                      <span class="ev-tag ev-news">消息面</span>{{ sec.evidenceNews }}
+                    </div>
+                    <div class="sr-ev" v-if="sec.evidenceMoney">
+                      <span class="ev-tag ev-money">资金面</span>{{ sec.evidenceMoney }}
+                    </div>
+                    <div class="sr-ev" v-if="sec.evidenceEmotion">
+                      <span class="ev-tag ev-emo">情绪面</span>{{ sec.evidenceEmotion }}
+                    </div>
+                  </div>
+                  <el-table :data="sec.leaders || []" size="small" border class="leader-mini-table">
+                    <el-table-column label="代码" prop="code" width="80" align="center" />
+                    <el-table-column label="名称" prop="name" width="100" align="center" />
+                    <el-table-column label="现价" width="72" align="right">
+                      <template #default="{ row }">{{ row.price || '-' }}</template>
+                    </el-table-column>
+                    <el-table-column label="推荐依据" min-width="240" show-overflow-tooltip>
+                      <template #default="{ row }">{{ row.reason || '-' }}</template>
+                    </el-table-column>
+                    <el-table-column label="新手可买" width="95" align="center">
+                      <template #default="{ row }">
+                        <el-tag v-if="row.beginner" type="success" size="small">00/60主板</el-tag>
+                        <el-tag v-else type="info" size="small">建议观望</el-tag>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+              </div>
+                </el-tab-pane>
+                </el-tabs>
+              </template>
+              <div class="ai-disclaimer">
+                以上 AI 推荐基于中期研判指标（指数趋势/量能/两融/板块轮动）与当日盘面事实自动生成，仅供参考，不构成投资建议，据此操作风险自负。
+              </div>
+            </template>
+            <el-empty
+              v-else
+              description="点击右上角【AI策略推荐】，按当前市场类型生成操作建议、推荐板块（含启动阶段与消息/资金/情绪三面依据）及龙头股推荐"
+              :image-size="70"
+            />
+          </el-col>
+        </el-row>
+      </template>
+      <el-empty v-else-if="!cycleLoading" description="中期研判数据暂无（首次加载约15秒，请稍候或刷新重试）" :image-size="60" />
+    </el-card>
+
     <!-- 消息面 -->
     <el-card shadow="hover" class="news-card" v-if="data">
       <template #header>
@@ -366,7 +561,7 @@
 import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { TrendCharts, Refresh, MagicStick, Clock } from '@element-plus/icons-vue'
-import { GetRealtimeAnalysis, AnalyzeMarketWithAi, GetTodayMarketAnalysis, GetMarketHistoryList, GetMarketHistoryReview } from '@/api/stockAsset'
+import { GetRealtimeAnalysis, AnalyzeMarketWithAi, GetTodayMarketAnalysis, GetMarketHistoryList, GetMarketHistoryReview, GetMarketCycleAnalysis, AnalyzeMarketCycleWithAi } from '@/api/stockAsset'
 
 const data = ref(null)
 const ai = ref(null)
@@ -381,6 +576,11 @@ const historyLoading = ref(false)
 const reviewDialogVisible = ref(false)
 const reviewLoading = ref(false)
 const reviewData = ref(null)
+
+// 中期市场研判与AI策略推荐
+const cycleData = ref(null)
+const cycleLoading = ref(false)
+const cycleAiLoading = ref(false)
 
 // ---------- 数据加载 ----------
 const loadRealtime = async () => {
@@ -473,6 +673,69 @@ const loadHistoryReview = async () => {
   }
 }
 
+// ---------- 中期市场研判与AI策略推荐 ----------
+const loadCycle = async () => {
+  cycleLoading.value = true
+  try {
+    const res = await GetMarketCycleAnalysis()
+    if (res.code === 200) {
+      cycleData.value = res.data
+    }
+  } catch (e) {
+    // 研判为辅助模块，静默失败不打扰主流程
+  } finally {
+    cycleLoading.value = false
+  }
+}
+
+const analyzeCycleAi = async () => {
+  cycleAiLoading.value = true
+  try {
+    const res = await AnalyzeMarketCycleWithAi()
+    if (res.code === 200) {
+      cycleData.value = res.data
+      if (res.data && res.data.ai && res.data.ai.aiFailed) {
+        ElMessage.warning('AI服务暂时不可用，稍后可重试')
+      } else {
+        ElMessage.success('AI中期策略推荐已生成')
+      }
+    } else {
+      ElMessage.error(res.message || 'AI中期策略推荐失败')
+    }
+  } catch (e) {
+    ElMessage.error('AI中期策略推荐失败：' + (e.message || '网络异常，AI可能耗时较长请重试'))
+  } finally {
+    cycleAiLoading.value = false
+  }
+}
+
+// 每日特征表：无分析记录的行淡化显示
+const dailyRowClass = ({ row }) => (row.recorded ? '' : 'dim-row')
+
+// AI策略推荐标签页渲染：momentum动量跟随（当日主线龙头）+ predictive潜伏预测（即将启动）；兼容旧单块结构
+const aiTab = ref('momentum')
+const aiBlocks = computed(() => {
+  const ai = cycleData.value?.ai
+  if (!ai) return []
+  if (ai.momentum || ai.predictive) {
+    const blocks = []
+    if (ai.momentum) {
+      blocks.push({ key: 'momentum', tag: '动量跟随', tagType: 'danger', shortTitle: '当日主线龙头', title: '当日主线与领涨龙头（谁在走强，含追高风险提示）', data: ai.momentum })
+    }
+    if (ai.predictive) {
+      blocks.push({ key: 'predictive', tag: '潜伏预测', tagType: 'warning', shortTitle: '即将启动预测', title: '即将启动板块与个股（当前未启动，按确认信号介入）', data: ai.predictive })
+    }
+    return blocks
+  }
+  return [{ key: 'single', tag: '策略', tagType: 'primary', shortTitle: '策略建议', title: `操作策略建议（${cycleData.value.cycleType}适配）`, data: ai }]
+})
+// AI结果刷新后若当前标签不在块列表中，回退到第一个标签
+watch(aiBlocks, (blocks) => {
+  if (blocks.length && !blocks.some((b) => b.key === aiTab.value)) {
+    aiTab.value = blocks[0].key
+  }
+})
+
 onMounted(async () => {
   historyLoading.value = true
   try {
@@ -480,6 +743,7 @@ onMounted(async () => {
   } finally {
     historyLoading.value = false
   }
+  loadCycle()
   await loadRealtime()
 })
 
@@ -557,6 +821,46 @@ const sustainTagType = computed(() => {
   if (s.includes('一日游')) return 'warning'
   return 'info'
 })
+
+// 涨跌分布卡描述：多空氛围 + 封板质量
+const breadthText = computed(() => {
+  if (!data.value) return ''
+  const up = Number(data.value.upCount || 0)
+  const down = Number(data.value.downCount || 0)
+  const total = up + down
+  const zha = Number(data.value.zhaBanRate || 0)
+  const parts = []
+  if (total > 0) {
+    const ratio = down > 0 ? up / down : up
+    if (ratio >= 3) parts.push('上涨家数远超下跌，做多氛围浓厚')
+    else if (ratio >= 1.5) parts.push('红盘明显占优，市场偏暖')
+    else if (ratio >= 0.8) parts.push('涨跌家数接近，多空拉锯')
+    else if (ratio >= 0.4) parts.push('下跌家数占优，情绪转弱')
+    else parts.push('普跌格局，亏钱效应明显')
+  }
+  if (zha >= 40) parts.push(`炸板率${zha}%偏高，打板接力需谨慎`)
+  else if (zha > 0 && zha < 20) parts.push(`炸板率仅${zha}%，封板质量高`)
+  return parts.join('；')
+})
+
+// 中期研判：市场类型标签配色（红=强市、绿=熊市、橙=轮动/弱震荡）
+const cycleTagType = computed(() => {
+  const t = cycleData.value?.cycleType || ''
+  if (t.includes('主线') || t.includes('上行')) return 'danger'
+  if (t.includes('熊市')) return 'success'
+  if (t.includes('轮动') || t.includes('弱势')) return 'warning'
+  return 'primary'
+})
+// AI推荐板块启动阶段配色
+const stageTagType = stage => {
+  if (stage === '主升期') return 'danger'
+  if (stage === '启动初期') return 'warning'
+  if (stage === '潜伏期') return 'info'
+  return 'primary'
+}
+// 连板梯队个股悬浮提示
+const tierStockTip = (st, lb) =>
+  `${st.name}(${st.code})｜${lb}连板｜${st.hybk || '行业未知'}｜${st.ztStat || ''}｜现价 ${st.price ?? '-'}｜成交 ${st.fund ?? '-'}亿`
 
 const sentimentColors = [
   { color: '#5470c6', percentage: 20 },
@@ -711,6 +1015,25 @@ const mdToHtml = md => {
 .card-title.sector-hot { color: #c0392b; }
 .card-title.sector-cold { color: #16875a; }
 
+/* 三卡等高铺满 */
+.equal-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.equal-row > .el-col {
+  display: flex;
+}
+.equal-row .panel-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.equal-row .panel-card :deep(.el-card__body) {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 /* 情绪温度计 */
 .sentiment-wrap {
   display: flex;
@@ -749,7 +1072,7 @@ const mdToHtml = md => {
   height: 34px;
   border-radius: 8px;
   overflow: hidden;
-  margin: 10px 0 14px;
+  margin: 10px 0 12px;
   font-size: 12px;
   color: #fff;
   line-height: 34px;
@@ -758,6 +1081,15 @@ const mdToHtml = md => {
 .up-part { background: linear-gradient(90deg, #e6262e, #f0655f); min-width: 40px; }
 .flat-part { background: #c0c4cc; min-width: 24px; }
 .down-part { background: linear-gradient(90deg, #35c07f, #1cad62); min-width: 40px; }
+.updown-desc {
+  font-size: 12px;
+  color: #606266;
+  background: #f8f9fb;
+  border-radius: 6px;
+  padding: 6px 9px;
+  margin-bottom: 12px;
+  line-height: 1.7;
+}
 .stat-chips {
   display: flex;
   flex-wrap: wrap;
@@ -767,7 +1099,7 @@ const mdToHtml = md => {
   flex: 1 1 40%;
   text-align: center;
   border-radius: 8px;
-  padding: 8px 4px;
+  padding: 10px 4px;
   font-weight: 700;
   color: #fff;
   font-size: 13px;
@@ -776,38 +1108,77 @@ const mdToHtml = md => {
 .chip.green { background: linear-gradient(135deg, #1cad62, #35c07f); }
 .chip.orange { background: linear-gradient(135deg, #e6a23c, #f3c27a); }
 .chip.purple { background: linear-gradient(135deg, #7c50e6, #a583f0); }
+.chip-desc {
+  flex: 1;
+  margin-top: 12px;
+  font-size: 12px;
+  color: #909399;
+  line-height: 1.7;
+  border-top: 1px dashed #dcdfe6;
+  padding-top: 8px;
+}
 .updown-tip {
-  margin-top: 10px;
+  margin-top: 8px;
   font-size: 12px;
   color: #909399;
 }
 
-/* 连板梯队 */
+/* 连板梯队（流式铺满，全部展示不截断） */
 .tier-list {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 .tier-item {
   display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tier-head {
+  display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
 }
 .tier-tag { flex-shrink: 0; }
 .tier-count {
   color: #c0392b;
   font-weight: 700;
+  font-size: 13px;
   flex-shrink: 0;
 }
-.tier-stocks {
-  color: #303133;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+.tier-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, #fbc4c4, rgba(251, 196, 196, 0));
 }
+.tier-stocks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.stock-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #fdf0f0;
+  border: 1px solid #fbc4c4;
+  font-size: 12px;
+  cursor: default;
+  transition: all 0.15s;
+}
+.stock-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(230, 38, 46, 0.18);
+}
+.stock-tag-hi {
+  background: #fde2e2;
+  border-color: #e6262e;
+}
+.st-name { color: #303133; font-weight: 600; }
+.st-pct { font-weight: 700; }
 
 /* 资金流动 */
 .flow-card {
@@ -944,6 +1315,153 @@ const mdToHtml = md => {
   font-size: 12px;
   color: #909399;
 }
+
+/* 中期研判与AI策略推荐 */
+.cycle-card {
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.cycle-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cycle-desc {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2d3d;
+  background: linear-gradient(90deg, #ecf5ff, #f5f7fa);
+  border-left: 3px solid #409eff;
+  border-radius: 6px;
+  padding: 9px 12px;
+  margin-bottom: 10px;
+  line-height: 1.6;
+}
+.cycle-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.cm-item {
+  background: #f8f9fb;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cm-label { font-size: 12px; color: #909399; }
+.cm-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2d3d;
+  font-family: 'DIN Alternate', 'Helvetica Neue', sans-serif;
+}
+.cycle-reasons { margin-bottom: 12px; }
+.cr-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c0392b;
+  margin-bottom: 6px;
+}
+.cr-item {
+  font-size: 12px;
+  color: #606266;
+  line-height: 1.7;
+  padding-left: 22px;
+  position: relative;
+  margin-bottom: 4px;
+}
+.cr-idx {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 4px;
+  background: #ebeef5;
+  color: #606266;
+  font-size: 11px;
+  font-weight: 700;
+}
+.daily-table { width: 100%; }
+.table-note {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #909399;
+  line-height: 1.6;
+}
+.daily-table :deep(.dim-row) td.el-table__cell {
+  background: #fafbfc;
+  color: #a8abb2;
+}
+.ai-fail-alert { margin-bottom: 10px; }
+.ai-block-tabs :deep(.el-tabs__header) { margin-bottom: 12px; }
+.ai-block-tabs :deep(.el-tabs__content) { overflow: visible; }
+.ai-tab-label { display: inline-flex; align-items: center; gap: 5px; font-weight: 600; }
+.blk-tag { margin-right: 2px; }
+
+/* AI 板块推荐卡片 */
+.sector-rec-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.sector-rec {
+  border: 1px solid #ebeef5;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fafbfc;
+}
+.sr-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.sr-rank {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 5px;
+  background: #e6262e;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.sr-name { font-size: 15px; font-weight: 700; color: #1f2d3d; }
+.sr-logic { font-size: 12px; color: #606266; flex: 1; min-width: 200px; }
+.sr-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.sr-ev {
+  font-size: 12px;
+  color: #606266;
+  line-height: 1.6;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.ev-tag {
+  flex-shrink: 0;
+  font-size: 11px;
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: #fff;
+}
+.ev-news { background: #409eff; }
+.ev-money { background: #e6a23c; }
+.ev-emo { background: #e6262e; }
+.leader-mini-table { width: 100%; }
 
 /* 消息面 */
 .news-card {

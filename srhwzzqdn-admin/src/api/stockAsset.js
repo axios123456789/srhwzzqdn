@@ -106,3 +106,13 @@ export const GetMarketHistoryReview = () => {
   // AI历史复盘调用大模型，放宽超时
   return request({ url: `${marketApi}/getHistoryReview`, method: 'get', timeout: 300000 });
 };
+
+export const GetMarketCycleAnalysis = () => {
+  // 中期研判：指数/板块30日K线+两融历史串行抓取约15秒（后端当日30分钟缓存），放宽超时
+  return request({ url: `${marketApi}/getMarketCycleAnalysis`, method: 'get', timeout: 120000 });
+};
+
+export const AnalyzeMarketCycleWithAi = () => {
+  // 中期研判+AI策略推荐：研判缓存命中后主要是大模型耗时，放宽超时
+  return request({ url: `${marketApi}/analyzeMarketCycleWithAi`, method: 'get', timeout: 900000 });
+};
