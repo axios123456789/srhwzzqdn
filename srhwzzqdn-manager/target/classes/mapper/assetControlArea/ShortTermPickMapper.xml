@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.assetControlArea.mapper.ShortTermPickMapper">
+
+    <!-- 删除指定交易日的全部推荐记录（重算当天先删后插；仅限当天，不触碰其他交易日） -->
+    <delete id="deleteByTradeDate">
+        delete from t_short_term_pick_daily where trade_date = #{tradeDate}
+    </delete>
+
+    <!-- 批量插入当日推荐记录 -->
+    <insert id="batchInsertPicks">
+        insert into t_short_term_pick_daily
+        (trade_date, pick_phase, pick_type, priority, stock_code, stock_name, market, industry, concept,
+         price, change_pct, total_cap, circ_cap, turnover_rate, volume_ratio, main_inflow, main_inflow_pct,
+         outer_inner_ratio, lianban, seal_ratio, zhaban_count, zt_time_first, zt_count_60d,
+         low_depth, vol_shrink, trend_ma_ok, gain_5d, gain_20d, score,
+         behavior, behavior_evidence, priority_reason, confirm_signal, risk_note)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.tradeDate}, #{item.pickPhase}, #{item.pickType}, #{item.priority}, #{item.stockCode},
+             #{item.stockName}, #{item.market}, #{item.industry}, #{item.concept},
+             #{item.price}, #{item.changePct}, #{item.totalCap}, #{item.circCap}, #{item.turnoverRate},
+             #{item.volumeRatio}, #{item.mainInflow}, #{item.mainInflowPct}, #{item.outerInnerRatio},
+             #{item.lianban}, #{item.sealRatio}, #{item.zhabanCount}, #{item.ztTimeFirst}, #{item.ztCount60d},
+             #{item.lowDepth}, #{item.volShrink}, #{item.trendMaOk}, #{item.gain5d}, #{item.gain20d},
+             #{item.score}, #{item.behavior}, #{item.behaviorEvidence}, #{item.priorityReason},
+             #{item.confirmSignal}, #{item.riskNote})
+        </foreach>
+    </insert>
+
+    <!-- 查询指定交易日的推荐记录（优先close版本，其次intraday：同一时刻只存在一个版本，先删后插保证） -->
+    <select id="selectByTradeDate" resultType="com.xk.srhwzzqdn.model.entity.assetControl.ShortTermPickDaily">
+        select * from t_short_term_pick_daily
+        where trade_date = #{tradeDate}
+        order by pick_type asc, priority asc
+    </select>
+
+    <!-- 查询待复盘推荐：区间内且尚未生成过任何经验的记录 -->
+    <select id="selectPicksForReview" resultType="com.xk.srhwzzqdn.model.entity.assetControl.ShortTermPickDaily">
+        select p.* from t_short_term_pick_daily p
+        left join t_short_term_experience e
+            on e.trade_date = p.trade_date and e.stock_code = p.stock_code
+        where p.trade_date between #{minDate} and #{maxDate}
+          and e.id is null
+        order by p.trade_date desc, p.pick_type asc, p.priority asc
+        limit 40
+    </select>
+
+    <!-- 插入一条复盘经验 -->
+    <insert id="insertExperience">
+        insert into t_short_term_experience
+        (exp_date, exp_type, pick_type, trade_date, stock_code, stock_name, result_brief, summary, rule_hint, ai_raw)
+        values
+        (#{expDate}, #{expType}, #{pickType}, #{tradeDate}, #{stockCode}, #{stockName},
+         #{resultBrief}, #{summary}, #{ruleHint}, #{aiRaw})
+    </insert>
+
+    <!-- 查询最近的复盘经验列表 -->
+    <select id="selectRecentExperience" resultType="com.xk.srhwzzqdn.model.entity.assetControl.ShortTermExperience">
+        select * from t_short_term_experience
+        order by exp_date desc, id desc
+        limit #{limit}
+    </select>
+
+    <!-- 查询与指定推荐日期集合相关的全部经验（复盘AI输入） -->
+    <select id="selectExperienceByDates" resultType="com.xk.srhwzzqdn.model.entity.assetControl.ShortTermExperience">
+        select * from t_short_term_experience
+        where trade_date in
+        <foreach collection="dates" item="d" open="(" separator="," close=")">
+            #{d}
+        </foreach>
+        order by exp_date desc
+    </select>
+</mapper>
