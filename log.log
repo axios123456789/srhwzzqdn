@@ -101368,3 +101368,895 @@ java.lang.NumberFormatException: For input string: "-"
 2026-09-19 11:28:41 Token消耗 | 输入: 6354 | 输出: 312 | 总计: 6666
 2026-09-19 11:28:41 AI响应解析 | finish_reason=stop | 内容长度=313 字符
 2026-09-19 11:28:41 AI调用成功 | 耗时=8495 ms | 响应长度=313 字符
+2026-09-19 14:00:58 HikariPool-1 - Shutdown initiated...
+2026-09-19 14:00:58 HikariPool-1 - Shutdown completed.
+2026-09-19 14:01:21 Starting ManagerApplication using Java 17.0.17 with PID 31272 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 14:01:21 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 14:01:21 The following 1 profile is active: "dev"
+2026-09-19 14:01:22 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 14:01:22 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 14:01:22 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-19 14:01:23 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 14:01:23 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 14:01:23 Starting service [Tomcat]
+2026-09-19 14:01:23 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 14:01:23 Initializing Spring embedded WebApplicationContext
+2026-09-19 14:01:23 Root WebApplicationContext: initialization completed in 1835 ms
+2026-09-19 14:01:25 商业试验数据同步调度器已启动，距下次执行11小时58分钟（每日02:00低峰同步）
+2026-09-19 14:01:26 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 14:01:26 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 14:01:26 Started ManagerApplication in 5.483 seconds (process running for 6.811)
+2026-09-19 14:01:44 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 14:01:44 Initializing Servlet 'dispatcherServlet'
+2026-09-19 14:01:44 Completed initialization in 4 ms
+2026-09-19 14:01:53 HikariPool-1 - Starting...
+2026-09-19 14:01:53 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@54abd961
+2026-09-19 14:01:53 HikariPool-1 - Start completed.
+2026-09-19 14:03:42 京东同步完成 | status=2 | 请求0次 | 成功0 | 耗时28ms | 请先在application.yml的biz.crawl.shops中配置京东店铺绑定(platform/shop-code/shop-name/category)
+2026-09-19 14:44:20 HikariPool-1 - Shutdown initiated...
+2026-09-19 14:44:20 HikariPool-1 - Shutdown completed.
+2026-09-19 14:44:25 Starting ManagerApplication using Java 17.0.17 with PID 35732 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 14:44:25 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 14:44:25 The following 1 profile is active: "dev"
+2026-09-19 14:44:26 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 14:44:26 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 14:44:26 Finished Spring Data repository scanning in 21 ms. Found 0 Redis repository interfaces.
+2026-09-19 14:44:26 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 14:44:26 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 14:44:26 Starting service [Tomcat]
+2026-09-19 14:44:26 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 14:44:26 Initializing Spring embedded WebApplicationContext
+2026-09-19 14:44:26 Root WebApplicationContext: initialization completed in 1781 ms
+2026-09-19 14:44:28 商业试验数据同步调度器已启动，距下次执行11小时15分钟（每日02:00低峰同步）
+2026-09-19 14:44:29 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 14:44:29 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 14:44:30 Started ManagerApplication in 5.566 seconds (process running for 6.651)
+2026-09-19 14:44:34 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 14:44:34 Initializing Servlet 'dispatcherServlet'
+2026-09-19 14:44:34 Completed initialization in 3 ms
+2026-09-19 14:44:36 HikariPool-1 - Starting...
+2026-09-19 14:44:36 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@d743725
+2026-09-19 14:44:36 HikariPool-1 - Start completed.
+2026-09-19 14:44:50 商业试验爬虫防护：平台1请求失败，首次即熔断10分钟，期间该平台所有请求直接跳过
+2026-09-19 14:44:50 京东同步完成 | status=2 | 请求0次 | 成功0 | 耗时1022ms | 京东疑似被反爬拦截：京东搜索页未解析到商品节点（疑似拦截或页面结构变更），已自动熔断11分钟
+2026-09-19 15:43:45 HikariPool-1 - Shutdown initiated...
+2026-09-19 15:43:45 HikariPool-1 - Shutdown completed.
+2026-09-19 15:43:56 Starting ManagerApplication using Java 17.0.17 with PID 29628 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 15:43:56 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 15:43:56 The following 1 profile is active: "dev"
+2026-09-19 15:43:57 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 15:43:57 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 15:43:57 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-19 15:43:57 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 15:43:57 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 15:43:57 Starting service [Tomcat]
+2026-09-19 15:43:57 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 15:43:57 Initializing Spring embedded WebApplicationContext
+2026-09-19 15:43:57 Root WebApplicationContext: initialization completed in 1748 ms
+2026-09-19 15:43:59 商业试验数据同步调度器已启动，距下次执行10小时16分钟（每日02:00低峰同步）
+2026-09-19 15:44:00 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 15:44:00 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 15:44:00 Started ManagerApplication in 5.318 seconds (process running for 6.441)
+2026-09-19 15:44:05 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 15:44:05 Initializing Servlet 'dispatcherServlet'
+2026-09-19 15:44:05 Completed initialization in 3 ms
+2026-09-19 15:44:10 HikariPool-1 - Starting...
+2026-09-19 15:44:10 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@7d71974
+2026-09-19 15:44:10 HikariPool-1 - Start completed.
+2026-09-19 15:44:27 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 15:44:27 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时1462ms | 医疗保健:TOP20已同步;
+2026-09-19 15:44:57 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 15:44:57 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时444ms | 医疗保健:TOP20已同步;
+2026-09-19 15:45:04 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 15:45:04 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时370ms | 医疗保健:TOP20已同步;
+2026-09-19 15:52:17 HikariPool-1 - Shutdown initiated...
+2026-09-19 15:52:17 HikariPool-1 - Shutdown completed.
+2026-09-19 15:52:28 Starting ManagerApplication using Java 17.0.17 with PID 24132 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 15:52:28 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 15:52:28 The following 1 profile is active: "dev"
+2026-09-19 15:52:29 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 15:52:29 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 15:52:29 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-19 15:52:30 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 15:52:30 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 15:52:30 Starting service [Tomcat]
+2026-09-19 15:52:30 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 15:52:30 Initializing Spring embedded WebApplicationContext
+2026-09-19 15:52:30 Root WebApplicationContext: initialization completed in 1789 ms
+2026-09-19 15:52:32 商业试验数据同步调度器已启动，距下次执行10小时7分钟（每日02:00低峰同步）
+2026-09-19 15:52:33 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 15:52:33 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 15:52:33 Started ManagerApplication in 5.443 seconds (process running for 6.387)
+2026-09-19 15:52:40 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 15:52:40 Initializing Servlet 'dispatcherServlet'
+2026-09-19 15:52:40 Completed initialization in 4 ms
+2026-09-19 15:52:41 HikariPool-1 - Starting...
+2026-09-19 15:52:41 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@349e6f28
+2026-09-19 15:52:41 HikariPool-1 - Start completed.
+2026-09-19 15:58:17 HikariPool-1 - Shutdown initiated...
+2026-09-19 15:58:17 HikariPool-1 - Shutdown completed.
+2026-09-19 15:58:28 Starting ManagerApplication using Java 17.0.17 with PID 17304 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 15:58:28 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 15:58:28 The following 1 profile is active: "dev"
+2026-09-19 15:58:29 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 15:58:29 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 15:58:29 Finished Spring Data repository scanning in 21 ms. Found 0 Redis repository interfaces.
+2026-09-19 15:58:29 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 15:58:29 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 15:58:29 Starting service [Tomcat]
+2026-09-19 15:58:29 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 15:58:30 Initializing Spring embedded WebApplicationContext
+2026-09-19 15:58:30 Root WebApplicationContext: initialization completed in 1844 ms
+2026-09-19 15:58:31 商业试验数据同步调度器已启动，距下次执行10小时1分钟（每日02:00低峰同步）
+2026-09-19 15:58:32 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 15:58:32 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 15:58:32 Started ManagerApplication in 5.325 seconds (process running for 6.289)
+2026-09-19 15:58:35 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 15:58:35 Initializing Servlet 'dispatcherServlet'
+2026-09-19 15:58:35 Completed initialization in 3 ms
+2026-09-19 15:58:37 HikariPool-1 - Starting...
+2026-09-19 15:58:37 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4643924d
+2026-09-19 15:58:37 HikariPool-1 - Start completed.
+2026-09-19 15:58:54 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 15:58:54 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时1311ms | 医疗保健:TOP20已同步;
+2026-09-19 15:59:02 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 15:59:02 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时391ms | 医疗保健:TOP20已同步;
+2026-09-19 16:04:47 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 16:04:47 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时476ms | 医疗保健:TOP20已同步;
+2026-09-19 16:17:07 调用AI服务 | type=anthropic | model=gpt-5.6-sol | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=2496 bytes
+2026-09-19 16:18:13 Token消耗 | 输入: 5084 | 输出: 2800 | 总计: 7884
+2026-09-19 16:18:13 AI响应解析 | finish_reason=stop | 内容长度=3690 字符
+2026-09-19 16:18:13 AI调用成功 | 耗时=65525 ms | 响应长度=3690 字符
+2026-09-19 16:22:30 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 16:22:30 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时468ms | 医疗保健:TOP20已同步;
+2026-09-19 16:37:08 HikariPool-1 - Shutdown initiated...
+2026-09-19 16:37:08 HikariPool-1 - Shutdown completed.
+2026-09-19 16:37:20 Starting ManagerApplication using Java 17.0.17 with PID 7044 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 16:37:20 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 16:37:20 The following 1 profile is active: "dev"
+2026-09-19 16:37:21 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 16:37:21 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 16:37:21 Finished Spring Data repository scanning in 19 ms. Found 0 Redis repository interfaces.
+2026-09-19 16:37:22 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 16:37:22 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 16:37:22 Starting service [Tomcat]
+2026-09-19 16:37:22 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 16:37:22 Initializing Spring embedded WebApplicationContext
+2026-09-19 16:37:22 Root WebApplicationContext: initialization completed in 1790 ms
+2026-09-19 16:37:23 商业试验数据同步调度器已启动，距下次执行9小时22分钟（每日02:00低峰同步）
+2026-09-19 16:37:24 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 16:37:24 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 16:37:25 Started ManagerApplication in 5.338 seconds (process running for 6.257)
+2026-09-19 16:37:31 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 16:37:31 Initializing Servlet 'dispatcherServlet'
+2026-09-19 16:37:31 Completed initialization in 2 ms
+2026-09-19 16:37:32 HikariPool-1 - Starting...
+2026-09-19 16:37:32 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@38668710
+2026-09-19 16:37:32 HikariPool-1 - Start completed.
+2026-09-19 16:38:50 自由填报自动建档商品[制氧机]（平台1，店铺DGF医疗器械官方旗舰店）
+2026-09-19 16:38:51 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 16:38:52 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时1540ms | 医疗保健:TOP20已同步;
+2026-09-19 16:39:04 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 16:39:04 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时361ms | 医疗保健:TOP20已同步;
+2026-09-19 16:43:42 HikariPool-1 - Shutdown initiated...
+2026-09-19 16:43:42 HikariPool-1 - Shutdown completed.
+2026-09-19 16:43:51 Starting ManagerApplication using Java 17.0.17 with PID 20488 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 16:43:51 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 16:43:51 The following 1 profile is active: "dev"
+2026-09-19 16:43:53 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 16:43:53 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 16:43:53 Finished Spring Data repository scanning in 21 ms. Found 0 Redis repository interfaces.
+2026-09-19 16:43:53 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 16:43:53 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 16:43:53 Starting service [Tomcat]
+2026-09-19 16:43:53 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 16:43:53 Initializing Spring embedded WebApplicationContext
+2026-09-19 16:43:53 Root WebApplicationContext: initialization completed in 1915 ms
+2026-09-19 16:43:55 商业试验数据同步调度器已启动，距下次执行9小时16分钟（每日02:00低峰同步）
+2026-09-19 16:43:56 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 16:43:56 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 16:43:56 Started ManagerApplication in 5.593 seconds (process running for 6.612)
+2026-09-19 16:44:11 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 16:44:11 Initializing Servlet 'dispatcherServlet'
+2026-09-19 16:44:11 Completed initialization in 3 ms
+2026-09-19 16:44:13 HikariPool-1 - Starting...
+2026-09-19 16:44:13 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4643924d
+2026-09-19 16:44:13 HikariPool-1 - Start completed.
+2026-09-19 16:44:31 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 16:44:31 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时1423ms | 医疗保健:TOP20已同步;
+2026-09-19 16:44:47 调用AI服务 | type=anthropic | model=gpt-5.6-sol | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=2270 bytes
+2026-09-19 16:46:36 AI调用失败 | HTTP 502 | 耗时=109530 ms | 错误: {"error":{"message":"Upstream service temporarily unavailable","type":"upstream_error"}}
+2026-09-19 16:47:24 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 16:47:25 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时479ms | 医疗保健:TOP20已同步;
+2026-09-19 16:49:22 HikariPool-1 - Shutdown initiated...
+2026-09-19 16:49:22 HikariPool-1 - Shutdown completed.
+2026-09-19 16:49:27 Starting ManagerApplication using Java 17.0.17 with PID 30624 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 16:49:27 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 16:49:27 The following 1 profile is active: "dev"
+2026-09-19 16:49:28 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 16:49:28 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 16:49:28 Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-09-19 16:49:28 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 16:49:28 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 16:49:28 Starting service [Tomcat]
+2026-09-19 16:49:28 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 16:49:29 Initializing Spring embedded WebApplicationContext
+2026-09-19 16:49:29 Root WebApplicationContext: initialization completed in 1763 ms
+2026-09-19 16:49:30 商业试验数据同步调度器已启动，距下次执行9小时10分钟（每日02:00低峰同步）
+2026-09-19 16:49:31 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 16:49:31 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 16:49:31 Started ManagerApplication in 5.315 seconds (process running for 6.429)
+2026-09-19 16:50:16 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 16:50:16 Initializing Servlet 'dispatcherServlet'
+2026-09-19 16:50:16 Completed initialization in 3 ms
+2026-09-19 16:50:17 HikariPool-1 - Starting...
+2026-09-19 16:50:17 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1d02a51f
+2026-09-19 16:50:17 HikariPool-1 - Start completed.
+2026-09-19 16:50:51 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 16:50:51 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时1327ms | 医疗保健:TOP20已同步;
+2026-09-19 16:51:13 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 16:51:14 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时389ms | 医疗保健:TOP20已同步;
+2026-09-19 16:51:15 调用AI服务 | type=anthropic | model=gpt-5.6-sol | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=2268 bytes
+2026-09-19 16:54:35 Token消耗 | 输入: 5001 | 输出: 3552 | 总计: 8553
+2026-09-19 16:54:35 AI响应解析 | finish_reason=stop | 内容长度=4771 字符
+2026-09-19 16:54:35 AI调用成功 | 耗时=199666 ms | 响应长度=4771 字符
+2026-09-19 17:14:23 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 17:14:23 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时551ms | 医疗保健:TOP20已同步;
+2026-09-19 17:15:25 京东联盟API[实时热销榜]返回商品20条
+2026-09-19 17:15:25 京东同步完成 | status=1 | 请求1次 | 成功1 | 耗时422ms | 医疗保健:TOP20已同步;
+2026-09-19 17:59:43 HikariPool-1 - Shutdown initiated...
+2026-09-19 17:59:43 HikariPool-1 - Shutdown completed.
+2026-09-19 17:59:55 Starting ManagerApplication using Java 17.0.17 with PID 1028 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 17:59:55 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 17:59:55 The following 1 profile is active: "dev"
+2026-09-19 17:59:56 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 17:59:56 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 17:59:56 Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-09-19 17:59:56 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 17:59:57 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 17:59:57 Starting service [Tomcat]
+2026-09-19 17:59:57 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 17:59:57 Initializing Spring embedded WebApplicationContext
+2026-09-19 17:59:57 Root WebApplicationContext: initialization completed in 1749 ms
+2026-09-19 17:59:58 Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'businessExperimentController': Unsatisfied dependency expressed through field 'businessExperimentService': Error creating bean with name 'businessExperimentServiceImpl': Unsatisfied dependency expressed through field 'mapper': No qualifying bean of type 'com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.mapper.BusinessExperimentMapper' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-09-19 17:59:58 Stopping service [Tomcat]
+2026-09-19 17:59:58 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-09-19 17:59:58 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field mapper in com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.service.impl.BusinessExperimentServiceImpl required a bean of type 'com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.mapper.BusinessExperimentMapper' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.mapper.BusinessExperimentMapper' in your configuration.
+
+2026-09-19 18:00:15 Starting ManagerApplication using Java 17.0.17 with PID 20008 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 18:00:15 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 18:00:15 The following 1 profile is active: "dev"
+2026-09-19 18:00:16 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 18:00:16 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 18:00:16 Finished Spring Data repository scanning in 20 ms. Found 0 Redis repository interfaces.
+2026-09-19 18:00:17 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 18:00:17 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:00:17 Starting service [Tomcat]
+2026-09-19 18:00:17 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 18:00:17 Initializing Spring embedded WebApplicationContext
+2026-09-19 18:00:17 Root WebApplicationContext: initialization completed in 1757 ms
+2026-09-19 18:00:18 Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'businessExperimentController': Unsatisfied dependency expressed through field 'businessExperimentService': Error creating bean with name 'businessExperimentServiceImpl': Unsatisfied dependency expressed through field 'mapper': No qualifying bean of type 'com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.mapper.BusinessExperimentMapper' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-09-19 18:00:18 Stopping service [Tomcat]
+2026-09-19 18:00:18 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-09-19 18:00:18 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field mapper in com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.service.impl.BusinessExperimentServiceImpl required a bean of type 'com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.mapper.BusinessExperimentMapper' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.mapper.BusinessExperimentMapper' in your configuration.
+
+2026-09-19 18:06:29 Starting ManagerApplication using Java 17.0.17 with PID 6876 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 18:06:29 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 18:06:29 The following 1 profile is active: "dev"
+2026-09-19 18:06:30 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 18:06:30 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 18:06:30 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-19 18:06:31 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 18:06:31 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:06:31 Starting service [Tomcat]
+2026-09-19 18:06:31 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 18:06:31 Initializing Spring embedded WebApplicationContext
+2026-09-19 18:06:31 Root WebApplicationContext: initialization completed in 1936 ms
+2026-09-19 18:06:32 Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'businessExperimentController': Unsatisfied dependency expressed through field 'businessExperimentService': Error creating bean with name 'businessExperimentServiceImpl': Unsatisfied dependency expressed through field 'mapper': No qualifying bean of type 'com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.mapper.BusinessExperimentMapper' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+2026-09-19 18:06:32 Stopping service [Tomcat]
+2026-09-19 18:06:32 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-09-19 18:06:32 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field mapper in com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.service.impl.BusinessExperimentServiceImpl required a bean of type 'com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.mapper.BusinessExperimentMapper' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.mapper.BusinessExperimentMapper' in your configuration.
+
+2026-09-19 18:09:08 Starting ManagerApplication using Java 17.0.17 with PID 4428 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 18:09:08 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 18:09:08 The following 1 profile is active: "dev"
+2026-09-19 18:09:09 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 18:09:09 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 18:09:09 Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-09-19 18:09:10 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 18:09:10 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:09:10 Starting service [Tomcat]
+2026-09-19 18:09:10 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 18:09:10 Initializing Spring embedded WebApplicationContext
+2026-09-19 18:09:10 Root WebApplicationContext: initialization completed in 1788 ms
+2026-09-19 18:09:13 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:09:13 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 18:09:13 Started ManagerApplication in 5.191 seconds (process running for 6.279)
+2026-09-19 18:09:43 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 18:09:43 Initializing Servlet 'dispatcherServlet'
+2026-09-19 18:09:43 Completed initialization in 2 ms
+2026-09-19 18:09:49 HikariPool-1 - Starting...
+2026-09-19 18:09:49 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@752fec91
+2026-09-19 18:09:49 HikariPool-1 - Start completed.
+2026-09-19 18:11:22 HikariPool-1 - Shutdown initiated...
+2026-09-19 18:11:22 HikariPool-1 - Shutdown completed.
+2026-09-19 18:11:33 Starting ManagerApplication using Java 17.0.17 with PID 2640 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 18:11:33 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 18:11:33 The following 1 profile is active: "dev"
+2026-09-19 18:11:34 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 18:11:34 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 18:11:34 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-09-19 18:11:35 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 18:11:35 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:11:35 Starting service [Tomcat]
+2026-09-19 18:11:35 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 18:11:35 Initializing Spring embedded WebApplicationContext
+2026-09-19 18:11:35 Root WebApplicationContext: initialization completed in 1318 ms
+2026-09-19 18:11:38 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:11:38 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 18:11:38 Started ManagerApplication in 4.544 seconds (process running for 5.151)
+2026-09-19 18:11:46 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 18:11:46 Initializing Servlet 'dispatcherServlet'
+2026-09-19 18:11:46 Completed initialization in 4 ms
+2026-09-19 18:11:47 HikariPool-1 - Starting...
+2026-09-19 18:11:48 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6699e8ab
+2026-09-19 18:11:48 HikariPool-1 - Start completed.
+2026-09-19 18:14:27 HikariPool-1 - Shutdown initiated...
+2026-09-19 18:14:27 HikariPool-1 - Shutdown completed.
+2026-09-19 18:14:52 Starting ManagerApplication using Java 17.0.17 with PID 1244 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 18:14:52 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 18:14:52 The following 1 profile is active: "dev"
+2026-09-19 18:14:53 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 18:14:53 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 18:14:53 Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-09-19 18:14:53 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 18:14:53 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:14:53 Starting service [Tomcat]
+2026-09-19 18:14:53 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 18:14:54 Initializing Spring embedded WebApplicationContext
+2026-09-19 18:14:54 Root WebApplicationContext: initialization completed in 1680 ms
+2026-09-19 18:14:56 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:14:56 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 18:14:56 Started ManagerApplication in 4.846 seconds (process running for 6.332)
+2026-09-19 18:15:15 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 18:15:15 Initializing Servlet 'dispatcherServlet'
+2026-09-19 18:15:15 Completed initialization in 3 ms
+2026-09-19 18:15:16 HikariPool-1 - Starting...
+2026-09-19 18:15:16 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1d8d55b5
+2026-09-19 18:15:16 HikariPool-1 - Start completed.
+2026-09-19 18:15:48 拉取京东联盟榜单失败：榜单查询失败：参数错误
+2026-09-19 18:15:48 调用AI服务 | type=anthropic | model=gpt-5.6-sol | endpoint=http://192.168.14.51:8080/v1/chat/completions | 请求体大小=1679 bytes
+2026-09-19 18:16:09 AI调用异常 | endpoint=http://192.168.14.51:8080/v1/chat/completions
+java.net.ConnectException: Connection timed out: getsockopt
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at java.base/sun.net.NetworkClient.doConnect(NetworkClient.java:178)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:533)
+	at java.base/sun.net.www.http.HttpClient.openServer(HttpClient.java:638)
+	at java.base/sun.net.www.http.HttpClient.<init>(HttpClient.java:283)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:386)
+	at java.base/sun.net.www.http.HttpClient.New(HttpClient.java:408)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1329)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1262)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1148)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1077)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream0(HttpURLConnection.java:1479)
+	at java.base/sun.net.www.protocol.http.HttpURLConnection.getOutputStream(HttpURLConnection.java:1442)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.doRequest(AiCommonUtil.java:180)
+	at com.xk.srhwzzqdn.manager.util.AiCommonUtil.call(AiCommonUtil.java:96)
+	at com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.service.impl.BusinessExperimentServiceImpl.aiAnalyze(BusinessExperimentServiceImpl.java:91)
+	at com.xk.srhwzzqdn.manager.trialExecutionArea.businessExperiment.controller.BusinessExperimentController.aiAnalyze(BusinessExperimentController.java:30)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:563)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+2026-09-19 18:26:00 HikariPool-1 - Shutdown initiated...
+2026-09-19 18:26:00 HikariPool-1 - Shutdown completed.
+2026-09-19 18:26:05 Starting ManagerApplication using Java 17.0.17 with PID 12940 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-19 18:26:05 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-19 18:26:05 The following 1 profile is active: "dev"
+2026-09-19 18:26:06 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-19 18:26:06 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-19 18:26:06 Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-09-19 18:26:07 Tomcat initialized with port(s): 8400 (http)
+2026-09-19 18:26:07 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:26:07 Starting service [Tomcat]
+2026-09-19 18:26:07 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-19 18:26:07 Initializing Spring embedded WebApplicationContext
+2026-09-19 18:26:07 Root WebApplicationContext: initialization completed in 1195 ms
+2026-09-19 18:26:10 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-19 18:26:10 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-19 18:26:10 Started ManagerApplication in 5.035 seconds (process running for 5.589)
+2026-09-19 18:28:25 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-19 18:28:25 Initializing Servlet 'dispatcherServlet'
+2026-09-19 18:28:25 Completed initialization in 3 ms
+2026-09-19 18:28:26 HikariPool-1 - Starting...
+2026-09-19 18:28:26 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@16b68784
+2026-09-19 18:28:26 HikariPool-1 - Start completed.
+2026-09-19 18:29:02 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:02 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:02 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:02 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:02 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:02 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:02 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:02 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:02 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:02 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:02 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:02 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:02 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:02 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:29:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:29:04 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000807&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-19 18:32:06 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:32:06 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:32:06 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:32:06 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:32:06 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-19 18:32:06 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-19 18:32:06 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-19 18:32:06 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-19 21:24:52 HikariPool-1 - Shutdown initiated...
+2026-09-19 21:24:52 HikariPool-1 - Shutdown completed.
+2026-09-20 08:33:14 Starting ManagerApplication using Java 17.0.17 with PID 7060 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 08:33:14 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 08:33:14 The following 1 profile is active: "dev"
+2026-09-20 08:33:16 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 08:33:16 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 08:33:16 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-20 08:33:16 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 08:33:16 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 08:33:16 Starting service [Tomcat]
+2026-09-20 08:33:16 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 08:33:17 Initializing Spring embedded WebApplicationContext
+2026-09-20 08:33:17 Root WebApplicationContext: initialization completed in 2064 ms
+2026-09-20 08:33:19 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 08:33:19 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 08:33:19 Started ManagerApplication in 5.431 seconds (process running for 7.225)
+2026-09-20 08:33:53 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 08:33:53 Initializing Servlet 'dispatcherServlet'
+2026-09-20 08:33:53 Completed initialization in 11 ms
+2026-09-20 08:33:59 HikariPool-1 - Starting...
+2026-09-20 08:34:00 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@790d5a2
+2026-09-20 08:34:00 HikariPool-1 - Start completed.
+2026-09-20 09:35:18 HikariPool-1 - Shutdown initiated...
+2026-09-20 09:35:18 HikariPool-1 - Shutdown completed.
+2026-09-20 09:35:40 Starting ManagerApplication using Java 17.0.17 with PID 11864 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 09:35:40 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 09:35:40 The following 1 profile is active: "dev"
+2026-09-20 09:35:41 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 09:35:41 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 09:35:41 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-20 09:35:42 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 09:35:42 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 09:35:42 Starting service [Tomcat]
+2026-09-20 09:35:42 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 09:35:42 Initializing Spring embedded WebApplicationContext
+2026-09-20 09:35:42 Root WebApplicationContext: initialization completed in 1947 ms
+2026-09-20 09:35:45 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 09:35:45 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 09:35:45 Started ManagerApplication in 5.469 seconds (process running for 6.839)
+2026-09-20 09:35:58 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 09:35:58 Initializing Servlet 'dispatcherServlet'
+2026-09-20 09:35:58 Completed initialization in 2 ms
+2026-09-20 09:36:04 HikariPool-1 - Starting...
+2026-09-20 09:36:04 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@d41f3ab
+2026-09-20 09:36:04 HikariPool-1 - Start completed.
+2026-09-20 09:36:15 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:15 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:15 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:15 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:15 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:15 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:15 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:15 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:16 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:16 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:16 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:16 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 09:36:16 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:16 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:16 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:16 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:24 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600989&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:25 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.605117&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:25 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000426&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:25 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.002414&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.002709&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:25 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.002648&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:25 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.001337&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:25 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.002379&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:25 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:25 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.002192&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:26 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600961&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:26 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000567&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:26 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.002842&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000807&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:26 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000506&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:26 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.601628&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:26 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.601872&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:26 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:26 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.002636&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:27 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000933&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:27 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000833&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:27 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000408&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.600354&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.601899&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:27 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.603993&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:27 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.002452&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:27 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:27 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.605098&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.603045&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:28 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000612&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:28 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.603025&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.603605&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:28 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000975&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:28 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000737&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:28 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.601168&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:29 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=0.000657&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 09:36:29 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.603271&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 09:36:29 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.601336&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond

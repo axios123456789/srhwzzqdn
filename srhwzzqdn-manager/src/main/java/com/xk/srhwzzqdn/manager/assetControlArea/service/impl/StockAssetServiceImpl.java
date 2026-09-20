@@ -2224,6 +2224,11 @@ public class StockAssetServiceImpl implements StockAssetService {
             for (JSONObject s : all) {
                 String name = s.getString("f14");
                 if (name.contains("ST") || name.contains("退")) continue;
+                // 新手可买硬过滤：仅保留00/60开头主板股（000/001/002/003/600/601/603/605），股价不高于100元
+                String code0 = s.getString("f12");
+                if (code0 == null || !(code0.startsWith("00") || code0.startsWith("60"))) continue;
+                Double priceGate = asDouble(s.get("f2"));
+                if (priceGate == null || priceGate <= 0 || priceGate > 100) continue;
                 Double roe = asDouble(s.get("f37"));
                 Double revGrowth = asDouble(s.get("f41"));
                 Double profitGrowth = asDouble(s.get("f46"));
