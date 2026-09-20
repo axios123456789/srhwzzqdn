@@ -1107,7 +1107,7 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
             "http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=%s&klt=101&fqt=1&lmt=30&end=20500101"
                     + "&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57";
     /** 腾讯K线兜底（指数用，口径与个股K线兜底一致） */
-    private static final String CYCLE_TX_KLINE_URL = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get";
+    private static final String CYCLE_TX_KLINE_URL = "https://ifzq.gtimg.cn/appstock/app/fqkline/get"; // web.ifzq.gtimg.cn已被腾讯501废弃，裸域实测正常
 
     @Override
     public Map<String, Object> getMarketCycleAnalysis() {

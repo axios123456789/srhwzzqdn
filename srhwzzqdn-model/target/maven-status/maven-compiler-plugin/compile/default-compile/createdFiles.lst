@@ -43,6 +43,7 @@ com\xk\srhwzzqdn\model\entity\assetControl\FundPortfolio.class
 com\xk\srhwzzqdn\model\entity\trialExecutionArea\PredictionSimulate.class
 com\xk\srhwzzqdn\model\entity\system\SysCommConfig.class
 com\xk\srhwzzqdn\model\dto\system\SysRoleDto.class
+com\xk\srhwzzqdn\model\entity\assetControl\ShortTermExperience.class
 com\xk\srhwzzqdn\model\vo\personalObservationArea\SubTypeAnalysisVo.class
 com\xk\srhwzzqdn\model\dto\assetControl\AssetTransactionDto.class
 com\xk\srhwzzqdn\model\entity\system\SysPersonInfo.class
@@ -60,6 +61,7 @@ com\xk\srhwzzqdn\model\entity\assetControl\StockBasic.class
 com\xk\srhwzzqdn\model\vo\common\GroupTextValueVo.class
 com\xk\srhwzzqdn\model\entity\assetControl\AssetTransaction.class
 com\xk\srhwzzqdn\model\vo\system\LoginVo.class
+com\xk\srhwzzqdn\model\entity\assetControl\ShortTermPickDaily.class
 com\xk\srhwzzqdn\model\dto\trialExecutionArea\DailyReviewDto.class
 com\xk\srhwzzqdn\model\entity\memoryReceptionArea\FunMemory.class
 com\xk\srhwzzqdn\model\dto\system\EditPasswordDto.class

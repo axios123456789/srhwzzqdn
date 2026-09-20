@@ -1,5 +1,4 @@
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\service\TradeRecordService.java
-D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\businessExperiment\service\BusinessExperimentService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\impl\StockAssetServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\controller\LifeMemoryAccessController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\mapper\SysRoleMapper.java
@@ -48,11 +47,9 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\service\impl\ValidateCodeServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\service\impl\SysDictServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\properties\MinioProperties.java
-D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\businessExperiment\properties\BizCrawlProperties.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\service\impl\PredictionSimulateServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\FundAssetService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\mapper\AssetClusteringAnalysisMapper.java
-D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\businessExperiment\mapper\BusinessExperimentMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\util\AiPromptUtil.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\properties\UserProperties.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\personalObservationArea\controller\AssetDynamicsObservation.java
@@ -63,15 +60,19 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\service\LearnMemoryAccessService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\mapper\SysDictMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\service\impl\ReviewReportServiceImpl.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\ShortTermPickService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\service\SysMenuService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\StockAssetService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\service\PredictionSimulateService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\impl\FundAssetServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\mapper\PredictionSimulateMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\util\BailianApiUtil.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\mapper\ShortTermPickMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\service\CommunicateMemoryAccessService.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\impl\ShortTermPickServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\util\DeepSeekApiUtil.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\mapper\LifeMemoryAccessMapper.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\controller\ShortTermPickController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\mapper\CommunicateMemoryAccessMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\controller\AssetTransactionController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\mapper\StockAssetMapper.java
@@ -81,7 +82,6 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\util\SysCodeHelper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\AssetClusteringAnalysisService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\controller\SysMenuController.java
-D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\businessExperiment\service\JdUnionService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\personalObservationArea\service\AssetDynamicsObservationService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\controller\FileUploadController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\mapper\DailyReviewMapper.java
@@ -90,7 +90,6 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\personalObservationArea\mapper\AssetDynamicsObservationMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\service\ReviewReportService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\ManagerApplication.java
-D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\businessExperiment\controller\BusinessExperimentController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\AssetLedgerService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\mapper\ReviewReportMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\service\impl\TradeRecordServiceImpl.java
@@ -108,7 +107,6 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\controller\MarketAnalysisController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\service\WorkMemoryAccessService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\util\AdministrativeHelper.java
-D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\businessExperiment\service\impl\BusinessExperimentServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\service\SysUserService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\controller\DailyReviewController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\controller\FundAssetController.java

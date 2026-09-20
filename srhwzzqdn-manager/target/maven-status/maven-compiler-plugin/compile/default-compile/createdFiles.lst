@@ -44,6 +44,7 @@ com\xk\srhwzzqdn\manager\interceptor\LoginAuthInterceptor.class
 com\xk\srhwzzqdn\manager\util\AdministrativeHelper.class
 com\xk\srhwzzqdn\manager\assetControlArea\service\impl\AssetTransactionServiceImpl.class
 com\xk\srhwzzqdn\manager\assetControlArea\controller\FundAssetController.class
+com\xk\srhwzzqdn\manager\assetControlArea\service\ShortTermPickService.class
 com\xk\srhwzzqdn\manager\assetControlArea\util\FundDataParser$HolderStructure.class
 com\xk\srhwzzqdn\manager\trialExecutionArea\controller\DailyReviewController.class
 com\xk\srhwzzqdn\manager\util\MenuHelper.class
@@ -68,6 +69,7 @@ com\xk\srhwzzqdn\manager\memoryReceptionArea\controller\LifeMemoryAccessControll
 com\xk\srhwzzqdn\manager\assetControlArea\service\StockAssetService.class
 com\xk\srhwzzqdn\manager\trialExecutionArea\controller\TransactionSystemTrialController.class
 com\xk\srhwzzqdn\manager\trialExecutionArea\service\impl\PredictionSimulateServiceImpl.class
+com\xk\srhwzzqdn\manager\assetControlArea\controller\ShortTermPickController.class
 com\xk\srhwzzqdn\manager\memoryReceptionArea\service\impl\RowMemoryAccessServiceImpl.class
 com\xk\srhwzzqdn\manager\system\service\SysRoleService.class
 com\xk\srhwzzqdn\manager\assetControlArea\util\FundDataParser$StockInfo.class
@@ -95,6 +97,7 @@ com\xk\srhwzzqdn\manager\trialExecutionArea\mapper\DailyReviewMapper.class
 com\xk\srhwzzqdn\manager\properties\MinioProperties.class
 com\xk\srhwzzqdn\manager\trialExecutionArea\mapper\TransactionSystemTrialMapper.class
 com\xk\srhwzzqdn\manager\assetControlArea\controller\StockAssetController.class
+com\xk\srhwzzqdn\manager\assetControlArea\service\impl\ShortTermPickServiceImpl.class
 com\xk\srhwzzqdn\manager\trialExecutionArea\controller\PredictionSimulateController.class
 com\xk\srhwzzqdn\manager\assetControlArea\mapper\StockAssetMapper.class
 com\xk\srhwzzqdn\manager\memoryReceptionArea\mapper\FunMemoryAccessMapper.class
@@ -122,10 +125,12 @@ com\xk\srhwzzqdn\manager\trialExecutionArea\mapper\TradeRecordMapper.class
 com\xk\srhwzzqdn\manager\trialExecutionArea\service\impl\DailyReviewServiceImpl.class
 com\xk\srhwzzqdn\manager\system\mapper\SysRoleMapper.class
 com\xk\srhwzzqdn\manager\assetControlArea\service\AssetClusteringAnalysisService.class
+com\xk\srhwzzqdn\manager\assetControlArea\mapper\ShortTermPickMapper.class
 com\xk\srhwzzqdn\manager\system\service\impl\ValidateCodeServiceImpl.class
 com\xk\srhwzzqdn\manager\system\controller\MapperConfigurationController.class
 com\xk\srhwzzqdn\manager\trialExecutionArea\service\PredictionSimulateService.class
 com\xk\srhwzzqdn\manager\system\service\FileUploadService.class
 com\xk\srhwzzqdn\manager\assetControlArea\service\impl\FundAssetServiceImpl.class
 com\xk\srhwzzqdn\manager\system\controller\FileUploadController.class
+com\xk\srhwzzqdn\manager\assetControlArea\service\impl\ShortTermPickServiceImpl$Bar.class
 com\xk\srhwzzqdn\manager\memoryReceptionArea\service\impl\FunMemoryAccessServiceImpl.class

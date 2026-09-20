@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产管制区-股票资产管理-09">
+    <list default="true" id="7c463dfa-07c2-48f3-9628-87c000ccff26" name="Changes" comment="资产管制区-股票资产管理-10">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/log.log" beforeDir="false" afterPath="$PROJECT_DIR$/log.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.bloomcycle.bin/xl.meta" afterDir="false" />
@@ -13,11 +13,10 @@
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/.usage.json/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin.bkp/xl.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" beforeDir="false" afterPath="$PROJECT_DIR$/minioSource/data/.minio.sys/buckets/srhwzzqdn-bucket/.usage-cache.bin/xl.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/minioSource/data/.minio.sys/tmp/468f4546-b407-4a50-873e-70503f50155a" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/stockAssetManagementTabs/tabFundamentalScreening.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/stockAssetManagementTabs/tabFundamentalScreening.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/stockAsset.js" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/api/stockAsset.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/stockAssetManagement.vue" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-admin/src/views/assetControlArea/stockAssetManagement.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/MarketAnalysisServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/MarketAnalysisServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/src/main/java/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl$IndustryStat.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl$IndustryStat.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl$TechResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl$TechResult.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/classes/com/xk/srhwzzqdn/manager/assetControlArea/service/impl/StockAssetServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/srhwzzqdn-manager/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/srhwzzqdn-manager/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
@@ -576,14 +575,7 @@
       <workItem from="1789728879839" duration="649000" />
       <workItem from="1789786989389" duration="9265000" />
       <workItem from="1789812308641" duration="2025000" />
-      <workItem from="1789864372230" duration="2090000" />
-    </task>
-    <task id="LOCAL-00127" summary="基金资产管理-34">
-      <created>1779596277182</created>
-      <option name="number" value="00127" />
-      <option name="presentableId" value="LOCAL-00127" />
-      <option name="project" value="LOCAL" />
-      <updated>1779596277183</updated>
+      <workItem from="1789864372230" duration="6588000" />
     </task>
     <task id="LOCAL-00128" summary="基金资产管理-35">
       <created>1779600317844</created>
@@ -921,7 +913,14 @@
       <option name="project" value="LOCAL" />
       <updated>1789791386897</updated>
     </task>
-    <option name="localTasksCounter" value="176" />
+    <task id="LOCAL-00176" summary="资产管制区-股票资产管理-10">
+      <created>1789873007173</created>
+      <option name="number" value="00176" />
+      <option name="presentableId" value="LOCAL-00176" />
+      <option name="project" value="LOCAL" />
+      <updated>1789873007174</updated>
+    </task>
+    <option name="localTasksCounter" value="177" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -940,7 +939,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="试验开展区-交易系统试验-03" />
     <MESSAGE value="试验开展区-交易系统试验-04" />
     <MESSAGE value="试验开展区-交易系统试验-05" />
     <MESSAGE value="试验开展区-交易系统试验-06" />
@@ -965,7 +963,8 @@
     <MESSAGE value="资产管制区-股票资产管理-07" />
     <MESSAGE value="资产管制区-股票资产管理-08" />
     <MESSAGE value="资产管制区-股票资产管理-09" />
-    <option name="LAST_COMMIT_MESSAGE" value="资产管制区-股票资产管理-09" />
+    <MESSAGE value="资产管制区-股票资产管理-10" />
+    <option name="LAST_COMMIT_MESSAGE" value="资产管制区-股票资产管理-10" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

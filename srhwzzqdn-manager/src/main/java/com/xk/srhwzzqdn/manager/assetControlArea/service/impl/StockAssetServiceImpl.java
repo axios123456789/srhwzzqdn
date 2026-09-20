@@ -47,7 +47,7 @@ public class StockAssetServiceImpl implements StockAssetService {
     // 单次请求失败时降级为分段补抓：每段500根 + end日期向前翻页
     private static final int KLINE_SEG_LMT = 500;
     // 腾讯K线兜底接口（东财整域被临时拉黑时使用）：单次上限640根，end=日期向前翻页，前复权口径与东财一致
-    private static final String TX_KLINE_URL = "https://web.ifzq.gtimg.cn/appstock/app/fqkline/get";
+    private static final String TX_KLINE_URL = "https://ifzq.gtimg.cn/appstock/app/fqkline/get"; // web.ifzq.gtimg.cn已被腾讯501废弃，裸域实测正常
     // 东财K线熔断退避：任一K线请求失败（静默空回复/200空数据）后，5分钟内所有东财K线请求（单次+分段）直接跳过走腾讯兜底，
     // 避免被拦期间每个请求都白耗3次重试（约2秒/次）的等待；到期后自动恢复探测东财，拉黑解除即回归主源
     private static final long EAST_KLINE_BREAK_MS = 5 * 60 * 1000L;

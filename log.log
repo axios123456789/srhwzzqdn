@@ -102260,3 +102260,601 @@ java.net.ConnectException: Connection timed out: getsockopt
 2026-09-20 09:36:29 Retrying request to {}->http://push2his.eastmoney.com:80
 2026-09-20 09:36:29 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.603271&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
 2026-09-20 09:36:29 HTTP请求失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.601336&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 11:23:40 HikariPool-1 - Shutdown initiated...
+2026-09-20 11:23:40 HikariPool-1 - Shutdown completed.
+2026-09-20 11:24:07 Starting ManagerApplication using Java 17.0.17 with PID 28172 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 11:24:07 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 11:24:07 The following 1 profile is active: "dev"
+2026-09-20 11:24:08 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 11:24:08 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 11:24:08 Finished Spring Data repository scanning in 20 ms. Found 0 Redis repository interfaces.
+2026-09-20 11:24:09 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 11:24:09 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 11:24:09 Starting service [Tomcat]
+2026-09-20 11:24:09 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 11:24:09 Initializing Spring embedded WebApplicationContext
+2026-09-20 11:24:09 Root WebApplicationContext: initialization completed in 2145 ms
+2026-09-20 11:24:12 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 11:24:12 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 11:24:12 Started ManagerApplication in 6.021 seconds (process running for 7.684)
+2026-09-20 11:24:19 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 11:24:19 Initializing Servlet 'dispatcherServlet'
+2026-09-20 11:24:19 Completed initialization in 3 ms
+2026-09-20 11:24:24 HikariPool-1 - Starting...
+2026-09-20 11:24:24 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@131f57c
+2026-09-20 11:24:24 HikariPool-1 - Start completed.
+2026-09-20 11:24:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:24:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:24:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:24:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:24:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:24:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:24:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:24:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:24:28 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:24:28 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:24:29 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:24:29 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:24:29 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 11:24:29 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 11:24:29 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 11:24:29 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 11:24:36 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:24:36 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:24:36 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:24:36 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:24:36 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:24:36 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:24:36 短线选股HTTP失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 11:24:36 短线选股东财K线首次失败，熔断5分钟：期间K线全部直走腾讯兜底
+2026-09-20 11:24:43 短线选股数据采集 | 涨停池=78 炸板池=25 快照候选=0 K线成功=40/40 | 耗时=6245ms
+2026-09-20 11:34:18 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:34:18 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:34:18 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:34:18 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:34:18 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:34:18 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:34:18 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:34:18 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:34:18 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:34:18 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:34:18 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:34:18 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:34:19 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 11:34:19 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 11:34:19 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 11:34:19 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 11:37:29 HikariPool-1 - Shutdown initiated...
+2026-09-20 11:37:29 HikariPool-1 - Shutdown completed.
+2026-09-20 11:37:46 Starting ManagerApplication using Java 17.0.17 with PID 5256 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 11:37:46 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 11:37:46 The following 1 profile is active: "dev"
+2026-09-20 11:37:48 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 11:37:48 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 11:37:48 Finished Spring Data repository scanning in 24 ms. Found 0 Redis repository interfaces.
+2026-09-20 11:37:50 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 11:37:50 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 11:37:50 Starting service [Tomcat]
+2026-09-20 11:37:50 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 11:37:50 Initializing Spring embedded WebApplicationContext
+2026-09-20 11:37:50 Root WebApplicationContext: initialization completed in 3738 ms
+2026-09-20 11:37:56 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 11:37:56 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 11:37:56 Started ManagerApplication in 10.181 seconds (process running for 11.39)
+2026-09-20 11:38:00 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 11:38:00 Initializing Servlet 'dispatcherServlet'
+2026-09-20 11:38:00 Completed initialization in 3 ms
+2026-09-20 11:38:02 HikariPool-1 - Starting...
+2026-09-20 11:38:02 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3f8da956
+2026-09-20 11:38:02 HikariPool-1 - Start completed.
+2026-09-20 11:38:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:38:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:38:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:38:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:38:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:38:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:38:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:38:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:38:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:38:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:38:03 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:38:03 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:38:03 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 11:38:03 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 11:38:04 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 11:38:04 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 11:38:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:38:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:38:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:38:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:38:04 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 11:38:04 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 11:38:05 短线选股HTTP失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 11:38:05 短线选股东财K线首次失败，熔断5分钟：期间K线全部直走腾讯兜底
+2026-09-20 12:03:49 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=10m45s197ms444µs).
+2026-09-20 14:01:43 HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h55m54s36ms266µs800ns).
+2026-09-20 14:07:34 HikariPool-1 - Shutdown initiated...
+2026-09-20 14:07:34 HikariPool-1 - Shutdown completed.
+2026-09-20 14:08:00 Starting ManagerApplication using Java 17.0.17 with PID 31740 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 14:08:00 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 14:08:00 The following 1 profile is active: "dev"
+2026-09-20 14:08:01 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 14:08:01 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 14:08:01 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-20 14:08:02 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 14:08:02 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:08:02 Starting service [Tomcat]
+2026-09-20 14:08:02 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 14:08:02 Initializing Spring embedded WebApplicationContext
+2026-09-20 14:08:02 Root WebApplicationContext: initialization completed in 2121 ms
+2026-09-20 14:08:05 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:08:05 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 14:08:05 Started ManagerApplication in 5.968 seconds (process running for 7.283)
+2026-09-20 14:08:18 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 14:08:18 Initializing Servlet 'dispatcherServlet'
+2026-09-20 14:08:18 Completed initialization in 2 ms
+2026-09-20 14:08:19 HikariPool-1 - Starting...
+2026-09-20 14:08:19 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2e47885f
+2026-09-20 14:08:19 HikariPool-1 - Start completed.
+2026-09-20 14:08:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:08:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:08:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:08:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:08:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:08:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:08:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:08:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:08:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:08:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:08:37 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:08:37 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:08:37 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:08:37 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:08:38 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:08:38 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:08:45 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:08:45 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:08:45 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:08:45 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:08:45 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:08:45 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:08:45 短线选股HTTP失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:08:45 短线选股东财K线首次失败，熔断5分钟：期间K线全部直走腾讯兜底
+2026-09-20 14:15:35 HikariPool-1 - Shutdown initiated...
+2026-09-20 14:15:35 HikariPool-1 - Shutdown completed.
+2026-09-20 14:15:50 Starting ManagerApplication using Java 17.0.17 with PID 31928 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 14:15:50 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 14:15:50 The following 1 profile is active: "dev"
+2026-09-20 14:15:51 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 14:15:51 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 14:15:51 Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+2026-09-20 14:15:52 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 14:15:52 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:15:52 Starting service [Tomcat]
+2026-09-20 14:15:52 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 14:15:52 Initializing Spring embedded WebApplicationContext
+2026-09-20 14:15:52 Root WebApplicationContext: initialization completed in 1655 ms
+2026-09-20 14:15:54 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:15:54 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 14:15:54 Started ManagerApplication in 5.117 seconds (process running for 6.187)
+2026-09-20 14:16:06 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 14:16:06 Initializing Servlet 'dispatcherServlet'
+2026-09-20 14:16:06 Completed initialization in 3 ms
+2026-09-20 14:16:07 HikariPool-1 - Starting...
+2026-09-20 14:16:07 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@66798180
+2026-09-20 14:16:07 HikariPool-1 - Start completed.
+2026-09-20 14:16:09 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:16:09 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:16:09 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:16:09 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:16:09 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:16:09 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:16:09 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:16:09 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:16:09 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:16:09 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:16:09 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:16:09 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:16:09 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:16:09 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:16:09 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:16:09 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:16:10 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:16:10 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:16:10 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:16:10 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:16:10 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:16:10 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:16:10 短线选股HTTP失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:16:10 短线选股东财K线首次失败，熔断5分钟：期间K线全部直走腾讯兜底
+2026-09-20 14:16:20 短线选股数据采集 | 涨停池=78 炸板池=25 快照候选=0 K线成功=40/40 | 耗时=9087ms
+2026-09-20 14:27:16 HikariPool-1 - Shutdown initiated...
+2026-09-20 14:27:16 HikariPool-1 - Shutdown completed.
+2026-09-20 14:27:32 Starting ManagerApplication using Java 17.0.17 with PID 34212 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 14:27:32 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 14:27:32 The following 1 profile is active: "dev"
+2026-09-20 14:27:33 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 14:27:33 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 14:27:33 Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+2026-09-20 14:27:33 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 14:27:33 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:27:33 Starting service [Tomcat]
+2026-09-20 14:27:33 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 14:27:34 Initializing Spring embedded WebApplicationContext
+2026-09-20 14:27:34 Root WebApplicationContext: initialization completed in 1869 ms
+2026-09-20 14:27:36 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:27:36 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 14:27:36 Started ManagerApplication in 5.252 seconds (process running for 6.387)
+2026-09-20 14:27:42 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 14:27:42 Initializing Servlet 'dispatcherServlet'
+2026-09-20 14:27:42 Completed initialization in 3 ms
+2026-09-20 14:27:43 HikariPool-1 - Starting...
+2026-09-20 14:27:44 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@39ce1fa4
+2026-09-20 14:27:44 HikariPool-1 - Start completed.
+2026-09-20 14:27:45 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:27:45 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:27:45 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:27:45 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:27:45 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:27:45 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:27:45 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:27:45 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:27:45 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:27:45 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:27:45 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:27:45 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:27:45 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:27:45 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:27:45 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:27:45 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:27:46 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:27:46 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:27:46 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:27:46 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:27:46 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:27:46 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:27:46 短线选股HTTP失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:27:46 短线选股东财K线首次失败，熔断5分钟：期间K线全部直走腾讯兜底
+2026-09-20 14:28:02 短线选股数据采集 | 涨停池=78 炸板池=25 快照候选=70 K线成功=92/92 | 耗时=16154ms
+2026-09-20 14:28:03 短线推荐归库失败 tradeDate=2026-09-18 phase=close
+org.springframework.dao.DataIntegrityViolationException: 
+### Error updating database.  Cause: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Out of range value for column 'volume_ratio' at row 11
+### The error may exist in file [D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes\mapper\assetControlArea\ShortTermPickMapper.xml]
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: insert into t_short_term_pick_daily         (trade_date, pick_phase, pick_type, priority, stock_code, stock_name, market, industry, concept,          price, change_pct, total_cap, circ_cap, turnover_rate, volume_ratio, main_inflow, main_inflow_pct,          outer_inner_ratio, lianban, seal_ratio, zhaban_count, zt_time_first, zt_count_60d,          low_depth, vol_shrink, trend_ma_ok, gain_5d, gain_20d, score,          behavior, behavior_evidence, priority_reason, confirm_signal, risk_note)         values                        (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)          ,              (?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?, ?,              ?, ?, ?, ?,              ?, ?)
+### Cause: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Out of range value for column 'volume_ratio' at row 11
+; Data truncation: Out of range value for column 'volume_ratio' at row 11
+	at org.springframework.jdbc.support.SQLStateSQLExceptionTranslator.doTranslate(SQLStateSQLExceptionTranslator.java:105)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:70)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:79)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:79)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:92)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:439)
+	at jdk.proxy2/jdk.proxy2.$Proxy81.insert(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.insert(SqlSessionTemplate.java:272)
+	at org.apache.ibatis.binding.MapperMethod.execute(MapperMethod.java:62)
+	at org.apache.ibatis.binding.MapperProxy$PlainMethodInvoker.invoke(MapperProxy.java:145)
+	at org.apache.ibatis.binding.MapperProxy.invoke(MapperProxy.java:86)
+	at jdk.proxy2/jdk.proxy2.$Proxy92.batchInsertPicks(Unknown Source)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.ShortTermPickServiceImpl.computeAndPersist(ShortTermPickServiceImpl.java:343)
+	at com.xk.srhwzzqdn.manager.assetControlArea.service.impl.ShortTermPickServiceImpl.getShortTermStocks(ShortTermPickServiceImpl.java:164)
+	at com.xk.srhwzzqdn.manager.assetControlArea.controller.ShortTermPickController.getShortTermStocks(ShortTermPickController.java:35)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:207)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:152)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:884)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:797)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1081)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:974)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1011)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:537)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:631)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:166)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:341)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:390)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:894)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+Caused by: com.mysql.cj.jdbc.exceptions.MysqlDataTruncation: Data truncation: Out of range value for column 'volume_ratio' at row 11
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:104)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:916)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:354)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59)
+	at jdk.proxy3/jdk.proxy3.$Proxy153.execute(Unknown Source)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.update(PreparedStatementHandler.java:47)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.update(RoutingStatementHandler.java:74)
+	at org.apache.ibatis.executor.SimpleExecutor.doUpdate(SimpleExecutor.java:50)
+	at org.apache.ibatis.executor.BaseExecutor.update(BaseExecutor.java:117)
+	at org.apache.ibatis.executor.CachingExecutor.update(CachingExecutor.java:76)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:64)
+	at jdk.proxy2/jdk.proxy2.$Proxy151.update(Unknown Source)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.update(DefaultSqlSession.java:194)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.insert(DefaultSqlSession.java:181)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:425)
+	... 59 common frames omitted
+2026-09-20 14:33:53 HikariPool-1 - Shutdown initiated...
+2026-09-20 14:33:53 HikariPool-1 - Shutdown completed.
+2026-09-20 14:34:10 Starting ManagerApplication using Java 17.0.17 with PID 30004 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 14:34:10 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 14:34:10 The following 1 profile is active: "dev"
+2026-09-20 14:34:11 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 14:34:11 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 14:34:11 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-20 14:34:11 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 14:34:11 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:34:11 Starting service [Tomcat]
+2026-09-20 14:34:11 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 14:34:12 Initializing Spring embedded WebApplicationContext
+2026-09-20 14:34:12 Root WebApplicationContext: initialization completed in 1935 ms
+2026-09-20 14:34:14 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:34:14 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 14:34:14 Started ManagerApplication in 5.791 seconds (process running for 6.938)
+2026-09-20 14:34:18 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 14:34:18 Initializing Servlet 'dispatcherServlet'
+2026-09-20 14:34:18 Completed initialization in 3 ms
+2026-09-20 14:34:19 HikariPool-1 - Starting...
+2026-09-20 14:34:19 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@29e0edb
+2026-09-20 14:34:19 HikariPool-1 - Start completed.
+2026-09-20 14:34:21 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:34:21 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:34:21 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:34:21 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:34:21 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:34:21 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:34:21 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:34:21 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:34:21 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:34:21 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:34:21 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:34:21 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:34:21 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:34:21 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:34:21 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:34:21 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:34:22 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:34:22 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:34:22 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:34:22 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:34:22 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:34:22 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:34:22 短线选股HTTP失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:34:22 短线选股东财K线首次失败，熔断5分钟：期间K线全部直走腾讯兜底
+2026-09-20 14:34:22 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh000001,day,,,5,qfq
+2026-09-20 14:34:22 最近交易日判定双兜底失败，退化为本地日历（节假日可能误判）：2026-09-18
+2026-09-20 14:34:26 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603230,day,,,60,qfq
+2026-09-20 14:34:26 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz001216,day,,,60,qfq
+2026-09-20 14:34:26 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002285,day,,,60,qfq
+2026-09-20 14:34:26 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603248,day,,,60,qfq
+2026-09-20 14:34:27 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz301390,day,,,60,qfq
+2026-09-20 14:34:27 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002836,day,,,60,qfq
+2026-09-20 14:34:27 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000504,day,,,60,qfq
+2026-09-20 14:34:27 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600630,day,,,60,qfq
+2026-09-20 14:34:27 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600448,day,,,60,qfq
+2026-09-20 14:34:27 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603626,day,,,60,qfq
+2026-09-20 14:34:27 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002453,day,,,60,qfq
+2026-09-20 14:34:27 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600127,day,,,60,qfq
+2026-09-20 14:34:28 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz301689,day,,,60,qfq
+2026-09-20 14:34:28 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002185,day,,,60,qfq
+2026-09-20 14:34:28 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603118,day,,,60,qfq
+2026-09-20 14:34:28 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603686,day,,,60,qfq
+2026-09-20 14:34:28 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz001212,day,,,60,qfq
+2026-09-20 14:34:28 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz001317,day,,,60,qfq
+2026-09-20 14:34:28 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz001376,day,,,60,qfq
+2026-09-20 14:34:28 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002980,day,,,60,qfq
+2026-09-20 14:34:29 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz301583,day,,,60,qfq
+2026-09-20 14:34:29 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002965,day,,,60,qfq
+2026-09-20 14:34:29 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh601123,day,,,60,qfq
+2026-09-20 14:34:29 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603068,day,,,60,qfq
+2026-09-20 14:34:29 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002471,day,,,60,qfq
+2026-09-20 14:34:29 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz001399,day,,,60,qfq
+2026-09-20 14:34:29 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002161,day,,,60,qfq
+2026-09-20 14:34:29 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002713,day,,,60,qfq
+2026-09-20 14:34:30 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600621,day,,,60,qfq
+2026-09-20 14:34:30 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603138,day,,,60,qfq
+2026-09-20 14:34:30 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002300,day,,,60,qfq
+2026-09-20 14:34:30 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002298,day,,,60,qfq
+2026-09-20 14:34:30 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002971,day,,,60,qfq
+2026-09-20 14:34:30 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh688292,day,,,60,qfq
+2026-09-20 14:34:30 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600343,day,,,60,qfq
+2026-09-20 14:34:30 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz001211,day,,,60,qfq
+2026-09-20 14:34:31 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz001229,day,,,60,qfq
+2026-09-20 14:34:31 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600577,day,,,60,qfq
+2026-09-20 14:34:31 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603016,day,,,60,qfq
+2026-09-20 14:34:31 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh601133,day,,,60,qfq
+2026-09-20 14:34:31 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002589,day,,,60,qfq
+2026-09-20 14:34:31 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000002,day,,,60,qfq
+2026-09-20 14:34:31 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603232,day,,,60,qfq
+2026-09-20 14:34:31 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh605188,day,,,60,qfq
+2026-09-20 14:34:32 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000410,day,,,60,qfq
+2026-09-20 14:34:32 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600838,day,,,60,qfq
+2026-09-20 14:34:32 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600261,day,,,60,qfq
+2026-09-20 14:34:32 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000532,day,,,60,qfq
+2026-09-20 14:34:32 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603122,day,,,60,qfq
+2026-09-20 14:34:33 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002005,day,,,60,qfq
+2026-09-20 14:34:33 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh601086,day,,,60,qfq
+2026-09-20 14:34:33 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz003041,day,,,60,qfq
+2026-09-20 14:34:33 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000710,day,,,60,qfq
+2026-09-20 14:34:33 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603725,day,,,60,qfq
+2026-09-20 14:34:33 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600640,day,,,60,qfq
+2026-09-20 14:34:33 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000731,day,,,60,qfq
+2026-09-20 14:34:33 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600847,day,,,60,qfq
+2026-09-20 14:34:34 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh601811,day,,,60,qfq
+2026-09-20 14:34:34 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600719,day,,,60,qfq
+2026-09-20 14:34:34 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz003006,day,,,60,qfq
+2026-09-20 14:34:34 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz001248,day,,,60,qfq
+2026-09-20 14:34:34 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002685,day,,,60,qfq
+2026-09-20 14:34:34 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002134,day,,,60,qfq
+2026-09-20 14:34:34 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002029,day,,,60,qfq
+2026-09-20 14:34:34 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600746,day,,,60,qfq
+2026-09-20 14:34:35 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002623,day,,,60,qfq
+2026-09-20 14:34:35 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz301230,day,,,60,qfq
+2026-09-20 14:34:35 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000509,day,,,60,qfq
+2026-09-20 14:34:35 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh601369,day,,,60,qfq
+2026-09-20 14:34:35 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600503,day,,,60,qfq
+2026-09-20 14:34:35 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600163,day,,,60,qfq
+2026-09-20 14:34:35 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002724,day,,,60,qfq
+2026-09-20 14:34:35 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002440,day,,,60,qfq
+2026-09-20 14:34:36 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600383,day,,,60,qfq
+2026-09-20 14:34:36 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603353,day,,,60,qfq
+2026-09-20 14:34:36 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603177,day,,,60,qfq
+2026-09-20 14:34:36 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh601519,day,,,60,qfq
+2026-09-20 14:34:36 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000790,day,,,60,qfq
+2026-09-20 14:34:36 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000797,day,,,60,qfq
+2026-09-20 14:34:36 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz300122,day,,,60,qfq
+2026-09-20 14:34:36 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002728,day,,,60,qfq
+2026-09-20 14:34:37 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz002296,day,,,60,qfq
+2026-09-20 14:34:37 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603120,day,,,60,qfq
+2026-09-20 14:34:37 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz300827,day,,,60,qfq
+2026-09-20 14:34:37 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz300018,day,,,60,qfq
+2026-09-20 14:34:37 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh600638,day,,,60,qfq
+2026-09-20 14:34:37 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz300634,day,,,60,qfq
+2026-09-20 14:34:37 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000536,day,,,60,qfq
+2026-09-20 14:34:37 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh688596,day,,,60,qfq
+2026-09-20 14:34:38 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh603127,day,,,60,qfq
+2026-09-20 14:34:38 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sh688362,day,,,60,qfq
+2026-09-20 14:34:38 短线选股HTTP非200 | 状态=501 | 尝试=1/1 | url=https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz300510,day,,,60,qfq
+2026-09-20 14:34:38 短线选股数据采集 | 涨停池=78 炸板池=25 快照候选=70 K线成功=0/92 | 耗时=15386ms
+2026-09-20 14:41:01 HikariPool-1 - Shutdown initiated...
+2026-09-20 14:41:01 HikariPool-1 - Shutdown completed.
+2026-09-20 14:41:20 Starting ManagerApplication using Java 17.0.17 with PID 27704 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 14:41:20 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 14:41:20 The following 1 profile is active: "dev"
+2026-09-20 14:41:21 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 14:41:21 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 14:41:21 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-20 14:41:21 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 14:41:21 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:41:21 Starting service [Tomcat]
+2026-09-20 14:41:21 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 14:41:22 Initializing Spring embedded WebApplicationContext
+2026-09-20 14:41:22 Root WebApplicationContext: initialization completed in 1902 ms
+2026-09-20 14:41:24 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 14:41:24 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 14:41:24 Started ManagerApplication in 5.567 seconds (process running for 6.546)
+2026-09-20 14:41:30 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 14:41:30 Initializing Servlet 'dispatcherServlet'
+2026-09-20 14:41:30 Completed initialization in 2 ms
+2026-09-20 14:41:31 HikariPool-1 - Starting...
+2026-09-20 14:41:31 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@66798180
+2026-09-20 14:41:31 HikariPool-1 - Start completed.
+2026-09-20 14:41:32 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:41:32 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:41:32 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:41:32 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:41:32 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:41:32 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:41:32 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:41:33 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:41:33 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:41:33 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:41:33 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:41:33 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:41:33 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:41:33 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:41:33 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:41:33 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 14:41:33 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:41:33 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:41:34 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:41:34 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:41:34 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 14:41:34 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 14:41:34 短线选股HTTP失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 14:41:34 短线选股东财K线首次失败，熔断5分钟：期间K线全部直走腾讯兜底
+2026-09-20 14:41:48 短线选股数据采集 | 涨停池=78 炸板池=25 快照候选=70 K线成功=92/92 | 耗时=13785ms
+2026-09-20 15:01:03 HikariPool-1 - Shutdown initiated...
+2026-09-20 15:01:03 HikariPool-1 - Shutdown completed.
+2026-09-20 15:01:18 Starting ManagerApplication using Java 17.0.17 with PID 27936 (D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\target\classes started by 20183 in D:\personLearn\learnJava\personProject\srhwzzqdn)
+2026-09-20 15:01:18 Running with Spring Boot v3.0.5, Spring v6.0.7
+2026-09-20 15:01:18 The following 1 profile is active: "dev"
+2026-09-20 15:01:19 Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-20 15:01:19 Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-20 15:01:19 Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-20 15:01:20 Tomcat initialized with port(s): 8400 (http)
+2026-09-20 15:01:20 Initializing ProtocolHandler ["http-nio-8400"]
+2026-09-20 15:01:20 Starting service [Tomcat]
+2026-09-20 15:01:20 Starting Servlet engine: [Apache Tomcat/10.1.7]
+2026-09-20 15:01:20 Initializing Spring embedded WebApplicationContext
+2026-09-20 15:01:20 Root WebApplicationContext: initialization completed in 1884 ms
+2026-09-20 15:01:23 Starting ProtocolHandler ["http-nio-8400"]
+2026-09-20 15:01:23 Tomcat started on port(s): 8400 (http) with context path ''
+2026-09-20 15:01:23 Started ManagerApplication in 5.367 seconds (process running for 6.57)
+2026-09-20 15:01:26 Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-20 15:01:26 Initializing Servlet 'dispatcherServlet'
+2026-09-20 15:01:26 Completed initialization in 4 ms
+2026-09-20 15:01:27 HikariPool-1 - Starting...
+2026-09-20 15:01:28 HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@5d0b7b28
+2026-09-20 15:01:28 HikariPool-1 - Start completed.
+2026-09-20 15:01:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 15:01:30 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 15:01:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 15:01:30 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 15:01:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 15:01:30 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 15:01:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 15:01:30 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 15:01:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 15:01:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 15:01:30 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 15:01:30 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 15:01:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 15:01:30 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 15:01:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 15:01:30 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 15:01:30 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 15:01:30 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级
+2026-09-20 15:01:30 短线选股HTTP失败 | 尝试=1/1 | url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 | 原因=push2his.eastmoney.com:80 failed to respond
+2026-09-20 15:01:30 短线选股东财K线首次失败，熔断5分钟：期间K线全部直走腾讯兜底
+2026-09-20 15:01:30 I/O exception (org.apache.http.NoHttpResponseException) caught when processing request to {}->http://push2his.eastmoney.com:80: The target server failed to respond
+2026-09-20 15:01:30 Retrying request to {}->http://push2his.eastmoney.com:80
+2026-09-20 15:01:30 HTTP请求失败 url=http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=1.000001&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57 err=push2his.eastmoney.com:80 failed to respond
+2026-09-20 15:01:30 东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级

@@ -116,3 +116,20 @@ export const AnalyzeMarketCycleWithAi = () => {
   // 中期研判+AI策略推荐：研判缓存命中后主要是大模型耗时，放宽超时
   return request({ url: `${marketApi}/analyzeMarketCycleWithAi`, method: 'get', timeout: 900000 });
 };
+
+// ==================== 短线选股（短线选股标签页） ====================
+const shortTermApi = '/superBrain/assetControl/shortTerm';
+
+export const GetShortTermStocks = () => {
+  // 后端需串行+并发采集池/快照/约90只K线（首算约1分钟内，缓存命中毫秒级返回），放宽超时
+  return request({ url: `${shortTermApi}/getShortTermStocks`, method: 'get', timeout: 300000 });
+};
+
+export const GetShortTermExperience = (limit) => {
+  return request({ url: `${shortTermApi}/getExperience/${limit}`, method: 'get', timeout: 30000 });
+};
+
+export const ReviewShortTermPicks = () => {
+  // 复盘：最多30只K线验证+一次AI总结，放宽超时
+  return request({ url: `${shortTermApi}/review`, method: 'get', timeout: 300000 });
+};

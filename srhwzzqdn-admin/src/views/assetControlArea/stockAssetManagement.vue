@@ -11,6 +11,9 @@
       <el-tab-pane label="价值选股" name="fundamental">
         <TabFundamentalScreening v-if="activeTab === 'fundamental'" />
       </el-tab-pane>
+      <el-tab-pane label="短线选股" name="shortTerm">
+        <TabShortTermScreening v-if="activeTab === 'shortTerm'" />
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -20,6 +23,7 @@ import { ref } from 'vue'
 import TabStockAnalysis from './stockAssetManagementTabs/tabStockAnalysis.vue'
 import TabFundamentalScreening from './stockAssetManagementTabs/tabFundamentalScreening.vue'
 import TabMarketAnalysis from './stockAssetManagementTabs/tabMarketAnalysis.vue'
+import TabShortTermScreening from './stockAssetManagementTabs/tabShortTermScreening.vue'
 
 const activeTab = ref('market')
 </script>
