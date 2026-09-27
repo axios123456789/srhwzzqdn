@@ -46,4 +46,15 @@ public interface ShortTermPickMapper {
      * 查询与指定推荐列表相关的全部经验（复盘AI输入）
      */
     List<ShortTermExperience> selectExperienceByDates(@Param("dates") List<Date> dates);
+
+    /**
+     * 按代码批量查询库内行业/概念（东财失败时新浪/腾讯兜底源无此字段，从t_stock_basic补齐）
+     */
+    List<java.util.Map<String, Object>> selectIndustryByCodes(@Param("codes") List<String> codes);
+
+    /**
+     * 批量补库行业/概念（东财正常时把当轮见到的代码/名称/行业/概念增量写入t_stock_basic，
+     * 供东财封禁期fillIndustryFromDb兜底读取；存在则仅更新非空字段，不覆盖已有公司档案字段）
+     */
+    void upsertBasicIndustry(@Param("list") List<java.util.Map<String, Object>> list);
 }

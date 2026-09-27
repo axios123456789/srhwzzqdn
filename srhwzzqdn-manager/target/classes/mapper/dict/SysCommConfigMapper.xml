@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xk.srhwzzqdn.manager.system.mapper.SysCommConfigMapper">
+    <sql id="columns">
+        id,
+        value,
+        description,
+        interface_name as interfaceName,
+        fallback_url as fallbackUrl,
+        category,
+        status,
+        create_time as createTime,
+        update_time as updateTime,
+        create_by as createBy,
+        update_by as updateBy
+    </sql>
+
+    <insert id="insert">
+        insert into t_sys_comm_config(
+            id, value, description, interface_name, fallback_url,
+            category, status, create_time, create_by
+        ) values (
+            #{id}, #{value}, #{description}, #{interfaceName}, #{fallbackUrl},
+            #{category}, #{status}, now(), #{createBy}
+        )
+    </insert>
+
+    <update id="update">
+        update t_sys_comm_config set
+        <if test="value != null">
+            value = #{value},
+        </if>
+        <if test="description != null">
+            description = #{description},
+        </if>
+        <if test="interfaceName != null">
+            interface_name = #{interfaceName},
+        </if>
+        <if test="fallbackUrl != null">
+            fallback_url = #{fallbackUrl},
+        </if>
+        <if test="category != null">
+            category = #{category},
+        </if>
+        <if test="status != null">
+            status = #{status},
+        </if>
+        update_time = now(),
+        update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from t_sys_comm_config where id = #{id}
+    </delete>
+
+    <select id="findList" resultType="com.xk.srhwzzqdn.model.entity.system.SysCommConfig">
+        select <include refid="columns"/>
+        from t_sys_comm_config
+        <where>
+            <if test="interfaceName != null and interfaceName != ''">
+                and interface_name like concat('%', #{interfaceName}, '%')
+            </if>
+            <if test="category != null and category != ''">
+                and category = #{category}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="id != null and id != ''">
+                and id like concat('%', #{id}, '%')
+            </if>
+        </where>
+        order by category, update_time desc
+    </select>
+
+    <select id="findAllEnabled" resultType="com.xk.srhwzzqdn.model.entity.system.SysCommConfig">
+        select <include refid="columns"/>
+        from t_sys_comm_config
+        where status = 1
+        order by category
+    </select>
+
+    <select id="findById" resultType="com.xk.srhwzzqdn.model.entity.system.SysCommConfig">
+        select <include refid="columns"/>
+        from t_sys_comm_config
+        where id = #{id}
+    </select>
+</mapper>

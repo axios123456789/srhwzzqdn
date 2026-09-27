@@ -29,6 +29,15 @@
       >
         <span>映射配置区</span>
       </div>
+      <div v-if="viewDictType != 4" @click="interfaceConfig">
+        <span>接口配置区</span>
+      </div>
+      <div
+        style="border-bottom: 3px solid green; color: green"
+        v-if="viewDictType == 4"
+      >
+        <span>接口配置区</span>
+      </div>
     </div>
     <!--  大脑字典A区展示  -->
     <div v-if="viewDictType == 1">
@@ -457,6 +466,161 @@
         :total="mapperTotal"
       />
     </div>
+
+    <!--  接口配置区展示  -->
+    <div v-if="viewDictType == 4">
+      <div class="search-div">
+        <el-form label-width="100px" size="small">
+          <el-row>
+            <el-col :span="6">
+              <el-form-item label="接口名称">
+                <el-input v-model="configQueryDto.interfaceName" style="width: 100%" clearable />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="分类">
+                <el-select v-model="configQueryDto.category" style="width: 100%" clearable placeholder="请选择">
+                  <el-option label="股票(stock)" value="stock" />
+                  <el-option label="交易(trial)" value="trial" />
+                  <el-option label="基金(fund)" value="fund" />
+                  <el-option label="通用(common)" value="common" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="状态">
+                <el-select v-model="configQueryDto.status" style="width: 100%" clearable placeholder="请选择">
+                  <el-option :key="1" label="启用" :value="1" />
+                  <el-option :key="0" label="停用" :value="0" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="配置id">
+                <el-input v-model="configQueryDto.id" style="width: 100%" clearable />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row style="display:flex">
+            <el-button type="primary" size="small" @click="searchConfig">搜索</el-button>
+            <el-button size="small" @click="resetConfigData">重置</el-button>
+          </el-row>
+        </el-form>
+      </div>
+
+      <div class="tools-div">
+        <el-button type="success" size="small" @click="addConfig">添 加</el-button>
+        <el-button type="warning" size="small" @click="handleAiFetchLatest" :loading="aiFetchLoading">
+          <el-icon><MagicStick /></el-icon>
+          AI自动获取最新接口
+        </el-button>
+      </div>
+
+      <el-table :data="configList" style="width: 100%" height="500" border>
+        <el-table-column label="操作" align="center" width="150" #default="scope">
+          <el-button type="primary" size="small" @click="editConfig(scope.row)">修改</el-button>
+          <el-button type="danger" size="small" @click="deleteConfig(scope.row.id)">删除</el-button>
+        </el-table-column>
+        <el-table-column prop="id" label="配置id" width="180" />
+        <el-table-column prop="interfaceName" label="接口名称" width="150" />
+        <el-table-column prop="value" label="接口URL" #default="scope" min-width="300">
+          <span style="word-break: break-all; font-size: 12px">{{ scope.row.value }}</span>
+        </el-table-column>
+        <el-table-column prop="fallbackUrl" label="兜底URL" #default="scope" min-width="250">
+          <span style="word-break: break-all; font-size: 12px; color: #999">{{ scope.row.fallbackUrl }}</span>
+        </el-table-column>
+        <el-table-column prop="category" label="分类" width="100" />
+        <el-table-column prop="status" label="状态" #default="scope" width="80">
+          <span v-if="scope.row.status == 1" style="color: green">启用</span>
+          <span v-else style="color: red">停用</span>
+        </el-table-column>
+        <el-table-column prop="description" label="描述" #default="scope" min-width="200">
+          <span style="word-break: break-all; font-size: 12px">{{ scope.row.description }}</span>
+        </el-table-column>
+        <el-table-column prop="updateTime" label="更新时间" width="170" />
+      </el-table>
+
+      <el-pagination
+        style="margin-top: 30px"
+        v-model:current-page="configPageParams.page"
+        v-model:page-size="configPageParams.limit"
+        :page-sizes="[10, 20, 50, 100]"
+        @size-change="configFetchData"
+        @current-change="configFetchData"
+        layout="total, sizes, prev, pager, next"
+        :total="configTotal"
+      />
+
+      <!-- 接口配置编辑弹窗 -->
+      <el-dialog v-model="configDialogVisible" :title="configForm.id ? '修改接口配置' : '添加接口配置'" width="50%">
+        <el-form label-width="120px">
+          <el-form-item label="配置id">
+            <el-input v-model="configForm.id" :disabled="!!configForm._exist" placeholder="如 stock_quote_url" />
+          </el-form-item>
+          <el-form-item label="接口名称">
+            <el-input v-model="configForm.interfaceName" placeholder="如 实时行情接口" />
+          </el-form-item>
+          <el-form-item label="接口URL">
+            <el-input v-model="configForm.value" type="textarea" :rows="2" placeholder="接口URL模板,含占位符如{stock_code}" />
+          </el-form-item>
+          <el-form-item label="兜底URL">
+            <el-input v-model="configForm.fallbackUrl" type="textarea" :rows="2" placeholder="原写死URL,数据库读不到时用此兜底" />
+          </el-form-item>
+          <el-form-item label="描述">
+            <el-input v-model="configForm.description" type="textarea" :rows="2" placeholder="接口描述,AI匹配用" />
+          </el-form-item>
+          <el-form-item label="分类">
+            <el-select v-model="configForm.category" clearable placeholder="请选择">
+              <el-option label="股票(stock)" value="stock" />
+              <el-option label="交易(trial)" value="trial" />
+              <el-option label="基金(fund)" value="fund" />
+              <el-option label="通用(common)" value="common" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态">
+            <el-radio-group v-model="configForm.status">
+              <el-radio :label="1">启用</el-radio>
+              <el-radio :label="0">停用</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitConfig">提交</el-button>
+            <el-button @click="configDialogVisible = false">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </el-dialog>
+
+      <!-- AI比对弹窗 -->
+      <el-dialog v-model="aiCompareDialogVisible" title="AI获取最新接口比对" width="70%" :close-on-click-modal="false">
+        <div style="margin-bottom: 10px; color: #666">
+          AI已获取最新接口,请勾选需要更新的接口,点击确认后批量更新数据库
+        </div>
+        <el-table :data="aiCompareList" ref="aiCompareTableRef" style="width: 100%" border max-height="500" @selection-change="handleAiCompareSelectionChange">
+          <el-table-column type="selection" width="55" :selectable="row => row.changed" />
+          <el-table-column prop="interfaceName" label="接口名称" width="150" />
+          <el-table-column prop="oldUrl" label="旧URL" #default="scope" min-width="250">
+            <span style="word-break: break-all; font-size: 12px; color: #999">{{ scope.row.oldUrl }}</span>
+          </el-table-column>
+          <el-table-column prop="newUrl" label="新URL" #default="scope" min-width="250">
+            <span style="word-break: break-all; font-size: 12px" :style="{ color: scope.row.changed ? '#e6a23c' : '#999' }">{{ scope.row.newUrl }}</span>
+          </el-table-column>
+          <el-table-column label="是否变化" #default="scope" width="100">
+            <el-tag v-if="scope.row.changed" type="warning" size="small">已变化</el-tag>
+            <el-tag v-else type="info" size="small">未变化</el-tag>
+          </el-table-column>
+          <el-table-column label="验证状态" #default="scope" width="200">
+            <el-tag v-if="scope.row.validated === true" type="success" size="small">已验证</el-tag>
+            <el-tag v-else-if="scope.row.validated === false" type="danger" size="small">未验证</el-tag>
+            <el-tag v-else type="info" size="small">-</el-tag>
+            <span v-if="scope.row.validateMsg" style="margin-left: 6px; font-size: 11px; color: #999">{{ scope.row.validateMsg }}</span>
+          </el-table-column>
+        </el-table>
+        <template #footer>
+          <el-button @click="aiCompareDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="confirmAiUpdate">确认更新勾选项</el-button>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -470,6 +634,11 @@ import {
   GetSysDictList,
   SaveDict,
   UpdateSysCode,
+  FindConfigPage,
+  SaveConfig,
+  UpdateConfig,
+  DeleteConfigById,
+  AiFetchLatestConfig,
 } from '@/api/sysDict'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
@@ -478,6 +647,7 @@ import {
   GetMapperConfigByType,
   SaveConfiguration,
 } from '@/api/mapperConfiguration'
+import { MagicStick } from '@element-plus/icons-vue'
 //-----------------------------------------------tab标签页切换------------------------------------
 const viewDictType = ref(1)
 const brainA = () => {
@@ -491,6 +661,10 @@ const brainB = () => {
 const mapperConfiguration = () => {
   viewDictType.value = 3
   mapperFetchData()
+}
+const interfaceConfig = () => {
+  viewDictType.value = 4
+  configFetchData()
 }
 
 //-----------------------------------------------查询数据字典列表----------------------------------
@@ -813,6 +987,171 @@ const deleteMapperConfigurationById = id => {
       ElMessage.error(message)
     }
   })
+}
+
+//----------------------------------------------------------接口配置区------------------------------------------------------
+const configList = ref([])
+const configTotal = ref(0)
+const configPageParams = ref({ page: 1, limit: 10 })
+const configQueryDto = ref({ interfaceName: '', category: '', status: null, id: '' })
+
+const configFetchData = async () => {
+  const { data } = await FindConfigPage(
+    configPageParams.value.page,
+    configPageParams.value.limit,
+    configQueryDto.value
+  )
+  configList.value = data.list
+  configTotal.value = data.total
+}
+
+const searchConfig = () => {
+  configPageParams.value.page = 1
+  configFetchData()
+}
+
+const resetConfigData = () => {
+  configQueryDto.value = { interfaceName: '', category: '', status: null, id: '' }
+  configPageParams.value.page = 1
+  configFetchData()
+}
+
+const configDialogVisible = ref(false)
+const configForm = ref({})
+
+const addConfig = () => {
+  configForm.value = { status: 1, _exist: false }
+  configDialogVisible.value = true
+}
+
+const editConfig = row => {
+  configForm.value = { ...row, _exist: true }
+  configDialogVisible.value = true
+}
+
+const submitConfig = async () => {
+  if (!configForm.value.id) {
+    ElMessage.warning('【配置id】不能为空')
+    return
+  }
+  if (!configForm.value.value) {
+    ElMessage.warning('【接口URL】不能为空')
+    return
+  }
+  if (configForm.value._exist) {
+    const { code, message } = await UpdateConfig(configForm.value)
+    if (code === 200) {
+      configDialogVisible.value = false
+      ElMessage.success('更新成功')
+      configFetchData()
+    } else {
+      ElMessage.error(message || '更新失败')
+    }
+  } else {
+    const { code, message } = await SaveConfig(configForm.value)
+    if (code === 200) {
+      configDialogVisible.value = false
+      ElMessage.success('添加成功')
+      configFetchData()
+    } else {
+      ElMessage.error(message || '添加失败')
+    }
+  }
+}
+
+const deleteConfig = id => {
+  ElMessageBox.confirm('此操作将永久删除该记录, 是否继续?', 'Warning', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(async () => {
+    const { code, message } = await DeleteConfigById(id)
+    if (code === 200) {
+      ElMessage.success(message || '删除成功')
+      configFetchData()
+    } else {
+      ElMessage.error(message || '删除失败')
+    }
+  })
+}
+
+// AI自动获取最新接口
+const aiFetchLoading = ref(false)
+const aiCompareDialogVisible = ref(false)
+const aiCompareList = ref([])
+const aiCompareTableRef = ref(null)
+const aiCompareSelection = ref([])
+
+const handleAiCompareSelectionChange = val => {
+  aiCompareSelection.value = val
+}
+
+const handleAiFetchLatest = async () => {
+  try {
+    await ElMessageBox.confirm('将调用AI全量获取最新可用接口,可能需要较长时间,是否继续?', 'AI获取确认', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+  } catch (e) { return }
+
+  aiFetchLoading.value = true
+  const fetchMsg = ElMessage({
+    message: 'AI正在获取最新接口,请耐心等待...',
+    type: 'info',
+    duration: 0,
+    showClose: false,
+  })
+
+  try {
+    const { code, data, message } = await AiFetchLatestConfig()
+    fetchMsg.close()
+    if (code === 200) {
+      aiCompareList.value = data || []
+      aiCompareDialogVisible.value = true
+      const changedCount = aiCompareList.value.filter(r => r.changed).length
+      ElMessage.success(`AI获取完成,共${aiCompareList.value.length}个接口,其中${changedCount}个有变化`)
+    } else {
+      ElMessage.error(message || 'AI获取失败')
+    }
+  } catch (error) {
+    fetchMsg.close()
+    console.error('AI获取最新接口失败:', error)
+    ElMessage.error('AI获取失败,请稍后重试')
+  } finally {
+    aiFetchLoading.value = false
+  }
+}
+
+const confirmAiUpdate = async () => {
+  if (aiCompareSelection.value.length === 0) {
+    ElMessage.warning('请勾选需要更新的接口')
+    return
+  }
+  const selectedRows = aiCompareSelection.value
+  const updateMsg = ElMessage({
+    message: `正在更新${selectedRows.length}个接口...`,
+    type: 'info',
+    duration: 0,
+    showClose: false,
+  })
+  try {
+    let successCount = 0
+    for (const row of selectedRows) {
+      const { code } = await UpdateConfig({
+        id: row.id,
+        value: row.newUrl,
+      })
+      if (code === 200) successCount++
+    }
+    updateMsg.close()
+    ElMessage.success(`更新完成,成功${successCount}/${selectedRows.length}个`)
+    aiCompareDialogVisible.value = false
+    configFetchData()
+  } catch (error) {
+    updateMsg.close()
+    ElMessage.error('批量更新失败,请稍后重试')
+  }
 }
 </script>
 

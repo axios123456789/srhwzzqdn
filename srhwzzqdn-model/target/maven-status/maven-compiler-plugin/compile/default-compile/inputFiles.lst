@@ -24,6 +24,7 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\c
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\trialExecutionArea\AutoGeneratePlanDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\FundNav.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\ShortTermPickDaily.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\SysCommConfigQueryDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\assetControl\TransactionAmountGroup.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\system\SysUserRole.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\assetControl\StockCapitalFlow.java
@@ -36,6 +37,7 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\c
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\SysRoleDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\memoryReceptionArea\WorkMemory.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\entity\system\SysAdministrative.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\vo\system\InterfaceCompareVo.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\LoginDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\trialExecutionArea\ReviewReportDto.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-model\src\main\java\com\xk\srhwzzqdn\model\dto\system\DistributeRoleDto.java

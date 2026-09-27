@@ -34,7 +34,7 @@ import java.nio.charset.StandardCharsets;
 public class DeepSeekApiUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(DeepSeekApiUtil.class);
-    private static final String DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
+    private static final String DEEPSEEK_API_URL_FALLBACK = "https://api.deepseek.com/v1/chat/completions";
 
     @Value("${deepseek.api.key:}")
     private String apiKey;
@@ -113,7 +113,7 @@ public class DeepSeekApiUtil {
             String jsonBody = requestBody.toJSONString();
             logger.debug("请求 DeepSeek API，请求体大小：{} bytes", jsonBody.getBytes(StandardCharsets.UTF_8).length);
 
-            URL url = new URL(DEEPSEEK_API_URL);
+            URL url = new URL(InterfaceConfigUtil.getUrl("ai_deepseek_url", DEEPSEEK_API_URL_FALLBACK));
             conn = (HttpsURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");

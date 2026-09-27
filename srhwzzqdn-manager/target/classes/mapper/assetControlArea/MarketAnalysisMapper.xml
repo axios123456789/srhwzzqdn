@@ -111,4 +111,11 @@
         ORDER BY market_date DESC
         LIMIT #{limit}
     </select>
+
+    <!-- 更新指定交易日的AI历史复盘经验，供后续AI分析明日展望时结合历史失败经验形成教训 -->
+    <update id="updateAiHistoryReview">
+        UPDATE t_market_analysis_daily
+        SET ai_history_review = #{aiHistoryReview}, update_time = NOW()
+        WHERE market_date = DATE(#{marketDate})
+    </update>
 </mapper>

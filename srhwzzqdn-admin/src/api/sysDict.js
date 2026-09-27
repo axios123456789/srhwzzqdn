@@ -102,3 +102,66 @@ export const GetAllSysCode = type => {
     method: 'get',
   })
 }
+
+// ============ 接口配置区（t_sys_comm_config） ============
+const config_api = '/superBrain/system/sysCommConfig'
+
+// 分页查询接口配置
+export const FindConfigPage = (current, limit, queryDto) => {
+  return request({
+    url: `${config_api}/findPage/${current}/${limit}`,
+    method: 'get',
+    params: queryDto,
+  })
+}
+
+// 查询全部启用的接口配置
+export const FindAllEnabledConfig = () => {
+  return request({
+    url: `${config_api}/findAllEnabled`,
+    method: 'get',
+  })
+}
+
+// 根据id查询接口配置
+export const FindConfigById = id => {
+  return request({
+    url: `${config_api}/findById/${id}`,
+    method: 'get',
+  })
+}
+
+// 新增接口配置
+export const SaveConfig = config => {
+  return request({
+    url: `${config_api}/save`,
+    method: 'post',
+    data: config,
+  })
+}
+
+// 修改接口配置
+export const UpdateConfig = config => {
+  return request({
+    url: `${config_api}/update`,
+    method: 'put',
+    data: config,
+  })
+}
+
+// 删除接口配置
+export const DeleteConfigById = id => {
+  return request({
+    url: `${config_api}/deleteById/${id}`,
+    method: 'delete',
+  })
+}
+
+// AI自动全量获取最新可用接口
+export const AiFetchLatestConfig = () => {
+  return request({
+    url: `${config_api}/aiFetchLatest`,
+    method: 'post',
+    timeout: 900000,
+  })
+}

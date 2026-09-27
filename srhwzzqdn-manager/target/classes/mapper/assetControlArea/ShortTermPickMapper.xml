@@ -72,4 +72,25 @@
         </foreach>
         order by exp_date desc
     </select>
+    <!-- 按代码批量查询库内行业/概念（兜底源字段补齐用，仅取缺失字段） -->
+    <select id="selectIndustryByCodes" resultType="java.util.HashMap">
+        select stock_code as stockCode, industry, concept_sectors as conceptSectors
+        from t_stock_basic
+        where stock_code in
+        <foreach collection="codes" item="c" open="(" separator="," close=")">#{c}</foreach>
+    </select>
+
+    <!-- 批量补库行业/概念（东财正常时增量入库，封禁期兜底读取）；stock_code有唯一索引，
+         已存在的行仅用非空值更新名称/行业/概念，绝不触碰公司档案等其他字段 -->
+    <insert id="upsertBasicIndustry">
+        insert into t_stock_basic (stock_code, stock_name, industry, concept_sectors)
+        values
+        <foreach collection="list" item="s" separator=",">
+            (#{s.stockCode}, #{s.stockName}, #{s.industry}, #{s.concept})
+        </foreach>
+        on duplicate key update
+            stock_name = if(values(stock_name) is null or values(stock_name) = '', stock_name, values(stock_name)),
+            industry = if(values(industry) is null or values(industry) = '', industry, values(industry)),
+            concept_sectors = if(values(concept_sectors) is null or values(concept_sectors) = '', concept_sectors, values(concept_sectors))
+    </insert>
 </mapper>

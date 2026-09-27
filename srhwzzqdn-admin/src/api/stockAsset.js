@@ -125,6 +125,11 @@ export const GetShortTermStocks = () => {
   return request({ url: `${shortTermApi}/getShortTermStocks`, method: 'get', timeout: 300000 });
 };
 
+export const RefreshShortTermStocks = () => {
+  // 刷新精选按钮专用：不管什么时段直接实时采集+先删后入库，首算约1分钟内，放宽超时
+  return request({ url: `${shortTermApi}/refreshShortTermStocks`, method: 'get', timeout: 300000 });
+};
+
 export const GetShortTermExperience = (limit) => {
   return request({ url: `${shortTermApi}/getExperience/${limit}`, method: 'get', timeout: 30000 });
 };

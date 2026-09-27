@@ -6,12 +6,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.xk.srhwzzqdn.manager.assetControlArea.mapper.ShortTermPickMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.ShortTermPickService;
 import com.xk.srhwzzqdn.manager.util.AiCommonUtil;
+import com.xk.srhwzzqdn.manager.util.InterfaceConfigUtil;
 import com.xk.srhwzzqdn.model.entity.assetControl.ShortTermExperience;
 import com.xk.srhwzzqdn.model.entity.assetControl.ShortTermPickDaily;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -26,9 +28,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 短线选股核心实现（独立服务，不改动原有选股/研判功能）
@@ -59,17 +64,38 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
     @Autowired
     private AiCommonUtil aiCommonUtil;
 
-    // ===== 东财涨停/炸板池（与市场研判同源模板） =====
-    private static final String ZT_POOL_URL_TPL =
-            "http://push2ex.eastmoney.com/getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt"
-                    + "&Pageindex=0&pagesize=600&sort=fbt%%3Aasc&date=%s";
-    private static final String ZB_POOL_URL_TPL =
-            "http://push2ex.eastmoney.com/getTopicZBPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt"
-                    + "&Pageindex=0&pagesize=600&sort=fbt%%3Aasc&date=%s";
+    // ===== 东财涨停/炸板池（与市场研判同源模板，URL走配置表 t_sys_comm_config） =====
+    private static String getZtPoolUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("market_zt_pool_url", "http://push2ex.eastmoney.com/getTopicZTPool");
+        return base + "?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=600&sort=fbt%%3Aasc&date=%s";
+    }
+    private static String getZbPoolUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("market_zb_pool_url", "http://push2ex.eastmoney.com/getTopicZBPool");
+        return base + "?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=600&sort=fbt%%3Aasc&date=%s";
+    }
 
     // ===== 行情快照clist：沪深A股，按主力净流入占比(f184)降序（f62净流入额会被大市值股霸榜，过滤后候选为0） =====
     // 注意：clist单页pz上限实测100，需翻页pn=1..3覆盖f184 top300（宽口径粗筛基数）
-    private static final String[] CLIST_HOSTS = {"https://push2delay.eastmoney.com", "https://push2.eastmoney.com"};
+    // host走配置表（stock_clist_host_delay/stock_clist_host_main），DB异常用原写死值兜底
+    private static String[] getClistHosts() {
+        String delay = InterfaceConfigUtil.getUrl("stock_clist_host_delay", "https://push2delay.eastmoney.com");
+        String main = InterfaceConfigUtil.getUrl("stock_clist_host_main", "https://push2.eastmoney.com");
+        return new String[]{delay, main};
+    }
+    // 新浪全市场快照兜底URL（东财clist双域名均失败时使用）：提供换手率/流通市值/涨跌幅，无主力净流入/量比/行业/概念
+    private static String getSinaHqNodeUrl() {
+        return InterfaceConfigUtil.getUrl("stock_sina_hqnode_url",
+                "https://vip.stock.finance.sina.com.cn/quotes_service/api/json_v2.php/Market_Center.getHQNodeData");
+    }
+    // 新浪批量行情兜底URL（东财ulist双域名均失败时使用）：提供价格/涨跌幅，无主力净流入/量比/行业/概念
+    private static String getSinaQuoteUrl() {
+        return InterfaceConfigUtil.getUrl("stock_sina_quote_url", "https://hq.sinajs.cn/list=");
+    }
+    // 腾讯批量行情兜底URL（东财ulist失败→腾讯→新浪三级兜底）：提供价格/涨跌幅/换手率/量比/总市值，无主力资金/行业/概念
+    // 注意与stock_tx_quote_url（纯host，股票分析用base+"/q="+code）口径不同：本键直接拼代码，必须带/q=后缀
+    private static String getTxQuoteUrl() {
+        return InterfaceConfigUtil.getUrl("stock_tx_quote_batch_url", "https://qt.gtimg.cn/q=");
+    }
     private static final String CLIST_PATH =
             "/api/qt/clist/get?pn=%d&pz=100&po=1&np=1&fltt=2&invt=2&fid=f184"
                     + "&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23"
@@ -85,20 +111,30 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
                     + "&fields=f12,f14,f2,f3,f8,f10,f20,f21,f62,f100,f103,f184";
     private static final int ULIST_BATCH = 60;
 
-    // ===== K线：60根日K（东财主源 + 腾讯兜底） =====
-    private static final String EAST_KLINE_URL_TPL =
-            "http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=%s&klt=101&fqt=1&lmt=60&end=20500101"
-                    + "&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57";
-    private static final String TX_KLINE_URL = "https://ifzq.gtimg.cn/appstock/app/fqkline/get"; // web.ifzq.gtimg.cn已被腾讯501废弃，裸域实测正常
+    // ===== K线：60根日K（东财主源 + 腾讯兜底 + 新浪兜底，URL走配置表） =====
+    private static String getEastKlineUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("stock_kline_url", "http://push2his.eastmoney.com/api/qt/stock/kline/get");
+        return base + "?secid=%s&klt=101&fqt=1&lmt=60&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57";
+    }
+    private static String getTxKlineUrl() {
+        return InterfaceConfigUtil.getUrl("stock_tx_kline_url", "https://ifzq.gtimg.cn/appstock/app/fqkline/get");
+    }
+    // 资金流日K兜底URL（push2his fflow，与K线同host家族共享GROUP_KLINE熔断视图）：当日主力净流入/净占比兜底用
+    private static String getFflowDayUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("stock_fflow_day_url", "https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get");
+        return base + "?lmt=2&klt=101&fields1=f1,f2,f3,f7&fields2=f51,f52,f57&secid=%s";
+    }
+    // 新浪日K线兜底URL（东财/腾讯均失败时使用）：scale=240日K，datalen上限1023，volume单位是"股"
+    private static String getSinaKlineUrl() {
+        return InterfaceConfigUtil.getUrl("stock_sina_minute_url", "https://quotes.sina.cn/cn/api/jsonp_v2.php/var%20srhwTrend=");
+    }
 
-    // ===== 熔断器（本服务独立计数，不影响其他模块自己的熔断状态） =====
-    private static final long EAST_KLINE_BREAK_MS = 5 * 60 * 1000L;
-    private static volatile long eastKlineBlockedUntil = 0L;
-    private static final long CLIST_BREAK_MS = 3 * 60 * 1000L;
-    private static volatile long clistBlockedUntil = 0L;
+    // ===== 熔断器：全局统一存于 StockDataFetcher（GROUP_KLINE/GROUP_CLIST），与股票分析/市场分析共享同一份拉黑视图 =====
+    // （拉黑期间该组请求全部跳过防延长封禁；K线5分钟/clist快照3分钟，到期自动恢复探测）
 
-    // ===== 结果缓存：正常30分钟，降级5分钟 =====
+    // ===== 结果缓存：盘前/盘后30分钟，盘中10分钟（贴实时），熔断降级统一5分钟 =====
     private static final long CACHE_TTL_OK = 30 * 60 * 1000L;
+    private static final long CACHE_TTL_INTRADAY = 10 * 60 * 1000L;
     private static final long CACHE_TTL_DEGRADED = 5 * 60 * 1000L;
     private final Map<String, Map<String, Object>> resultCache = new ConcurrentHashMap<>();
 
@@ -108,32 +144,47 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
 
     private static final Object COMPUTE_LOCK = new Object();
 
-    // 最近交易日解析缓存（按自然日失效）
+    // 最近交易日解析缓存（按自然日失效；值≠今日且工作日时每5分钟重解析，防盘前解析出的"昨日"缓存卡住盘中判定）
     private static volatile String tradeDateCacheDay = "";
-    private static volatile String tradeDateCacheValue = "";
+    private static volatile String tradeDateCacheValue = "";   // 最新bar日（盘中/盘后=今日，盘前/节假日=上一交易日）
+    private static volatile String tradeDateCachePrev = "";    // 上一交易日（盘前bar提前生成时用）
+    private static volatile long tradeDateCacheAt = 0L;
 
     // ================================================================
-    // 主入口：时段归库状态机
+    // 主入口：三态时段状态机（盘前pre/盘中intraday/盘后close）
+    // 盘前：直读上一交易日收盘版，没有则重算昨日收盘版并入库
+    // 盘中：实时算法选股（不读库不写库，仅缓存10分钟）
+    // 盘后：库有今日收盘版直读，没有则实时算法选今日股并入库
     // ================================================================
     @Override
     public Map<String, Object> getShortTermStocks() {
-        String tradeDate = resolveTradeDate();
         String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        boolean tradingDay = today.equals(tradeDate);
+        int hm = Integer.parseInt(new SimpleDateFormat("HHmm").format(new Date()));
+        String[] td = resolveTradeDates();
+        String latest = td[0];
 
+        String tradeDate;
         String phase;
-        if (!tradingDay) {
-            phase = "close"; // 非交易日按上个交易日收盘版
+        if (!today.equals(latest)) {
+            // 今日尚无K线bar：节假日/周末 或 交易日盘前（bar未生成）→ 沿用上一交易日
+            tradeDate = latest;
+            phase = "pre";
+        } else if (isWeekday() && hm < 930) {
+            // bar提前生成（集合竞价）但未开盘 → 仍按盘前，目标日=上一交易日
+            tradeDate = td[1];
+            phase = "pre";
+        } else if (hm < 1500) {
+            tradeDate = today;
+            phase = "intraday";
         } else {
-            int hm = Integer.parseInt(new SimpleDateFormat("HHmm").format(new Date()));
-            phase = hm >= 1500 ? "close" : "intraday";
+            tradeDate = today;
+            phase = "close";
         }
 
         String cacheKey = tradeDate + "|" + phase;
         Map<String, Object> cached = resultCache.get(cacheKey);
         if (cached != null) {
-            long ttl = Boolean.TRUE.equals(cached.get("degraded")) ? CACHE_TTL_DEGRADED : CACHE_TTL_OK;
-            if (System.currentTimeMillis() - (long) cached.get("_cacheTime") < ttl) {
+            if (System.currentTimeMillis() - (long) cached.get("_cacheTime") < cacheTtl(phase, cached)) {
                 Map<String, Object> out = new LinkedHashMap<>(cached);
                 out.put("fromCache", true);
                 return out;
@@ -156,15 +207,20 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             }
         }
 
-        // 盘中不进行任何库读写（既不查询也不删除），数据只存在redis缓存里；
-        // 仅非交易日/收盘后走库内直读（这些阶段数据落库，用于留存与复盘）
+        // 盘中不进行任何库读写（既不查询也不删除），数据只存缓存里；
+        // 盘前直读上一交易日已归库版本（没有则下方重算昨日收盘版并入库）；
+        // 盘后仅直读今日收盘版（没有则重算今日），不会拿昨日数据顶替今日
         if (!"intraday".equals(phase)) {
             List<ShortTermPickDaily> rows = shortTermPickMapper.selectByTradeDate(java.sql.Date.valueOf(tradeDate));
             if (!rows.isEmpty()) {
                 boolean hasClose = rows.stream().anyMatch(r -> "close".equals(r.getPickPhase()));
-                // 非交易日库有数据即直读（含盘中残留）；交易日收盘后直读close版
-                if (hasClose || !tradingDay) {
+                // 盘前：上一交易日任意版本即沿用；盘后：必须有收盘版才直读
+                if (hasClose || "pre".equals(phase)) {
                     Map<String, Object> out = assembleFromDb(tradeDate, rows);
+                    if ("pre".equals(phase)) {
+                        out.put("phase", "pre");
+                        out.put("phaseText", "盘前·沿用上一交易日收盘版");
+                    }
                     out.put("_cacheTime", System.currentTimeMillis());
                     resultCache.put(cacheKey, out);
                     return out;
@@ -172,27 +228,30 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             }
         }
 
-        // 实时计算 + 先删后插入库（加锁防并发双算/双删）
+        // 实时计算（加锁防并发双算/双删）；pre态生成上一交易日收盘版并归库
         Map<String, Object> out;
         synchronized (COMPUTE_LOCK) {
             // 双重检查：等待期间别的线程可能已算完并缓存
             cached = resultCache.get(cacheKey);
             if (cached != null) {
-                long ttl = Boolean.TRUE.equals(cached.get("degraded")) ? CACHE_TTL_DEGRADED : CACHE_TTL_OK;
-                if (System.currentTimeMillis() - (long) cached.get("_cacheTime") < ttl) {
+                if (System.currentTimeMillis() - (long) cached.get("_cacheTime") < cacheTtl(phase, cached)) {
                     Map<String, Object> o = new LinkedHashMap<>(cached);
                     o.put("fromCache", true);
                     return o;
                 }
             }
-            out = computeAndPersist(tradeDate, phase);
+            out = computeAndPersist(tradeDate, "pre".equals(phase) ? "close" : phase);
+            if ("pre".equals(phase)) {
+                out.put("phase", "pre");
+                out.put("phaseText", "盘前·沿用上一交易日收盘版");
+            }
         }
         out.put("_cacheTime", System.currentTimeMillis());
         resultCache.put(cacheKey, out);
-        // 盘中：结果写redis缓存（不入库）；TTL正常30分钟/降级5分钟，与内存缓存语义一致
+        // 盘中：结果写redis缓存（不入库）；TTL正常10分钟/降级5分钟，与内存缓存语义一致
         if ("intraday".equals(phase)) {
             try {
-                long ttlMin = Boolean.TRUE.equals(out.get("degraded")) ? 5 : 30;
+                long ttlMin = Boolean.TRUE.equals(out.get("degraded")) ? 5 : 10;
                 stringRedisTemplate.opsForValue().set(redisKey, JSON.toJSONString(out), ttlMin, TimeUnit.MINUTES);
             } catch (Exception e) {
                 logger.warn("短线选股盘中推荐redis写入失败（不影响本次返回） | key={}", redisKey, e);
@@ -205,22 +264,62 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         return out;
     }
 
-    /** 最近交易日：指数K线最后一根的日期（东财→腾讯→本地日历兜底），按自然日缓存 */
-    private String resolveTradeDate() {
-        String todayKey = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        if (todayKey.equals(tradeDateCacheDay) && tradeDateCacheValue != null && !tradeDateCacheValue.isEmpty()) {
-            return tradeDateCacheValue;
+    /** 结果缓存TTL：熔断降级统一5分钟；盘中10分钟（贴实时），盘前/盘后30分钟 */
+    private long cacheTtl(String phase, Map<String, Object> cached) {
+        return Boolean.TRUE.equals(cached.get("degraded")) ? CACHE_TTL_DEGRADED
+                : ("intraday".equals(phase) ? CACHE_TTL_INTRADAY : CACHE_TTL_OK);
+    }
+
+    /**
+     * 刷新精选（按钮专用）：不管什么时段，直接走 computeAndPersist 获取一遍并先删后入库。
+     * 与 getShortTermStocks 不同：不走缓存/不查库直读，强制实时采集+入库。
+     */
+    @Override
+    public Map<String, Object> refreshShortTermStocks() {
+        String tradeDate = resolveTradeDate();
+        String phase = "close"; // 传 close 使 computeAndPersist 内部走先删后入库逻辑
+        Map<String, Object> out;
+        synchronized (COMPUTE_LOCK) {
+            out = computeAndPersist(tradeDate, phase);
         }
-        String td = null;
-        // 1) 东财上证指数日K（单次不重试，失败即触发K线熔断走兜底）
+        String cacheKey = tradeDate + "|" + phase;
+        out.put("_cacheTime", System.currentTimeMillis());
+        resultCache.put(cacheKey, out);
+        if (resultCache.size() > 4) {
+            resultCache.keySet().removeIf(k -> !k.equals(cacheKey));
+        }
+        return out;
+    }
+
+    /**
+     * 最近交易日解析：一次K线请求同时取最后两根bar → [最新bar日, 上一交易日]（东财→腾讯→本地日历三级）。
+     * 缓存按自然日失效；缓存值≠今日且为工作日时每5分钟重解析——盘前8点解析出的"昨日"不能缓存一整天卡住盘中判定；
+     * 节假日重解析成本仅1次K线请求（有熔断保护），可接受。
+     */
+    private String[] resolveTradeDates() {
+        String todayKey = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        if (todayKey.equals(tradeDateCacheDay) && tradeDateCacheValue != null && !tradeDateCacheValue.isEmpty()) {
+            boolean stale = !today.equals(tradeDateCacheValue) && isWeekday()
+                    && System.currentTimeMillis() - tradeDateCacheAt > 5 * 60 * 1000L;
+            if (!stale) {
+                return new String[]{tradeDateCacheValue, tradeDateCachePrev};
+            }
+        }
+        String latest = null;
+        String prev = null;
+        // 1) 东财上证指数日K（单次不重试，失败即触发K线熔断走兜底）：一次取最后两根bar日期
         if (!eastKlineBlocked()) {
             try {
-                String url = String.format(EAST_KLINE_URL_TPL, "1.000001");
+                String url = String.format(getEastKlineUrlTpl(), "1.000001");
                 String resp = httpGetNoRetry(url);
                 if (resp != null) {
                     JSONArray ks = JSON.parseObject(resp).getJSONObject("data").getJSONArray("klines");
                     if (ks != null && !ks.isEmpty()) {
-                        td = ks.getString(ks.size() - 1).split(",")[0];
+                        latest = ks.getString(ks.size() - 1).split(",")[0];
+                        if (ks.size() >= 2) {
+                            prev = ks.getString(ks.size() - 2).split(",")[0];
+                        }
                     }
                 } else {
                     markEastKlineFail();
@@ -230,15 +329,18 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             }
         }
         // 2) 腾讯指数兜底
-        if (td == null) {
+        if (latest == null) {
             try {
-                String resp = httpGetNoRetry(TX_KLINE_URL + "?param=sh000001,day,,,5,qfq");
+                String resp = httpGetNoRetry(getTxKlineUrl() + "?param=sh000001,day,,,5,qfq");
                 if (resp != null) {
                     JSONObject node = JSON.parseObject(resp).getJSONObject("data").getJSONObject("sh000001");
                     JSONArray days = node == null ? null : (node.getJSONArray("qfqday") == null
                             ? node.getJSONArray("day") : node.getJSONArray("qfqday"));
                     if (days != null && !days.isEmpty()) {
-                        td = days.getJSONArray(days.size() - 1).getString(0);
+                        latest = days.getJSONArray(days.size() - 1).getString(0);
+                        if (days.size() >= 2) {
+                            prev = days.getJSONArray(days.size() - 2).getString(0);
+                        }
                     }
                 }
             } catch (Exception ignore) {
@@ -246,17 +348,35 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             }
         }
         // 3) 本地日历（仅跳过周末，法定节假日无法识别——仅极端双兜底失败时使用）
-        if (td == null) {
+        if (latest == null) {
             Calendar c = Calendar.getInstance();
             while (c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 c.add(Calendar.DAY_OF_MONTH, -1);
             }
-            td = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
-            logger.warn("最近交易日判定双兜底失败，退化为本地日历（节假日可能误判）：{}", td);
+            latest = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+            c.add(Calendar.DAY_OF_MONTH, -1);
+            while (c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                c.add(Calendar.DAY_OF_MONTH, -1);
+            }
+            prev = new SimpleDateFormat("yyyy-MM-dd").format(c.getTime());
+            logger.warn("最近交易日判定双兜底失败，退化为本地日历（节假日可能误判）：latest={} prev={}", latest, prev);
         }
         tradeDateCacheDay = todayKey;
-        tradeDateCacheValue = td;
-        return td;
+        tradeDateCacheValue = latest;
+        tradeDateCachePrev = prev == null ? latest : prev;
+        tradeDateCacheAt = System.currentTimeMillis();
+        return new String[]{latest, tradeDateCachePrev};
+    }
+
+    /** 兼容旧调用：仅取最新bar日（盘中/盘后=今日，盘前/节假日=上一交易日） */
+    private String resolveTradeDate() {
+        return resolveTradeDates()[0];
+    }
+
+    /** 今天是否周一~周五（本地日历兜底/盘前判定的粗粒度辅助，法定节假日不识别） */
+    private static boolean isWeekday() {
+        int dow = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
+        return dow >= Calendar.MONDAY && dow <= Calendar.FRIDAY;
     }
 
     // ================================================================
@@ -264,12 +384,18 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
     // ================================================================
     private Map<String, Object> computeAndPersist(String tradeDate, String phase) {
         long start = System.currentTimeMillis();
-        List<String> degradeReasons = new ArrayList<>();
+        // 快照候选与池获取并行执行，降级原因跨线程收集 → 线程安全列表
+        List<String> degradeReasons = Collections.synchronizedList(new ArrayList<>());
+
+        // 0) 先提交快照候选抓取（独立线程）：与后续"池获取+妖股快照补充"并行，任一方不拖累另一方
+        ExecutorService clistExecutor = Executors.newSingleThreadExecutor();
+        Future<List<Map<String, Object>>> candFuture = clistExecutor.submit(() -> fetchClistCandidates(degradeReasons));
+        clistExecutor.shutdown();
 
         // 1) 涨停池 + 炸板池（按归属交易日查询，串行，间隔200ms）
         String tradeDateCompact = tradeDate.replace("-", "");
-        JSONObject zt = fetchPool(ZT_POOL_URL_TPL, tradeDateCompact);
-        JSONObject zb = fetchPool(ZB_POOL_URL_TPL, tradeDateCompact);
+        JSONObject zt = fetchPool(getZtPoolUrlTpl(), tradeDateCompact);
+        JSONObject zb = fetchPool(getZbPoolUrlTpl(), tradeDateCompact);
         List<Map<String, Object>> ztList = parsePoolStocks(zt.getJSONArray("pool"), false);
         List<Map<String, Object>> zbList = parsePoolStocks(zb.getJSONArray("pool"), true);
         if (zt.getIntValue("count") < 0 && zb.getIntValue("count") < 0) {
@@ -299,8 +425,23 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         // 2.5) 池票（妖股）批量补快照：池接口无主力资金/换手/量比/总市值/概念，ulist按代码补齐宽表字段
         enrichPoolSnapshot(type1.values(), degradeReasons);
 
-        // 3) 行情快照粗筛 → 类型2/3候选
-        List<Map<String, Object>> cand = fetchClistCandidates(degradeReasons);
+        // 3) 收取并行执行的快照候选结果（池获取与妖股快照补充已在上方同步完成）
+        List<Map<String, Object>> cand;
+        try {
+            cand = candFuture.get(150, TimeUnit.SECONDS);
+        } catch (TimeoutException te) {
+            candFuture.cancel(true);
+            degradeReasons.add("快照候选获取超时，低位潜伏/趋势延续本轮降级");
+            cand = new ArrayList<>();
+        } catch (ExecutionException ee) {
+            logger.warn("快照候选并行获取异常", ee.getCause());
+            degradeReasons.add("快照候选获取异常，低位潜伏/趋势延续本轮降级");
+            cand = new ArrayList<>();
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            candFuture.cancel(true);
+            cand = new ArrayList<>();
+        }
 
         // 4) K线并发抓取（妖股前40 + 快照候选，去重后封顶120，控制请求预算）
         List<Map<String, Object>> type1ForKline = new ArrayList<>(type1.values());
@@ -325,6 +466,9 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
                 ztList.size(), zbList.size(), cand.size(), klines.size(), targets.size(),
                 System.currentTimeMillis() - start);
 
+        // 4.5) 主力净流入兜底：池票在东财快照失败/缺失时经资金流日K补齐（行为判定与妖股评分依赖，仅补缺失不覆盖）
+        backfillMainInflowFromFflow(type1.values(), tradeDate, degradeReasons);
+
         // 5) 妖股梯队：K线增强（涨停基因/位置）+ 行为判定 + 评分
         for (Map<String, Object> s : type1.values()) {
             enrichKlineFeatures(s, klines.get((String) s.get("code")));
@@ -334,9 +478,12 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         // 6) 快照候选：K线特征 → 类型2/3归类
         List<Map<String, Object>> qianfuList = new ArrayList<>();
         List<Map<String, Object>> qushiList = new ArrayList<>();
+        int klineMiss = 0, klineShort = 0;
         for (Map<String, Object> s : cand) {
-            List<Bar> bars = klines.get((String) s.get("code"));
-            if (bars == null || bars.size() < 25) continue; // K线不足（次新/停牌）无法判定趋势结构
+            String code = (String) s.get("code");
+            List<Bar> bars = klines.get(code);
+            if (bars == null) { klineMiss++; continue; }
+            if (bars.size() < 25) { klineShort++; continue; }
             Map<String, Object> f = klineFeatures(bars);
             mergeFeatures(s, f);
             boolean qianfu = asDouble(f.get("lowDepth")) != null && asDouble(f.get("lowDepth")) <= 28
@@ -350,19 +497,31 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
                     || ((asDouble(f.get("ma5")) != null && asDouble(f.get("ma10")) != null
                     && asDouble(f.get("ma5")) > asDouble(f.get("ma10"))
                     && asDouble(f.get("gain5")) != null && asDouble(f.get("gain5")) > 0)));
+            logger.info("候选判定 code={} K线{}根 lowDepth={} volShrink={} ztCount60={} recentZt={} gain5={} gain20={} maOk={} → qianfu={} qushi={}",
+                    code, bars.size(), f.get("lowDepth"), f.get("volShrink"), f.get("ztCount60"), f.get("recentZtDaysAgo"),
+                    f.get("gain5"), f.get("gain20"), f.get("trendMaOk"), qianfu, qushi);
             if (qianfu && !qushi) {
                 qianfuList.add(s);
             } else if (qushi) {
                 qushiList.add(s);
             }
         }
+        logger.info("候选归类统计 总{}只 K线缺失{}只 K线不足25根{}只 低位潜伏{}只 趋势延续{}只",
+                cand.size(), klineMiss, klineShort, qianfuList.size(), qushiList.size());
+
+        // 6.5) 主力净流入兜底：潜伏/趋势候选同上（评分"主力流入占比0~10分"因子需要，仅补缺失不覆盖）
+        List<Map<String, Object>> scoredCand = new ArrayList<>(qianfuList);
+        scoredCand.addAll(qushiList);
+        backfillMainInflowFromFflow(scoredCand, tradeDate, degradeReasons);
 
         // 7) 行为判定 + 评分 + 排序 + 各类top10
         for (Map<String, Object> s : qianfuList) judgeBehavior(s);
         for (Map<String, Object> s : qushiList) judgeBehavior(s);
-        List<Map<String, Object>> yaoguTop = scoreAndTop(type1.values(), "yaogu", 10);
-        List<Map<String, Object>> qianfuTop = scoreAndTop(qianfuList, "qianfu", 10);
-        List<Map<String, Object>> qushiTop = scoreAndTop(qushiList, "qushi", 10);
+        // 经验闭环：读取历史复盘经验构建索引，反哺选股评分
+        Map<String, List<String>> expIndex = buildExpIndex();
+        List<Map<String, Object>> yaoguTop = scoreAndTop(type1.values(), "yaogu", 10, expIndex);
+        List<Map<String, Object>> qianfuTop = scoreAndTop(qianfuList, "qianfu", 10, expIndex);
+        List<Map<String, Object>> qushiTop = scoreAndTop(qushiList, "qushi", 10, expIndex);
 
         // 8) 入库：仅收盘版先删后插（长期留存供复盘）；盘中不入库——数据只存redis缓存（每30分钟随缓存过期自然重算）
         boolean saved = false;
@@ -414,6 +573,12 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         JSONObject out = new JSONObject();
         out.put("count", -1);
         out.put("pool", new JSONArray());
+        // push2ex池接口熔断期内0请求（GROUP_POOL 3分钟），防拉黑期继续请求延长封禁
+        if (com.xk.srhwzzqdn.manager.util.StockDataFetcher.blocked(com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_POOL)) {
+            logger.info("涨跌停池接口熔断期内（剩余{}秒），跳过请求",
+                    com.xk.srhwzzqdn.manager.util.StockDataFetcher.remainMs(com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_POOL) / 1000);
+            return out;
+        }
         try {
             String body = httpGet(String.format(urlTpl, tradeDateCompact), 3);
             JSONObject json = JSON.parseObject(body);
@@ -423,6 +588,13 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             }
         } catch (Exception e) {
             logger.warn("短线选股获取涨跌停池失败 url={}", urlTpl, e);
+        }
+        if (out.getIntValue("count") < 0) {
+            // 池接口失败 → 3分钟内跳过后续池请求（含市场分析共享同一熔断组）
+            com.xk.srhwzzqdn.manager.util.StockDataFetcher.markFail(
+                    com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_POOL, 3 * 60 * 1000L);
+        } else {
+            com.xk.srhwzzqdn.manager.util.StockDataFetcher.markSuccess(com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_POOL);
         }
         sleep(200);
         return out;
@@ -458,60 +630,71 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         return list;
     }
 
-    /** 行情快照粗筛（clist翻3页覆盖f184 top300）：市值/换手/涨幅/年初涨幅/非ST过滤后按主力净占比取top70 */
+    /** 行情快照粗筛（clist翻3页覆盖f184 top300）：市值/换手/涨幅/年初涨幅/非ST过滤后按主力净占比取top70。
+     *  接口优先串行：东财clist接口（熔断期跳过）→ 新浪全市场快照兜底；东财失败激活GROUP_CLIST 3分钟熔断。
+     *  原三源race同发（东财双host+新浪，每轮3路请求）已按合规模型改串行降级。 */
     private List<Map<String, Object>> fetchClistCandidates(List<String> degradeReasons) {
-        if (clistBlocked()) {
-            degradeReasons.add("行情快照接口熔断中（3分钟），低位潜伏/趋势延续本轮降级");
-            return new ArrayList<>();
+        boolean blockedNow = clistBlocked();
+        if (blockedNow) {
+            degradeReasons.add("行情快照接口熔断中（3分钟），东财源跳过，直接走新浪全市场快照兜底");
+        } else {
+            List<Map<String, Object>> east = fetchClistPages(getClistHosts()[1]);   // [1]=push2主源
+            if (east != null && !east.isEmpty()) {
+                markSuccessClist();
+                upsertBasicIndustryQuietly(east);   // 东财正常时把行业/概念增量写入t_stock_basic，供封禁期兜底读取
+                List<Map<String, Object>> list = new ArrayList<>(east);
+                list.sort((a, b) -> {
+                    Double pa = asDouble(a.get("mainInflowPct"));
+                    Double pb = asDouble(b.get("mainInflowPct"));
+                    return Double.compare(pb == null ? -999 : pb, pa == null ? -999 : pa);
+                });
+                return new ArrayList<>(list.subList(0, Math.min(70, list.size())));
+            }
+            markClistFail();
+            degradeReasons.add("行情快照东财接口失败（已熔断3分钟），走新浪全市场快照兜底");
         }
-        boolean ok = false;
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (String host : CLIST_HOSTS) {
-            List<Map<String, Object>> merged = new ArrayList<>();
-            boolean allPagesOk = true;
+        List<Map<String, Object>> sina = fetchClistCandidatesFromSina();
+        if (sina != null && !sina.isEmpty()) {
+            enrichCandidatesFromTencent(sina);   // 新浪无量比，腾讯批量行情补量比/市值（每60只一批）
+            fillIndustryFromDb(sina);   // 新浪无行业/概念，库内t_stock_basic补齐
+            degradeReasons.add("行情快照走新浪成交额top兜底，候选" + sina.size() + "只（主力净流入/年初涨幅缺失）");
+            return sina; // 新浪源内部已按成交额降序过滤并取top70
+        }
+        degradeReasons.add("行情快照两源（东财+新浪）均失败，低位潜伏/趋势延续本轮降级");
+        return new ArrayList<>();
+    }
+
+    /** 东财单host clist分页聚合（3页并发，单源内部分页并行）：全部页成功返回解析行列表，任一页失败返回null（视为该源失败） */
+    private List<Map<String, Object>> fetchClistPages(String host) {
+        ExecutorService exec = Executors.newFixedThreadPool(CLIST_PAGES);
+        try {
+            List<java.util.concurrent.Future<List<Map<String, Object>>>> pageFutures = new ArrayList<>();
             for (int pn = 1; pn <= CLIST_PAGES; pn++) {
-                String body = httpGetNoRetry(host + String.format(CLIST_PATH, pn));
-                if (body == null) {
-                    allPagesOk = false;
-                    break;
-                }
-                try {
+                final int page = pn;
+                pageFutures.add(exec.submit(() -> {
+                    String body = httpGetNoRetry(host + String.format(CLIST_PATH, page));
+                    if (body == null) return null;
                     JSONObject data = JSON.parseObject(body).getJSONObject("data");
                     JSONArray diff = toDiffArray(data == null ? null : data.get("diff"));
-                    if (diff == null || diff.isEmpty()) {
-                        allPagesOk = false;
-                        break;
-                    }
-                    parseClistRows(diff, merged);
-                    if (pn < CLIST_PAGES) Thread.sleep(200); // 页间限速防反爬
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                    allPagesOk = false;
-                    break;
-                } catch (Exception e) {
-                    logger.warn("短线选股行情快照解析失败 host={} pn={}", host, pn, e);
-                    allPagesOk = false;
-                    break;
-                }
+                    if (diff == null || diff.isEmpty()) return null;
+                    List<Map<String, Object>> rows = new ArrayList<>();
+                    parseClistRows(diff, rows);
+                    return rows;
+                }));
             }
-            if (allPagesOk) {
-                list = merged;
-                ok = true;
-                break;
+            List<Map<String, Object>> merged = new ArrayList<>();
+            for (java.util.concurrent.Future<List<Map<String, Object>>> f : pageFutures) {
+                List<Map<String, Object>> rows = f.get(15, TimeUnit.SECONDS);
+                if (rows == null || rows.isEmpty()) return null;
+                merged.addAll(rows);
             }
+            return merged.isEmpty() ? null : merged;
+        } catch (Exception e) {
+            logger.warn("短线选股clist分页聚合失败 host={}", host, e);
+            return null;
+        } finally {
+            exec.shutdownNow();
         }
-        if (!ok) {
-            markClistFail();
-            degradeReasons.add("行情快照接口双域名均失败，已熔断3分钟，低位潜伏/趋势延续本轮降级");
-            return new ArrayList<>();
-        }
-        // 按主力净流入占比降序取top70
-        list.sort((a, b) -> {
-            Double pa = asDouble(a.get("mainInflowPct"));
-            Double pb = asDouble(b.get("mainInflowPct"));
-            return Double.compare(pb == null ? -999 : pb, pa == null ? -999 : pa);
-        });
-        return new ArrayList<>(list.subList(0, Math.min(70, list.size())));
     }
 
     /** clist行解析：非ST/仙股过滤 + 宽口径粗筛（换手2%~25%、涨幅-2%~11%，兼顾趋势票与低位缩量票）+ 概念截断 */
@@ -594,43 +777,27 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
                 if (secids.length() > 0) secids.append(',');
                 secids.append(marketInt((String) s.get("code"))).append('.').append((String) s.get("code"));
             }
-            boolean ok = false;
-            for (String host : CLIST_HOSTS) {
-                String body = httpGetNoRetry(host + String.format(ULIST_PATH, secids));
-                if (body == null) continue;
-                try {
-                    JSONObject data = JSON.parseObject(body).getJSONObject("data");
-                    JSONArray diff = toDiffArray(data == null ? null : data.get("diff"));
-                    if (diff == null || diff.isEmpty()) continue;
-                    Map<String, JSONObject> byCode = new HashMap<>();
-                    for (int i = 0; i < diff.size(); i++) {
-                        JSONObject d = diff.getJSONObject(i);
-                        String code = d.getString("f12");
-                        if (code != null) byCode.put(code, d);
-                    }
-                    for (Map<String, Object> s : batch) {
-                        JSONObject d = byCode.get((String) s.get("code"));
-                        if (d == null) continue;
-                        Double mainInflow = asDouble(d.get("f62"));
-                        Double mainPct = asDouble(d.get("f184"));
-                        Double totalCap = asDouble(d.get("f20"));
-                        Double vr = asDouble(d.get("f10")); // ulist口径：量比=f10
-                        s.put("mainInflow", mainInflow == null ? null : round2(mainInflow / 1e8));
-                        s.put("mainInflowPct", mainPct);
-                        s.put("totalCap", totalCap == null ? null : round2(totalCap / 1e8));
-                        if (asDouble(s.get("turnoverRate")) == null) s.put("turnoverRate", asDouble(d.get("f8")));
-                        if (asDouble(s.get("volumeRatio")) == null) s.put("volumeRatio", vr == null ? null : round2(vr));
-                        if (s.get("industry") == null || "-".equals(s.get("industry"))) s.put("industry", d.getString("f100"));
-                        if (s.get("concept") == null) s.put("concept", trimConcept(d.getString("f103")));
-                    }
+            // 接口优先串行：东财ulist批量快照接口（熔断期跳过）→ 腾讯批量行情 → 新浪批量行情；行业/概念缺失由库内t_stock_basic补齐
+            boolean clistBlockedNow = clistBlocked();
+            boolean ok;
+            if (clistBlockedNow) {
+                degradeReasons.add("行情集群熔断中，妖股快照东财请求跳过，直接走腾讯/新浪批量行情兜底");
+                ok = enrichPoolSnapshotFromTencent(batch);
+                if (!ok) ok = enrichPoolSnapshotFromSina(batch);
+                if (ok) fillIndustryFromDb(batch);
+            } else {
+                Boolean east = applyUlistBatch(getClistHosts()[1], secids.toString(), batch);   // [1]=push2主源
+                if (Boolean.TRUE.equals(east)) {
                     ok = true;
-                    break;
-                } catch (Exception e) {
-                    logger.warn("池票快照补充解析失败 host={}", host, e);
+                    upsertBasicIndustryQuietly(batch);   // 池票行业/概念同步增量入库
+                } else {
+                    ok = enrichPoolSnapshotFromTencent(batch);
+                    if (!ok) ok = enrichPoolSnapshotFromSina(batch);
+                    if (ok) fillIndustryFromDb(batch);
+                    if (!ok) {
+                        degradeReasons.add("妖股快照三源（东财+腾讯+新浪批量行情）均失败，部分妖股资金/换手字段缺失");
+                    }
                 }
-            }
-            if (!ok) {
-                degradeReasons.add("妖股快照补充失败（ulist异常），部分妖股资金/换手字段缺失");
             }
             try {
                 Thread.sleep(200); // 批间限速防反爬
@@ -641,8 +808,276 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         }
     }
 
+    /** 单hostulist批量快照拉取+字段回填（供race竞争）：成功true/失败null；字段口径 f62主力净流入/f184主力净占比/f20总市值/f10量比/f100行业/f103概念 */
+    private Boolean applyUlistBatch(String host, String secids, List<Map<String, Object>> batch) {
+        String body = httpGetNoRetry(host + String.format(ULIST_PATH, secids));
+        if (body == null) return null;
+        try {
+            JSONObject data = JSON.parseObject(body).getJSONObject("data");
+            JSONArray diff = toDiffArray(data == null ? null : data.get("diff"));
+            if (diff == null || diff.isEmpty()) return null;
+            Map<String, JSONObject> byCode = new HashMap<>();
+            for (int i = 0; i < diff.size(); i++) {
+                JSONObject d = diff.getJSONObject(i);
+                String code = d.getString("f12");
+                if (code != null) byCode.put(code, d);
+            }
+            for (Map<String, Object> s : batch) {
+                JSONObject d = byCode.get((String) s.get("code"));
+                if (d == null) continue;
+                Double mainInflow = asDouble(d.get("f62"));
+                Double mainPct = asDouble(d.get("f184"));
+                Double totalCap = asDouble(d.get("f20"));
+                Double vr = asDouble(d.get("f10")); // ulist口径：量比=f10
+                s.put("mainInflow", mainInflow == null ? null : round2(mainInflow / 1e8));
+                s.put("mainInflowPct", mainPct);
+                s.put("totalCap", totalCap == null ? null : round2(totalCap / 1e8));
+                if (asDouble(s.get("turnoverRate")) == null) s.put("turnoverRate", asDouble(d.get("f8")));
+                if (asDouble(s.get("volumeRatio")) == null) s.put("volumeRatio", vr == null ? null : round2(vr));
+                if (s.get("industry") == null || "-".equals(s.get("industry"))) s.put("industry", d.getString("f100"));
+                if (s.get("concept") == null) s.put("concept", trimConcept(d.getString("f103")));
+            }
+            return Boolean.TRUE;
+        } catch (Exception e) {
+            logger.warn("池票快照补充解析失败 host={}", host, e);
+            return null;
+        }
+    }
+
+    /**
+     * 新浪全市场快照兜底（东财clist双域名均失败时使用）：
+     * Market_Center.getHQNodeData 按成交额降序翻3页覆盖top240（原按换手率排序会被流通市值20-500亿过滤后剩~0只，实测成交额排序通过76只），
+     * 提供换手率/流通市值/涨跌幅，但不提供主力净流入/量比/年初涨幅/行业/概念（置空）。
+     * 粗筛条件与parseClistRows一致（年初涨幅过滤跳过），过滤后按成交额降序取top70。
+     * 返回null表示该源失败（供race竞争；空列表与失败等价）。
+     */
+    private List<Map<String, Object>> fetchClistCandidatesFromSina() {
+        List<Map<String, Object>> merged = new ArrayList<>();
+        String base = getSinaHqNodeUrl();
+        for (int page = 1; page <= 3; page++) {
+            String url = base + "?page=" + page + "&num=80&node=hs_a&sort=amount&desc=1&_s_r_a=auto";
+            String body = httpGetNoRetry(url);
+            if (body == null) {
+                logger.warn("新浪全市场快照兜底HTTP失败 page={}", page);
+                return merged.isEmpty() ? null : merged;
+            }
+            try {
+                JSONArray arr = JSON.parseArray(body);
+                if (arr == null || arr.isEmpty()) {
+                    logger.warn("新浪全市场快照返回空 page={} body前80={}", page,
+                            body.substring(0, Math.min(80, body.length())));
+                    break;
+                }
+                for (int i = 0; i < arr.size(); i++) {
+                    JSONObject d = arr.getJSONObject(i);
+                    String name = d.getString("name");
+                    if (name == null || name.contains("ST") || name.contains("退")) continue;
+                    String code = d.getString("code");
+                    if (code == null) continue;
+                    Double price = asDouble(d.get("trade"));
+                    Double pct = asDouble(d.get("changepercent"));
+                    Double turnover = asDouble(d.get("turnoverratio"));
+                    Double circCap = asDouble(d.get("nmc")); // 流通市值（万元，需÷10000转亿元）
+                    if (price == null || price < 2) continue;
+                    if (circCap == null) continue;
+                    circCap = circCap / 10000;
+                    if (circCap < 20 || circCap > 500) continue;
+                    if (turnover == null || turnover < 2 || turnover > 25) continue;
+                    if (pct == null || pct < -2 || pct > 11) continue;
+                    Map<String, Object> s = new LinkedHashMap<>();
+                    s.put("code", code);
+                    s.put("name", name);
+                    s.put("marketFlag", code.startsWith("6") ? 1 : 0);
+                    s.put("price", round2(price));
+                    s.put("changePct", round2(pct));
+                    s.put("industry", null);
+                    s.put("circCap", round2(circCap));
+                    Double totalCap = asDouble(d.get("mktcap"));
+                    s.put("totalCap", totalCap == null ? null : round2(totalCap / 10000));
+                    s.put("turnoverRate", round2(turnover));
+                    s.put("volumeRatio", null);
+                    s.put("mainInflow", null);
+                    s.put("mainInflowPct", null);
+                    s.put("inner", null);
+                    s.put("outer", null);
+                    s.put("outerInnerRatio", null);
+                    s.put("ytdPct", null);
+                    s.put("concept", null);
+                    merged.add(s);
+                }
+                if (page < 3) Thread.sleep(200);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (Exception e) {
+                logger.warn("新浪全市场快照解析失败 page={}", page, e);
+                break;
+            }
+        }
+        // 已按成交额降序拉取+过滤（保序），空结果视为该源失败（race竞争语义）
+        return merged.isEmpty() ? null : new ArrayList<>(merged.subList(0, Math.min(70, merged.size())));
+    }
+
+    /**
+     * 新浪批量行情兜底（东财ulist双域名均失败时使用）：
+     * hq.sinajs.cn/list= 按代码批量查询，提供价格/涨跌幅，
+     * 不提供主力净流入/量比/行业/概念（置空）。
+     * @return true=至少补齐了一只
+     */
+    /** 腾讯批量行情兜底（东财ulist失败→腾讯→新浪三级）：qt.gtimg.cn/q=批量，补价格/涨跌幅/换手率/量比/总市值。
+     *  字段实测：3现价 4昨收 32涨跌% 37成交额(万) 38换手率 45总市值(亿) 49量比；腾讯无主力资金（ff_接口已下线）
+     *  与行业/概念（后者由fillIndustryFromDb库内补齐）。GB2312编码仅影响中文名（不使用），数字字段ASCII兼容。 */
+    private boolean enrichPoolSnapshotFromTencent(List<Map<String, Object>> batch) {
+        StringBuilder symbols = new StringBuilder();
+        for (Map<String, Object> s : batch) {
+            String code = (String) s.get("code");
+            if (symbols.length() > 0) symbols.append(',');
+            symbols.append(code.startsWith("6") ? "sh" : "sz").append(code);
+        }
+        String body = httpGetNoRetry(getTxQuoteUrl() + symbols);
+        if (body == null) return false;
+        int count = 0;
+        for (String line : body.split(";")) {
+            int eq = line.indexOf('=');
+            if (eq < 0) continue;
+            String key = line.substring(0, eq).trim();
+            String val = line.substring(eq + 1).trim();
+            if (val.startsWith("\"") && val.endsWith("\"")) val = val.substring(1, val.length() - 1);
+            if (val.isEmpty() || "1".equals(val)) continue;   // v_pv_none_match="1" 防呆
+            String[] f = val.split("~");
+            if (f.length < 50) continue;
+            String code = key.replaceAll(".*v_", "").replaceAll("^(sh|sz)", "");
+            for (Map<String, Object> s : batch) {
+                if (code.equals(s.get("code"))) {
+                    Double price = asDouble(f[3]);
+                    Double prevClose = asDouble(f[4]);
+                    if (price != null) s.put("price", round2(price));
+                    if (price != null && prevClose != null && prevClose > 0) {
+                        s.put("changePct", round2((price - prevClose) / prevClose * 100));
+                    }
+                    if (asDouble(s.get("turnoverRate")) == null) s.put("turnoverRate", asDouble(f[38]));
+                    if (asDouble(s.get("volumeRatio")) == null) {
+                        Double vr = asDouble(f[49]);
+                        s.put("volumeRatio", vr == null ? null : round2(vr));
+                    }
+                    if (asDouble(s.get("totalCap")) == null) s.put("totalCap", asDouble(f[45]));   // 已是亿
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count > 0;
+    }
+
+    /** 库内补齐行业/概念（东财失败时新浪/腾讯兜底源无此字段）：t_stock_basic一次IN查询，仅填缺失字段。
+     *  查询失败只打日志不抛出——行业/概念缺失不影响选股主流程。 */
+    private void fillIndustryFromDb(List<Map<String, Object>> stocks) {
+        if (stocks == null || stocks.isEmpty()) return;
+        List<String> need = new ArrayList<>();
+        for (Map<String, Object> s : stocks) {
+            if (isBlankField(s.get("industry")) || isBlankField(s.get("concept"))) {
+                String code = (String) s.get("code");
+                if (code != null && !need.contains(code)) need.add(code);
+            }
+        }
+        if (need.isEmpty()) return;
+        try {
+            List<Map<String, Object>> rows = shortTermPickMapper.selectIndustryByCodes(need);
+            Map<String, Map<String, Object>> byCode = new HashMap<>();
+            for (Map<String, Object> r : rows) byCode.put((String) r.get("stockCode"), r);
+            for (Map<String, Object> s : stocks) {
+                Map<String, Object> r = byCode.get(s.get("code"));
+                if (r == null) continue;
+                if (isBlankField(s.get("industry")) && !isBlankField(r.get("industry"))) {
+                    s.put("industry", r.get("industry"));
+                }
+                if (isBlankField(s.get("concept")) && !isBlankField(r.get("conceptSectors"))) {
+                    s.put("concept", trimConcept(String.valueOf(r.get("conceptSectors"))));
+                }
+            }
+        } catch (Exception e) {
+            logger.warn("库内行业/概念补齐失败（不影响选股主流程）: {}", e.getMessage());
+        }
+    }
+
+    private static boolean isBlankField(Object v) {
+        return v == null || "".equals(v) || "-".equals(v);
+    }
+
+    /** 东财源成功时把见到的名称/行业/概念增量写入t_stock_basic（封禁期fillIndustryFromDb的数据来源）。
+     *  只写这三列且失败仅打日志，不影响选股主流程；每批200行 upsert。 */
+    private void upsertBasicIndustryQuietly(Collection<Map<String, Object>> stocks) {
+        List<Map<String, Object>> rows = new ArrayList<>();
+        for (Map<String, Object> s : stocks) {
+            String code = (String) s.get("code");
+            Object ind = s.get("industry");
+            Object con = s.get("concept");
+            if (code == null || (isBlankField(ind) && isBlankField(con))) continue;
+            Map<String, Object> r = new HashMap<>();
+            r.put("stockCode", code);
+            r.put("stockName", s.get("name"));
+            r.put("industry", isBlankField(ind) ? null : String.valueOf(ind));
+            r.put("concept", isBlankField(con) ? null : String.valueOf(con));
+            rows.add(r);
+        }
+        if (rows.isEmpty()) return;
+        try {
+            for (int from = 0; from < rows.size(); from += 200) {
+                shortTermPickMapper.upsertBasicIndustry(rows.subList(from, Math.min(from + 200, rows.size())));
+            }
+        } catch (Exception e) {
+            logger.warn("行业/概念增量入库失败（不影响选股主流程）: {}", e.getMessage());
+        }
+    }
+
+    /** 新浪兜底候选的量比补齐（新浪全市场快照无量比/主力资金）：复用腾讯批量行情，每60只一批单次尝试 */
+    private void enrichCandidatesFromTencent(List<Map<String, Object>> candidates) {
+        for (int from = 0; from < candidates.size(); from += 60) {
+            enrichPoolSnapshotFromTencent(candidates.subList(from, Math.min(from + 60, candidates.size())));
+        }
+    }
+
+    private boolean enrichPoolSnapshotFromSina(List<Map<String, Object>> batch) {
+        StringBuilder symbols = new StringBuilder();
+        for (Map<String, Object> s : batch) {
+            String code = (String) s.get("code");
+            if (symbols.length() > 0) symbols.append(',');
+            symbols.append(code.startsWith("6") ? "sh" : "sz").append(code);
+        }
+        String url = getSinaQuoteUrl() + symbols.toString();
+        String body = httpGetNoRetry(url);
+        if (body == null) return false;
+        int count = 0;
+        for (String line : body.split(";")) {
+            int eq = line.indexOf('=');
+            if (eq < 0) continue;
+            String key = line.substring(0, eq).trim();
+            String val = line.substring(eq + 1).trim();
+            if (val.startsWith("\"") && val.endsWith("\"")) val = val.substring(1, val.length() - 1);
+            if (val.isEmpty()) continue;
+            String[] f = val.split(",");
+            if (f.length < 10) continue;
+            String symbol = key.replaceAll(".*hq_str_", "");
+            if (symbol.length() < 4) continue;
+            String code = symbol.substring(2);
+            for (Map<String, Object> s : batch) {
+                if (code.equals(s.get("code"))) {
+                    Double price = asDouble(f[3]);
+                    Double prevClose = asDouble(f[2]);
+                    if (price != null) s.put("price", round2(price));
+                    if (price != null && prevClose != null && prevClose > 0) {
+                        s.put("changePct", round2((price - prevClose) / prevClose * 100));
+                    }
+                    count++;
+                    break;
+                }
+            }
+        }
+        return count > 0;
+    }
+
     // ================================================================
-    // K线抓取（东财单次→熔断→腾讯兜底）
+    // K线抓取（东财单次→熔断→腾讯兜底→新浪兜底）
     // ================================================================
     /** 单根日K：date + open,close,high,low,volume */
     static class Bar {
@@ -650,22 +1085,38 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         double open, close, high, low, volume;
     }
 
-    /** 并发拉取60日日K（4线程×每任务150ms），东财失败即熔断并改走腾讯兜底 */
+    /** 并发拉取60日日K（16线程；每股内接口优先串行：东财（熔断期跳过）→腾讯→新浪，均单次尝试；替代原每股三源race同发） */
     private Map<String, List<Bar>> fetchKlines(Map<String, Integer> targets) {
         Map<String, List<Bar>> map = new ConcurrentHashMap<>();
-        ExecutorService es = Executors.newFixedThreadPool(4);
+        // 16线程：40股分3批跑完（8线程分5批，全失败时仅轮次等待就~51s）；单源快速失败后正常轮次~2s/批
+        ExecutorService es = Executors.newFixedThreadPool(16);
         try {
             List<Callable<Void>> tasks = new ArrayList<>();
             for (Map.Entry<String, Integer> e : targets.entrySet()) {
                 tasks.add(() -> {
                     try {
-                        List<Bar> bars = fetchKlineEast(e.getKey(), e.getValue());
-                        if (bars == null) bars = fetchKlineTx(e.getKey(), e.getValue());
-                        if (bars != null && !bars.isEmpty()) map.put(e.getKey(), bars);
+                        String code = e.getKey();
+                        int market = e.getValue();
+                        // 接口优先串行：东财K线接口（熔断期跳过；失败即激活5分钟熔断，同批后续股自动直走兜底）→腾讯→新浪
+                        List<Bar> bars = null;
+                        if (!eastKlineBlocked()) {
+                            bars = fetchKlineEast(code, market);
+                        }
+                        if (bars == null || bars.isEmpty()) {
+                            bars = fetchKlineTx(code, market);
+                        }
+                        if (bars == null || bars.isEmpty()) {
+                            bars = fetchKlineSina(code, market);
+                        }
+                        if (bars != null && !bars.isEmpty()) {
+                            map.put(code, bars);
+                        } else {
+                            logger.warn("K线三源（东财/腾讯/新浪）均失败 code={}", code);
+                        }
                     } catch (Exception ignore) {
                         // 单股失败不影响整体，该股按K线缺失处理
                     }
-                    Thread.sleep(150);
+                    Thread.sleep(80);
                     return null;
                 });
             }
@@ -682,7 +1133,7 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
     private List<Bar> fetchKlineEast(String code, int market) {
         if (eastKlineBlocked()) return null;
         try {
-            String resp = httpGetNoRetry(String.format(EAST_KLINE_URL_TPL, market + "." + code));
+            String resp = httpGetNoRetry(String.format(getEastKlineUrlTpl(), market + "." + code));
             if (resp == null) {
                 markEastKlineFail();
                 return null;
@@ -716,12 +1167,68 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         return bars;
     }
 
+    /**
+     * 主力净流入兜底（东财clist/ulist快照不可达时）：push2his资金流日K逐票补齐当日主力净流入(亿)与净占比(%)。
+     * 盘中该接口当日行有数（分钟级延迟），与东财快照f62/f184口径一致；只认tradeDate当日行，绝不串用历史数据；
+     * 仅补空值不覆盖东财主源数据。GROUP_KLINE熔断期内0请求（push2his与K线同host家族）；失败触发5分钟熔断；
+     * 150ms间隔限速。行为判定/评分（主力流入占比0~10分因子）依赖此字段，兜底保证选股与算法一致。
+     */
+    private void backfillMainInflowFromFflow(Collection<Map<String, Object>> stocks, String tradeDate, List<String> degradeReasons) {
+        List<Map<String, Object>> missing = new ArrayList<>();
+        for (Map<String, Object> s : stocks) {
+            if (s.get("mainInflow") == null || s.get("mainInflowPct") == null) missing.add(s);
+        }
+        if (missing.isEmpty()) return;
+        if (eastKlineBlocked()) {
+            degradeReasons.add("东财K线集群熔断中，主力净流入资金流日K兜底跳过（" + missing.size() + "只字段缺失）");
+            return;
+        }
+        int filled = 0, failed = 0;
+        for (Map<String, Object> s : missing) {
+            if (eastKlineBlocked()) break;   // 首次失败触发熔断后剩余票0请求
+            String code = (String) s.get("code");
+            int market = marketInt(code);
+            String resp = httpGetNoRetry(String.format(getFflowDayUrlTpl(), market + "." + code));
+            if (resp == null) {
+                failed++;
+                markEastKlineFail();
+            } else {
+                try {
+                    JSONArray ks = JSON.parseObject(resp).getJSONObject("data").getJSONArray("klines");
+                    if (ks != null) {
+                        for (int i = ks.size() - 1; i >= 0; i--) {
+                            String[] f = ks.getString(i).split(",");
+                            if (!tradeDate.equals(f[0])) continue;   // 只认当日行
+                            if (s.get("mainInflow") == null) s.put("mainInflow", round2(asDouble(f[1]) / 1e8));
+                            if (s.get("mainInflowPct") == null) s.put("mainInflowPct", round2(asDouble(f[2])));
+                            filled++;
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.warn("资金流日K兜底解析失败 code={}", code, e);
+                }
+            }
+            try {
+                Thread.sleep(150L);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+        if (filled > 0) degradeReasons.add("主力净流入经资金流日K兜底补齐" + filled + "只（分钟级延迟口径）");
+        if (failed > 0) degradeReasons.add("主力净流入兜底失败" + failed + "只（字段留空，解封后自动恢复）");
+    }
+
     /** 腾讯日K兜底（前复权，口径与东财一致） */
     private List<Bar> fetchKlineTx(String code, int market) {
         try {
             String mkt = market == 1 ? "sh" : "sz";
-            String resp = httpGetNoRetry(TX_KLINE_URL + "?param=" + mkt + code + ",day,,,60,qfq");
-            if (resp == null) return null;
+            String resp = httpGetNoRetry(getTxKlineUrl() + "?param=" + mkt + code + ",day,,,60,qfq");
+            if (resp == null) {
+                logger.warn("腾讯K线HTTP失败 code={}", code);
+                return null;
+            }
             JSONObject node = JSON.parseObject(resp).getJSONObject("data").getJSONObject(mkt + code);
             if (node == null) return null;
             JSONArray days = node.getJSONArray("qfqday");
@@ -742,6 +1249,58 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             return bars;
         } catch (Exception e) {
             logger.warn("腾讯K线兜底失败 code={}", code);
+            return null;
+        }
+    }
+
+    /**
+     * 新浪日K线兜底（东财/腾讯均失败时使用）：quotes.sina.cn/cn/api/jsonp_v2.php 接口，scale=240日K，
+     * datalen=60，返回JSONP格式 var srhwTrend=[{day,open,high,low,close,volume},...]，volume单位是"股"。
+     */
+    private List<Bar> fetchKlineSina(String code, int market) {
+        try {
+            String symbol = (market == 1 ? "sh" : "sz") + code;
+            String url = getSinaKlineUrl() + "/CN_MarketDataService.getKLineData?symbol=" + symbol
+                    + "&scale=240&ma=no&datalen=60";
+            String resp = httpGetNoRetry(url);
+            if (resp == null || resp.isEmpty()) {
+                logger.warn("新浪K线兜底HTTP失败 code={} resp={}", code, resp == null ? "null" : "empty");
+                return null;
+            }
+            int start = resp.indexOf('[');
+            int end = resp.lastIndexOf(']');
+            if (start < 0 || end <= start) {
+                logger.warn("新浪K线兜底解析失败 code={} resp前100={}", code, resp.substring(0, Math.min(100, resp.length())));
+                return null;
+            }
+            JSONArray arr = JSON.parseArray(resp.substring(start, end + 1));
+            if (arr == null || arr.isEmpty()) {
+                logger.warn("新浪K线兜底空数组 code={}", code);
+                return null;
+            }
+            List<Bar> bars = new ArrayList<>(arr.size());
+            for (int i = 0; i < arr.size(); i++) {
+                JSONObject o = arr.getJSONObject(i);
+                String day = o.getString("day");
+                if (day == null || day.length() < 10) continue;
+                Double open = asDouble(o.get("open"));
+                Double close = asDouble(o.get("close"));
+                Double high = asDouble(o.get("high"));
+                Double low = asDouble(o.get("low"));
+                Double volume = asDouble(o.get("volume"));
+                if (open == null || close == null || high == null || low == null) continue;
+                Bar b = new Bar();
+                b.date = day.substring(0, 10);
+                b.open = open;
+                b.close = close;
+                b.high = high;
+                b.low = low;
+                b.volume = volume == null ? 0 : volume;
+                bars.add(b);
+            }
+            return bars.isEmpty() ? null : bars;
+        } catch (Exception e) {
+            logger.warn("新浪K线兜底失败 code={}", code);
             return null;
         }
     }
@@ -842,6 +1401,18 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         String behavior;
         List<String> ev = new ArrayList<>();
 
+        // 非池涨停票+主力强流入 → 继续拉升（clist抓到的涨停票但非涨停池来源）
+        if (!limitUpNow && zhaban == 0 && pct != null && pct >= 9.5
+                && mainPositive && mainPct != null && mainPct > 5) {
+            behavior = "pull_up";
+            ev.add(String.format("涨停%.1f%%", pct));
+            ev.add(String.format("主力净流入占成交%.1f%%", mainPct));
+            if (mainIn != null) ev.add(String.format("主力净流入%.2f亿", mainIn));
+            s.put("behavior", behavior);
+            s.put("behaviorEvidence", String.join("；", ev));
+            return;
+        }
+
         if (limitUpNow) {
             if (zhaban >= 2 || (innerDominant && mainPct != null && mainPct < 0)) {
                 behavior = "distribute";
@@ -873,21 +1444,31 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
                 ev.add("待分歧转一致确认");
             }
         } else {
-            if (mainPositive && outerDominant && (shrink || (pct != null && pct < 5))) {
+            if (mainPct != null && mainPct > 10 && mainPositive && pct != null && pct > 5) {
+                behavior = "pull_up";
+                ev.add(String.format("主力净流入占成交%.1f%%", mainPct));
+                ev.add(String.format("涨幅%.1f%%", pct));
+                if (mainIn != null) ev.add(String.format("主力净流入%.2f亿", mainIn));
+            } else if (mainPositive && mainPct != null && mainPct > 5
+                    && (shrink || (pct != null && pct <= 5))) {
                 behavior = "absorb";
-                ev.add(String.format("主力净流入%.2f亿占成交%.1f%%", mainIn, mainPct == null ? 0 : mainPct));
-                if (outerDominant) ev.add(String.format("外盘/内盘%.2f主动买占优", ratio));
+                ev.add(String.format("主力净流入%.2f亿占成交%.1f%%", mainIn, mainPct));
                 if (shrink) ev.add("缩量");
-            } else if (mainPct != null && mainPct <= -3 && (innerDominant || mainIn == null || mainIn < 0)) {
+                if (pct != null) ev.add(String.format("涨幅%.1f%%", pct));
+            } else if (mainPct != null && mainPct <= -3 && (mainIn == null || mainIn < 0)) {
                 behavior = "distribute";
                 ev.add(String.format("主力净流出占成交%.1f%%", mainPct));
-                if (innerDominant) ev.add("内盘>外盘");
-            } else if (maBull && pct != null && Math.abs(pct) <= 4
+            } else if (maBull && pct != null && Math.abs(pct) <= 5
                     && (shrink || (volumeRatio != null && volumeRatio < 1.2))) {
                 behavior = "organize";
                 ev.add("均线多头窄幅整理");
                 ev.add(String.format("涨幅%.1f%%", pct));
                 ev.add("量能温和");
+            } else if (mainPositive && outerDominant && shrink) {
+                behavior = "absorb";
+                ev.add(String.format("主力净流入%.2f亿", mainIn));
+                ev.add(String.format("外盘/内盘%.2f主动买占优", ratio));
+                ev.add("缩量");
             } else {
                 behavior = "unknown";
                 ev.add("量价信号不明确，无法判定");
@@ -897,12 +1478,50 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         s.put("behaviorEvidence", String.join("；", ev));
     }
 
-    /** 出货行为一票剔除 + 评分排序 + topN + 优先级理由/确认信号/风险提示 */
-    private List<Map<String, Object>> scoreAndTop(Collection<Map<String, Object>> pool, String type, int topN) {
+    /** 读取最近100条经验构建索引：stockCode → expType列表（供选股评分调整，经验闭环） */
+    private Map<String, List<String>> buildExpIndex() {
+        Map<String, List<String>> index = new HashMap<>();
+        try {
+            List<ShortTermExperience> exps = shortTermPickMapper.selectRecentExperience(100);
+            if (exps != null) {
+                for (ShortTermExperience e : exps) {
+                    index.computeIfAbsent(e.getStockCode(), k -> new ArrayList<>()).add(e.getExpType());
+                }
+            }
+        } catch (Exception e) {
+            logger.warn("读取历史经验索引失败，选股评分不做经验调整", e);
+        }
+        return index;
+    }
+
+    /** 出货行为一票剔除 + 评分排序 + topN + 经验闭环调整 + 优先级理由/确认信号/风险提示 */
+    private List<Map<String, Object>> scoreAndTop(Collection<Map<String, Object>> pool, String type, int topN,
+            Map<String, List<String>> expIndex) {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Map<String, Object> s : pool) {
             if ("distribute".equals(s.get("behavior"))) continue; // 出货嫌疑不入选
-            s.put("score", round2(calcScore(s, type)));
+            double baseScore = calcScore(s, type);
+            // 经验闭环：根据历史复盘经验调整评分（crash惩罚/fake_out轻惩/success奖励）
+            String code = (String) s.get("code");
+            List<String> exps = expIndex.get(code);
+            if (exps != null && !exps.isEmpty() && baseScore > 0) {
+                int crashCount = 0, fakeOutCount = 0, successCount = 0;
+                for (String exp : exps) {
+                    if ("crash".equals(exp)) crashCount++;
+                    else if ("fake_out".equals(exp)) fakeOutCount++;
+                    else if ("success".equals(exp) || "limit_up".equals(exp)) successCount++;
+                }
+                double factor = 1.0 - crashCount * 0.15 - fakeOutCount * 0.08 + successCount * 0.05;
+                factor = Math.max(0.3, Math.min(1.3, factor));
+                double adjustedScore = baseScore * factor;
+                s.put("score", round2(adjustedScore));
+                if (factor != 1.0) {
+                    s.put("expAdjust", String.format("历史经验%d条(崩车%d/假强%d/成功%d)，评分×%.2f(%.1f→%.1f)",
+                            exps.size(), crashCount, fakeOutCount, successCount, factor, baseScore, adjustedScore));
+                }
+            } else {
+                s.put("score", round2(baseScore));
+            }
             list.add(s);
         }
         list.sort((a, b) -> {
@@ -945,11 +1564,12 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             if (lowDepth != null) score += Math.max(0, 28 - lowDepth) * 0.25;       // 低位深度 0~7
             if (volShrink != null) score += Math.max(0, 1 - volShrink) * 6;         // 缩量程度 0~6
             score += Math.min(ztCount60, 4) * 1.2;                                  // 涨停基因 0~4.8
-            if (mainPct != null) score += clamp(mainPct, 0, 10) * 0.3;              // 主力流入占比 0~3
+            if (mainPct != null) score += clamp(mainPct, 0, 20) * 0.5;              // 主力流入占比 0~10
             if (gain20 != null && gain20 >= -8 && gain20 <= 12) score += 2;         // 平台未启动
-            if ("absorb".equals(behavior)) score += 4;
+            if ("pull_up".equals(behavior)) score += 5;
+            else if ("absorb".equals(behavior)) score += 4;
             else if ("organize".equals(behavior)) score += 2;
-            else if ("pull_up".equals(behavior)) score += 1;
+            else if (mainPct != null && mainPct > 15) score += 1.5;                 // unknown但主力强流入保底
         } else { // qushi
             Integer recentZt = (Integer) s.get("recentZtDaysAgo");
             boolean maBull = Integer.valueOf(1).equals(s.get("trendMaOk"));
@@ -961,10 +1581,11 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             if (volShrink != null && volShrink >= 0.6 && volShrink <= 1.0) score += 2; // 缩量健康
             if (lowDepth != null && lowDepth >= 15 && lowDepth <= 60) score += 1.5; // 空间位置
             if (gain20 != null) score += clamp(gain20, 0, 25) * 0.1;
-            if (mainPct != null) score += clamp(mainPct, 0, 8) * 0.25;
-            if ("pull_up".equals(behavior)) score += 3;
-            else if ("organize".equals(behavior)) score += 2;
-            else if ("absorb".equals(behavior)) score += 1;
+            if (mainPct != null) score += clamp(mainPct, 0, 15) * 0.4;              // 主力流入占比 0~6
+            if ("pull_up".equals(behavior)) score += 5;
+            else if ("organize".equals(behavior)) score += 3;
+            else if ("absorb".equals(behavior)) score += 2;
+            else if (mainPct != null && mainPct > 15) score += 2;                   // unknown但主力强流入保底
         }
         return score;
     }
@@ -1192,13 +1813,19 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             }
             double price0 = p.getPrice() != null ? p.getPrice().doubleValue()
                     : (idx > 0 ? bars.get(idx - 1).close : bars.get(idx).open);
-            int window = 3;
+            String pickType = p.getPickType();
+            // 按类型区分初始窗口：妖股T+3（连板3天见分晓），潜伏/趋势T+5
+            int window = "qianfu".equals(pickType) ? 5 : ("qushi".equals(pickType) ? 5 : 3);
             Map<String, Object> fact = windowFact(bars, idx, window, price0);
-            String expType = classifyExp(fact);
-            if (expType == null && idx + 5 <= bars.size()) {
-                window = 5;
-                fact = windowFact(bars, idx, window, price0);
-                expType = classifyExp(fact);
+            String expType = classifyExp(fact, pickType);
+            if (expType == null) {
+                // 扩大窗口：潜伏T+10（等启动），趋势/妖股T+5
+                int window2 = "qianfu".equals(pickType) ? 10 : 5;
+                if (idx + window2 <= bars.size()) {
+                    window = window2;
+                    fact = windowFact(bars, idx, window, price0);
+                    expType = classifyExp(fact, pickType);
+                }
             }
             if (expType == null) {
                 d.put("skipped", "走势中性，不生成经验");
@@ -1212,12 +1839,13 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             exp.setTradeDate(p.getTradeDate());
             exp.setStockCode(p.getStockCode());
             exp.setStockName(p.getStockName());
-            exp.setResultBrief(truncate(String.format("推荐价%.2f元，推荐后%d个交易日最高%+.1f%%、最低%+.1f%%、期末%+.1f%%，期间涨停%d次",
+            exp.setResultBrief(truncate(String.format("推荐价%.2f元，推荐后%d个交易日最高%+.1f%%、最低%+.1f%%、期末%+.1f%%，期间涨停%d次，量能比%.1f",
                     price0, window,
                     asDouble(fact.get("maxHighPct")) == null ? 0 : asDouble(fact.get("maxHighPct")),
                     asDouble(fact.get("minLowPct")) == null ? 0 : asDouble(fact.get("minLowPct")),
                     asDouble(fact.get("endPct")) == null ? 0 : asDouble(fact.get("endPct")),
-                    (int) fact.getOrDefault("ztCount", 0)), 500));
+                    (int) fact.getOrDefault("ztCount", 0),
+                    asDouble(fact.get("volRatio")) == null ? 0 : asDouble(fact.get("volRatio"))), 500));
             exps.add(exp);
             d.put("expType", expType);
             d.put("resultBrief", exp.getResultBrief());
@@ -1259,40 +1887,69 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         return out;
     }
 
-    /** 推荐后window根bar的事实统计（相对推荐价） */
+    /** 推荐后window根bar的事实统计（相对推荐价），含量能变化（推荐后均量/推荐前5日均量） */
     private Map<String, Object> windowFact(List<Bar> bars, int idx, int window, double price0) {
         double maxHigh = -Double.MAX_VALUE, minLow = Double.MAX_VALUE;
         int ztCount = 0;
         double prevClose = idx > 0 ? bars.get(idx - 1).close : price0;
+        double volSum = 0;
+        int volCount = 0;
         for (int i = idx; i < idx + window && i < bars.size(); i++) {
             Bar b = bars.get(i);
             maxHigh = Math.max(maxHigh, b.high);
             minLow = Math.min(minLow, b.low);
             if (prevClose > 0 && (b.close / prevClose - 1) * 100 >= 9.5) ztCount++;
             prevClose = b.close;
+            volSum += b.volume;
+            volCount++;
         }
         double endClose = bars.get(Math.min(idx + window, bars.size()) - 1).close;
+        // 推荐前5日均量（量能变化基准）
+        double preVolSum = 0;
+        int preVolCount = 0;
+        for (int i = Math.max(0, idx - 5); i < idx && i < bars.size(); i++) {
+            preVolSum += bars.get(i).volume;
+            preVolCount++;
+        }
         Map<String, Object> f = new LinkedHashMap<>();
         f.put("maxHighPct", round2((maxHigh / price0 - 1) * 100));
         f.put("minLowPct", round2((minLow / price0 - 1) * 100));
         f.put("endPct", round2((endClose / price0 - 1) * 100));
         f.put("ztCount", ztCount);
+        f.put("volRatio", preVolCount > 0 && volCount > 0 ? round2((volSum / volCount) / (preVolSum / preVolCount)) : null);
         return f;
     }
 
-    /** 事实归类：limit_up > success > crash > fake_out > no_start */
-    private String classifyExp(Map<String, Object> fact) {
+    /** 事实归类（按推荐类型区分阈值）：limit_up > success > crash > fake_out > no_start */
+    private String classifyExp(Map<String, Object> fact, String pickType) {
         Double maxHigh = asDouble(fact.get("maxHighPct"));
         Double minLow = asDouble(fact.get("minLowPct"));
         Double endPct = asDouble(fact.get("endPct"));
         int ztCount = (int) fact.getOrDefault("ztCount", 0);
         if (maxHigh == null || minLow == null || endPct == null) return null;
         if (ztCount >= 1) return "limit_up";
-        if (maxHigh >= 8 && endPct >= 3) return "success";
-        if (minLow <= -8) return "crash";
-        if (maxHigh >= 5 && endPct < 0) return "fake_out";
-        if (maxHigh < 3 && endPct < 1) return "no_start";
-        return null;
+        if ("qianfu".equals(pickType)) {
+            // 低位潜伏：启动5%即成功；跌5%该止损；冲高回落3%算假突破；未启动且没大跌=中性不生成
+            if (maxHigh >= 5 && endPct >= 2) return "success";
+            if (minLow <= -5) return "crash";
+            if (maxHigh >= 3 && endPct < 0) return "fake_out";
+            if (maxHigh < 3 && endPct >= -3) return null;
+            return "no_start";
+        } else if ("qushi".equals(pickType)) {
+            // 趋势延续：趋势破坏看endPct<-5或最低≤-6%；冲高回落4%算假强
+            if (maxHigh >= 5 && endPct >= 2) return "success";
+            if (minLow <= -6 || endPct < -5) return "crash";
+            if (maxHigh >= 4 && endPct < 0) return "fake_out";
+            if (maxHigh < 3 && endPct < 1) return "no_start";
+            return null;
+        } else {
+            // 妖股梯队：连板股期望高，3天最高不到5%已偏弱
+            if (maxHigh >= 8 && endPct >= 3) return "success";
+            if (minLow <= -8) return "crash";
+            if (maxHigh >= 5 && endPct < 0) return "fake_out";
+            if (maxHigh < 5 && endPct >= 0) return "no_start";
+            return null;
+        }
     }
 
     /** AI批量复盘：事实列表 → 每条summary+ruleHint */
@@ -1310,7 +1967,9 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
                 arr.add(o);
             }
             String sys = "你是A股短线交易复盘教练。基于给定的事实数据做经验沉淀，语气客观克制，不夸大、不臆测未提供的信息。输出必须是严格的JSON数组，不要输出任何其他文字或markdown代码块标记。";
-            String user = "以下是若干条\"历史短线推荐→实际走势\"的事实记录（expType为程序判定归类：limit_up晋级/success按信号启动/crash崩车/fake_out假强/no_start不启动）。\n"
+            String user = "以下是若干条\"历史短线推荐→实际走势\"的事实记录。\n"
+                    + "pickType为推荐策略：yaogu妖股梯队（连板高度+封板质量，期望继续拉升）/qianfu低位潜伏（低位缩量等启动，不启动不算失败）/qushi趋势延续（均线多头+近5日有涨停，期望持续向上）。\n"
+                    + "expType为程序判定归类：limit_up晋级/success按信号启动/crash崩车/fake_out假强/no_start不启动。量能比>1为放量，<1为缩量。\n"
                     + "请对每一条给出经验总结summary（60字内）与可执行的修正规则ruleHint（40字内，供后续推荐算法参考，如\"低位潜伏需等放量突破再纳入\"\"封单弱的高位板次日谨慎\"）。\n"
                     + "仅输出JSON数组：[{\"code\":\"...\",\"tradeDate\":\"yyyy-MM-dd\",\"summary\":\"...\",\"ruleHint\":\"...\"}]\n"
                     + "输入数据：\n" + arr.toJSONString();
@@ -1394,49 +2053,72 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
         return httpGet(url, 1);
     }
 
-    /** 带超时与重试的GET请求（K线/快照类调用方传1次，池类传3次） */
+    // ==================== 请求头 ====================
+    // 合规约束：固定单一UA/Referer正常访问公开数据接口，不做UA轮换伪装、不规避访问控制；
+    // 访问频率由全局熔断器+单次尝试+批量200ms间隔约束，克制调用
+    private static final String FIXED_UA =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+    private static void applyBrowserHeaders(HttpGet request) {
+        String host = request.getURI().getHost();
+        boolean isSina = host != null && host.contains("sina");
+        request.setHeader("User-Agent", FIXED_UA);
+        request.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        request.setHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+        request.setHeader("Connection", "keep-alive");
+        request.setHeader("Cache-Control", "max-age=0");
+        // 新浪接口2021年起强制要求sina站内Referer（接口访问要求，非伪装；finance.sina.com.cn实测200，hq.sinajs.cn自引用会403）；其余固定东财行情页来源
+        request.setHeader("Referer", isSina ? "https://finance.sina.com.cn/" : "https://quote.eastmoney.com/");
+    }
+
+    /** GET请求（单次尝试，无重试）：失败由调用方降级兜底源/激活熔断；maxAttempts参数已废弃统一单次（重试会延长拉黑时长且放大请求量） */
     private static String httpGet(String url, int maxAttempts) {
-        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
-            try (CloseableHttpClient client = HttpClients.createDefault()) {
-                HttpGet request = new HttpGet(url);
-                request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-                request.setConfig(RequestConfig.custom()
-                        .setConnectTimeout(10000)
-                        .setSocketTimeout(15000)
-                        .build());
-                try (CloseableHttpResponse response = client.execute(request)) {
-                    if (response.getStatusLine().getStatusCode() == 200) {
-                        return EntityUtils.toString(response.getEntity(), "UTF-8");
-                    }
-                    logger.warn("短线选股HTTP非200 | 状态={} | 尝试={}/{} | url={}",
-                            response.getStatusLine().getStatusCode(), attempt, maxAttempts, url);
+        return httpGetSingle(url);
+    }
+
+    private static String httpGetSingle(String url) {
+        try (CloseableHttpClient client = HttpClientBuilder.create().disableAutomaticRetries().build()) {
+            HttpGet request = new HttpGet(url);
+            applyBrowserHeaders(request);
+            request.setConfig(RequestConfig.custom()
+                    .setConnectTimeout(5000)
+                    .setSocketTimeout(8000) // race架构下快速失败优于长等待：正常请求<1s，8s足够宽裕
+                    .build());
+            try (CloseableHttpResponse response = client.execute(request)) {
+                if (response.getStatusLine().getStatusCode() == 200) {
+                    return EntityUtils.toString(response.getEntity(), "UTF-8");
                 }
-            } catch (Exception e) {
-                logger.warn("短线选股HTTP失败 | 尝试={}/{} | url={} | 原因={}", attempt, maxAttempts, url, e.getMessage());
+                logger.warn("短线选股HTTP非200 | 状态={} | url={}",
+                        response.getStatusLine().getStatusCode(), url);
             }
-            if (attempt < maxAttempts) {
-                sleep(500L * attempt);
-            }
+        } catch (Exception e) {
+            logger.warn("短线选股HTTP失败 | url={} | 原因={}", url, e.getMessage());
         }
         return null;
     }
 
     private static void markEastKlineFail() {
-        eastKlineBlockedUntil = System.currentTimeMillis() + EAST_KLINE_BREAK_MS;
-        logger.warn("短线选股东财K线首次失败，熔断5分钟：期间K线全部直走腾讯兜底");
+        com.xk.srhwzzqdn.manager.util.StockDataFetcher.markFail(
+                com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_KLINE, 5 * 60 * 1000L);
     }
 
     private static boolean eastKlineBlocked() {
-        return System.currentTimeMillis() < eastKlineBlockedUntil;
+        return com.xk.srhwzzqdn.manager.util.StockDataFetcher.blocked(
+                com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_KLINE);
     }
 
     private static void markClistFail() {
-        clistBlockedUntil = System.currentTimeMillis() + CLIST_BREAK_MS;
-        logger.warn("短线选股行情快照双域名失败，熔断3分钟：期间clist请求跳过防延长封禁");
+        com.xk.srhwzzqdn.manager.util.StockDataFetcher.markFail(
+                com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_CLIST, 3 * 60 * 1000L);
+    }
+
+    private static void markSuccessClist() {
+        com.xk.srhwzzqdn.manager.util.StockDataFetcher.markSuccess(
+                com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_CLIST);
     }
 
     private static boolean clistBlocked() {
-        return System.currentTimeMillis() < clistBlockedUntil;
+        return com.xk.srhwzzqdn.manager.util.StockDataFetcher.blocked(
+                com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_CLIST);
     }
 
     /** clist diff兼容两种返回格式：数组 或 数字键对象 {"0":{...}} */

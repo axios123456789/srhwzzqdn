@@ -141,4 +141,8 @@ public class StockBasic {
 
     @Schema(description = "更新人")
     private String updateBy;
+
+    /** 行情数据来源标识（east/eastDelay/tencent，非库字段）：兜底源字段不全时，更新前用库内旧值补齐缺失字段防置空 */
+    @Schema(description = "行情数据来源标识", hidden = true)
+    private transient String quoteSource;
 }

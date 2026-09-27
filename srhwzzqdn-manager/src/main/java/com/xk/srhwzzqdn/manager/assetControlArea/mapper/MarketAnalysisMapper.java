@@ -34,4 +34,10 @@ public interface MarketAnalysisMapper {
      * 查询最近N天的分析记录（按日期倒序），供AI历史对比复盘使用
      */
     List<MarketAnalysisDaily> selectRecent(@Param("limit") Integer limit);
+
+    /**
+     * 更新指定交易日的AI历史复盘经验（点击"AI历史准确性复盘"生成复盘报告后落库，
+     * 供后续AI分析明日展望时结合历史失败经验形成教训）
+     */
+    int updateAiHistoryReview(@Param("marketDate") Date marketDate, @Param("aiHistoryReview") String aiHistoryReview);
 }

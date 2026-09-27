@@ -11,8 +11,10 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\service\impl\SysRoleServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\controller\WorkMemoryAccessController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\mapper\FundAssetMapper.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\service\impl\SysCommConfigServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\controller\CommunicateMemoryAccessController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\controller\LearnMemoryAccessController.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\service\SysCommConfigService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\controller\AssetLedgerController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\service\RowMemoryAccessService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\controller\RowMemoryAccessController.java
@@ -47,6 +49,7 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\service\impl\ValidateCodeServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\service\impl\SysDictServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\properties\MinioProperties.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\mapper\SysCommConfigMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\service\impl\PredictionSimulateServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\FundAssetService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\mapper\AssetClusteringAnalysisMapper.java
@@ -71,6 +74,7 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\service\CommunicateMemoryAccessService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\impl\ShortTermPickServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\util\DeepSeekApiUtil.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\controller\SysCommConfigController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\mapper\LifeMemoryAccessMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\controller\ShortTermPickController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\mapper\CommunicateMemoryAccessMapper.java
@@ -83,15 +87,18 @@ D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\AssetClusteringAnalysisService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\controller\SysMenuController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\personalObservationArea\service\AssetDynamicsObservationService.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\util\SpringContextHolder.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\system\controller\FileUploadController.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\mapper\DailyReviewMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\mapper\MarketAnalysisMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\impl\AssetLedgerServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\personalObservationArea\mapper\AssetDynamicsObservationMapper.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\service\ReviewReportService.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\util\InterfaceConfigUtil.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\ManagerApplication.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\service\AssetLedgerService.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\mapper\ReviewReportMapper.java
+D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\util\StockDataFetcher.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\trialExecutionArea\service\impl\TradeRecordServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\memoryReceptionArea\service\impl\LearnMemoryAccessServiceImpl.java
 D:\personLearn\learnJava\personProject\srhwzzqdn\srhwzzqdn-manager\src\main\java\com\xk\srhwzzqdn\manager\assetControlArea\controller\StockAssetController.java

@@ -1327,6 +1327,9 @@ const handleRowRefresh = async row => {
       fetchData()
       // 当前详情正展示该股时，同步刷新详情各页签数据
       if (selectedStock.value && selectedStock.value.stockCode === row.stockCode) {
+        // 先重取股票基本信息（公司名片/估值指标/实时行情/市值规模绑定 selectedStock，刷新后须同步更新）
+        const basic = await GetStockBasicByCode(row.stockCode)
+        if (basic.code === 200) selectedStock.value = basic.data
         loadKlineData()
         loadFinanceData()
         loadFlowData()

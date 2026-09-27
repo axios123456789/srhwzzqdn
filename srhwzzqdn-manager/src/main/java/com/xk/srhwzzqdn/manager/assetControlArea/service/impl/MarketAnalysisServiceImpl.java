@@ -6,11 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.xk.srhwzzqdn.manager.assetControlArea.mapper.MarketAnalysisMapper;
 import com.xk.srhwzzqdn.manager.assetControlArea.service.MarketAnalysisService;
 import com.xk.srhwzzqdn.manager.util.AiCommonUtil;
+import com.xk.srhwzzqdn.manager.util.InterfaceConfigUtil;
 import com.xk.srhwzzqdn.model.entity.assetControl.MarketAnalysisDaily;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -22,11 +24,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 市场实时分析服务实现
@@ -56,30 +60,57 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
 
     // 行情集群failover：push2delay 延迟行情集群优先（稳定），push2 兜底；push2 高频会被临时拉黑
     private static final String[] PUSH2_HOSTS = {"http://push2delay.eastmoney.com", "http://push2.eastmoney.com"};
-    private static final String INDEX_URL_TPL =
-            "%s/api/qt/ulist.np/get?fltt=2&secids=1.000001,0.399001,0.399006,1.000688"
-                    + "&fields=f2,f3,f4,f6,f12,f14,f62,f66,f72,f78,f84,f184,f104,f105,f106,f124";
-    private static final String KLINE_URL =
-            "http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=%s&klt=101&fqt=1&lmt=3&end=20500101"
-                    + "&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57";
-    private static final String ZT_POOL_URL_TPL =
-            "http://push2ex.eastmoney.com/getTopicZTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt"
-                    + "&Pageindex=0&pagesize=600&sort=fbt%%3Aasc&date=%s";
-    private static final String ZB_POOL_URL_TPL =
-            "http://push2ex.eastmoney.com/getTopicZBPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt"
-                    + "&Pageindex=0&pagesize=600&sort=fbt%%3Aasc&date=%s";
-    private static final String DT_POOL_URL_TPL =
-            "http://push2ex.eastmoney.com/getTopicDTPool?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt"
-                    + "&Pageindex=0&pagesize=600&sort=fund%%3Aasc&date=%s";
-    private static final String SECTOR_URL_TPL =
-            "%s/api/qt/clist/get?fltt=2&pn=1&pz=%d&po=%d&fid=%s&fs=%s"
-                    + "&fields=f12,f14,f3,f62,f66,f72,f184,f128,f140,f136";
-    private static final String NEWS_URL_TPL =
-            "https://np-listapi.eastmoney.com/comm/web/getFastNewsList?client=web&biz=web_724"
-                    + "&fastColumn=102&sortEnd=&pageSize=30&req_trace=%d";
-    private static final String MARGIN_URL =
-            "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPTA_RZRQ_LSHJ&columns=ALL"
-                    + "&source=WEB&sortColumns=dim_date&sortTypes=-1&pageSize=1&pageNumber=1";
+
+
+    // ==================== 接口URL数据库化（t_sys_comm_config） ====================
+    // 行情集群host failover：push2delay优先（稳定），push2兜底；host从DB读取，读不到用原写死值
+    private static String[] getClistHosts() {
+        String delay = InterfaceConfigUtil.getUrl("stock_clist_host_delay", PUSH2_HOSTS[0]);
+        String main = InterfaceConfigUtil.getUrl("stock_clist_host_main", PUSH2_HOSTS[1]);
+        return new String[]{delay, main};
+    }
+    // 多子域名轮换：push2delay/push2 + 子域名1/2/7.push2，配合浏览器级请求头伪装降低反爬限流命中
+    private static String[] getClistHostsMulti() {
+        String delay = InterfaceConfigUtil.getUrl("stock_clist_host_delay", PUSH2_HOSTS[0]);
+        String main = InterfaceConfigUtil.getUrl("stock_clist_host_main", PUSH2_HOSTS[1]);
+        return new String[]{delay, main, "https://1.push2.eastmoney.com", "https://2.push2.eastmoney.com", "https://7.push2.eastmoney.com"};
+    }
+    // 指数行情ulist模板（host由getClistHosts failover填充，路径+参数固定）
+    private static final String INDEX_URL_PATH =
+            "/api/qt/ulist.np/get?fltt=2&secids=1.000001,0.399001,0.399006,1.000688&fields=f2,f3,f4,f6,f12,f14,f62,f66,f72,f78,f84,f184,f104,f105,f106,f124";
+    // 昨日成交额K线模板（stock_kline_url为base）
+    private static String getKlineUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("stock_kline_url", "http://push2his.eastmoney.com/api/qt/stock/kline/get");
+        return base + "?secid=%s&klt=101&fqt=1&lmt=3&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57";
+    }
+    // 涨停池模板（market_zt_pool_url为base）
+    private static String getZtPoolUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("market_zt_pool_url", "http://push2ex.eastmoney.com/getTopicZTPool");
+        return base + "?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=600&sort=fbt%%3Aasc&date=%s";
+    }
+    // 炸板池模板（market_zb_pool_url为base）
+    private static String getZbPoolUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("market_zb_pool_url", "http://push2ex.eastmoney.com/getTopicZBPool");
+        return base + "?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=600&sort=fbt%%3Aasc&date=%s";
+    }
+    // 跌停池模板（market_dt_pool_url为base）
+    private static String getDtPoolUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("market_dt_pool_url", "http://push2ex.eastmoney.com/getTopicDTPool");
+        return base + "?ut=7eea3edcaed734bea9cbfc24409ed989&dpt=wz.ztzt&Pageindex=0&pagesize=600&sort=fund%%3Aasc&date=%s";
+    }
+    // 板块资金流clist模板（host由getClistHosts填，路径固定）
+    private static final String SECTOR_URL_PATH =
+            "/api/qt/clist/get?fltt=2&pn=1&pz=%d&po=%d&fid=%s&fs=%s&fields=f12,f14,f3,f62,f66,f72,f184,f128,f140,f136";
+    // 7×24快讯模板（market_news_url为base）
+    private static String getNewsUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("market_news_url", "https://np-listapi.eastmoney.com/comm/web/getFastNewsList");
+        return base + "?client=web&biz=web_724&fastColumn=102&sortEnd=&pageSize=30&req_trace=%d";
+    }
+    // 两融T-1（stock_datacenter_batch_url为base）
+    private static String getMarginUrl() {
+        String base = InterfaceConfigUtil.getUrl("stock_datacenter_batch_url", "https://datacenter-web.eastmoney.com/api/data/v1/get");
+        return base + "?reportName=RPTA_RZRQ_LSHJ&columns=ALL&source=WEB&sortColumns=dim_date&sortTypes=-1&pageSize=1&pageNumber=1";
+    }
 
     // 实时聚合短缓存：切标签页/连续刷新时1分钟内复用，避免密集请求触发东财限流
     private static final long REALTIME_CACHE_TTL_MS = 60 * 1000L;
@@ -212,8 +243,18 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
                 + "最后总结3-5条可执行的纠错规则，供下次分析时规避同类失误。用Markdown输出，简明扼要，总字数600字以内。";
         String user = "以下是历史展望与实际走势对比数据：\n" + JSON.toJSONString(pairs);
         String review = aiCommonUtil.callWithSystem(system, user);
-        result.put("review", review == null || review.isEmpty()
-                ? "AI复盘暂时不可用，请稍后重试。" : review);
+        String reviewText = review == null || review.isEmpty()
+                ? "AI复盘暂时不可用，请稍后重试。" : review;
+        result.put("review", reviewText);
+        // 复盘经验落库到今日记录的ai_history_review字段，供后续AI分析明日展望时结合历史失败经验形成教训
+        try {
+            int updated = marketAnalysisMapper.updateAiHistoryReview(new Date(), trunc(reviewText, 4000));
+            if (updated > 0) {
+                logger.info("AI历史复盘经验已落库 marketDate={} 字符数={}", fmtDay(new Date()), reviewText.length());
+            }
+        } catch (Exception e) {
+            logger.warn("AI历史复盘经验落库失败：{}", e.getMessage());
+        }
         return result;
     }
 
@@ -225,20 +266,32 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         String phase = detectPhase();
         Date now = new Date();
 
+        // 1~6块数据相互独立 → 并行采集（原串行6块最坏叠加全部超时；并行后总耗时≈最慢块；
+        // 各块内部已有熔断/兜底，单块失败只降级自身，不影响其余块）
+        ExecutorService fetchExec = Executors.newFixedThreadPool(6);
+        CompletableFuture<JSONObject> idxF = CompletableFuture.supplyAsync(this::fetchIndexQuotes, fetchExec);
+        CompletableFuture<JSONObject> prevF = CompletableFuture.supplyAsync(this::fetchPrevAmount, fetchExec);
+        CompletableFuture<JSONObject> ztF = CompletableFuture.supplyAsync(() -> fetchPool(getZtPoolUrlTpl(), true), fetchExec);
+        CompletableFuture<JSONObject> zbF = CompletableFuture.supplyAsync(() -> fetchPool(getZbPoolUrlTpl(), false), fetchExec);
+        CompletableFuture<JSONObject> dtF = CompletableFuture.supplyAsync(() -> fetchPool(getDtPoolUrlTpl(), false), fetchExec);
+        CompletableFuture<Map<String, List<Map<String, Object>>>> secF = CompletableFuture.supplyAsync(this::fetchSectors, fetchExec);
+        CompletableFuture<List<Map<String, Object>>> newsF = CompletableFuture.supplyAsync(this::fetchNews, fetchExec);
+        CompletableFuture<JSONObject> marginF = CompletableFuture.supplyAsync(this::fetchMargin, fetchExec);
+        fetchExec.shutdown();
         // 1. 指数行情 + 全市场涨跌家数 + 大盘资金流（一次请求）
-        JSONObject idx = fetchIndexQuotes();
+        JSONObject idx = joinOrFallback(idxF, new JSONObject());
         // 2. 昨日两市成交额（指数日线）
-        JSONObject prevAmount = fetchPrevAmount();
-        // 3. 涨停池/炸板池/跌停池（今日）+ 昨日涨停池（主线延续性对比）
-        JSONObject ztToday = fetchPool(ZT_POOL_URL_TPL, true);
-        JSONObject zbToday = fetchPool(ZB_POOL_URL_TPL, false);
-        JSONObject dtToday = fetchPool(DT_POOL_URL_TPL, false);
+        JSONObject prevAmount = joinOrFallback(prevF, new JSONObject());
+        // 3. 涨停池/炸板池/跌停池（今日）
+        JSONObject ztToday = joinOrFallback(ztF, new JSONObject());
+        JSONObject zbToday = joinOrFallback(zbF, new JSONObject());
+        JSONObject dtToday = joinOrFallback(dtF, new JSONObject());
         // 4. 板块资金流（行业+概念，净流入榜+净流出榜+涨幅榜）
-        Map<String, List<Map<String, Object>>> sectors = fetchSectors();
+        Map<String, List<Map<String, Object>>> sectors = joinOrFallback(secF, new HashMap<>());
         // 5. 7×24快讯
-        List<Map<String, Object>> news = fetchNews();
+        List<Map<String, Object>> news = joinOrFallback(newsF, new ArrayList<>());
         // 6. 两融（T-1）
-        JSONObject margin = fetchMargin();
+        JSONObject margin = joinOrFallback(marginF, new JSONObject());
 
         // ---------- 指数与量能 ----------
         JSONArray indexes = idx.getJSONArray("indexes");
@@ -302,6 +355,24 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         // ---------- 板块热力 ----------
         List<Map<String, Object>> hotSectors = sectors.get("hot");
         List<Map<String, Object>> coldSectors = sectors.get("cold");
+        // 板块资金流兜底：push2熔断时从数据库最近一条读取历史板块数据
+        if ((hotSectors == null || hotSectors.isEmpty()) && (coldSectors == null || coldSectors.isEmpty())) {
+            try {
+                List<MarketAnalysisDaily> recent = marketAnalysisMapper.selectRecent(1);
+                if (recent != null && !recent.isEmpty()) {
+                    MarketAnalysisDaily latest = recent.get(0);
+                    if (hotSectors == null || hotSectors.isEmpty()) {
+                        hotSectors = parseSectorJson(latest.getHotSectors());
+                    }
+                    if (coldSectors == null || coldSectors.isEmpty()) {
+                        coldSectors = parseSectorJson(latest.getColdSectors());
+                    }
+                    logger.info("板块资金流走数据库历史兜底,来源日期={}", latest.getMarketDate());
+                }
+            } catch (Exception e) {
+                logger.warn("板块资金流数据库历史兜底失败: {}", e.getMessage());
+            }
+        }
         result.put("hotSectors", hotSectors);
         result.put("coldSectors", coldSectors);
 
@@ -336,6 +407,21 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         return result;
     }
 
+    /** 并行块收取：超时/异常回退默认值（单块失败只降级自身，不拖垮整份研判） */
+    private <T> T joinOrFallback(CompletableFuture<T> f, T fallback) {
+        try {
+            T v = f.get(120, TimeUnit.SECONDS);
+            return v != null ? v : fallback;
+        } catch (TimeoutException te) {
+            f.cancel(true);
+            logger.warn("市场分析并行采集块超时，该块降级");
+            return fallback;
+        } catch (Exception e) {
+            logger.warn("市场分析并行采集块失败，该块降级", e);
+            return fallback;
+        }
+    }
+
     /** 指数行情 + 全市场涨跌家数 + 大盘资金流（沪深指数f104/f105/f106相加，创业板为其子集不重复计） */
     private JSONObject fetchIndexQuotes() {
         JSONObject out = new JSONObject();
@@ -347,11 +433,13 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         long quoteTime = 0;
         try {
             // clist熔断期直接跳过（指数该轮缺省），防拉黑期间反复请求延长封禁
-            String body = isPush2ClistBlocked() ? null : httpGetHosts(String.format(INDEX_URL_TPL, PUSH2_HOSTS[0]));
+            String[] clistHosts = getClistHosts();
+            String body = isPush2ClistBlocked() ? null : httpGetHosts(clistHosts[0] + INDEX_URL_PATH);
             if (body == null && !isPush2ClistBlocked()) {
-                body = httpGetHosts(String.format(INDEX_URL_TPL, PUSH2_HOSTS[1]));
+                body = httpGetHosts(clistHosts[1] + INDEX_URL_PATH);
                 if (body == null) markPush2ClistFail();
             }
+            if (body == null) throw new RuntimeException("东财clist指数行情请求失败(熔断或限流)");
             JSONObject json = JSON.parseObject(body);
             JSONArray diff = json.getJSONObject("data").getJSONArray("diff");
             for (int i = 0; i < diff.size(); i++) {
@@ -384,7 +472,36 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
                 quoteTime = Math.max(quoteTime, d.getLongValue("f124"));
             }
         } catch (Exception e) {
-            logger.error("获取大盘指数行情失败", e);
+            logger.warn("东财指数行情请求失败,将走腾讯兜底: {}", e.getMessage());
+        }
+        // 东财失败/熔断时走腾讯实时指数兜底（指数点位+涨跌幅）；成交额/涨跌家数/资金流腾讯不提供，从数据库最近一条历史记录补齐
+        if (indexes.isEmpty()) {
+            JSONObject txResult = fetchIndexQuotesFromTencent();
+            if (txResult != null && txResult.getJSONArray("indexes") != null && !txResult.getJSONArray("indexes").isEmpty()) {
+                indexes = txResult.getJSONArray("indexes");
+                totalAmount = txResult.getBigDecimal("totalAmount");
+                // 腾讯只提供指数点位+涨跌幅，涨跌家数/资金流/成交额从数据库最近一条历史记录补齐，避免前端全0
+                try {
+                    List<MarketAnalysisDaily> recent = marketAnalysisMapper.selectRecent(1);
+                    if (recent != null && !recent.isEmpty()) {
+                        MarketAnalysisDaily latest = recent.get(0);
+                        if (latest.getUpCount() != null) up = latest.getUpCount();
+                        if (latest.getDownCount() != null) down = latest.getDownCount();
+                        if (latest.getFlatCount() != null) flat = latest.getFlatCount();
+                        if (latest.getMainNetInflow() != null) mainNet = latest.getMainNetInflow().doubleValue();
+                        if (latest.getUltraNetInflow() != null) ultraNet = latest.getUltraNetInflow().doubleValue();
+                        if (latest.getBigNetInflow() != null) bigNet = latest.getBigNetInflow().doubleValue();
+                        if (latest.getMidNetInflow() != null) midNet = latest.getMidNetInflow().doubleValue();
+                        if (latest.getSmallNetInflow() != null) smallNet = latest.getSmallNetInflow().doubleValue();
+                        if (latest.getTotalAmount() != null) totalAmount = latest.getTotalAmount();
+                        logger.info("东财指数行情失败，已走腾讯实时指数兜底获取{}个指数,涨跌家数/资金流从数据库历史记录补齐,来源日期={}", indexes.size(), latest.getMarketDate());
+                    } else {
+                        logger.info("东财指数行情失败，已走腾讯实时指数兜底获取{}个指数,数据库无历史记录,涨跌家数/资金流置0", indexes.size());
+                    }
+                } catch (Exception e) {
+                    logger.warn("腾讯兜底时从数据库补齐涨跌家数/资金流失败: {}", e.getMessage());
+                }
+            }
         }
         if (quoteTime > 0) {
             out.put("quoteTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(quoteTime * 1000L)));
@@ -403,6 +520,47 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         return out;
     }
 
+    /** 腾讯实时指数兜底（东财clist熔断时）：qt.gtimg.cn/q=接口，返回指数点位+涨跌幅；成交额/涨跌家数/资金流腾讯不提供，由调用方从数据库历史记录补齐 */
+    private JSONObject fetchIndexQuotesFromTencent() {
+        JSONObject out = new JSONObject();
+        JSONArray indexes = new JSONArray();
+        try {
+            String txIndexBase = InterfaceConfigUtil.getUrl("stock_tx_index_quote_url", "https://qt.gtimg.cn");
+            String body = httpGet(txIndexBase + "/q=sh000001,sz399001,sz399006,sh000688");
+            if (body == null) return null;
+            String[] lines = body.split(";");
+            String[][] mapping = {{"sh000001", "上证指数"}, {"sz399001", "深证成指"}, {"sz399006", "创业板指"}, {"sh000688", "科创50"}};
+            for (String[] m : mapping) {
+                String prefix = "v_" + m[0] + "=\"";
+                for (String line : lines) {
+                    line = line.trim();
+                    if (!line.startsWith(prefix)) continue;
+                    String content = line.substring(prefix.length(), line.length() - 1);
+                    String[] fields = content.split("~");
+                    if (fields.length < 5) break;
+                    double close = Double.parseDouble(fields[3]);
+                    double prevClose = Double.parseDouble(fields[4]);
+                    double changeAmt = close - prevClose;
+                    double changePct = prevClose > 0 ? changeAmt / prevClose * 100 : 0;
+                    JSONObject item = new JSONObject(true);
+                    item.put("code", m[0].substring(2));
+                    item.put("name", m[1]);
+                    item.put("close", new BigDecimal(close).setScale(2, RoundingMode.HALF_UP));
+                    item.put("changePct", new BigDecimal(changePct).setScale(2, RoundingMode.HALF_UP));
+                    item.put("changeAmt", new BigDecimal(changeAmt).setScale(2, RoundingMode.HALF_UP));
+                    item.put("amountYi", 0.0);
+                    indexes.add(item);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            logger.warn("腾讯实时指数兜底失败：{}", e.getMessage());
+        }
+        out.put("indexes", indexes);
+        out.put("totalAmount", BigDecimal.ZERO);
+        return out;
+    }
+
     /** 昨日两市全天成交额（沪+深指数日线，量能对比基准）；push2his熔断期直接跳过东财，用市场分析表最近交易日记录兜底 */
     private JSONObject fetchPrevAmount() {
         JSONObject out = new JSONObject();
@@ -413,7 +571,7 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         } else {
             String today = new SimpleDateFormat("yyyyMMdd").format(new Date());
             for (String secid : new String[]{"1.000001", "0.399001"}) {
-                String body = httpGetNoRetry(String.format(KLINE_URL, secid));
+                String body = httpGetNoRetry(String.format(getKlineUrlTpl(), secid));
                 if (body == null) {
                     // 首次失败即熔断（push2his拉黑特征），剩余指数不再请求，转表兜底
                     markPush2hisFail();
@@ -461,11 +619,16 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         return out;
     }
 
-    /** 涨停/炸板/跌停池（date=today；返回tc总数与pool明细） */
+    /** 涨停/炸板/跌停池（date=today；返回tc总数与pool明细）；push2ex熔断期内0请求防延长封禁（GROUP_POOL与短线选股共享） */
     private JSONObject fetchPool(String urlTpl, boolean needPool) {
         JSONObject out = new JSONObject();
         out.put("count", 0);
         out.put("pool", new JSONArray());
+        // 熔断期内跳过：拉黑期间继续请求会延长封禁时长
+        if (com.xk.srhwzzqdn.manager.util.StockDataFetcher.blocked(com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_POOL)) {
+            return out;
+        }
+        boolean ok = false;
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
         try {
             String body = httpGet(String.format(urlTpl, date));
@@ -476,9 +639,16 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
                 if (needPool) {
                     out.put("pool", json.getJSONObject("data").getJSONArray("pool"));
                 }
+                ok = true;
             }
         } catch (Exception e) {
             logger.warn("获取涨跌停池失败 url={}", urlTpl, e);
+        }
+        if (ok) {
+            com.xk.srhwzzqdn.manager.util.StockDataFetcher.markSuccess(com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_POOL);
+        } else {
+            com.xk.srhwzzqdn.manager.util.StockDataFetcher.markFail(
+                    com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_POOL, 3 * 60 * 1000L);
         }
         sleep(200);
         return out;
@@ -560,13 +730,19 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
             boolean desc = "1".equals(spec[1]);
             int pz = Integer.parseInt(spec[2]);
             try {
-                String url = String.format(SECTOR_URL_TPL, PUSH2_HOSTS[0], pz, desc ? 1 : 0, desc ? "f62" : "f62", fs);
-                // clist熔断期直接跳过（板块列表该轮缺省），防拉黑期间反复请求延长封禁
-                String body = isPush2ClistBlocked() ? null : httpGetHosts(url);
-                if (body == null && !isPush2ClistBlocked()) {
-                    url = String.format(SECTOR_URL_TPL, PUSH2_HOSTS[1], pz, desc ? 1 : 0, desc ? "f62" : "f62", fs);
-                    body = httpGetHosts(url);
+                String sectorPath = String.format(SECTOR_URL_PATH, pz, desc ? 1 : 0, "f62", fs);
+                // clist熔断期直接跳过；多子域名轮换(push2delay/push2/1.push2/2.push2/7.push2)降低反爬限流命中
+                String body = null;
+                if (!isPush2ClistBlocked()) {
+                    for (String host : getClistHostsMulti()) {
+                        body = httpGetHosts(host + sectorPath);
+                        if (body != null) break;
+                    }
                     if (body == null) markPush2ClistFail();
+                }
+                if (body == null) {
+                    logger.warn("板块资金流请求失败(熔断或限流) fs={}", fs);
+                    continue;
                 }
                 JSONObject json = JSON.parseObject(body);
                 JSONObject dataObj = json.getJSONObject("data");
@@ -600,11 +776,23 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         return out;
     }
 
+    /** 解析数据库存储的板块JSON字符串为List<Map>（板块资金流历史兜底用） */
+    @SuppressWarnings("unchecked")
+    private List<Map<String, Object>> parseSectorJson(String json) {
+        if (json == null || json.trim().isEmpty()) return null;
+        try {
+            return JSON.parseObject(json, List.class);
+        } catch (Exception e) {
+            logger.warn("解析板块历史JSON失败: {}", e.getMessage());
+            return null;
+        }
+    }
+
     /** 7×24财经快讯（消息面） */
     private List<Map<String, Object>> fetchNews() {
         List<Map<String, Object>> list = new ArrayList<>();
         try {
-            String body = httpGet(String.format(NEWS_URL_TPL, System.currentTimeMillis()));
+            String body = httpGet(String.format(getNewsUrlTpl(), System.currentTimeMillis()));
             JSONObject json = JSON.parseObject(body);
             JSONArray arr = json.getJSONObject("data").getJSONArray("fastNewsList");
             for (int i = 0; i < arr.size() && i < 25; i++) {
@@ -642,7 +830,7 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         out.put("netBuyYi", null);
         out.put("date", null);
         try {
-            String body = httpGet(MARGIN_URL);
+            String body = httpGet(getMarginUrl());
             JSONObject json = JSON.parseObject(body);
             JSONArray data = json.getJSONObject("result").getJSONArray("data");
             if (data != null && !data.isEmpty()) {
@@ -844,13 +1032,14 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
             Map<String, Object> aiData = buildAiData(realtime);
             String system = "你是资深A股市场分析专家，擅长从盘面数据解读市场状态、资金意图与题材持续性。"
                     + "你必须基于给定的实时盘面数据与规则初判输出分析，禁止编造数据中不存在的信息。"
+                    + "若输入数据包含【历史教训】，生成ai_outlook时必须结合历史教训中指出的误判模式与纠错规则，规避同类失误，形成可执行的改进措施。"
                     + "输出严格的JSON（不要markdown代码块包裹），格式：\n"
                     + "{\"ai_market_status\":\"市场在做什么/情绪综合解读(200字内)\","
                     + "\"ai_logic\":\"当前催动市场的核心消息面与驱动逻辑，结合给定快讯(250字内)\","
                     + "\"ai_money_flow\":\"资金从哪流出到哪流入、增量资金是否进场、杠杆资金态度(250字内)\","
                     + "\"ai_mainline\":\"市场主线是什么、正在拉什么弃什么、主线是一日游还是可持续主线，判断依据(300字内)\","
                     + "\"ai_outlook\":\"明日盘前展望：关注什么信号、风险点(200字内)\""
-                    + (aiData.containsKey("historyBlock") ? ",\"ai_history_review\":\"结合历史展望vs实际走势复盘，指出过往误判模式与本次需规避的失误(250字内)\"" : "")
+                    + (aiData.containsKey("历史教训") ? ",\"ai_history_review\":\"结合【历史教训】中指出的误判模式与纠错规则，指出本次需规避的失误与可执行的改进措施(250字内)\"" : "")
                     + "}";
             String user = "今天是" + new SimpleDateFormat("yyyy-MM-dd").format(new Date())
                     + "，实时盘面数据（含竞价/盘中阶段标注）如下：\n"
@@ -950,6 +1139,16 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
             }
         } catch (Exception e) {
             logger.warn("组装历史复盘块失败", e);
+        }
+        // 历史教训：读取今日已落库的AI历史复盘经验，供AI生成明日展望时规避同类失误
+        try {
+            MarketAnalysisDaily todayRow = marketAnalysisMapper.selectByMarketDate(new Date());
+            if (todayRow != null && todayRow.getAiHistoryReview() != null
+                    && !todayRow.getAiHistoryReview().trim().isEmpty()) {
+                data.put("历史教训", trunc(todayRow.getAiHistoryReview(), 2000));
+            }
+        } catch (Exception e) {
+            logger.warn("读取历史教训失败", e);
         }
         return data;
     }
@@ -1069,45 +1268,44 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
     // AI策略推荐缓存：key=当日日期|涨停数指纹，当日数据小变时不重复调用大模型
     private final Map<String, Map<String, Object>> cycleAiCache = new ConcurrentHashMap<>();
 
-    // push2his K线熔断（同个股K线熔断机制：高频请求触发临时拉黑，TCP通但HTTP静默丢响应，NoHttpResponseException即拉黑特征）：
-    // 首次失败立即熔断5分钟，期间所有push2his K线类请求直接跳过（指数走腾讯兜底、板块K线跳过、昨日成交额用表数据兜底），
-    // 避免拉黑期间重试延长封禁+日志刷屏；封禁过期后下一次构建自动拿到完整数据
-    private static final long PUSH2HIS_BREAK_MS = 5 * 60 * 1000L;
-    private static volatile long push2hisBlockedUntil = 0L;
-
+    // push2his K线熔断 & push2/push2delay clist熔断：状态全局统一存于 StockDataFetcher
+    // （GROUP_KLINE 5分钟 / GROUP_CLIST 3分钟），与股票分析/短线选股共享同一份拉黑视图，
+    // 避免多服务各自为战：一个服务刚探测到解封、另一个服务还在盲目请求延长封禁
     private static boolean isPush2hisBlocked() {
-        return System.currentTimeMillis() < push2hisBlockedUntil;
+        return com.xk.srhwzzqdn.manager.util.StockDataFetcher.blocked(
+                com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_KLINE);
     }
 
     private static void markPush2hisFail() {
-        push2hisBlockedUntil = System.currentTimeMillis() + PUSH2HIS_BREAK_MS;
-        logger.warn("东财push2his K线请求失败，首次即熔断5分钟：期间K线类请求全部跳过，改用腾讯兜底/表数据降级");
+        com.xk.srhwzzqdn.manager.util.StockDataFetcher.markFail(
+                com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_KLINE, 5 * 60 * 1000L);
     }
 
-    // push2/push2delay 行情集群clist熔断（clist高频分页会触发该集群临时拉黑，与push2his独立）：
-    // 首次失败熔断3分钟，期间clist类请求直接跳过（板块池返回空=研判降级，实时分析板块/指数该轮缺省）
-    private static final long PUSH2_CLIST_BREAK_MS = 3 * 60 * 1000L;
-    private static volatile long push2ClistBlockedUntil = 0L;
-
     private static boolean isPush2ClistBlocked() {
-        return System.currentTimeMillis() < push2ClistBlockedUntil;
+        return com.xk.srhwzzqdn.manager.util.StockDataFetcher.blocked(
+                com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_CLIST);
     }
 
     private static void markPush2ClistFail() {
-        push2ClistBlockedUntil = System.currentTimeMillis() + PUSH2_CLIST_BREAK_MS;
-        logger.warn("东财行情集群clist请求失败，首次即熔断3分钟：期间clist类请求跳过防延长封禁");
+        com.xk.srhwzzqdn.manager.util.StockDataFetcher.markFail(
+                com.xk.srhwzzqdn.manager.util.StockDataFetcher.GROUP_CLIST, 3 * 60 * 1000L);
     }
 
     /** 研判特征板块池：按当日成交额取活跃行业板块30个 + 活跃概念板块10个（控制push2his请求量防拉黑） */
-    private static final String CYCLE_SECTOR_INDUSTRY_URL_TPL =
-            "%s/api/qt/clist/get?fltt=2&pn=1&pz=30&po=1&fid=f6&fs=m:90+t:2&fields=f12,f14,f3,f6";
-    private static final String CYCLE_SECTOR_CONCEPT_URL_TPL =
-            "%s/api/qt/clist/get?fltt=2&pn=1&pz=10&po=1&fid=f6&fs=m:90+t:3&fields=f12,f14,f3,f6";
-    private static final String CYCLE_KLINE_URL_TPL =
-            "http://push2his.eastmoney.com/api/qt/stock/kline/get?secid=%s&klt=101&fqt=1&lmt=30&end=20500101"
-                    + "&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57";
+    // DB数据库化：host由getClistHosts failover填充，路径+参数固定
+    private static final String CYCLE_SECTOR_INDUSTRY_URL_PATH =
+            "/api/qt/clist/get?fltt=2&pn=1&pz=30&po=1&fid=f6&fs=m:90+t:2&fields=f12,f14,f3,f6";
+    private static final String CYCLE_SECTOR_CONCEPT_URL_PATH =
+            "/api/qt/clist/get?fltt=2&pn=1&pz=10&po=1&fid=f6&fs=m:90+t:3&fields=f12,f14,f3,f6";
+    // 研判K线模板（stock_kline_url为base）
+    private static String getCycleKlineUrlTpl() {
+        String base = InterfaceConfigUtil.getUrl("stock_kline_url", "http://push2his.eastmoney.com/api/qt/stock/kline/get");
+        return base + "?secid=%s&klt=101&fqt=1&lmt=30&end=20500101&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57";
+    }
     /** 腾讯K线兜底（指数用，口径与个股K线兜底一致） */
-    private static final String CYCLE_TX_KLINE_URL = "https://ifzq.gtimg.cn/appstock/app/fqkline/get"; // web.ifzq.gtimg.cn已被腾讯501废弃，裸域实测正常
+    private static String getCycleTxKlineUrl() {
+        return InterfaceConfigUtil.getUrl("stock_tx_kline_url", "https://ifzq.gtimg.cn/appstock/app/fqkline/get");
+    }
 
     @Override
     public Map<String, Object> getMarketCycleAnalysis() {
@@ -1208,7 +1406,7 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         if (!isPush2hisBlocked()) {
             List<String[]> rows = new ArrayList<>();
             boolean ok = false;
-            String body = httpGetNoRetry(String.format(CYCLE_KLINE_URL_TPL, secid));
+            String body = httpGetNoRetry(String.format(getCycleKlineUrlTpl(), secid));
             if (body != null) {
                 JSONObject data = JSON.parseObject(body).getJSONObject("data");
                 JSONArray klines = data == null ? null : data.getJSONArray("klines");
@@ -1228,7 +1426,7 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
     /** 腾讯指数K线兜底（口径与个股K线兜底一致）：行无成交额（第7列补空），仅能算涨跌幅不能算量能比 */
     private List<String[]> fetchIndexKlineRawFromTencent(String txCode) {
         List<String[]> rows = new ArrayList<>();
-        String body = httpGetNoRetry(CYCLE_TX_KLINE_URL + "?param=" + txCode + ",day,,,40,qfq");
+        String body = httpGetNoRetry(getCycleTxKlineUrl() + "?param=" + txCode + ",day,,,40,qfq");
         if (body == null) return rows;
         try {
             JSONObject json = JSON.parseObject(body);
@@ -1269,8 +1467,8 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
 
     /** 两融历史（T-1起往前n天，含融资余额与融资净买入，单位元） */
     private List<Map<String, Object>> fetchMarginHistory(int n) throws Exception {
-        String url = "https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPTA_RZRQ_LSHJ&columns=ALL"
-                + "&source=WEB&sortColumns=dim_date&sortTypes=-1&pageSize=" + n + "&pageNumber=1";
+        String base = InterfaceConfigUtil.getUrl("stock_datacenter_batch_url", "https://datacenter-web.eastmoney.com/api/data/v1/get");
+        String url = base + "?reportName=RPTA_RZRQ_LSHJ&columns=ALL&source=WEB&sortColumns=dim_date&sortTypes=-1&pageSize=" + n + "&pageNumber=1";
         List<Map<String, Object>> rows = new ArrayList<>();
         String body = httpGet(url);
         if (body == null) return rows;
@@ -1332,7 +1530,7 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
     private boolean fetchOneSectorKline(Map<String, Object> s) {
         String secid = "90." + s.get("code");
         try {
-            String body = httpGetNoRetry(String.format(CYCLE_KLINE_URL_TPL, secid));
+            String body = httpGetNoRetry(String.format(getCycleKlineUrlTpl(), secid));
             if (body == null) {
                 markPush2hisFail();
                 return false;
@@ -1369,9 +1567,10 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
             return pool;
         }
         boolean anyOk = false;
-        for (String tpl : new String[]{CYCLE_SECTOR_INDUSTRY_URL_TPL, CYCLE_SECTOR_CONCEPT_URL_TPL}) {
-            for (String host : PUSH2_HOSTS) {
-                String body = httpGetHosts(String.format(tpl, host));
+        String[] clistHosts = getClistHostsMulti();
+        for (String path : new String[]{CYCLE_SECTOR_INDUSTRY_URL_PATH, CYCLE_SECTOR_CONCEPT_URL_PATH}) {
+            for (String host : clistHosts) {
+                String body = httpGetHosts(host + path);
                 if (body == null) continue;
                 JSONObject data = JSON.parseObject(body).getJSONObject("data");
                 Object diffObj = data == null ? null : data.get("diff");
@@ -1426,11 +1625,12 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
             return list;
         }
         // fs=沪深A股；fid=f62主力净流入降序；fltt=2返回已是元/百分比；f12代码/f14名称/f3涨幅/f8换手/f62主力净流入(元)/f184主力净占比
-        String tpl = "https://%s/api/qt/clist/get?pn=1&pz=120&po=1&np=1&fltt=2&invt=2&fid=f62"
+        String candidatePath = "/api/qt/clist/get?pn=1&pz=120&po=1&np=1&fltt=2&invt=2&fid=f62"
                 + "&fs=m:0+t:6,m:0+t:80,m:1+t:2,m:1+t:23&fields=f12,f13,f14,f2,f3,f8,f62,f184";
         boolean ok = false;
-        for (String host : PUSH2_HOSTS) {
-            String body = httpGetHosts(String.format(tpl, host));
+        String[] clistHosts = getClistHostsMulti();
+        for (String host : clistHosts) {
+            String body = httpGetHosts(host + candidatePath);
             if (body == null) continue;
             try {
                 JSONObject data = JSON.parseObject(body).getJSONObject("data");
@@ -1877,11 +2077,90 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         }
     }
 
+    // 交易日判定缓存（按自然日失效；9:30前bar未生成属暂定口径，9:30后强制重解析校正一次）
+    private static volatile String tradingDayCacheDay = "";
+    private static volatile boolean tradingDayCacheIsTrading = true;
+    private static volatile boolean tradingDayCacheProvisional = true;
+
+    /**
+     * 今日是否交易日：上证指数日K最新bar日判定（东财→腾讯兜底，均单次不重试，结果按天缓存）。
+     * 法定节假日全天无bar → 非交易日；交易日9:30前bar未生成 → 按工作日暂定是交易日（9:30后重解析校正）；
+     * 双源均失败 → 沿用原工作日口径（视为交易日，与历史行为一致），避免接口故障放大成时段误判。
+     */
+    private boolean isTradingDayToday() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+        int dow = cal.get(Calendar.DAY_OF_WEEK);
+        if (dow == Calendar.SATURDAY || dow == Calendar.SUNDAY) return false;
+        String todayKey = new SimpleDateFormat("yyyyMMdd").format(cal.getTime());
+        int hm = cal.get(Calendar.HOUR_OF_DAY) * 100 + cal.get(Calendar.MINUTE);
+        boolean resolvedNow = hm >= 930;
+        if (todayKey.equals(tradingDayCacheDay) && !(tradingDayCacheProvisional && resolvedNow)) {
+            return tradingDayCacheIsTrading;
+        }
+        String latest = null;
+        // 1) 东财上证指数日K（单次不重试，失败即触发K线熔断走兜底）
+        if (!isPush2hisBlocked()) {
+            String body = httpGetNoRetry(String.format(getKlineUrlTpl(), "1.000001"));
+            if (body == null) {
+                markPush2hisFail();
+            } else {
+                try {
+                    JSONArray ks = JSON.parseObject(body).getJSONObject("data").getJSONArray("klines");
+                    if (ks != null && !ks.isEmpty()) {
+                        latest = ks.getString(ks.size() - 1).split(",")[0].replace("-", "");
+                    }
+                } catch (Exception ignore) {
+                    // 解析失败走腾讯兜底
+                }
+            }
+        }
+        // 2) 腾讯指数日K兜底（东财熔断/失败时）
+        if (latest == null) {
+            try {
+                String url = InterfaceConfigUtil.getUrl("stock_tx_kline_url", "https://ifzq.gtimg.cn/appstock/app/fqkline/get")
+                        + "?param=sh000001,day,,,2,qfq";
+                String resp = httpGetNoRetry(url);
+                if (resp != null) {
+                    JSONObject node = JSON.parseObject(resp).getJSONObject("data").getJSONObject("sh000001");
+                    JSONArray days = node == null ? null : (node.getJSONArray("qfqday") == null
+                            ? node.getJSONArray("day") : node.getJSONArray("qfqday"));
+                    if (days != null && !days.isEmpty()) {
+                        latest = days.getJSONArray(days.size() - 1).getString(0).replace("-", "");
+                    }
+                }
+            } catch (Exception ignore) {
+                // 双兜底失败沿用工作日口径
+            }
+        }
+        boolean isTrading;
+        boolean provisional;
+        if (latest == null) {
+            isTrading = true;       // 双源失败：保持原工作日口径
+            provisional = true;     // 暂定口径，9:30后如再触发会重解析
+        } else if (latest.equals(todayKey)) {
+            isTrading = true;
+            provisional = false;
+        } else if (hm < 930) {
+            isTrading = true;       // 交易日盘前bar未生成（节假日无法区分），暂定是
+            provisional = true;
+        } else {
+            isTrading = false;      // 9:30后仍无今日bar → 法定节假日
+            provisional = false;
+        }
+        tradingDayCacheDay = todayKey;
+        tradingDayCacheIsTrading = isTrading;
+        tradingDayCacheProvisional = provisional;
+        return isTrading;
+    }
+
     private String detectPhase() {
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         int dow = cal.get(Calendar.DAY_OF_WEEK);
         if (dow == Calendar.SATURDAY || dow == Calendar.SUNDAY) return "非交易时段";
+        // 法定节假日判定（指数K线bar日）：非交易日全天按"非交易时段"，不再误判为交易日的午间休市/盘中
+        if (!isTradingDayToday()) return "非交易时段";
         int hm = cal.get(Calendar.HOUR_OF_DAY) * 100 + cal.get(Calendar.MINUTE);
         if (hm < 915) return "盘前";
         if (hm < 925) return "集合竞价";
@@ -1897,50 +2176,53 @@ public class MarketAnalysisServiceImpl implements MarketAnalysisService {
         return code != null && (code.startsWith("00") || code.startsWith("60"));
     }
 
+    // ==================== 反爬：浏览器级请求头伪装 ====================
+    // 合规约束：固定单一UA/Referer正常访问公开数据接口，不做UA轮换伪装、不规避访问控制；
+    // 访问频率由全局熔断器（StockDataFetcher分组）+单次尝试+批量200ms间隔约束，克制调用
+    private static final String FIXED_UA =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+    /** 给HttpGet设置请求头（固定UA；新浪接口要求sina站内Referer，其余固定东财行情页来源） */
+    private static void applyBrowserHeaders(HttpGet request) {
+        String host = request.getURI().getHost();
+        boolean isSina = host != null && host.contains("sina");
+        request.setHeader("User-Agent", FIXED_UA);
+        request.setHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+        request.setHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+        request.setHeader("Connection", "keep-alive");
+        request.setHeader("Cache-Control", "max-age=0");
+        request.setHeader("Referer", isSina ? "https://finance.sina.com.cn/" : "https://quote.eastmoney.com/");
+    }
+
     /**
-     * 带超时与重试的GET请求：东财接口偶发拦截（空响应/断连），最多3次，间隔递增500ms/1000ms
+     * GET请求（单次尝试，无重试）：失败由调用方降级兜底源/激活熔断。
+     * 合规与效率约束：重试既拖慢响应，又会在封禁期反复戳接口延长拉黑时长；频率由熔断器+批量间隔约束
      */
     private static String httpGet(String url) {
-        for (int attempt = 1; attempt <= 3; attempt++) {
-            try (CloseableHttpClient client = HttpClients.createDefault()) {
-                HttpGet request = new HttpGet(url);
-                request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-                request.setHeader("Referer", "https://quote.eastmoney.com/");
-                request.setConfig(RequestConfig.custom()
-                        .setConnectTimeout(10000).setSocketTimeout(15000).build());
-                try (CloseableHttpResponse resp = client.execute(request)) {
-                    if (resp.getStatusLine().getStatusCode() == 200) {
-                        String body = EntityUtils.toString(resp.getEntity(), "UTF-8");
-                        if (body != null && !body.trim().isEmpty()) return body;
-                    }
-                }
-            } catch (Exception e) {
-                // 前2次只记消息不记全栈（拉黑期间重试会大量触发，避免刷屏）；最后一次保留全栈定位
-                if (attempt >= 3) {
-                    logger.warn("HTTP请求失败 attempt={} url={}", attempt, url, e);
-                } else {
-                    logger.warn("HTTP请求失败 attempt={} url={} err={}", attempt, url, e.getMessage());
+        try (CloseableHttpClient client = HttpClientBuilder.create().disableAutomaticRetries().build()) {
+            HttpGet request = new HttpGet(url);
+            applyBrowserHeaders(request);
+            request.setConfig(RequestConfig.custom()
+                    .setConnectTimeout(5000).setSocketTimeout(8000).build());
+            try (CloseableHttpResponse resp = client.execute(request)) {
+                if (resp.getStatusLine().getStatusCode() == 200) {
+                    String body = EntityUtils.toString(resp.getEntity(), "UTF-8");
+                    if (body != null && !body.trim().isEmpty()) return body;
                 }
             }
-            if (attempt < 3) {
-                try {
-                    Thread.sleep(attempt * 500L);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
-            }
+        } catch (Exception e) {
+            logger.warn("HTTP请求失败 url={} err={}", url, e.getMessage());
         }
         return null;
     }
 
-    /** 指定host请求（供failover）：仅尝试1次，避免多域名×多次数放大请求量 */
+    /** 指定host请求（供failover）：仅尝试1次，避免多域名×多次数放大请求量；反爬：浏览器级请求头伪装 */
     private static String httpGetHosts(String url) {
-        try (CloseableHttpClient client = HttpClients.createDefault()) {
+        try (CloseableHttpClient client = HttpClientBuilder.create().disableAutomaticRetries().build()) {
             HttpGet request = new HttpGet(url);
-            request.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-            request.setHeader("Referer", "https://quote.eastmoney.com/");
+            applyBrowserHeaders(request);
             request.setConfig(RequestConfig.custom()
-                    .setConnectTimeout(10000).setSocketTimeout(15000).build());
+                    .setConnectTimeout(5000).setSocketTimeout(8000).build());
             try (CloseableHttpResponse resp = client.execute(request)) {
                 if (resp.getStatusLine().getStatusCode() == 200) {
                     String body = EntityUtils.toString(resp.getEntity(), "UTF-8");

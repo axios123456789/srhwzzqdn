@@ -15,6 +15,12 @@ public interface ShortTermPickService {
     Map<String, Object> getShortTermStocks();
 
     /**
+     * 刷新精选（按钮专用）：不管什么时段，直接实时采集涨停池/炸板池/快照/K线获取一遍并先删后入库。
+     * 与 getShortTermStocks 不同：不走缓存/不查库直读，强制实时采集+入库。
+     */
+    Map<String, Object> refreshShortTermStocks();
+
+    /**
      * 查询最近的复盘经验列表（AI数据记忆）
      */
     Map<String, Object> getExperience(Integer limit);

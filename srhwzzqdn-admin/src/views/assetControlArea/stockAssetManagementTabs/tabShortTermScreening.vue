@@ -11,7 +11,7 @@
           <el-icon><MagicStick /></el-icon>
           生成复盘经验
         </el-button>
-        <el-button type="primary" :loading="loading" @click="loadData">
+        <el-button type="primary" :loading="loading" @click="refreshData">
           <el-icon><Refresh /></el-icon>
           刷新精选
         </el-button>
@@ -44,10 +44,10 @@
     <!-- 归属信息与采集统计 -->
     <div class="summary-section" v-if="data">
       <el-tag size="large">归属交易日 {{ data.tradeDate }}</el-tag>
-      <el-tag :type="data.phase === 'close' ? 'success' : 'warning'" size="large">{{ data.phaseText }}</el-tag>
+      <el-tag :type="data.phase === 'close' ? 'success' : (data.phase === 'pre' ? 'info' : 'warning')" size="large">{{ data.phaseText }}</el-tag>
       <el-tag v-if="data.fromDb" type="info" size="large">库内直读</el-tag>
       <el-tag v-if="data.fromCache" type="info" size="large">缓存命中</el-tag>
-      <el-tag v-if="!data.saved" type="danger" size="large">入库失败</el-tag>
+      <el-tag v-if="!data.saved && data.phase !== 'intraday'" type="danger" size="large">入库失败</el-tag>
       <template v-if="data.stats && data.stats.source !== 'db'">
         <el-tag type="danger" size="large">涨停 {{ data.stats.ztCount }} 家</el-tag>
         <el-tag type="warning" size="large">炸板 {{ data.stats.zbCount }} 家</el-tag>
@@ -212,7 +212,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Refresh, Lightning, MagicStick } from '@element-plus/icons-vue'
-import { GetShortTermStocks, GetShortTermExperience, ReviewShortTermPicks } from '@/api/stockAsset'
+import { GetShortTermStocks, RefreshShortTermStocks, GetShortTermExperience, ReviewShortTermPicks } from '@/api/stockAsset'
 import { GetSysCodeByType } from '@/api/sysDict'
 
 const loading = ref(false)
@@ -272,11 +272,30 @@ const loadData = async () => {
     if (res && res.groups && res.groups.length && !groups.value.some(g => g.type === activeGroup.value)) {
       activeGroup.value = res.groups[0].type
     }
-    if (res && res.saved === false) {
+    if (res && res.saved === false && res.phase !== 'intraday') {
       ElMessage.warning('本轮推荐已生成但入库失败，请检查数据库')
     }
   } catch (e) {
     ElMessage.error('短线选股加载失败：' + (e && e.message ? e.message : '未知错误'))
+  } finally {
+    loading.value = false
+  }
+}
+
+// 刷新精选按钮专用：不管什么时段直接实时采集+先删后入库
+const refreshData = async () => {
+  loading.value = true
+  try {
+    const { data: res } = await RefreshShortTermStocks()
+    data.value = res
+    if (res && res.groups && res.groups.length && !groups.value.some(g => g.type === activeGroup.value)) {
+      activeGroup.value = res.groups[0].type
+    }
+    if (res && res.saved === false && res.phase !== 'intraday') {
+      ElMessage.warning('本轮推荐已生成但入库失败，请检查数据库')
+    }
+  } catch (e) {
+    ElMessage.error('刷新精选失败：' + (e && e.message ? e.message : '未知错误'))
   } finally {
     loading.value = false
   }

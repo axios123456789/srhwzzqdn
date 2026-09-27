@@ -41,6 +41,20 @@ public class ShortTermPickController {
     }
 
     /**
+     * 刷新精选（按钮专用）：不管什么时段直接实时采集+先删后入库，不走缓存/不查库直读
+     */
+    @GetMapping("/refreshShortTermStocks")
+    public Result refreshShortTermStocks() {
+        try {
+            Map<String, Object> result = shortTermPickService.refreshShortTermStocks();
+            return Result.build(result, ResultCodeEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error("刷新精选失败", e);
+            return Result.build(null, 500, "刷新精选失败：" + e.getMessage());
+        }
+    }
+
+    /**
      * 复盘经验列表（AI数据记忆）
      */
     @GetMapping("/getExperience/{limit}")

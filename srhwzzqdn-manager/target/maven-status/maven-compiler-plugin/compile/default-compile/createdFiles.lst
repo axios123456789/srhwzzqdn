@@ -22,6 +22,7 @@ com\xk\srhwzzqdn\manager\assetControlArea\service\impl\MarketAnalysisServiceImpl
 com\xk\srhwzzqdn\manager\assetControlArea\util\FundDataParser.class
 com\xk\srhwzzqdn\manager\memoryReceptionArea\service\impl\LifeMemoryAccessServiceImpl.class
 com\xk\srhwzzqdn\manager\memoryReceptionArea\controller\CommunicateMemoryAccessController.class
+com\xk\srhwzzqdn\manager\util\StockDataFetcher$Source.class
 com\xk\srhwzzqdn\manager\system\service\SysPersonInfoService.class
 com\xk\srhwzzqdn\manager\util\BailianApiUtil.class
 com\xk\srhwzzqdn\manager\memoryReceptionArea\service\WorkMemoryAccessService.class
@@ -35,6 +36,7 @@ com\xk\srhwzzqdn\manager\trialExecutionArea\service\impl\TradeRecordServiceImpl.
 com\xk\srhwzzqdn\manager\assetControlArea\util\FundDataParser$NavData.class
 com\xk\srhwzzqdn\manager\memoryReceptionArea\mapper\LearnMemoryAccessMapper.class
 com\xk\srhwzzqdn\manager\personalObservationArea\service\impl\AssetDynamicsObservationServiceImpl.class
+com\xk\srhwzzqdn\manager\util\StockDataFetcher.class
 com\xk\srhwzzqdn\manager\assetControlArea\controller\AssetLedgerController.class
 com\xk\srhwzzqdn\manager\system\service\ValidateCodeService.class
 com\xk\srhwzzqdn\manager\util\StockQuoteUtil.class
@@ -118,6 +120,7 @@ com\xk\srhwzzqdn\manager\system\service\impl\SysPersonInfoServiceImpl.class
 com\xk\srhwzzqdn\manager\assetControlArea\service\impl\StockAssetServiceImpl$AiAnalysisCacheEntry.class
 com\xk\srhwzzqdn\manager\memoryReceptionArea\controller\RowMemoryAccessController.class
 com\xk\srhwzzqdn\manager\system\service\impl\SysMenuServiceImpl.class
+com\xk\srhwzzqdn\manager\util\StockDataFetcher$RaceResult.class
 com\xk\srhwzzqdn\manager\system\mapper\SysDictMapper.class
 com\xk\srhwzzqdn\manager\system\controller\SysRoleController.class
 com\xk\srhwzzqdn\manager\system\mapper\SysUserAndRoleRelationMapper.class
