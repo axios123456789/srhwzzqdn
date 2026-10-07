@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,6 +34,9 @@ public class StockQuoteUtil {
     private static final String QUOTE_URL_FALLBACK = "http://push2.eastmoney.com/api/qt/stock/get";
     private static final String KLINE_URL_FALLBACK = "http://push2his.eastmoney.com/api/qt/stock/kline/get";
     private static final String FLOW_URL_FALLBACK = "http://push2.eastmoney.com/api/qt/stock/fflow/daykline/get";
+    /** push2his 资金流日K兜底（与 push2 主源不同 host 家族，push2 黑洞时常存活；fields2 口径与主源一致） */
+    private static final String FFLOW_DAY_URL_FALLBACK =
+            "https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt=%d&klt=101&fields1=f1,f2,f3,f7&fields2=f51,f52,f53,f54,f55&secid=%s";
     private static final String CLIST_URL_FALLBACK = "http://push2.eastmoney.com/api/qt/clist/get";
     private static final String TOPIC_POOL_URL_FALLBACK = "http://push2ex.eastmoney.com/getTopic";
 
@@ -60,6 +65,10 @@ public class StockQuoteUtil {
     }
     private static String getFlowUrl() {
         return InterfaceConfigUtil.getUrl("util_flow_url", FLOW_URL_FALLBACK);
+    }
+    /** push2his 资金流日K兜底（完整模板口径：lmt/fields 固定，代码仅替换 secid；独立配置键防与 util_flow_url 口径互踩） */
+    private static String getFflowDayUrlTpl() {
+        return InterfaceConfigUtil.getUrl("util_fflow_day_url", FFLOW_DAY_URL_FALLBACK);
     }
     private static String getClistUrl() {
         return InterfaceConfigUtil.getUrl("util_clist_url", CLIST_URL_FALLBACK);
@@ -188,8 +197,9 @@ public class StockQuoteUtil {
      */
     private static String fetchRealtimeQuote(String stockCode) {
         String secid = buildSecId(stockCode);
+        // f9=市盈率(动态,×100) f23=市净率(×100) f100=行业名 f116=总市值(元) f117=流通市值(元)——基本面字段0增量请求顺带获取
         String url = getQuoteUrl() + "?secid=" + secid +
-                "&fields=f43,f44,f45,f46,f47,f48,f57,f58,f168,f169,f170,f171";
+                "&fields=f43,f44,f45,f46,f47,f48,f57,f58,f9,f23,f100,f116,f117,f168,f169,f170,f171";
         String body = httpGet(url);
         if (body != null) {
             try {
@@ -210,6 +220,11 @@ public class StockQuoteUtil {
                     sb.append("换手率：").append(div100(d.get("f168"))).append("%\n");
                     sb.append("成交量：").append(d.get("f47")).append(" 手\n");
                     sb.append("成交额：").append(d.get("f48")).append(" 元\n");
+                    sb.append("行业：").append(strOrDash(d.getString("f100"))).append("\n");
+                    sb.append("市盈率(动态)：").append(div100(d.get("f9"))).append("\n");
+                    sb.append("市净率：").append(div100(d.get("f23"))).append("\n");
+                    sb.append("总市值：").append(divE8(d.get("f116"))).append(" 亿元\n");
+                    sb.append("流通市值：").append(divE8(d.get("f117"))).append(" 亿元\n");
                     return sb.toString();
                 }
             } catch (Exception e) {
@@ -217,6 +232,21 @@ public class StockQuoteUtil {
             }
         }
         return fetchRealtimeQuoteTx(stockCode);
+    }
+
+    /** 字符串空值转"-"（行业等文本字段） */
+    private static String strOrDash(String s) {
+        return (s == null || s.isEmpty() || "-".equals(s)) ? "-" : s;
+    }
+
+    /** 数值÷1e8保留2位小数（市值类字段元→亿） */
+    private static String divE8(Object val) {
+        if (val == null || "-".equals(val)) return "-";
+        try {
+            return new BigDecimal(val.toString()).divide(new BigDecimal("100000000"), 2, RoundingMode.HALF_UP).toPlainString();
+        } catch (Exception e) {
+            return val.toString();
+        }
     }
 
     /**
@@ -244,6 +274,14 @@ public class StockQuoteUtil {
             sb.append("换手率：").append(f[38]).append("%\n");
             sb.append("成交量：").append(f[36]).append(" 手\n");
             sb.append("成交额：").append(amountYuan).append(" 元\n");
+            // 腾讯无PE/PB/行业字段，仅补市值（[44]流通市值(亿) [45]总市值(亿)），字段缺失标注不提供
+            sb.append("行业：-\n");
+            sb.append("市盈率(动态)：-\n");
+            sb.append("市净率：-\n");
+            if (f.length > 45 && f[45] != null && !f[45].isEmpty()) sb.append("总市值：").append(f[45]).append(" 亿元\n");
+            else sb.append("总市值：-\n");
+            if (f.length > 44 && f[44] != null && !f[44].isEmpty()) sb.append("流通市值：").append(f[44]).append(" 亿元\n");
+            else sb.append("流通市值：-\n");
             return sb.toString();
         } catch (Exception e) {
             logger.warn("腾讯实时报价兜底失败 code={}", stockCode);
@@ -256,6 +294,18 @@ public class StockQuoteUtil {
      * 接口优先串行：东财K线（失败/空→腾讯日K兜底，前复权口径一致）
      */
     private static String fetchKLineData(String stockCode, int count) {
+        KlineData kd = fetchKLineDataBoth(stockCode, count);
+        return kd == null ? null : kd.text;
+    }
+
+    /** K线双输出：text=AI注入文本（与原格式完全一致），bars=[开,收,高,低]供技术指标计算（0增量请求） */
+    private static class KlineData {
+        final String text;
+        final List<double[]> bars;
+        KlineData(String text, List<double[]> bars) { this.text = text; this.bars = bars; }
+    }
+
+    private static KlineData fetchKLineDataBoth(String stockCode, int count) {
         String secid = buildSecId(stockCode);
         String url = getKlineUrl() + "?secid=" + secid +
                 "&klt=101&fqt=1&end=20500101&lmt=" + count +
@@ -270,24 +320,32 @@ public class StockQuoteUtil {
                     if (klines != null && !klines.isEmpty()) {
                         StringBuilder sb = new StringBuilder();
                         sb.append("【最近").append(klines.size()).append("日K线（日期,开盘,收盘,最高,最低,成交量手,成交额元,振幅%）】\n");
+                        List<double[]> bars = new ArrayList<>(klines.size());
                         for (int i = 0; i < klines.size(); i++) {
-                            sb.append(klines.getString(i)).append("\n");
+                            String row = klines.getString(i);
+                            sb.append(row).append("\n");
+                            try {
+                                String[] p = row.split(",");
+                                // fields2=f51日期,f52开,f53收,f54高,f55低 → [1]开[2]收[3]高[4]低
+                                bars.add(new double[]{Double.parseDouble(p[1]), Double.parseDouble(p[2]),
+                                        Double.parseDouble(p[3]), Double.parseDouble(p[4])});
+                            } catch (Exception ignore) { /* 单行解析失败不影响文本输出 */ }
                         }
-                        return sb.toString();
+                        return new KlineData(sb.toString(), bars);
                     }
                 }
             } catch (Exception e) {
                 logger.error("解析K线数据失败", e);
             }
         }
-        return fetchKLineDataTx(stockCode, count);
+        return fetchKLineDataTxBoth(stockCode, count);
     }
 
     /**
      * 腾讯日K线兜底（东财失败/空时）：bar=[日期,开,收,高,低,量手]（可能混入分红对象，只取前6列）；
      * 振幅=(高-低)/前收×100，首根前收以开盘近似；腾讯无历史成交额列，文本标注说明
      */
-    private static String fetchKLineDataTx(String stockCode, int count) {
+    private static KlineData fetchKLineDataTxBoth(String stockCode, int count) {
         try {
             String tx = txCode(stockCode);
             String body = httpGet(getTxKlineUrl() + "?param=" + tx + ",day,,," + count + ",qfq");
@@ -299,23 +357,26 @@ public class StockQuoteUtil {
             if (days == null || days.isEmpty()) return null;
             StringBuilder sb = new StringBuilder();
             sb.append("【最近").append(days.size()).append("日K线（日期,开盘,收盘,最高,最低,成交量手,振幅%）】\n");
+            List<double[]> bars = new ArrayList<>(days.size());
             BigDecimal prevClose = null;
             for (int i = 0; i < days.size(); i++) {
                 JSONArray a = days.getJSONArray(i);
-                BigDecimal open = new BigDecimal(a.getString(1));
-                BigDecimal close = new BigDecimal(a.getString(2));
-                BigDecimal high = new BigDecimal(a.getString(3));
-                BigDecimal low = new BigDecimal(a.getString(4));
-                BigDecimal prev = prevClose != null ? prevClose : open;
+                double open = Double.parseDouble(a.getString(1));
+                double close = Double.parseDouble(a.getString(2));
+                double high = Double.parseDouble(a.getString(3));
+                double low = Double.parseDouble(a.getString(4));
+                bars.add(new double[]{open, close, high, low});
+                BigDecimal prev = prevClose != null ? prevClose : new BigDecimal(a.getString(1));
                 BigDecimal amp = prev.signum() == 0 ? BigDecimal.ZERO
-                        : high.subtract(low).multiply(new BigDecimal("100")).divide(prev, 2, RoundingMode.HALF_UP);
-                sb.append(a.getString(0)).append(",").append(open.toPlainString()).append(",")
-                        .append(close.toPlainString()).append(",").append(high.toPlainString()).append(",")
-                        .append(low.toPlainString()).append(",").append(a.size() > 5 ? a.getString(5) : "0").append(",")
+                        : new BigDecimal(a.getString(3)).subtract(new BigDecimal(a.getString(4)))
+                                .multiply(new BigDecimal("100")).divide(prev, 2, RoundingMode.HALF_UP);
+                sb.append(a.getString(0)).append(",").append(a.getString(1)).append(",")
+                        .append(a.getString(2)).append(",").append(a.getString(3)).append(",")
+                        .append(a.getString(4)).append(",").append(a.size() > 5 ? a.getString(5) : "0").append(",")
                         .append(amp.toPlainString()).append("\n");
-                prevClose = close;
+                prevClose = new BigDecimal(a.getString(2));
             }
-            return sb.toString();
+            return new KlineData(sb.toString(), bars);
         } catch (Exception e) {
             logger.warn("腾讯K线兜底失败 code={}", stockCode);
             return null;
@@ -323,12 +384,87 @@ public class StockQuoteUtil {
     }
 
     /**
+     * 技术指标文本（纯 Java 计算，0 增量请求）：MA5/10/20、MACD(12,26,9)、KDJ(9,3,3)
+     * 仅基于已拉取的日K bars，样本不足时标注实际样本数
+     */
+    private static String formatTechIndicators(List<double[]> bars) {
+        if (bars == null || bars.isEmpty()) return null;
+        StringBuilder sb = new StringBuilder();
+        sb.append("【技术指标（基于近").append(bars.size()).append("日收盘价计算）】\n");
+        // 均线：收盘价简单均值（收盘=bars[i][1]）
+        appendMa(sb, "MA5", bars, 5);
+        appendMa(sb, "MA10", bars, 10);
+        appendMa(sb, "MA20", bars, 20);
+        // MACD：EMA12/EMA26→DIF，DEA=EMA9(DIF)，柱=2×(DIF-DEA)
+        if (bars.size() >= 9) {
+            double ema12 = bars.get(0)[1], ema26 = bars.get(0)[1], dea = 0;
+            double dif = 0, lastDif = 0, lastDea = 0;
+            for (int i = 0; i < bars.size(); i++) {
+                double c = bars.get(i)[1];
+                ema12 = i == 0 ? c : ema12 * 11 / 13 + c * 2 / 13;
+                ema26 = i == 0 ? c : ema26 * 25 / 27 + c * 2 / 27;
+                dif = ema12 - ema26;
+                dea = i == 0 ? dif : dea * 8 / 10 + dif * 2 / 10;
+                lastDif = dif;
+                lastDea = dea;
+            }
+            sb.append("MACD：DIF=").append(r2(lastDif)).append("，DEA=").append(r2(lastDea))
+                    .append("，柱=").append(r2(2 * (lastDif - lastDea))).append("\n");
+        } else {
+            sb.append("MACD：样本不足\n");
+        }
+        // KDJ(9,3,3)：RSV=(C-Ln)/(Hn-Ln)×100，K=2/3K'+1/3RSV，D=2/3D'+1/3K，J=3K-2D
+        if (bars.size() >= 9) {
+            double k = 50, dj = 50;
+            for (int i = 0; i < bars.size(); i++) {
+                int from = Math.max(0, i - 8);
+                double hh = -Double.MAX_VALUE, ll = Double.MAX_VALUE;
+                for (int j = from; j <= i; j++) {
+                    hh = Math.max(hh, bars.get(j)[2]);
+                    ll = Math.min(ll, bars.get(j)[3]);
+                }
+                double rsv = hh == ll ? 50 : (bars.get(i)[1] - ll) / (hh - ll) * 100;
+                k = k * 2 / 3 + rsv / 3;
+                dj = dj * 2 / 3 + k / 3;
+            }
+            sb.append("KDJ：K=").append(r2(k)).append("，D=").append(r2(dj)).append("，J=").append(r2(3 * k - 2 * dj)).append("\n");
+        } else {
+            sb.append("KDJ：样本不足\n");
+        }
+        return sb.toString();
+    }
+
+    /** N日简单均线输出（样本不足标注） */
+    private static void appendMa(StringBuilder sb, String name, List<double[]> bars, int n) {
+        if (bars.size() < n) {
+            sb.append(name).append("：样本不足\n");
+            return;
+        }
+        double sum = 0;
+        for (int i = bars.size() - n; i < bars.size(); i++) sum += bars.get(i)[1];
+        sb.append(name).append("：").append(r2(sum / n)).append("\n");
+    }
+
+    /** 保留2位小数字符串 */
+    private static String r2(double v) {
+        return new BigDecimal(v).setScale(2, RoundingMode.HALF_UP).toPlainString();
+    }
+
+    /**
      * 获取最近N天资金流向并格式化为文本
+     * 接口优先串行：push2 主源（失败/空→push2his fflow daykline 兜底，fields2 口径一致，GROUP_FLOW 熔断共享）
      */
     private static String fetchMoneyFlow(String stockCode, int days) {
         String secid = buildSecId(stockCode);
         String url = getFlowUrl() + "?secid=" + secid + "&lmt=" + days;
         String body = httpGet(url);
+        String result = parseMoneyFlowText(body);
+        if (result != null) return result;
+        return fetchMoneyFlowHis(stockCode, days);
+    }
+
+    /** 解析资金流响应为文本（主源/兜底共用；失败返回null由调用方走兜底） */
+    private static String parseMoneyFlowText(String body) {
         if (body == null) return null;
         try {
             JSONObject json = JSON.parseObject(body);
@@ -349,27 +485,77 @@ public class StockQuoteUtil {
     }
 
     /**
-     * 获取股票完整实时行情文本（报价+K线+资金流向）
+     * push2his fflow daykline 资金流兜底（与 push2 主源不同 host 家族，push2 黑洞时常存活；
+     * URL 含 fflow→GROUP_FLOW 与主源共享熔断；fields2=f51,f52,f53,f54,f55 与主源输出格式一致）
+     */
+    private static String fetchMoneyFlowHis(String stockCode, int days) {
+        try {
+            String url = String.format(getFflowDayUrlTpl(), days, buildSecId(stockCode));
+            String body = httpGet(url);
+            String result = parseMoneyFlowText(body);
+            if (result != null) logger.info("资金流push2his兜底成功 code={}", stockCode);
+            return result;
+        } catch (Exception e) {
+            logger.warn("push2his资金流兜底失败 code={} 原因={}", stockCode, e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * 获取股票完整实时行情文本（报价含基本面 + K线 + 技术指标 + 资金流向 + 大盘指数）
      * 用于注入 AI 预测提示词
-     * 三个请求相互独立 → 并行执行（原串行最坏叠加3×(3次重试+退避)的白等；并行后总耗时≈最慢块）
-     * 任一接口失败不影响其他数据，返回的文本始终非 null
+     * 四块并行执行（指数块内部复用东财→腾讯兜底链）；任一接口失败不影响其他数据，返回的文本始终非 null
+     * 技术指标基于已拉取的K线纯 Java 计算，0 增量请求；资金流向为 push2→push2his 兜底链
      */
     public static String getRealtimeMarketData(String stockCode) {
-        ExecutorService ex = Executors.newFixedThreadPool(3);
+        ExecutorService ex = Executors.newFixedThreadPool(4);
         Future<String> quoteF = ex.submit(() -> fetchRealtimeQuote(stockCode));
-        Future<String> klineF = ex.submit(() -> fetchKLineData(stockCode, 30));
+        Future<KlineData> klineF = ex.submit(() -> fetchKLineDataBoth(stockCode, 30));
         Future<String> flowF = ex.submit(() -> fetchMoneyFlow(stockCode, 5));
+        Future<String> marketF = ex.submit(StockQuoteUtil::fetchMarketBrief);
         ex.shutdown();
         String quote = joinQuietly(quoteF);
-        String kline = joinQuietly(klineF);
+        KlineData kline = joinKlineQuietly(klineF);
         String flow = joinQuietly(flowF);
+        String market = joinQuietly(marketF);
         StringBuilder sb = new StringBuilder();
         if (quote != null) sb.append(quote);
         else sb.append("【当日实时行情】获取失败\n");
-        if (kline != null) sb.append(kline);
+        if (kline != null) sb.append(kline.text);
         else sb.append("【最近日K线】获取失败\n");
+        String tech = kline == null ? null : formatTechIndicators(kline.bars);
+        if (tech != null) sb.append(tech);
+        else sb.append("【技术指标】K线获取失败，无法计算\n");
         if (flow != null) sb.append(flow);
         else sb.append("【资金流向】获取失败\n");
+        if (market != null) sb.append(market);
+        else sb.append("【大盘指数】获取失败\n");
+        return sb.toString();
+    }
+
+    /** K线双输出并行块收取：超时/异常返回null */
+    private static KlineData joinKlineQuietly(Future<KlineData> f) {
+        try {
+            return f.get(45, java.util.concurrent.TimeUnit.SECONDS);
+        } catch (Exception e) {
+            f.cancel(true);
+            return null;
+        }
+    }
+
+    /**
+     * 大盘指数简报（三大指数涨跌幅+两市成交额，复用 fetchIndexChangePct/fetchIndexAmount 的东财→腾讯兜底链）
+     */
+    private static String fetchMarketBrief() {
+        Double sh = fetchIndexChangePct("1.000001");
+        Double sz = fetchIndexChangePct("0.399001");
+        Double cyb = fetchIndexChangePct("0.399006");
+        if (sh == null && sz == null && cyb == null) return null;
+        StringBuilder sb = new StringBuilder();
+        sb.append("【大盘指数】\n");
+        sb.append("上证指数涨跌幅：").append(sh == null ? "-" : r2(sh)).append("%\n");
+        sb.append("深证成指涨跌幅：").append(sz == null ? "-" : r2(sz)).append("%\n");
+        sb.append("创业板指涨跌幅：").append(cyb == null ? "-" : r2(cyb)).append("%\n");
         return sb.toString();
     }
 

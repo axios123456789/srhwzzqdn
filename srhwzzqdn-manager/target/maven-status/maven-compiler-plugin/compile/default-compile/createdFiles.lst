@@ -38,6 +38,7 @@ com\xk\srhwzzqdn\manager\memoryReceptionArea\mapper\LearnMemoryAccessMapper.clas
 com\xk\srhwzzqdn\manager\personalObservationArea\service\impl\AssetDynamicsObservationServiceImpl.class
 com\xk\srhwzzqdn\manager\util\StockDataFetcher.class
 com\xk\srhwzzqdn\manager\assetControlArea\controller\AssetLedgerController.class
+com\xk\srhwzzqdn\manager\util\StockQuoteUtil$KlineData.class
 com\xk\srhwzzqdn\manager\system\service\ValidateCodeService.class
 com\xk\srhwzzqdn\manager\util\StockQuoteUtil.class
 com\xk\srhwzzqdn\manager\system\mapper\MapperConfigurationMapper.class

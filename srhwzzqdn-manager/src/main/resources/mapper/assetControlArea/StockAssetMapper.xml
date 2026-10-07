@@ -76,7 +76,7 @@
     </select>
 
     <insert id="batchAddStockKline">
-        insert into t_stock_kline(
+        insert ignore into t_stock_kline(
             stock_code, trade_date, kline_type, open_price, close_price, high_price, low_price,
             volume, turnover, amplitude, change_pct, change_amount, turnover_rate, create_time
         ) values

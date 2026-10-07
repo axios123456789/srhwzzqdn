@@ -641,7 +641,7 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
             List<Map<String, Object>> east = fetchClistPages(getClistHosts()[1]);   // [1]=push2主源
             if (east != null && !east.isEmpty()) {
                 markSuccessClist();
-                upsertBasicIndustryQuietly(east);   // 东财正常时把行业/概念增量写入t_stock_basic，供封禁期兜底读取
+
                 List<Map<String, Object>> list = new ArrayList<>(east);
                 list.sort((a, b) -> {
                     Double pa = asDouble(a.get("mainInflowPct"));
@@ -789,7 +789,7 @@ public class ShortTermPickServiceImpl implements ShortTermPickService {
                 Boolean east = applyUlistBatch(getClistHosts()[1], secids.toString(), batch);   // [1]=push2主源
                 if (Boolean.TRUE.equals(east)) {
                     ok = true;
-                    upsertBasicIndustryQuietly(batch);   // 池票行业/概念同步增量入库
+
                 } else {
                     ok = enrichPoolSnapshotFromTencent(batch);
                     if (!ok) ok = enrichPoolSnapshotFromSina(batch);

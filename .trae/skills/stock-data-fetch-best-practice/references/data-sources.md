@@ -27,8 +27,18 @@
 klines 行 = `日期,主力净流入(元),主力净占比(%)` → f[1]/1e8=亿、f[2]=净占比。只认当日行。
 
 ### K线（push2his）
-`{host}/api/qt/stock/kline/get?secid={mkt}.{code}&klt=101&fqt=1&lmt={n}&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57`
+`{host}/api/qt/stock/kline/get?secid={mkt}.{code}&klt=101&fqt=1&lmt={n}&end=20500101&fields1=f1,f2,f3,f4,f5,f6&fields2=f51,f52,f53,f54,f55,f56,f57,f58`
 fields2 顺序：日期/开/收/高/低/量/额。
+
+### push2 get 单票报价可顺带的基本面字段（同 URL 0 增量请求，2026-09-27 验证）
+f9=市盈率动态(×100) f23=市净率(×100) f100=行业名 f116=总市值(元,÷1e8) f117=流通市值(元,÷1e8)。
+
+### push2his fflow daykline（资金流兜底，GROUP_FLOW 与 push2 主源共享熔断）
+`https://push2his.eastmoney.com/api/qt/stock/fflow/daykline/get?lmt={n}&klt=101&fields1=f1,f2,f3,f7&fields2=f51,f52,f53,f54,f55&secid={mkt}.{code}`
+klines 行 = `日期,主力净流入元,小单,中单,大单` 与 push2 主源格式一致。注意三个口径不同的配置键：util_flow_url（push2 主源）/ util_fflow_day_url（本模板 f51-f55 五列）/ stock_fflow_day_url（短线选股 f51,f52,f57 三列含净占比）。
+
+### 技术指标模式（AI 输入，0 增量请求）
+K线已拉到时纯 Java 计算 MA5/10/20、MACD(12,26,9)、KDJ(9,3,3) 直接注入文本，不要为算指标再发请求；bars<周期数时标注"样本不足"而非省略段落。
 
 ### datacenter-web（数据中心报表，带 GROUP_DATACENTER 熔断 5min）
 - 业绩报表：`https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_LICO_FN_CPD&...`（ROE 降序，价值选股兜底主源）

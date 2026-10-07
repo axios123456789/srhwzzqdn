@@ -772,7 +772,12 @@ public class StockAssetServiceImpl implements StockAssetService {
             return Collections.emptyList();
         }
         // 衍生字段计算：换手率=量(手)/流通股本(万股)；涨跌额/涨跌幅/振幅按前收盘
+        // 截断到 count 根（最近优先）：腾讯单段固定640根，若不截断，返回窗口会超过
+        // refreshKlinePeriod 的比对窗口(compareCount+150)，INC分支把窗口外旧数据当新增重复入库（历史重复K线根因）
         List<StockKline> list = new ArrayList<>(merged.values());
+        if (list.size() > count) {
+            list = new ArrayList<>(list.subList(0, count));
+        }
         for (int i = 0; i < list.size(); i++) {
             StockKline k = list.get(i);
             if (circShares != null && circShares.signum() > 0 && k.getVolume() != null) {
